@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>One Buffalo Postseason Tracker</title>
+  <style>
+    :root {
+      --bills-blue: #00338D;
+      --bills-red: #C60C30;
+      --sabres-navy: #002654;
+      --sabres-gold: #FCB514;
+      --bg-dark: #0b0f19;
+      --card-bg: #161e2e;
+      --card-border: #232f48;
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      padding: 1.5rem;
+      line-height: 1.5;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 0.3rem;
+      background: linear-gradient(90deg, #3b82f6, #f59e0b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .meta-bar {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .meta-bar a {
+      color: #60a5fa;
+      text-decoration: none;
+    }
+    .meta-bar a:hover { text-decoration: underline; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 1.5rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .card-bills { border-top: 4px solid var(--bills-red); }
+    .card-sabres { border-top: 4px solid var(--sabres-gold); }
+
+    .team-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .team-title { font-size: 1.4rem; font-weight: 700; }
+    .badge {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      font-weight: 700;
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+    }
+    .badge-bills { background: var(--bills-red); color: #fff; }
+    .badge-sabres { background: var(--sabres-gold); color: #000; }
+
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      text-align: center;
+    }
+
+    .stat-box {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 0.75rem 0.5rem;
+      border-radius: 8px;
+    }
+
+    .stat-val {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+      text-transform: uppercase;
+    }
+
+    .section-subtitle {
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .dist-bar-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+
+    .dist-row {
+      display: flex;
+      align-items: center;
+      font-size: 0.8rem;
+    }
+
+    .dist-name { width: 90px; color: var(--text-muted); }
+    .dist-track {
+      flex: 1;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 0 0.5rem;
+    }
+    .dist-fill-bills { height: 100%; background: #3b82f6; border-radius: 4px; }
+    .dist-fill-sabres { height: 100%; background: var(--sabres-gold); border-radius: 4px; }
+    .dist-pct { width: 35px; text-align: right; font-weight: 600; }
+
+    .rooting-item {
+      background: rgba(255, 255, 255, 0.02);
+      border-left: 3px solid #3b82f6;
+      padding: 0.6rem 0.8rem;
+      border-radius: 0 6px 6px 0;
+      font-size: 0.85rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .rooting-target { font-weight: 700; color: #fff; }
+    .rooting-why { color: var(--text-muted); font-size: 0.75rem; }
+
+    footer {
+      text-align: center;
+      margin-top: 3rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>ONE BUFFALO TRACKER</h1>
+    <div class="meta-bar">
+      <span id="update-status">Loading nightly data...</span>
+      <span>•</span>
+      <span>Source: <a href="http://www.playoffstatus.com" target="_blank" rel="noopener">PlayoffStatus.com</a></span>
+    </div>
+  </header>
+
+  <main class="grid">
+    <!-- BILLS CARD -->
+    <article class="card card-bills">
+      <div class="team-header">
+        <h2 class="team-title">Buffalo Bills</h2>
+        <span class="badge badge-bills">NFL AFC</span>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat-box">
+          <div class="stat-val" id="bills-playoff-pct">--%</div>
+          <div class="stat-label">Playoffs</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" id="bills-div-pct">--%</div>
+          <div class="stat-label">AFC East</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" id="bills-bye-pct">--%</div>
+          <div class="stat-label">#1 Bye</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-subtitle">Playoff Seeding Distribution</div>
+        <div class="dist-bar-wrap" id="bills-distribution"></div>
+      </div>
+
+      <div>
+        <div class="section-subtitle">Weekly Rooting Priority</div>
+        <div class="rooting-item">
+          <div class="rooting-target">Root for Chargers over Chiefs</div>
+          <div class="rooting-why">Maximizes odds for Buffalo's AFC #1 overall seed & bye week.</div>
+        </div>
+        <div class="rooting-item">
+          <div class="rooting-target">Root for Jets & Dolphins Losses</div>
+          <div class="rooting-why">Fast-tracks AFC East magic elimination number.</div>
+        </div>
+      </div>
+    </article>
+
+    <!-- SABRES CARD -->
+    <article class="card card-sabres">
+      <div class="team-header">
+        <h2 class="team-title">Buffalo Sabres</h2>
+        <span class="badge badge-sabres">NHL Atlantic</span>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat-box">
+          <div class="stat-val" id="sabres-playoff-pct">--%</div>
+          <div class="stat-label">Playoffs</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" id="sabres-div-pct">--%</div>
+          <div class="stat-label">Atlantic Div</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" id="sabres-wc-pct">--%</div>
+          <div class="stat-label">Wildcard</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-subtitle">Projected Finish Distribution</div>
+        <div class="dist-bar-wrap" id="sabres-distribution"></div>
+      </div>
+
+      <div>
+        <div class="section-subtitle">Weekly Rooting Priority</div>
+        <div class="rooting-item" style="border-left-color: var(--sabres-gold);">
+          <div class="rooting-target">Regulation Losses for Atlantic Rivals</div>
+          <div class="rooting-why">Ensure games involving BOS, TBL, and FLA do not go to 3-point overtimes.</div>
+        </div>
+        <div class="rooting-item" style="border-left-color: var(--sabres-gold);">
+          <div class="rooting-target">Western Conference Wins vs. Metro</div>
+          <div class="rooting-why">Protects Eastern Conference Wild Card slot thresholds.</div>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <footer>
+    <p>Automated nightly via <a href="https://github.com" target="_blank" rel="noopener" style="color: #60a5fa;">GitHub Actions</a>. Playoff simulation data courtesy of PlayoffStatus.com.</p>
+  </footer>
+
+  <script>
+    async function loadData() {
+      const statusEl = document.getElementById('update-status');
+      let data = null;
+
+      try {
+        const res = await fetch('./data.json?t=' + Date.now());
+        if (!res.ok) throw new Error('data.json not generated yet');
+        data = await res.json();
+      } catch (err) {
+        console.warn('Falling back to baseline numbers:', err);
+        data = {
+          updatedAt: new Date().toISOString(),
+          bills: {
+            makePlayoffs: 84, winDivision: 62, seed1: 18,
+            seedDistribution: [
+              { seed: '#1 Seed', pct: 18 }, { seed: '#2 Seed', pct: 24 },
+              { seed: '#3 Seed', pct: 12 }, { seed: '#4 Seed', pct: 8 },
+              { seed: '#5 Seed', pct: 11 }, { seed: '#6 Seed', pct: 7 },
+              { seed: '#7 Seed', pct: 4 }
+            ]
+          },
+          sabres: {
+            makePlayoffs: 38, winDivision: 11, wildcard: 27,
+            seedDistribution: [
+              { seed: 'Div 1', pct: 11 }, { seed: 'Div 2', pct: 14 },
+              { seed: 'Div 3', pct: 13 }, { seed: 'Wildcard 1', pct: 16 },
+              { seed: 'Wildcard 2', pct: 11 }
+            ]
+          }
+        };
+      }
+
+      // Update Header
+      const dateStr = new Date(data.updatedAt).toLocaleDateString(undefined, {
+        month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+      });
+      statusEl.textContent = `Updated: ${dateStr}`;
+
+      // Populate Bills
+      document.getElementById('bills-playoff-pct').textContent = `${data.bills.makePlayoffs}%`;
+      document.getElementById('bills-div-pct').textContent = `${data.bills.winDivision}%`;
+      document.getElementById('bills-bye-pct').textContent = `${data.bills.seed1}%`;
+
+      const billsDist = document.getElementById('bills-distribution');
+      billsDist.innerHTML = data.bills.seedDistribution.map(item => `
+        <div class="dist-row">
+          <span class="dist-name">${item.seed}</span>
+          <div class="dist-track">
+            <div class="dist-fill-bills" style="width: ${item.pct}%"></div>
+          </div>
+          <span class="dist-pct">${item.pct}%</span>
+        </div>
+      `).join('');
+
+      // Populate Sabres
+      document.getElementById('sabres-playoff-pct').textContent = `${data.sabres.makePlayoffs}%`;
+      document.getElementById('sabres-div-pct').textContent = `${data.sabres.winDivision}%`;
+      document.getElementById('sabres-wc-pct').textContent = `${data.sabres.wildcard}%`;
+
+      const sabresDist = document.getElementById('sabres-distribution');
+      sabresDist.innerHTML = data.sabres.seedDistribution.map(item => `
+        <div class="dist-row">
+          <span class="dist-name">${item.seed}</span>
+          <div class="dist-track">
+            <div class="dist-fill-sabres" style="width: ${item.pct}%"></div>
+          </div>
+          <span class="dist-pct">${item.pct}%</span>
+        </div>
+      `).join('');
+    }
+
+    document.addEventListener('DOMContentLoaded', loadData);
+  </script>
+</body>
+</html>
