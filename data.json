@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-14T04:35:09.562Z",
+  "updatedAt": "2026-10-14T04:42:17.716Z",
   "source": "http://www.playoffstatus.com",
   "bills": {
     "team": "Buffalo Bills",
@@ -10,6 +10,7 @@
     "nextGame": {
       "opponent": "@ Raiders",
       "gameTime": "Sun, Oct 18 • 4:25 PM ET",
+      "isoTime": "2026-10-18T20:25Z",
       "ifWin": 91,
       "ifLoss": 74,
       "leverage": 17
@@ -100,6 +101,7 @@
     "nextGame": {
       "opponent": "@ Toronto",
       "gameTime": "Thu, Oct 15 • 7:00 PM ET",
+      "isoTime": "2026-10-15T23:00:00Z",
       "ifWin": 44,
       "ifLoss": 33,
       "leverage": 11
