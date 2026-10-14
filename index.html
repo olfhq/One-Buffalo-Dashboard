@@ -72,7 +72,7 @@
       padding: 1.5rem;
       display: flex;
       flex-direction: column;
-      gap: 1.3rem;
+      gap: 1.25rem;
       box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
     }
     .card-bills { border-top: 4px solid var(--bills-red); }
@@ -93,6 +93,26 @@
     }
     .badge-bills { background: var(--bills-red); color: #fff; }
     .badge-sabres { background: var(--sabres-gold); color: #000; }
+
+    /* CLINCHING ALERT WIDGET */
+    .clinch-alert-box {
+      border-radius: 8px;
+      padding: 0.6rem 0.85rem;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+    }
+    .clinch-alert-active {
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      color: #fbbf24;
+      font-weight: 600;
+    }
+    .clinch-icon { font-size: 1rem; flex-shrink: 0; }
 
     /* STREAMLINED NEXT GAME HERO CARD */
     .stakes-banner {
@@ -174,7 +194,6 @@
       margin-top: 0.1rem;
     }
 
-    /* BOTTOM STAT DUAL-PANEL */
     .stakes-bottom-row {
       display: grid;
       grid-template-columns: 1fr 1.6fr;
@@ -258,7 +277,6 @@
       margin-bottom: 0.5rem;
     }
 
-    /* DISTRIBUTION BARS */
     .dist-bar-wrap { display: flex; flex-direction: column; gap: 0.4rem; }
     .dist-row { display: flex; align-items: center; font-size: 0.8rem; }
     .dist-name { width: 85px; color: var(--text-muted); }
@@ -274,7 +292,6 @@
     .dist-fill-sabres { height: 100%; background: var(--sabres-gold); border-radius: 4px; }
     .dist-pct { width: 35px; text-align: right; font-weight: 600; }
 
-    /* RADAR & OPPONENTS */
     .radar-wrap { display: flex; gap: 0.5rem; }
     .radar-item {
       flex: 1;
@@ -298,7 +315,6 @@
     }
     .opp-pct { font-weight: 700; color: #f59e0b; margin-left: 0.3rem; }
 
-    /* ROOTING ITEMS */
     .rooting-item {
       background: rgba(255, 255, 255, 0.02);
       border-left: 3px solid #38bdf8;
@@ -339,7 +355,13 @@
         <span class="badge badge-bills">NFL AFC</span>
       </div>
 
-      <!-- STREAMLINED NEXT GAME SECTION -->
+      <!-- CLINCHING ALERT WIDGET -->
+      <div class="clinch-alert-box" id="bills-clinch-box">
+        <span class="clinch-icon">🔒</span>
+        <span id="bills-clinch-text">Checking clinching status...</span>
+      </div>
+
+      <!-- NEXT GAME SECTION -->
       <div class="stakes-banner">
         <div class="stakes-top-row">
           <div class="matchup-main">
@@ -393,25 +415,21 @@
         </div>
       </div>
 
-      <!-- DIVISION RADAR -->
       <div>
         <div class="section-subtitle">AFC East Division Radar</div>
         <div class="radar-wrap" id="bills-radar"></div>
       </div>
 
-      <!-- SEEDING DISTRIBUTION -->
       <div>
         <div class="section-subtitle">Playoff Seeding Distribution</div>
         <div class="dist-bar-wrap" id="bills-distribution"></div>
       </div>
 
-      <!-- FIRST ROUND OPPONENTS -->
       <div>
         <div class="section-subtitle">Likely 1st Round Matchups</div>
         <div class="opponent-chips" id="bills-opponents"></div>
       </div>
 
-      <!-- ROOTING GUIDE (NEUTRAL ONLY) -->
       <div>
         <div class="section-subtitle">Weekly Rooting Priority (Neutral Games)</div>
         <div id="bills-rooting-container"></div>
@@ -425,7 +443,13 @@
         <span class="badge badge-sabres">NHL Atlantic</span>
       </div>
 
-      <!-- STREAMLINED NEXT GAME SECTION -->
+      <!-- CLINCHING ALERT WIDGET -->
+      <div class="clinch-alert-box" id="sabres-clinch-box">
+        <span class="clinch-icon">🔒</span>
+        <span id="sabres-clinch-text">Checking clinching status...</span>
+      </div>
+
+      <!-- NEXT GAME SECTION -->
       <div class="stakes-banner">
         <div class="stakes-top-row">
           <div class="matchup-main">
@@ -479,25 +503,21 @@
         </div>
       </div>
 
-      <!-- DIVISION RADAR -->
       <div>
         <div class="section-subtitle">Atlantic Division Radar</div>
         <div class="radar-wrap" id="sabres-radar"></div>
       </div>
 
-      <!-- SEEDING DISTRIBUTION -->
       <div>
         <div class="section-subtitle">Projected Finish Distribution</div>
         <div class="dist-bar-wrap" id="sabres-distribution"></div>
       </div>
 
-      <!-- FIRST ROUND OPPONENTS -->
       <div>
         <div class="section-subtitle">Likely 1st Round Matchups</div>
         <div class="opponent-chips" id="sabres-opponents"></div>
       </div>
 
-      <!-- ROOTING GUIDE -->
       <div>
         <div class="section-subtitle">Weekly Rooting Priority</div>
         <div id="sabres-rooting-container"></div>
@@ -566,6 +586,17 @@
       document.getElementById('bills-bye-pct').textContent = `${b.seed1}%`;
       document.getElementById('bills-magic-num').textContent = b.magicNumber || '--';
       
+      // Clinch Alert
+      const bClinchBox = document.getElementById('bills-clinch-box');
+      const bClinchText = document.getElementById('bills-clinch-text');
+      if (b.clinchAlert && b.clinchAlert.active) {
+        bClinchBox.classList.add('clinch-alert-active');
+        bClinchText.textContent = `⚡ CLINCHING ACTIVE: ${b.clinchAlert.scenario}`;
+      } else {
+        bClinchBox.classList.remove('clinch-alert-active');
+        bClinchText.textContent = `No clinching scenarios available this week (Magic #: ${b.magicNumber || '--'})`;
+      }
+
       document.getElementById('bills-next-opp').textContent = b.nextGame.opponent;
       document.getElementById('bills-game-time').textContent = b.nextGame.gameTime || '';
       document.getElementById('bills-win-chance').textContent = `${b.nextGame.winChance || 68}%`;
@@ -614,6 +645,17 @@
       document.getElementById('sabres-div-pct').textContent = `${s.winDivision}%`;
       document.getElementById('sabres-wc-pct').textContent = `${s.wildcard}%`;
       document.getElementById('sabres-tragic-num').textContent = s.tragicNumber || '--';
+
+      // Clinch Alert
+      const sClinchBox = document.getElementById('sabres-clinch-box');
+      const sClinchText = document.getElementById('sabres-clinch-text');
+      if (s.clinchAlert && s.clinchAlert.active) {
+        sClinchBox.classList.add('clinch-alert-active');
+        sClinchText.textContent = `⚡ CLINCHING ACTIVE: ${s.clinchAlert.scenario}`;
+      } else {
+        sClinchBox.classList.remove('clinch-alert-active');
+        sClinchText.textContent = `No clinching scenarios available this week (${s.tragicNumber || 'Tracking Target'})`;
+      }
 
       document.getElementById('sabres-next-opp').textContent = s.nextGame.opponent;
       document.getElementById('sabres-game-time').textContent = s.nextGame.gameTime || '';
