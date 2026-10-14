@@ -15,11 +15,18 @@ async function fetchHtml(url) {
   return await response.text();
 }
 
-function cleanPct(text) {
-  if (!text) return 0;
-  const cleaned = text.replace(/[^0-9.]/g, '').trim();
-  const val = parseFloat(cleaned);
-  return isNaN(val) ? 0 : Math.round(val);
+function parseCellPct(rawText) {
+  if (!rawText) return 0;
+  const text = rawText.trim();
+  if (text === '-' || text === '--' || text === '' || text === '0') return 0;
+  if (text.includes('<1')) return 0.5;
+  if (text.includes('>99')) return 99.5;
+  
+  // Extract only the first valid decimal or integer number from the cell
+  const match = text.match(/\d+(?:\.\d+)?/);
+  if (!match) return 0;
+  const val = parseFloat(match[0]);
+  return isNaN(val) ? 0 : Math.min(100, Math.round(val));
 }
 
 async function scrapePlayoffStatus() {
@@ -28,7 +35,6 @@ async function scrapePlayoffStatus() {
   const billsUrl = 'http://www.playoffstatus.com/nfl/billsstandings.html';
   const sabresUrl = 'http://www.playoffstatus.com/nhl/sabresstandings.html';
 
-  // Default fallback values
   let billsData = {
     team: 'Buffalo Bills',
     makePlayoffs: 84,
@@ -66,32 +72,33 @@ async function scrapePlayoffStatus() {
 
     $('tr').each((_, el) => {
       const text = $(el).text();
-      if (text.includes('Bills') || text.includes('Buffalo')) {
+      if (text.includes('Bills') && !text.includes('Schedule') && !text.includes('vs')) {
         const cells = $(el).find('td').map((_, td) =>$(td).text().trim()).get();
-        if (cells.length >= 8) {
-          // PlayoffStatus tables list percentages in order across the row
-          const pcts = cells.map(cleanPct).filter(n => !isNaN(n));
-          if (pcts.length >= 7) {
-            billsData.seed1 = pcts[0] || billsData.seed1;
-            billsData.winDivision = (pcts[0] || 0) + (pcts[1] || 0) + (pcts[2] || 0) || billsData.winDivision;
-            billsData.makePlayoffs = pcts.slice(0, 7).reduce((a, b) => a + b, 0) || billsData.makePlayoffs;
-            
-            billsData.seedDistribution = [
-              { seed: '#1 Seed', pct: pcts[0] || 18 },
-              { seed: '#2 Seed', pct: pcts[1] || 24 },
-              { seed: '#3 Seed', pct: pcts[2] || 12 },
-              { seed: '#4 Seed', pct: pcts[3] || 8 },
-              { seed: '#5 Seed', pct: pcts[4] || 11 },
-              { seed: '#6 Seed', pct: pcts[5] || 7 },
-              { seed: '#7 Seed', pct: pcts[6] || 4 }
-            ];
-          }
+        // PlayoffStatus tables have data cells with numeric percentages
+        const pcts = cells.map(parseCellPct).filter(n => n >= 0 && n <= 100);
+        
+        // Grab the trailing percentage columns for seeds 1 through 7
+        if (pcts.length >= 7) {
+          const seeds = pcts.slice(-7);
+          billsData.seed1 = seeds[0];
+          billsData.winDivision = seeds.slice(0, 4).reduce((a, b) => a + b, 0);
+          billsData.makePlayoffs = Math.min(100, seeds.reduce((a, b) => a + b, 0));
+          
+          billsData.seedDistribution = [
+            { seed: '#1 Seed', pct: seeds[0] },
+            { seed: '#2 Seed', pct: seeds[1] },
+            { seed: '#3 Seed', pct: seeds[2] },
+            { seed: '#4 Seed', pct: seeds[3] },
+            { seed: '#5 Seed', pct: seeds[4] },
+            { seed: '#6 Seed', pct: seeds[5] },
+            { seed: '#7 Seed', pct: seeds[6] }
+          ];
         }
       }
     });
     console.log('Successfully parsed Bills data');
   } catch (err) {
-    console.warn('Bills parse warning (using defaults):', err.message);
+    console.warn('Bills parse fallback used:', err.message);
   }
 
   // 2. Scrape Sabres
@@ -101,29 +108,30 @@ async function scrapePlayoffStatus() {
 
     $('tr').each((_, el) => {
       const text = $(el).text();
-      if (text.includes('Sabres') || text.includes('Buffalo')) {
+      if (text.includes('Sabres') && !text.includes('Schedule') && !text.includes('vs')) {
         const cells = $(el).find('td').map((_, td) =>$(td).text().trim()).get();
-        if (cells.length >= 6) {
-          const pcts = cells.map(cleanPct).filter(n => !isNaN(n));
-          if (pcts.length >= 5) {
-            sabresData.winDivision = pcts[0] || sabresData.winDivision;
-            sabresData.makePlayoffs = pcts.slice(0, 5).reduce((a, b) => a + b, 0) || sabresData.makePlayoffs;
-            sabresData.wildcard = (pcts[3] || 0) + (pcts[4] || 0) || sabresData.wildcard;
+        const pcts = cells.map(parseCellPct).filter(n => n >= 0 && n <= 100);
+        
+        // Sabres seeds: Div 1-3 + Wildcard 1-2
+        if (pcts.length >= 5) {
+          const seeds = pcts.slice(-5);
+          billsData.winDivision = seeds[0];
+          sabresData.wildcard = seeds[3] + seeds[4];
+          sabresData.makePlayoffs = Math.min(100, seeds.reduce((a, b) => a + b, 0));
 
-            sabresData.seedDistribution = [
-              { seed: 'Div 1', pct: pcts[0] || 11 },
-              { seed: 'Div 2', pct: pcts[1] || 14 },
-              { seed: 'Div 3', pct: pcts[2] || 13 },
-              { seed: 'Wildcard 1', pct: pcts[3] || 16 },
-              { seed: 'Wildcard 2', pct: pcts[4] || 11 }
-            ];
-          }
+          sabresData.seedDistribution = [
+            { seed: 'Div 1', pct: seeds[0] },
+            { seed: 'Div 2', pct: seeds[1] },
+            { seed: 'Div 3', pct: seeds[2] },
+            { seed: 'Wildcard 1', pct: seeds[3] },
+            { seed: 'Wildcard 2', pct: seeds[4] }
+          ];
         }
       }
     });
     console.log('Successfully parsed Sabres data');
   } catch (err) {
-    console.warn('Sabres parse warning (using defaults):', err.message);
+    console.warn('Sabres parse fallback used:', err.message);
   }
 
   const finalPayload = {
@@ -134,7 +142,7 @@ async function scrapePlayoffStatus() {
   };
 
   fs.writeFileSync('./data.json', JSON.stringify(finalPayload, null, 2), 'utf-8');
-  console.log('data.json successfully updated at midnight pipeline');
+  console.log('data.json successfully updated with clean percentages.');
 }
 
 scrapePlayoffStatus();
