@@ -2,8 +2,8 @@ name: Update Buffalo Odds Twice Daily
 
 on:
   schedule:
-    # 04:00 UTC (12:00 AM EDT) and 16:00 UTC (12:00 PM EDT)
-    - cron: '0 4,16 * * *'
+    # 08:20 UTC (4:20 AM EDT) and 20:20 UTC (4:20 PM EDT)
+    - cron: '20 8,20 * * *'
   workflow_dispatch:
 
 permissions:
@@ -32,4 +32,4 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add data.json
-          git diff --staged --quiet || (git commit -m "Update full Buffalo postseason matrix [skip ci]" && git push)
+          git diff --staged --quiet || (git commit -m "Auto-update Buffalo playoff probabilities [skip ci]" && git push)
