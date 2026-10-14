@@ -155,9 +155,9 @@ async function scrapePlayoffStatus() {
       { team: 'Jacksonville Jaguars', pct: 15 }
     ],
     rootingGuide: [
-      { target: "Root for Chargers over Chiefs", why: "Maximizes odds for Buffalo's AFC #1 overall seed & bye week." },
-      { target: "Root for Jets over Patriots", why: "Suppresses division chasers in the AFC East standings." },
-      { target: "Root for Texans over Jaguars", why: "Creates favorable seeding tiebreaker positioning." }
+      { target: "Root for Chargers Win", why: "Maximizes odds for Buffalo's AFC #1 overall seed & bye week." },
+      { target: "Root for Jets Win", why: "Suppresses division chasers in the AFC East standings." },
+      { target: "Root for Texans Win", why: "Creates favorable seeding tiebreaker positioning." }
     ]
   };
 
@@ -235,7 +235,7 @@ async function scrapePlayoffStatus() {
     console.warn('Bills standings fallback used:', err.message);
   }
 
-  // 2. Bills Neutral Rooting Guide
+  // 2. Bills Neutral Rooting Guide (Replaces 'Wins' with 'Win')
   try {
     const migHtml = await fetchHtml(billsMigUrl);
     const $ = cheerio.load(migHtml);
@@ -253,8 +253,10 @@ async function scrapePlayoffStatus() {
           const matchup = cells[0].replace(/\s+/g, ' ');
           const preference = cells.find(c => c.includes('Wins'));
           if (preference && dynamicGuide.length < 3) {
+            // Converts "Jets Wins" -> "Jets Win"
+            const cleanedPreference = preference.replace(/Wins/g, 'Win').trim();
             dynamicGuide.push({
-              target: `Root for ${preference.trim()}`,
+              target: `Root for ${cleanedPreference}`,
               why: `Matchup: ${matchup}. Neutral AFC leverage for Buffalo's seeding.`
             });
           }
@@ -310,7 +312,7 @@ async function scrapePlayoffStatus() {
   };
 
   fs.writeFileSync('./data.json', JSON.stringify(finalPayload, null, 2), 'utf-8');
-  console.log('data.json successfully written with streaks and leverage.');
+  console.log('data.json successfully written with corrected singular grammar.');
 }
 
 scrapePlayoffStatus();
