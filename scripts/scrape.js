@@ -98,7 +98,6 @@ async function fetchNextGameSchedule() {
         const dateStr = d.toLocaleDateString('en-US', { timeZone: 'America/New_York', weekday: 'short', month: 'short', day: 'numeric' });
         const timeStr = d.toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour: 'numeric', minute: '2-digit', hour12: true });
 
-        // Parse points and records from standings if available
         let sabresPoints = 4;
         let oppPoints = 6;
         let sabresRecord = '2-1-0';
@@ -147,6 +146,8 @@ async function scrapePlayoffStatus() {
   const billsUrl = 'http://www.playoffstatus.com/nfl/billsstandings.html';
   const sabresUrl = 'http://www.playoffstatus.com/nhl/sabresstandings.html';
   const billsMigUrl = 'http://www.playoffstatus.com/nfl/billsmig.html';
+  const billsClinchUrl = 'http://www.playoffstatus.com/nfl/billsclinch.html';
+  const sabresClinchUrl = 'http://www.playoffstatus.com/nhl/sabresclinch.html';
 
   let billsData = {
     team: 'Buffalo Bills',
@@ -154,6 +155,7 @@ async function scrapePlayoffStatus() {
     winDivision: 62,
     seed1: 18,
     magicNumber: '11',
+    clinchAlert: { active: false, scenario: 'No clinching scenarios available this week.' },
     nextGame: {
       opponent: billsSchedule.opponent,
       gameTime: billsSchedule.gameTime,
@@ -197,6 +199,7 @@ async function scrapePlayoffStatus() {
     winDivision: 11,
     wildcard: 27,
     tragicNumber: 'Cutoff: 92 Pts',
+    clinchAlert: { active: false, scenario: 'No clinching scenarios available this week.' },
     nextGame: {
       opponent: sabresSchedule.opponent,
       gameTime: sabresSchedule.gameTime,
@@ -260,7 +263,6 @@ async function scrapePlayoffStatus() {
         }
       }
     });
-    console.log('Parsed Bills standings.');
   } catch (err) {
     console.warn('Bills standings fallback used:', err.message);
   }
@@ -295,13 +297,37 @@ async function scrapePlayoffStatus() {
 
     if (dynamicGuide.length > 0) {
       billsData.rootingGuide = dynamicGuide;
-      console.log(`Parsed ${dynamicGuide.length} neutral rooting matchups.`);
     }
   } catch (err) {
     console.warn('Bills MIG fallback used:', err.message);
   }
 
-  // 3. Sabres Standings
+  // 3. Bills Clinching Scenarios Scrape
+  try {
+    const clinchHtml = await fetchHtml(billsClinchUrl);
+    const $ = cheerio.load(clinchHtml);
+    const scenarios = [];
+
+    $('tr').each((_, el) => {
+      const text = $(el).text();
+      if (text.includes('Case') && !text.includes('No clinching cases')) {
+        const cleaned = text.replace(/\s+/g, ' ').trim();
+        if (cleaned.length > 10) scenarios.push(cleaned);
+      }
+    });
+
+    if (scenarios.length > 0) {
+      billsData.clinchAlert = {
+        active: true,
+        scenario: scenarios[0]
+      };
+      console.log('Active Bills clinching scenario detected!');
+    }
+  } catch (err) {
+    console.warn('Bills clinch check fallback:', err.message);
+  }
+
+  // 4. Sabres Standings
   try {
     const html = await fetchHtml(sabresUrl);
     const $ = cheerio.load(html);
@@ -328,9 +354,33 @@ async function scrapePlayoffStatus() {
         }
       }
     });
-    console.log('Parsed Sabres standings.');
   } catch (err) {
     console.warn('Sabres standings fallback used:', err.message);
+  }
+
+  // 5. Sabres Clinching Scenarios Scrape
+  try {
+    const sClinchHtml = await fetchHtml(sabresClinchUrl);
+    const $ = cheerio.load(sClinchHtml);
+    const sScenarios = [];
+
+    $('tr').each((_, el) => {
+      const text = $(el).text();
+      if (text.includes('Case') && !text.includes('No clinching cases')) {
+        const cleaned = text.replace(/\s+/g, ' ').trim();
+        if (cleaned.length > 10) sScenarios.push(cleaned);
+      }
+    });
+
+    if (sScenarios.length > 0) {
+      sabresData.clinchAlert = {
+        active: true,
+        scenario: sScenarios[0]
+      };
+      console.log('Active Sabres clinching scenario detected!');
+    }
+  } catch (err) {
+    console.warn('Sabres clinch check fallback:', err.message);
   }
 
   const finalPayload = {
@@ -341,7 +391,7 @@ async function scrapePlayoffStatus() {
   };
 
   fs.writeFileSync('./data.json', JSON.stringify(finalPayload, null, 2), 'utf-8');
-  console.log('data.json successfully written with team points.');
+  console.log('data.json successfully written with clinching alerts.');
 }
 
 scrapePlayoffStatus();
