@@ -94,7 +94,7 @@
     .badge-bills { background: var(--bills-red); color: #fff; }
     .badge-sabres { background: var(--sabres-gold); color: #000; }
 
-    /* STAKES / SWING BANNER */
+    /* SCHEDULE & STAKES BANNER */
     .stakes-banner {
       background: var(--card-inner);
       border: 1px solid var(--card-border);
@@ -104,14 +104,28 @@
       justify-content: space-between;
       align-items: center;
       font-size: 0.85rem;
+      gap: 0.75rem;
+    }
+    .stakes-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
     }
     .stakes-title { font-weight: 700; color: #fff; }
-    .stakes-badges { display: flex; gap: 0.5rem; }
+    .schedule-tag {
+      font-size: 0.75rem;
+      color: #38bdf8;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+    }
+    .schedule-tag-sabres { color: var(--sabres-gold); }
+    .stakes-badges { display: flex; gap: 0.4rem; flex-shrink: 0; }
     .pill {
       font-size: 0.75rem;
       padding: 0.15rem 0.5rem;
       border-radius: 4px;
       font-weight: 700;
+      white-space: nowrap;
     }
     .pill-win { background: rgba(16, 185, 129, 0.2); color: #34d399; }
     .pill-loss { background: rgba(239, 68, 68, 0.2); color: #f87171; }
@@ -162,10 +176,7 @@
     .dist-pct { width: 35px; text-align: right; font-weight: 600; }
 
     /* RADAR & OPPONENTS */
-    .radar-wrap {
-      display: flex;
-      gap: 0.5rem;
-    }
+    .radar-wrap { display: flex; gap: 0.5rem; }
     .radar-item {
       flex: 1;
       background: rgba(255, 255, 255, 0.03);
@@ -178,11 +189,7 @@
     .radar-team { font-weight: 700; color: #e2e8f0; }
     .radar-val { font-size: 0.95rem; font-weight: 800; color: #38bdf8; margin-top: 0.1rem; }
 
-    .opponent-chips {
-      display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-    }
+    .opponent-chips { display: flex; gap: 0.5rem; flex-wrap: wrap; }
     .opp-chip {
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid var(--card-border);
@@ -233,11 +240,14 @@
         <span class="badge badge-bills">NFL AFC</span>
       </div>
 
-      <!-- NEXT GAME STAKES -->
-      <div class="stakes-banner" id="bills-stakes">
-        <div>
-          <span class="stakes-title">Next Game Leverage:</span>
-          <span id="bills-next-opp" style="color: var(--text-muted); margin-left: 0.3rem;">--</span>
+      <!-- NEXT GAME STAKES & SCHEDULE -->
+      <div class="stakes-banner">
+        <div class="stakes-info">
+          <div>
+            <span class="stakes-title">Next Game:</span>
+            <span id="bills-next-opp" style="color: #fff; font-weight: 600; margin-left: 0.2rem;">--</span>
+          </div>
+          <div class="schedule-tag" id="bills-game-time">--</div>
         </div>
         <div class="stakes-badges">
           <span class="pill pill-win" id="bills-if-win">Win: --%</span>
@@ -296,11 +306,14 @@
         <span class="badge badge-sabres">NHL Atlantic</span>
       </div>
 
-      <!-- NEXT GAME STAKES -->
-      <div class="stakes-banner" id="sabres-stakes">
-        <div>
-          <span class="stakes-title">Next Game Leverage:</span>
-          <span id="sabres-next-opp" style="color: var(--text-muted); margin-left: 0.3rem;">--</span>
+      <!-- NEXT GAME STAKES & SCHEDULE -->
+      <div class="stakes-banner">
+        <div class="stakes-info">
+          <div>
+            <span class="stakes-title">Next Game:</span>
+            <span id="sabres-next-opp" style="color: #fff; font-weight: 600; margin-left: 0.2rem;">--</span>
+          </div>
+          <div class="schedule-tag schedule-tag-sabres" id="sabres-game-time">--</div>
         </div>
         <div class="stakes-badges">
           <span class="pill pill-win" id="sabres-if-win">Win: --%</span>
@@ -385,6 +398,7 @@
       document.getElementById('bills-magic-num').textContent = b.magicNumber || '--';
       
       document.getElementById('bills-next-opp').textContent = b.nextGame.opponent;
+      document.getElementById('bills-game-time').textContent = b.nextGame.gameTime || '';
       document.getElementById('bills-if-win').textContent = `Win: ${b.nextGame.ifWin}%`;
       document.getElementById('bills-if-loss').textContent = `Loss: ${b.nextGame.ifLoss}%`;
 
@@ -424,6 +438,7 @@
       document.getElementById('sabres-tragic-num').textContent = s.tragicNumber || '--';
 
       document.getElementById('sabres-next-opp').textContent = s.nextGame.opponent;
+      document.getElementById('sabres-game-time').textContent = s.nextGame.gameTime || '';
       document.getElementById('sabres-if-win').textContent = `Win: ${s.nextGame.ifWin}%`;
       document.getElementById('sabres-if-loss').textContent = `Loss: ${s.nextGame.ifLoss}%`;
 
