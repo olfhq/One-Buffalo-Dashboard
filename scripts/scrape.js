@@ -28,8 +28,68 @@ function parseCellPct(rawText) {
   return isNaN(val) ? 0 : Math.min(100, Math.round(val));
 }
 
+// Fetch live game schedules (Day, Date, Kickoff/Puck Drop Time)
+async function fetchNextGameSchedule() {
+  let billsSchedule = { opponent: '@ Raiders', gameTime: 'Sun, Oct 18 • 4:25 PM ET' };
+  let sabresSchedule = { opponent: '@ Maple Leafs', gameTime: 'Thu, Oct 15 • 7:00 PM ET' };
+
+  // 1. Bills (ESPN API - Team 2 is BUF)
+  try {
+    const res = await fetch('https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/2/schedule');
+    if (res.ok) {
+      const data = await res.json();
+      const nextGame = data.events?.find(e => e.competitions?.[0]?.status?.type?.state === 'pre');
+      if (nextGame) {
+        const comp = nextGame.competitions[0];
+        const isHome = comp.competitors.find(c => c.id === '2')?.homeAway === 'home';
+        const opp = comp.competitors.find(c => c.id !== '2')?.team?.shortDisplayName || 'Opponent';
+        const d = new Date(nextGame.date);
+        
+        const dateStr = d.toLocaleDateString('en-US', { timeZone: 'America/New_York', weekday: 'short', month: 'short', day: 'numeric' });
+        const timeStr = d.toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour: 'numeric', minute: '2-digit', hour12: true });
+        
+        billsSchedule = {
+          opponent: `${isHome ? 'vs.' : '@'} ${opp}`,
+          gameTime: `${dateStr} • ${timeStr} ET`
+        };
+      }
+    }
+  } catch (err) {
+    console.warn('Bills schedule API fallback used:', err.message);
+  }
+
+  // 2. Sabres (Official NHL API)
+  try {
+    const res = await fetch('https://api-web.nhle.com/v1/club-schedule/BUF/week/now');
+    if (res.ok) {
+      const data = await res.json();
+      const now = new Date();
+      const nextGame = data.games?.find(g => new Date(g.startTimeUTC) > now && g.gameState !== 'FINAL');
+      if (nextGame) {
+        const isHome = nextGame.homeTeam.abbrev === 'BUF';
+        const opp = isHome ? nextGame.awayTeam.placeName?.default || nextGame.awayTeam.abbrev : nextGame.homeTeam.placeName?.default || nextGame.homeTeam.abbrev;
+        const d = new Date(nextGame.startTimeUTC);
+
+        const dateStr = d.toLocaleDateString('en-US', { timeZone: 'America/New_York', weekday: 'short', month: 'short', day: 'numeric' });
+        const timeStr = d.toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour: 'numeric', minute: '2-digit', hour12: true });
+
+        sabresSchedule = {
+          opponent: `${isHome ? 'vs.' : '@'} ${opp}`,
+          gameTime: `${dateStr} • ${timeStr} ET`
+        };
+      }
+    }
+  } catch (err) {
+    console.warn('Sabres schedule API fallback used:', err.message);
+  }
+
+  return { billsSchedule, sabresSchedule };
+}
+
 async function scrapePlayoffStatus() {
   console.log('Initiating full matrix scrape from PlayoffStatus.com...');
+
+  const { billsSchedule, sabresSchedule } = await fetchNextGameSchedule();
 
   const billsUrl = 'http://www.playoffstatus.com/nfl/billsstandings.html';
   const sabresUrl = 'http://www.playoffstatus.com/nhl/sabresstandings.html';
@@ -41,9 +101,9 @@ async function scrapePlayoffStatus() {
     winDivision: 62,
     seed1: 18,
     magicNumber: '11',
-    sosRating: '11th Toughest',
     nextGame: {
-      opponent: '@ Raiders',
+      opponent: billsSchedule.opponent,
+      gameTime: billsSchedule.gameTime,
       ifWin: 91,
       ifLoss: 74,
       leverage: 17
@@ -81,9 +141,9 @@ async function scrapePlayoffStatus() {
     winDivision: 11,
     wildcard: 27,
     tragicNumber: 'Cutoff: 92 Pts',
-    sosRating: '8th Toughest in East',
     nextGame: {
-      opponent: '@ Canadiens',
+      opponent: sabresSchedule.opponent,
+      gameTime: sabresSchedule.gameTime,
       ifWin: 44,
       ifLoss: 33,
       leverage: 11
@@ -154,7 +214,6 @@ async function scrapePlayoffStatus() {
 
     $('tr').each((_, el) => {
       const rowText = $(el).text();
-      // Skip any game involving the Bills directly
       if (
         rowText.includes('Wins') && 
         (rowText.includes('vs') || rowText.includes('@')) && 
