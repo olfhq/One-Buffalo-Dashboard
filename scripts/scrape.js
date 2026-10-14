@@ -28,10 +28,18 @@ function parseCellPct(rawText) {
   return isNaN(val) ? 0 : Math.min(100, Math.round(val));
 }
 
-// Fetch live game schedules (Day, Date, Kickoff/Puck Drop Time)
+// Fetch live game schedules and exact ISO timestamps for timers
 async function fetchNextGameSchedule() {
-  let billsSchedule = { opponent: '@ Raiders', gameTime: 'Sun, Oct 18 • 4:25 PM ET' };
-  let sabresSchedule = { opponent: '@ Maple Leafs', gameTime: 'Thu, Oct 15 • 7:00 PM ET' };
+  let billsSchedule = {
+    opponent: '@ Raiders',
+    gameTime: 'Sun, Oct 18 • 4:25 PM ET',
+    isoTime: new Date(Date.now() + 4 * 86400000 + 15 * 3600000).toISOString()
+  };
+  let sabresSchedule = {
+    opponent: '@ Toronto',
+    gameTime: 'Thu, Oct 15 • 7:00 PM ET',
+    isoTime: new Date(Date.now() + 1 * 86400000 + 18 * 3600000).toISOString()
+  };
 
   // 1. Bills (ESPN API - Team 2 is BUF)
   try {
@@ -50,12 +58,13 @@ async function fetchNextGameSchedule() {
         
         billsSchedule = {
           opponent: `${isHome ? 'vs.' : '@'} ${opp}`,
-          gameTime: `${dateStr} • ${timeStr} ET`
+          gameTime: `${dateStr} • ${timeStr} ET`,
+          isoTime: nextGame.date
         };
       }
     }
   } catch (err) {
-    console.warn('Bills schedule API fallback used:', err.message);
+    console.warn('Bills schedule fallback used:', err.message);
   }
 
   // 2. Sabres (Official NHL API)
@@ -75,12 +84,13 @@ async function fetchNextGameSchedule() {
 
         sabresSchedule = {
           opponent: `${isHome ? 'vs.' : '@'} ${opp}`,
-          gameTime: `${dateStr} • ${timeStr} ET`
+          gameTime: `${dateStr} • ${timeStr} ET`,
+          isoTime: nextGame.startTimeUTC
         };
       }
     }
   } catch (err) {
-    console.warn('Sabres schedule API fallback used:', err.message);
+    console.warn('Sabres schedule fallback used:', err.message);
   }
 
   return { billsSchedule, sabresSchedule };
@@ -104,6 +114,7 @@ async function scrapePlayoffStatus() {
     nextGame: {
       opponent: billsSchedule.opponent,
       gameTime: billsSchedule.gameTime,
+      isoTime: billsSchedule.isoTime,
       ifWin: 91,
       ifLoss: 74,
       leverage: 17
@@ -144,6 +155,7 @@ async function scrapePlayoffStatus() {
     nextGame: {
       opponent: sabresSchedule.opponent,
       gameTime: sabresSchedule.gameTime,
+      isoTime: sabresSchedule.isoTime,
       ifWin: 44,
       ifLoss: 33,
       leverage: 11
@@ -281,7 +293,7 @@ async function scrapePlayoffStatus() {
   };
 
   fs.writeFileSync('./data.json', JSON.stringify(finalPayload, null, 2), 'utf-8');
-  console.log('data.json successfully written.');
+  console.log('data.json successfully written with countdown timestamps.');
 }
 
 scrapePlayoffStatus();
