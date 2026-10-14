@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-14T05:32:34.202Z",
+  "updatedAt": "2026-10-14T05:48:27.651Z",
   "source": "http://www.playoffstatus.com",
   "bills": {
     "team": "Buffalo Bills",
@@ -81,15 +81,15 @@
     ],
     "rootingGuide": [
       {
-        "target": "Root for Jets Wins",
+        "target": "Root for Jets Win",
         "why": "Matchup: Jets (2‑3)vsPatriots (3‑2). Neutral AFC leverage for Buffalo's seeding."
       },
       {
-        "target": "Root for Texans Wins",
+        "target": "Root for Texans Win",
         "why": "Matchup: Texans (1‑4)vsJaguars (4‑1). Neutral AFC leverage for Buffalo's seeding."
       },
       {
-        "target": "Root for Seahawks Wins",
+        "target": "Root for Seahawks Win",
         "why": "Matchup: Seahawks (3‑2)vsBroncos (3‑2). Neutral AFC leverage for Buffalo's seeding."
       }
     ]
