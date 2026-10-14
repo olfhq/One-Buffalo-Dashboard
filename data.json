@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-14T04:25:20.810Z",
+  "updatedAt": "2026-10-14T04:35:09.562Z",
   "source": "http://www.playoffstatus.com",
   "bills": {
     "team": "Buffalo Bills",
@@ -7,9 +7,9 @@
     "winDivision": 62,
     "seed1": 18,
     "magicNumber": "11",
-    "sosRating": "11th Toughest",
     "nextGame": {
       "opponent": "@ Raiders",
+      "gameTime": "Sun, Oct 18 • 4:25 PM ET",
       "ifWin": 91,
       "ifLoss": 74,
       "leverage": 17
@@ -97,9 +97,9 @@
     "winDivision": 11,
     "wildcard": 27,
     "tragicNumber": "Cutoff: 92 Pts",
-    "sosRating": "8th Toughest in East",
     "nextGame": {
-      "opponent": "@ Canadiens",
+      "opponent": "@ Toronto",
+      "gameTime": "Thu, Oct 15 • 7:00 PM ET",
       "ifWin": 44,
       "ifLoss": 33,
       "leverage": 11
