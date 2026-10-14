@@ -1,9 +1,9 @@
-name: Update Buffalo Odds at Midnight
+name: Update Buffalo Odds Twice Daily
 
 on:
   schedule:
-    # 04:00 UTC corresponds to 12:00 AM EDT (Midnight)
-    - cron: '0 4 * * *'
+    # Runs at 04:00 UTC (12:00 AM EDT) and 16:00 UTC (12:00 PM EDT)
+    - cron: '0 4,16 * * *'
   workflow_dispatch:
 
 permissions:
