@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-14T05:58:12.778Z",
+  "updatedAt": "2026-10-14T06:31:34.920Z",
   "source": "http://www.playoffstatus.com",
   "bills": {
     "team": "Buffalo Bills",
@@ -7,6 +7,10 @@
     "winDivision": 62,
     "seed1": 18,
     "magicNumber": "11",
+    "clinchAlert": {
+      "active": false,
+      "scenario": "No clinching scenarios available this week."
+    },
     "nextGame": {
       "opponent": "@ Raiders",
       "gameTime": "Sun, Oct 18 • 4:25 PM ET",
@@ -100,6 +104,10 @@
     "winDivision": 11,
     "wildcard": 27,
     "tragicNumber": "Cutoff: 92 Pts",
+    "clinchAlert": {
+      "active": false,
+      "scenario": "No clinching scenarios available this week."
+    },
     "nextGame": {
       "opponent": "@ Toronto",
       "gameTime": "Thu, Oct 15 • 7:00 PM ET",
