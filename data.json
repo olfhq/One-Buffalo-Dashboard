@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-14T04:05:18.664Z",
+  "updatedAt": "2026-10-14T04:14:03.373Z",
   "source": "http://www.playoffstatus.com",
   "bills": {
     "team": "Buffalo Bills",
@@ -35,6 +35,20 @@
         "seed": "#7 Seed",
         "pct": 4
       }
+    ],
+    "rootingGuide": [
+      {
+        "target": "Root for Bills Wins",
+        "why": "Matchup: Bills (4‑1)vsRaiders (3‑2). High playoff leverage for Buffalo's seeding."
+      },
+      {
+        "target": "Root for Jets Wins",
+        "why": "Matchup: Jets (2‑3)vsPatriots (3‑2). High playoff leverage for Buffalo's seeding."
+      },
+      {
+        "target": "Root for Texans Wins",
+        "why": "Matchup: Texans (1‑4)vsJaguars (4‑1). High playoff leverage for Buffalo's seeding."
+      }
     ]
   },
   "sabres": {
@@ -62,6 +76,16 @@
       {
         "seed": "Wildcard 2",
         "pct": 11
+      }
+    ],
+    "rootingGuide": [
+      {
+        "target": "Regulation Losses for Atlantic Rivals",
+        "why": "Ensure games involving BOS, TBL, and FLA do not go to 3-point overtimes."
+      },
+      {
+        "target": "Western Conference Wins vs. Metro",
+        "why": "Protects Eastern Conference Wild Card slot thresholds."
       }
     ]
   }
