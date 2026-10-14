@@ -1,11 +1,37 @@
 {
-  "updatedAt": "2026-10-14T04:14:03.373Z",
+  "updatedAt": "2026-10-14T04:25:20.810Z",
   "source": "http://www.playoffstatus.com",
   "bills": {
     "team": "Buffalo Bills",
     "makePlayoffs": 84,
     "winDivision": 62,
     "seed1": 18,
+    "magicNumber": "11",
+    "sosRating": "11th Toughest",
+    "nextGame": {
+      "opponent": "@ Raiders",
+      "ifWin": 91,
+      "ifLoss": 74,
+      "leverage": 17
+    },
+    "divisionRadar": [
+      {
+        "team": "Bills",
+        "pct": 62
+      },
+      {
+        "team": "Patriots",
+        "pct": 22
+      },
+      {
+        "team": "Dolphins",
+        "pct": 11
+      },
+      {
+        "team": "Jets",
+        "pct": 5
+      }
+    ],
     "seedDistribution": [
       {
         "seed": "#1 Seed",
@@ -36,18 +62,32 @@
         "pct": 4
       }
     ],
-    "rootingGuide": [
+    "opponents": [
       {
-        "target": "Root for Bills Wins",
-        "why": "Matchup: Bills (4‑1)vsRaiders (3‑2). High playoff leverage for Buffalo's seeding."
+        "team": "LA Chargers",
+        "pct": 26
       },
       {
+        "team": "Pittsburgh Steelers",
+        "pct": 19
+      },
+      {
+        "team": "Jacksonville Jaguars",
+        "pct": 15
+      }
+    ],
+    "rootingGuide": [
+      {
         "target": "Root for Jets Wins",
-        "why": "Matchup: Jets (2‑3)vsPatriots (3‑2). High playoff leverage for Buffalo's seeding."
+        "why": "Matchup: Jets (2‑3)vsPatriots (3‑2). Neutral AFC leverage for Buffalo's seeding."
       },
       {
         "target": "Root for Texans Wins",
-        "why": "Matchup: Texans (1‑4)vsJaguars (4‑1). High playoff leverage for Buffalo's seeding."
+        "why": "Matchup: Texans (1‑4)vsJaguars (4‑1). Neutral AFC leverage for Buffalo's seeding."
+      },
+      {
+        "target": "Root for Seahawks Wins",
+        "why": "Matchup: Seahawks (3‑2)vsBroncos (3‑2). Neutral AFC leverage for Buffalo's seeding."
       }
     ]
   },
@@ -56,6 +96,32 @@
     "makePlayoffs": 38,
     "winDivision": 11,
     "wildcard": 27,
+    "tragicNumber": "Cutoff: 92 Pts",
+    "sosRating": "8th Toughest in East",
+    "nextGame": {
+      "opponent": "@ Canadiens",
+      "ifWin": 44,
+      "ifLoss": 33,
+      "leverage": 11
+    },
+    "divisionRadar": [
+      {
+        "team": "Panthers",
+        "pct": 36
+      },
+      {
+        "team": "Lightning",
+        "pct": 28
+      },
+      {
+        "team": "Bruins",
+        "pct": 16
+      },
+      {
+        "team": "Sabres",
+        "pct": 11
+      }
+    ],
     "seedDistribution": [
       {
         "seed": "Div 1",
@@ -76,6 +142,20 @@
       {
         "seed": "Wildcard 2",
         "pct": 11
+      }
+    ],
+    "opponents": [
+      {
+        "team": "Florida Panthers",
+        "pct": 22
+      },
+      {
+        "team": "Tampa Bay Lightning",
+        "pct": 18
+      },
+      {
+        "team": "Toronto Maple Leafs",
+        "pct": 14
       }
     ],
     "rootingGuide": [
