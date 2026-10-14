@@ -232,4 +232,116 @@ async function scrapePlayoffStatus() {
   };
 
   // 1. Bills Standings
-  try
+  try {
+    const html = await fetchHtml(billsUrl);
+    const $ = cheerio.load(html);
+
+    $('tr').each((_, el) => {
+      const text = $(el).text();
+      if (text.includes('Bills') && !text.includes('Schedule') && !text.includes('vs')) {
+        const cells = $(el).find('td').map((_, td) =>$(td).text().trim()).get();
+        const pcts = cells.map(parseCellPct).filter(n => n >= 0 && n <= 100);
+        
+        if (pcts.length >= 7) {
+          const seeds = pcts.slice(-7);
+          billsData.seed1 = seeds[0];
+          billsData.winDivision = seeds.slice(0, 4).reduce((a, b) => a + b, 0);
+          billsData.makePlayoffs = Math.min(100, seeds.reduce((a, b) => a + b, 0));
+          
+          billsData.seedDistribution = [
+            { seed: '#1 Seed', pct: seeds[0] },
+            { seed: '#2 Seed', pct: seeds[1] },
+            { seed: '#3 Seed', pct: seeds[2] },
+            { seed: '#4 Seed', pct: seeds[3] },
+            { seed: '#5 Seed', pct: seeds[4] },
+            { seed: '#6 Seed', pct: seeds[5] },
+            { seed: '#7 Seed', pct: seeds[6] }
+          ];
+        }
+      }
+    });
+    console.log('Parsed Bills standings.');
+  } catch (err) {
+    console.warn('Bills standings fallback used:', err.message);
+  }
+
+  // 2. Bills Neutral Rooting Guide
+  try {
+    const migHtml = await fetchHtml(billsMigUrl);
+    const $ = cheerio.load(migHtml);
+    const dynamicGuide = [];
+
+    $('tr').each((_, el) => {
+      const rowText = $(el).text();
+      if (
+        rowText.includes('Wins') && 
+        (rowText.includes('vs') || rowText.includes('@')) && 
+        !rowText.includes('Bills')
+      ) {
+        const cells = $(el).find('td').map((_, td) =>$(td).text().trim()).get();
+        if (cells.length >= 3) {
+          const matchup = cells[0].replace(/\s+/g, ' ');
+          const preference = cells.find(c => c.includes('Wins'));
+          if (preference && dynamicGuide.length < 3) {
+            const cleanedPreference = preference.replace(/Wins/g, 'Win').trim();
+            dynamicGuide.push({
+              target: `Root for ${cleanedPreference}`,
+              why: `Matchup: ${matchup}. Neutral AFC leverage for Buffalo's seeding.`
+            });
+          }
+        }
+      }
+    });
+
+    if (dynamicGuide.length > 0) {
+      billsData.rootingGuide = dynamicGuide;
+      console.log(`Parsed ${dynamicGuide.length} neutral rooting matchups.`);
+    }
+  } catch (err) {
+    console.warn('Bills MIG fallback used:', err.message);
+  }
+
+  // 3. Sabres Standings
+  try {
+    const html = await fetchHtml(sabresUrl);
+    const $ = cheerio.load(html);
+
+    $('tr').each((_, el) => {
+      const text = $(el).text();
+      if (text.includes('Sabres') && !text.includes('Schedule') && !text.includes('vs')) {
+        const cells = $(el).find('td').map((_, td) =>$(td).text().trim()).get();
+        const pcts = cells.map(parseCellPct).filter(n => n >= 0 && n <= 100);
+        
+        if (pcts.length >= 5) {
+          const seeds = pcts.slice(-5);
+          billsData.winDivision = seeds[0];
+          sabresData.wildcard = seeds[3] + seeds[4];
+          sabresData.makePlayoffs = Math.min(100, seeds.reduce((a, b) => a + b, 0));
+
+          sabresData.seedDistribution = [
+            { seed: 'Div 1', pct: seeds[0] },
+            { seed: 'Div 2', pct: seeds[1] },
+            { seed: 'Div 3', pct: seeds[2] },
+            { seed: 'Wildcard 1', pct: seeds[3] },
+            { seed: 'Wildcard 2', pct: seeds[4] }
+          ];
+        }
+      }
+    });
+    console.log('Parsed Sabres standings.');
+  } catch (err) {
+    console.warn('Sabres standings fallback used:', err.message);
+  }
+
+  const finalPayload = {
+    updatedAt: new Date().toISOString(),
+    source: 'http://www.playoffstatus.com',
+    bills: billsData,
+    sabres: sabresData
+  };
+
+  fs.writeFileSync('./data.json', JSON.stringify(finalPayload, null, 2), 'utf-8');
+  console.log('data.json successfully written with team points.');
+}
+
+scrapePlayoffStatus();
