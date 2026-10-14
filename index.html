@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <title>One Buffalo Postseason Tracker</title>
   <style>
     :root {
@@ -217,14 +220,7 @@
 
       <div>
         <div class="section-subtitle">Weekly Rooting Priority</div>
-        <div class="rooting-item">
-          <div class="rooting-target">Root for Chargers over Chiefs</div>
-          <div class="rooting-why">Maximizes odds for Buffalo's AFC #1 overall seed & bye week.</div>
-        </div>
-        <div class="rooting-item">
-          <div class="rooting-target">Root for Jets & Dolphins Losses</div>
-          <div class="rooting-why">Fast-tracks AFC East magic elimination number.</div>
-        </div>
+        <div id="bills-rooting-container"></div>
       </div>
     </article>
 
@@ -257,14 +253,7 @@
 
       <div>
         <div class="section-subtitle">Weekly Rooting Priority</div>
-        <div class="rooting-item" style="border-left-color: var(--sabres-gold);">
-          <div class="rooting-target">Regulation Losses for Atlantic Rivals</div>
-          <div class="rooting-why">Ensure games involving BOS, TBL, and FLA do not go to 3-point overtimes.</div>
-        </div>
-        <div class="rooting-item" style="border-left-color: var(--sabres-gold);">
-          <div class="rooting-target">Western Conference Wins vs. Metro</div>
-          <div class="rooting-why">Protects Eastern Conference Wild Card slot thresholds.</div>
-        </div>
+        <div id="sabres-rooting-container"></div>
       </div>
     </article>
   </main>
@@ -279,7 +268,8 @@
       let data = null;
 
       try {
-        const res = await fetch('./data.json?t=' + Date.now());
+        // Enforce cache busting on every single visit
+        const res = await fetch('./data.json?v=' + Date.now(), { cache: 'no-store' });
         if (!res.ok) throw new Error('data.json not generated yet');
         data = await res.json();
       } catch (err) {
@@ -293,6 +283,10 @@
               { seed: '#3 Seed', pct: 12 }, { seed: '#4 Seed', pct: 8 },
               { seed: '#5 Seed', pct: 11 }, { seed: '#6 Seed', pct: 7 },
               { seed: '#7 Seed', pct: 4 }
+            ],
+            rootingGuide: [
+              { target: "Root for Chargers over Chiefs", why: "Maximizes odds for Buffalo's AFC #1 overall seed & bye week." },
+              { target: "Root for Jets & Dolphins Losses", why: "Fast-tracks AFC East magic elimination number." }
             ]
           },
           sabres: {
@@ -301,6 +295,10 @@
               { seed: 'Div 1', pct: 11 }, { seed: 'Div 2', pct: 14 },
               { seed: 'Div 3', pct: 13 }, { seed: 'Wildcard 1', pct: 16 },
               { seed: 'Wildcard 2', pct: 11 }
+            ],
+            rootingGuide: [
+              { target: "Regulation Losses for Atlantic Rivals", why: "Ensure games involving BOS, TBL, and FLA do not go to 3-point overtimes." },
+              { target: "Western Conference Wins vs. Metro", why: "Protects Eastern Conference Wild Card slot thresholds." }
             ]
           }
         };
@@ -328,6 +326,14 @@
         </div>
       `).join('');
 
+      const billsRooting = document.getElementById('bills-rooting-container');
+      billsRooting.innerHTML = data.bills.rootingGuide.map(item => `
+        <div class="rooting-item">
+          <div class="rooting-target">${item.target}</div>
+          <div class="rooting-why">${item.why}</div>
+        </div>
+      `).join('');
+
       // Populate Sabres
       document.getElementById('sabres-playoff-pct').textContent = `${data.sabres.makePlayoffs}%`;
       document.getElementById('sabres-div-pct').textContent = `${data.sabres.winDivision}%`;
@@ -341,6 +347,14 @@
             <div class="dist-fill-sabres" style="width: ${item.pct}%"></div>
           </div>
           <span class="dist-pct">${item.pct}%</span>
+        </div>
+      `).join('');
+
+      const sabresRooting = document.getElementById('sabres-rooting-container');
+      sabresRooting.innerHTML = data.sabres.rootingGuide.map(item => `
+        <div class="rooting-item" style="border-left-color: var(--sabres-gold);">
+          <div class="rooting-target">${item.target}</div>
+          <div class="rooting-why">${item.why}</div>
         </div>
       `).join('');
     }
