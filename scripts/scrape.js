@@ -28,7 +28,7 @@ function parseCellPct(rawText) {
   return isNaN(val) ? 0 : Math.min(100, Math.round(val));
 }
 
-// Fetch live game schedules, game win chance, ISO timestamps, and team records with streaks
+// Fetch live game schedules, game win chance, ISO timestamps, and team records with points & streaks
 async function fetchNextGameSchedule() {
   let billsSchedule = {
     opponent: '@ Raiders',
@@ -42,7 +42,7 @@ async function fetchNextGameSchedule() {
     gameTime: 'Thu, Oct 15 • 7:00 PM ET',
     isoTime: new Date(Date.now() + 1 * 86400000 + 18 * 3600000).toISOString(),
     winChance: 46,
-    matchupRecords: 'Sabres (2-1-0, W1) vs. Maple Leafs (3-1-0, W2)'
+    matchupRecords: 'Sabres (2-1-0, 4 pts, W1) vs. Maple Leafs (3-1-0, 6 pts, W2)'
   };
 
   // 1. Bills (ESPN API - Team 2 is BUF)
@@ -78,32 +78,62 @@ async function fetchNextGameSchedule() {
     console.warn('Bills schedule fallback used:', err.message);
   }
 
-  // 2. Sabres (Official NHL API)
+  // 2. Sabres (Official NHL API - extracts points directly)
   try {
-    const res = await fetch('https://api-web.nhle.com/v1/club-schedule/BUF/week/now');
-    if (res.ok) {
-      const data = await res.json();
+    const [schedRes, standingsRes] = await Promise.all([
+      fetch('https://api-web.nhle.com/v1/club-schedule/BUF/week/now'),
+      fetch('https://api-web.nhle.com/v1/standings/now')
+    ]);
+
+    if (schedRes.ok) {
+      const data = await schedRes.json();
       const now = new Date();
       const nextGame = data.games?.find(g => new Date(g.startTimeUTC) > now && g.gameState !== 'FINAL');
       if (nextGame) {
         const isHome = nextGame.homeTeam.abbrev === 'BUF';
-        const opp = isHome ? nextGame.awayTeam.placeName?.default || nextGame.awayTeam.abbrev : nextGame.homeTeam.placeName?.default || nextGame.homeTeam.abbrev;
+        const oppAbbrev = isHome ? nextGame.awayTeam.abbrev : nextGame.homeTeam.abbrev;
+        const oppName = isHome ? (nextGame.awayTeam.placeName?.default || oppAbbrev) : (nextGame.homeTeam.placeName?.default || oppAbbrev);
         const d = new Date(nextGame.startTimeUTC);
 
         const dateStr = d.toLocaleDateString('en-US', { timeZone: 'America/New_York', weekday: 'short', month: 'short', day: 'numeric' });
         const timeStr = d.toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour: 'numeric', minute: '2-digit', hour12: true });
 
+        // Parse points and records from standings if available
+        let sabresPoints = 4;
+        let oppPoints = 6;
+        let sabresRecord = '2-1-0';
+        let oppRecord = '3-1-0';
+        let sabresStreak = 'W1';
+        let oppStreak = 'W2';
+
+        if (standingsRes.ok) {
+          const standingsData = await standingsRes.json();
+          const bufStand = standingsData.standings?.find(s => s.teamAbbrev?.default === 'BUF');
+          const oppStand = standingsData.standings?.find(s => s.teamAbbrev?.default === oppAbbrev);
+
+          if (bufStand) {
+            sabresPoints = bufStand.points;
+            sabresRecord = `${bufStand.wins}-${bufStand.losses}-${bufStand.otLosses}`;
+            sabresStreak = `${bufStand.streakCode || 'W'}${bufStand.streakCount || 1}`;
+          }
+          if (oppStand) {
+            oppPoints = oppStand.points;
+            oppRecord = `${oppStand.wins}-${oppStand.losses}-${oppStand.otLosses}`;
+            oppStreak = `${oppStand.streakCode || 'W'}${oppStand.streakCount || 1}`;
+          }
+        }
+
         sabresSchedule = {
-          opponent: `${isHome ? 'vs.' : '@'} ${opp}`,
+          opponent: `${isHome ? 'vs.' : '@'} ${oppName}`,
           gameTime: `${dateStr} • ${timeStr} ET`,
           isoTime: nextGame.startTimeUTC,
           winChance: isHome ? 52 : 46,
-          matchupRecords: 'Sabres (2-1-0, W1) vs. Maple Leafs (3-1-0, W2)'
+          matchupRecords: `Sabres (${sabresRecord}, ${sabresPoints} pts, ${sabresStreak}) vs. ${oppName} (${oppRecord}, ${oppPoints} pts, ${oppStreak})`
         };
       }
     }
   } catch (err) {
-    console.warn('Sabres schedule fallback used:', err.message);
+    console.warn('Sabres standings/schedule fallback used:', err.message);
   }
 
   return { billsSchedule, sabresSchedule };
@@ -202,117 +232,4 @@ async function scrapePlayoffStatus() {
   };
 
   // 1. Bills Standings
-  try {
-    const html = await fetchHtml(billsUrl);
-    const $ = cheerio.load(html);
-
-    $('tr').each((_, el) => {
-      const text = $(el).text();
-      if (text.includes('Bills') && !text.includes('Schedule') && !text.includes('vs')) {
-        const cells = $(el).find('td').map((_, td) =>$(td).text().trim()).get();
-        const pcts = cells.map(parseCellPct).filter(n => n >= 0 && n <= 100);
-        
-        if (pcts.length >= 7) {
-          const seeds = pcts.slice(-7);
-          billsData.seed1 = seeds[0];
-          billsData.winDivision = seeds.slice(0, 4).reduce((a, b) => a + b, 0);
-          billsData.makePlayoffs = Math.min(100, seeds.reduce((a, b) => a + b, 0));
-          
-          billsData.seedDistribution = [
-            { seed: '#1 Seed', pct: seeds[0] },
-            { seed: '#2 Seed', pct: seeds[1] },
-            { seed: '#3 Seed', pct: seeds[2] },
-            { seed: '#4 Seed', pct: seeds[3] },
-            { seed: '#5 Seed', pct: seeds[4] },
-            { seed: '#6 Seed', pct: seeds[5] },
-            { seed: '#7 Seed', pct: seeds[6] }
-          ];
-        }
-      }
-    });
-    console.log('Parsed Bills standings.');
-  } catch (err) {
-    console.warn('Bills standings fallback used:', err.message);
-  }
-
-  // 2. Bills Neutral Rooting Guide (Replaces 'Wins' with 'Win')
-  try {
-    const migHtml = await fetchHtml(billsMigUrl);
-    const $ = cheerio.load(migHtml);
-    const dynamicGuide = [];
-
-    $('tr').each((_, el) => {
-      const rowText = $(el).text();
-      if (
-        rowText.includes('Wins') && 
-        (rowText.includes('vs') || rowText.includes('@')) && 
-        !rowText.includes('Bills')
-      ) {
-        const cells = $(el).find('td').map((_, td) =>$(td).text().trim()).get();
-        if (cells.length >= 3) {
-          const matchup = cells[0].replace(/\s+/g, ' ');
-          const preference = cells.find(c => c.includes('Wins'));
-          if (preference && dynamicGuide.length < 3) {
-            // Converts "Jets Wins" -> "Jets Win"
-            const cleanedPreference = preference.replace(/Wins/g, 'Win').trim();
-            dynamicGuide.push({
-              target: `Root for ${cleanedPreference}`,
-              why: `Matchup: ${matchup}. Neutral AFC leverage for Buffalo's seeding.`
-            });
-          }
-        }
-      }
-    });
-
-    if (dynamicGuide.length > 0) {
-      billsData.rootingGuide = dynamicGuide;
-      console.log(`Parsed ${dynamicGuide.length} neutral rooting matchups.`);
-    }
-  } catch (err) {
-    console.warn('Bills MIG fallback used:', err.message);
-  }
-
-  // 3. Sabres Standings
-  try {
-    const html = await fetchHtml(sabresUrl);
-    const $ = cheerio.load(html);
-
-    $('tr').each((_, el) => {
-      const text = $(el).text();
-      if (text.includes('Sabres') && !text.includes('Schedule') && !text.includes('vs')) {
-        const cells = $(el).find('td').map((_, td) =>$(td).text().trim()).get();
-        const pcts = cells.map(parseCellPct).filter(n => n >= 0 && n <= 100);
-        
-        if (pcts.length >= 5) {
-          const seeds = pcts.slice(-5);
-          billsData.winDivision = seeds[0];
-          sabresData.wildcard = seeds[3] + seeds[4];
-          sabresData.makePlayoffs = Math.min(100, seeds.reduce((a, b) => a + b, 0));
-
-          sabresData.seedDistribution = [
-            { seed: 'Div 1', pct: seeds[0] },
-            { seed: 'Div 2', pct: seeds[1] },
-            { seed: 'Div 3', pct: seeds[2] },
-            { seed: 'Wildcard 1', pct: seeds[3] },
-            { seed: 'Wildcard 2', pct: seeds[4] }
-          ];
-        }
-      }
-    });
-    console.log('Parsed Sabres standings.');
-  } catch (err) {
-    console.warn('Sabres standings fallback used:', err.message);
-  }
-
-  const finalPayload = {
-    updatedAt: new Date().toISOString(),
-    source: 'http://www.playoffstatus.com',
-    bills: billsData,
-    sabres: sabresData
-  };
-
-  fs.writeFileSync('./data.json', JSON.stringify(finalPayload, null, 2), 'utf-8');
-  console.log('data.json successfully written with corrected singular grammar.');
-}
-
-scrapePlayoffStatus();
+  try
