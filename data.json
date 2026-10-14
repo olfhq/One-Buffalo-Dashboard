@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-10-14T03:58:05.640Z",
+  "updatedAt": "2026-10-14T04:05:18.664Z",
   "source": "http://www.playoffstatus.com",
   "bills": {
     "team": "Buffalo Bills",
-    "makePlayoffs": 2.0142627162404234e+31,
-    "winDivision": 2.0142627162404234e+31,
+    "makePlayoffs": 84,
+    "winDivision": 62,
     "seed1": 18,
     "seedDistribution": [
       {
@@ -17,11 +17,11 @@
       },
       {
         "seed": "#3 Seed",
-        "pct": 2.0142627162404234e+31
+        "pct": 12
       },
       {
         "seed": "#4 Seed",
-        "pct": 5
+        "pct": 8
       },
       {
         "seed": "#5 Seed",
@@ -29,19 +29,19 @@
       },
       {
         "seed": "#6 Seed",
-        "pct": 5
+        "pct": 7
       },
       {
         "seed": "#7 Seed",
-        "pct": 1
+        "pct": 4
       }
     ]
   },
   "sabres": {
     "team": "Buffalo Sabres",
-    "makePlayoffs": 2.0163031409321036e+24,
+    "makePlayoffs": 38,
     "winDivision": 11,
-    "wildcard": 2,
+    "wildcard": 27,
     "seedDistribution": [
       {
         "seed": "Div 1",
@@ -53,11 +53,11 @@
       },
       {
         "seed": "Div 3",
-        "pct": 2.0163031409321036e+24
+        "pct": 13
       },
       {
         "seed": "Wildcard 1",
-        "pct": 2
+        "pct": 16
       },
       {
         "seed": "Wildcard 2",
