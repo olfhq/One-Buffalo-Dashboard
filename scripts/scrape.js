@@ -22,7 +22,6 @@ function parseCellPct(rawText) {
   if (text.includes('<1')) return 0.5;
   if (text.includes('>99')) return 99.5;
   
-  // Extract only the first valid decimal or integer number from the cell
   const match = text.match(/\d+(?:\.\d+)?/);
   if (!match) return 0;
   const val = parseFloat(match[0]);
@@ -34,6 +33,7 @@ async function scrapePlayoffStatus() {
 
   const billsUrl = 'http://www.playoffstatus.com/nfl/billsstandings.html';
   const sabresUrl = 'http://www.playoffstatus.com/nhl/sabresstandings.html';
+  const billsMigUrl = 'http://www.playoffstatus.com/nfl/billsmig.html';
 
   let billsData = {
     team: 'Buffalo Bills',
@@ -48,6 +48,10 @@ async function scrapePlayoffStatus() {
       { seed: '#5 Seed', pct: 11 },
       { seed: '#6 Seed', pct: 7 },
       { seed: '#7 Seed', pct: 4 }
+    ],
+    rootingGuide: [
+      { target: "Root for Chargers over Chiefs", why: "Maximizes odds for Buffalo's AFC #1 overall seed & bye week." },
+      { target: "Root for Jets & Dolphins Losses", why: "Fast-tracks AFC East magic elimination number." }
     ]
   };
 
@@ -62,10 +66,14 @@ async function scrapePlayoffStatus() {
       { seed: 'Div 3', pct: 13 },
       { seed: 'Wildcard 1', pct: 16 },
       { seed: 'Wildcard 2', pct: 11 }
+    ],
+    rootingGuide: [
+      { target: "Regulation Losses for Atlantic Rivals", why: "Ensure games involving BOS, TBL, and FLA do not go to 3-point overtimes." },
+      { target: "Western Conference Wins vs. Metro", why: "Protects Eastern Conference Wild Card slot thresholds." }
     ]
   };
 
-  // 1. Scrape Bills
+  // 1. Scrape Bills Standings
   try {
     const html = await fetchHtml(billsUrl);
     const $ = cheerio.load(html);
@@ -74,10 +82,8 @@ async function scrapePlayoffStatus() {
       const text = $(el).text();
       if (text.includes('Bills') && !text.includes('Schedule') && !text.includes('vs')) {
         const cells = $(el).find('td').map((_, td) =>$(td).text().trim()).get();
-        // PlayoffStatus tables have data cells with numeric percentages
         const pcts = cells.map(parseCellPct).filter(n => n >= 0 && n <= 100);
         
-        // Grab the trailing percentage columns for seeds 1 through 7
         if (pcts.length >= 7) {
           const seeds = pcts.slice(-7);
           billsData.seed1 = seeds[0];
@@ -96,12 +102,43 @@ async function scrapePlayoffStatus() {
         }
       }
     });
-    console.log('Successfully parsed Bills data');
+    console.log('Parsed Bills standings.');
   } catch (err) {
-    console.warn('Bills parse fallback used:', err.message);
+    console.warn('Bills standings fallback used:', err.message);
   }
 
-  // 2. Scrape Sabres
+  // 2. Scrape Bills Most Important Games (MIG)
+  try {
+    const migHtml = await fetchHtml(billsMigUrl);
+    const $ = cheerio.load(migHtml);
+    const dynamicGuide = [];
+
+    $('tr').each((_, el) => {
+      const rowText = $(el).text();
+      if (rowText.includes('Wins') && (rowText.includes('vs') || rowText.includes('@'))) {
+        const cells = $(el).find('td').map((_, td) =>$(td).text().trim()).get();
+        if (cells.length >= 3) {
+          const matchup = cells[0].replace(/\s+/g, ' ');
+          const preference = cells.find(c => c.includes('Wins'));
+          if (preference && dynamicGuide.length < 3) {
+            dynamicGuide.push({
+              target: `Root for ${preference}`,
+              why: `Matchup: ${matchup}. High playoff leverage for Buffalo's seeding.`
+            });
+          }
+        }
+      }
+    });
+
+    if (dynamicGuide.length > 0) {
+      billsData.rootingGuide = dynamicGuide;
+      console.log(`Parsed ${dynamicGuide.length} live rooting matchups for Bills.`);
+    }
+  } catch (err) {
+    console.warn('Bills MIG fallback used:', err.message);
+  }
+
+  // 3. Scrape Sabres Standings
   try {
     const html = await fetchHtml(sabresUrl);
     const $ = cheerio.load(html);
@@ -112,7 +149,6 @@ async function scrapePlayoffStatus() {
         const cells = $(el).find('td').map((_, td) =>$(td).text().trim()).get();
         const pcts = cells.map(parseCellPct).filter(n => n >= 0 && n <= 100);
         
-        // Sabres seeds: Div 1-3 + Wildcard 1-2
         if (pcts.length >= 5) {
           const seeds = pcts.slice(-5);
           billsData.winDivision = seeds[0];
@@ -129,9 +165,9 @@ async function scrapePlayoffStatus() {
         }
       }
     });
-    console.log('Successfully parsed Sabres data');
+    console.log('Parsed Sabres standings.');
   } catch (err) {
-    console.warn('Sabres parse fallback used:', err.message);
+    console.warn('Sabres standings fallback used:', err.message);
   }
 
   const finalPayload = {
@@ -142,7 +178,7 @@ async function scrapePlayoffStatus() {
   };
 
   fs.writeFileSync('./data.json', JSON.stringify(finalPayload, null, 2), 'utf-8');
-  console.log('data.json successfully updated with clean percentages.');
+  console.log('data.json successfully written.');
 }
 
 scrapePlayoffStatus();
