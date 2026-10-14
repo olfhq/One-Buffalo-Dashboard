@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-14T04:54:17.380Z",
+  "updatedAt": "2026-10-14T05:18:35.969Z",
   "source": "http://www.playoffstatus.com",
   "bills": {
     "team": "Buffalo Bills",
@@ -12,6 +12,7 @@
       "gameTime": "Sun, Oct 18 • 4:25 PM ET",
       "isoTime": "2026-10-18T20:25Z",
       "winChance": 68,
+      "matchupRecords": "Bills (4-1, W3) vs. Raiders (2-3, L1)",
       "ifWin": 91,
       "ifLoss": 74,
       "leverage": 17
@@ -104,6 +105,7 @@
       "gameTime": "Thu, Oct 15 • 7:00 PM ET",
       "isoTime": "2026-10-15T23:00:00Z",
       "winChance": 46,
+      "matchupRecords": "Sabres (2-1-0) vs. Maple Leafs (3-1-0)",
       "ifWin": 44,
       "ifLoss": 33,
       "leverage": 11
