@@ -28,17 +28,19 @@ function parseCellPct(rawText) {
   return isNaN(val) ? 0 : Math.min(100, Math.round(val));
 }
 
-// Fetch live game schedules and exact ISO timestamps for timers
+// Fetch live game schedules, game win chance, and ISO countdown timestamps
 async function fetchNextGameSchedule() {
   let billsSchedule = {
     opponent: '@ Raiders',
     gameTime: 'Sun, Oct 18 • 4:25 PM ET',
-    isoTime: new Date(Date.now() + 4 * 86400000 + 15 * 3600000).toISOString()
+    isoTime: new Date(Date.now() + 4 * 86400000 + 15 * 3600000).toISOString(),
+    winChance: 68
   };
   let sabresSchedule = {
     opponent: '@ Toronto',
     gameTime: 'Thu, Oct 15 • 7:00 PM ET',
-    isoTime: new Date(Date.now() + 1 * 86400000 + 18 * 3600000).toISOString()
+    isoTime: new Date(Date.now() + 1 * 86400000 + 18 * 3600000).toISOString(),
+    winChance: 46
   };
 
   // 1. Bills (ESPN API - Team 2 is BUF)
@@ -56,10 +58,17 @@ async function fetchNextGameSchedule() {
         const dateStr = d.toLocaleDateString('en-US', { timeZone: 'America/New_York', weekday: 'short', month: 'short', day: 'numeric' });
         const timeStr = d.toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour: 'numeric', minute: '2-digit', hour12: true });
         
+        // ESPN Matchup Predictor probability if present
+        let winChance = 68;
+        if (comp.predictor?.homeTeam) {
+          winChance = Math.round(isHome ? comp.predictor.homeTeam.gameProjection : (100 - comp.predictor.homeTeam.gameProjection));
+        }
+
         billsSchedule = {
           opponent: `${isHome ? 'vs.' : '@'} ${opp}`,
           gameTime: `${dateStr} • ${timeStr} ET`,
-          isoTime: nextGame.date
+          isoTime: nextGame.date,
+          winChance: winChance
         };
       }
     }
@@ -85,7 +94,8 @@ async function fetchNextGameSchedule() {
         sabresSchedule = {
           opponent: `${isHome ? 'vs.' : '@'} ${opp}`,
           gameTime: `${dateStr} • ${timeStr} ET`,
-          isoTime: nextGame.startTimeUTC
+          isoTime: nextGame.startTimeUTC,
+          winChance: isHome ? 52 : 46
         };
       }
     }
@@ -115,6 +125,7 @@ async function scrapePlayoffStatus() {
       opponent: billsSchedule.opponent,
       gameTime: billsSchedule.gameTime,
       isoTime: billsSchedule.isoTime,
+      winChance: billsSchedule.winChance,
       ifWin: 91,
       ifLoss: 74,
       leverage: 17
@@ -156,6 +167,7 @@ async function scrapePlayoffStatus() {
       opponent: sabresSchedule.opponent,
       gameTime: sabresSchedule.gameTime,
       isoTime: sabresSchedule.isoTime,
+      winChance: sabresSchedule.winChance,
       ifWin: 44,
       ifLoss: 33,
       leverage: 11
@@ -293,7 +305,7 @@ async function scrapePlayoffStatus() {
   };
 
   fs.writeFileSync('./data.json', JSON.stringify(finalPayload, null, 2), 'utf-8');
-  console.log('data.json successfully written with countdown timestamps.');
+  console.log('data.json successfully written with win chance percentages.');
 }
 
 scrapePlayoffStatus();
