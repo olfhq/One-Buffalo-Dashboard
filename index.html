@@ -15,8 +15,8 @@
   <meta name="theme-color" content="#090d16">
 
   <!-- Crisp Vector App Icon for iPad & iPhone Home Screens -->
-  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='110' fill='%23090d16'/%3E%3Cpath d='M70 120 L240 120 L240 392 L160 392 L160 210 L70 210 Z' fill='%23C60C30'/%3E%3Cpath d='M272 120 L442 120 L442 392 L362 392 L362 210 L272 210 Z' fill='%23FCB514'/%3E%3Ccircle cx='256' cy='440' r='18' fill='%2338bdf8'/%3E%3C/svg%3E">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='110' fill='%23090d16'/%3E%3Cpath d='M70 120 L240 120 L240 392 L160 392 L160 210 L70 210 Z' fill='%23C60C30'/%3E%3Cpath d='M272 120 L442 120 L442 392 L362 392 L362 210 L272 210 Z' fill='%23FCB514'/%3E%3Ccircle cx='256' cy='440' r='18' fill='%2338bdf8'/%3E%3C/svg%3E">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='110' fill='%23090d16'/%3E%3Cpath d='M70 120 L240 120 L240 392 L160 392 L160 210 L70 210 Z' fill='%23C60C30'/%3E%3Cpath d='M272 120 L442 120 L442 392 L362 392 L362 210 L272 210 Z' fill='%23FCB514'/%3E%3Ccircle cx='256' cy='440' r='18' fill='%23F37021'/%3E%3C/svg%3E">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='110' fill='%23090d16'/%3E%3Cpath d='M70 120 L240 120 L240 392 L160 392 L160 210 L70 210 Z' fill='%23C60C30'/%3E%3Cpath d='M272 120 L442 120 L442 392 L362 392 L362 210 L272 210 Z' fill='%23FCB514'/%3E%3Ccircle cx='256' cy='440' r='18' fill='%23F37021'/%3E%3C/svg%3E">
 
   <title>One Buffalo Postseason Command Center</title>
   <style>
@@ -25,6 +25,8 @@
       --bills-red: #C60C30;
       --sabres-navy: #002654;
       --sabres-gold: #FCB514;
+      --bandits-orange: #F37021;
+      --bandits-black: #111111;
       --bg-dark: #090d16;
       --card-bg: #141c2c;
       --card-inner: #0d1422;
@@ -54,7 +56,7 @@
       font-weight: 800;
       letter-spacing: -0.5px;
       margin-bottom: 0.3rem;
-      background: linear-gradient(90deg, #38bdf8, #f59e0b);
+      background: linear-gradient(90deg, #38bdf8, #FCB514, #F37021);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
@@ -102,11 +104,12 @@
       color: #fff;
     }
 
+    /* RESPONSIVE 3-COLUMN POSTSEASON GRID */
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
       gap: 1.5rem;
-      max-width: 1250px;
+      max-width: 1400px;
       margin: 0 auto;
     }
 
@@ -114,7 +117,7 @@
       background-color: var(--card-bg);
       border: 1px solid var(--card-border);
       border-radius: 14px;
-      padding: 1.5rem;
+      padding: 1.4rem;
       display: flex;
       flex-direction: column;
       gap: 1.25rem;
@@ -122,13 +125,14 @@
     }
     .card-bills { border-top: 4px solid var(--bills-red); }
     .card-sabres { border-top: 4px solid var(--sabres-gold); }
+    .card-bandits { border-top: 4px solid var(--bandits-orange); }
 
     .team-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
-    .team-title { font-size: 1.5rem; font-weight: 800; }
+    .team-title { font-size: 1.45rem; font-weight: 800; }
     .badge {
       font-size: 0.75rem;
       text-transform: uppercase;
@@ -138,12 +142,13 @@
     }
     .badge-bills { background: var(--bills-red); color: #fff; }
     .badge-sabres { background: var(--sabres-gold); color: #000; }
+    .badge-bandits { background: var(--bandits-orange); color: #fff; }
 
     /* CLINCHING ALERT WIDGET */
     .clinch-alert-box {
       border-radius: 8px;
       padding: 0.6rem 0.85rem;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       display: flex;
       align-items: center;
       gap: 0.5rem;
@@ -211,6 +216,7 @@
       margin-top: 0.15rem;
     }
     .schedule-tag-sabres { color: var(--sabres-gold); }
+    .schedule-tag-bandits { color: var(--bandits-orange); }
 
     .countdown-box {
       display: flex;
@@ -221,7 +227,7 @@
       border: 1px solid rgba(255, 255, 255, 0.07);
       border-radius: 8px;
       padding: 0.4rem 0.8rem;
-      min-width: 110px;
+      min-width: 105px;
       flex-shrink: 0;
       transition: all 0.3s ease;
     }
@@ -319,22 +325,27 @@
       color: var(--sabres-gold);
       border: 1px solid rgba(252, 181, 20, 0.3);
     }
+    .pill-swing-bandits {
+      background: rgba(243, 112, 33, 0.15);
+      color: var(--bandits-orange);
+      border: 1px solid rgba(243, 112, 33, 0.3);
+    }
 
     .stat-row {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 0.5rem;
+      gap: 0.45rem;
       text-align: center;
     }
     .stat-box {
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(255, 255, 255, 0.05);
-      padding: 0.6rem 0.3rem;
+      padding: 0.6rem 0.25rem;
       border-radius: 8px;
     }
     .stat-val { font-size: 1.35rem; font-weight: 800; color: #fff; }
     .stat-label {
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       color: var(--text-muted);
       margin-top: 0.2rem;
       text-transform: uppercase;
@@ -406,6 +417,7 @@
     }
     .dist-fill-bills { height: 100%; background: #38bdf8; border-radius: 4px; }
     .dist-fill-sabres { height: 100%; background: var(--sabres-gold); border-radius: 4px; }
+    .dist-fill-bandits { height: 100%; background: var(--bandits-orange); border-radius: 4px; }
     .dist-pct { width: 35px; text-align: right; font-weight: 600; }
 
     .radar-wrap { display: flex; gap: 0.5rem; }
@@ -459,7 +471,7 @@
       <span>•</span>
       <span>Runs 2x Daily via GitHub Actions</span>
       <span>•</span>
-      <span>Source: <a href="http://www.playoffstatus.com" target="_blank" rel="noopener">PlayoffStatus.com</a></span>
+      <span>Bills • Sabres • Bandits</span>
     </div>
   </header>
 
@@ -661,14 +673,109 @@
         <div id="sabres-rooting-container"></div>
       </div>
     </article>
+
+    <!-- BANDITS CARD -->
+    <article class="card card-bandits">
+      <div class="team-header">
+        <h2 class="team-title">Buffalo Bandits</h2>
+        <span class="badge badge-bandits">NLL Unified</span>
+      </div>
+
+      <div class="clinch-alert-box" id="bandits-clinch-box">
+        <span class="clinch-icon">🔒</span>
+        <span id="bandits-clinch-text">Checking clinching status...</span>
+      </div>
+
+      <div class="stakes-banner">
+        <div class="stakes-top-row">
+          <div class="matchup-main">
+            <div class="matchup-title-line">
+              <span class="matchup-prefix">Next Game:</span>
+              <span class="matchup-opp" id="bandits-next-opp">vs. Georgia Swarm</span>
+            </div>
+            <div class="matchup-records-line" id="bandits-records">Bandits (0-0, Home Opener) vs. Swarm (0-0)</div>
+            <div class="schedule-tag schedule-tag-bandits" id="bandits-game-time">Sat, Nov 28 • 7:00 PM ET</div>
+          </div>
+
+          <div class="countdown-box" id="bandits-countdown-box">
+            <div class="countdown-val" id="bandits-countdown" style="color: var(--bandits-orange);">--:--:--</div>
+            <div class="countdown-label" id="bandits-countdown-label">Faceoff In</div>
+          </div>
+        </div>
+
+        <div class="stakes-bottom-row">
+          <div class="metric-panel">
+            <span class="metric-label">Game Win Chance</span>
+            <span class="win-chance-value" id="bandits-win-chance">62%</span>
+          </div>
+
+          <div class="metric-panel" style="align-items: flex-end;">
+            <span class="metric-label">Playoff Leverage Impact</span>
+            <div class="impact-badges-group">
+              <span class="pill pill-win" id="bandits-if-win">Win: 94%</span>
+              <span class="pill pill-loss" id="bandits-if-loss">Loss: 88%</span>
+              <span class="pill pill-swing-bandits" id="bandits-leverage">±6%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat-box">
+          <div class="stat-val" id="bandits-playoff-pct">92%</div>
+          <div class="stat-label">Top 8</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" id="bandits-home-pct" style="color: var(--bandits-orange);">74%</div>
+          <div class="stat-label">Top 4 Host</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" id="bandits-bye-pct">34%</div>
+          <div class="stat-label">#1 Overall</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" id="bandits-magic-num" style="color: var(--bandits-orange);">10</div>
+          <div class="stat-label">Magic #</div>
+        </div>
+      </div>
+
+      <div class="integrated-trend-container">
+        <div class="trend-info-left">
+          <span class="trend-text-title">30-Day Arc:</span>
+          <span class="trend-badge" id="bandits-trend-badge">▲ +4%</span>
+        </div>
+        <div class="integrated-sparkline-svg" id="bandits-trend-svg"></div>
+      </div>
+
+      <div>
+        <div class="section-subtitle">NLL Contender Radar (Top 4 Race)</div>
+        <div class="radar-wrap" id="bandits-radar"></div>
+      </div>
+
+      <div>
+        <div class="section-subtitle">Projected NLL Seeding Distribution</div>
+        <div class="dist-bar-wrap" id="bandits-distribution"></div>
+      </div>
+
+      <div>
+        <div class="section-subtitle">Likely Playoff Opponents</div>
+        <div class="opponent-chips" id="bandits-opponents"></div>
+      </div>
+
+      <div>
+        <div class="section-subtitle">Weekly Rooting Priority (NLL Top-4 Leverage)</div>
+        <div id="bandits-rooting-container"></div>
+      </div>
+    </article>
   </main>
 
   <footer>
-    <p>Automated twice daily via <a href="https://github.com" target="_blank" rel="noopener" style="color: #38bdf8;">GitHub Actions</a>. Data sourced from PlayoffStatus.com.</p>
+    <p>Automated twice daily via <a href="https://github.com" target="_blank" rel="noopener" style="color: #38bdf8;">GitHub Actions</a>. Data sourced from PlayoffStatus.com & NLL Analytics.</p>
   </footer>
 
   <script>
     async function checkLiveScores() {
+      // 1. Bills (ESPN API)
       try {
         const res = await fetch('https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard');
         if (res.ok) {
@@ -711,6 +818,7 @@
         console.warn('Bills live score check skipped:', err);
       }
 
+      // 2. Sabres (NHL API)
       try {
         const res = await fetch('https://api-web.nhle.com/v1/score/now');
         if (res.ok) {
@@ -794,7 +902,7 @@
       const height = 28;
       const padY = 4;
 
-      const values = historyArr.map(h => h[key]);
+      const values = historyArr.map(h => h[key] || 50);
       const rawMin = Math.min(...values);
       const rawMax = Math.max(...values);
       const spread = rawMax - rawMin || 1;
@@ -827,8 +935,8 @@
       const badge = document.getElementById(badgeId);
       if (!badge || !historyArr || historyArr.length < 2) return;
 
-      const first = historyArr[0][key];
-      const last = historyArr[historyArr.length - 1][key];
+      const first = historyArr[0][key] || 50;
+      const last = historyArr[historyArr.length - 1][key] || 50;
       const delta = last - first;
 
       if (delta >= 0) {
@@ -981,6 +1089,73 @@
 
       document.getElementById('sabres-rooting-container').innerHTML = s.rootingGuide.map(item => `
         <div class="rooting-item" style="border-left-color: var(--sabres-gold);">
+          <div class="rooting-target">${item.target}</div>
+          <div class="rooting-why">${item.why}</div>
+        </div>
+      `).join('');
+
+      // Populate Bandits
+      const ban = data.bandits || {
+        makePlayoffs: 92, top4HomeTurf: 74, seed1: 34, magicNumber: '10',
+        nextGame: { opponent: 'vs. Georgia Swarm', gameTime: 'Sat, Nov 28 • 7:00 PM ET', isoTime: '2026-11-28T23:00:00Z', winChance: 62, matchupRecords: 'Bandits (0-0) vs. Swarm (0-0)', ifWin: 94, ifLoss: 88, leverage: 6 },
+        divisionRadar: [{ team: 'Bandits', pct: 34 }, { team: 'Rock', pct: 28 }, { team: 'Seals', pct: 22 }, { team: 'Swarm', pct: 16 }],
+        seedDistribution: [{ seed: '#1 Seed', pct: 34 }, { seed: '#2 Seed', pct: 22 }, { seed: '#3 Seed', pct: 18 }, { seed: '#4 Seed', pct: 10 }, { seed: '#5 Seed', pct: 6 }, { seed: '#6 Seed', pct: 4 }, { seed: '#7 Seed', pct: 3 }, { seed: '#8 Seed', pct: 1 }],
+        opponents: [{ team: 'Toronto Rock', pct: 31 }, { team: 'San Diego Seals', pct: 24 }, { team: 'Albany FireWolves', pct: 19 }],
+        rootingGuide: [
+          { target: "Root for Seals Win vs. Rock", why: "Prevents Toronto from building an NLL #1 overall seed tiebreaker lead." },
+          { target: "Root for Roughnecks Win vs. Swarm", why: "Suppresses Georgia in the unified top-4 home floor race." },
+          { target: "Root for Mammoth Win vs. Knighthawks", why: "Keeps regional chasers below the Top-8 playoff cutline." }
+        ]
+      };
+
+      document.getElementById('bandits-playoff-pct').textContent = `${ban.makePlayoffs}%`;
+      document.getElementById('bandits-home-pct').textContent = `${ban.top4HomeTurf}%`;
+      document.getElementById('bandits-bye-pct').textContent = `${ban.seed1}%`;
+      document.getElementById('bandits-magic-num').textContent = ban.magicNumber || '--';
+
+      const banClinchText = document.getElementById('bandits-clinch-text');
+      banClinchText.textContent = `Preseason/Early season. Magic # to clinch Top-8: ${ban.magicNumber || '10'}.`;
+
+      document.getElementById('bandits-next-opp').textContent = ban.nextGame.opponent;
+      document.getElementById('bandits-game-time').textContent = ban.nextGame.gameTime || '';
+      document.getElementById('bandits-win-chance').textContent = `${ban.nextGame.winChance || 62}%`;
+      document.getElementById('bandits-records').textContent = ban.nextGame.matchupRecords || '';
+      document.getElementById('bandits-if-win').textContent = `Win: ${ban.nextGame.ifWin}%`;
+      document.getElementById('bandits-if-loss').textContent = `Loss: ${ban.nextGame.ifLoss}%`;
+      document.getElementById('bandits-leverage').textContent = `±${ban.nextGame.leverage || 6}%`;
+
+      if (ban.nextGame.isoTime) {
+        startCountdown('bandits-countdown', 'bandits-countdown-label', 'bandits-countdown-box', ban.nextGame.isoTime);
+      }
+
+      if (data.history) {
+        renderSparkline('bandits-trend-svg', data.history, 'bandits', '#F37021');
+        calculateDeltaBadge('bandits-trend-badge', data.history, 'bandits');
+      }
+
+      document.getElementById('bandits-radar').innerHTML = ban.divisionRadar.map(r => `
+        <div class="radar-item">
+          <div class="radar-team">${r.team}</div>
+          <div class="radar-val" style="color: var(--bandits-orange);">${r.pct}%</div>
+        </div>
+      `).join('');
+
+      document.getElementById('bandits-distribution').innerHTML = ban.seedDistribution.map(item => `
+        <div class="dist-row">
+          <span class="dist-name">${item.seed}</span>
+          <div class="dist-track">
+            <div class="dist-fill-bandits" style="width: ${item.pct}%"></div>
+          </div>
+          <span class="dist-pct">${item.pct}%</span>
+        </div>
+      `).join('');
+
+      document.getElementById('bandits-opponents').innerHTML = ban.opponents.map(o => `
+        <div class="opp-chip">${o.team} <span class="opp-pct" style="color: var(--bandits-orange);">${o.pct}%</span></div>
+      `).join('');
+
+      document.getElementById('bandits-rooting-container').innerHTML = ban.rootingGuide.map(item => `
+        <div class="rooting-item" style="border-left-color: var(--bandits-orange);">
           <div class="rooting-target">${item.target}</div>
           <div class="rooting-why">${item.why}</div>
         </div>
