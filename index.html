@@ -180,6 +180,7 @@
     }
     .schedule-tag-sabres { color: var(--sabres-gold); }
 
+    /* COUNTDOWN OR LIVE SCOREBOARD TICKER */
     .countdown-box {
       display: flex;
       flex-direction: column;
@@ -189,8 +190,9 @@
       border: 1px solid rgba(255, 255, 255, 0.07);
       border-radius: 8px;
       padding: 0.4rem 0.8rem;
-      min-width: 105px;
+      min-width: 110px;
       flex-shrink: 0;
+      transition: all 0.3s ease;
     }
     .countdown-val {
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
@@ -198,6 +200,7 @@
       font-size: 0.95rem;
       letter-spacing: 0.5px;
       color: #fff;
+      text-align: center;
     }
     .countdown-label {
       font-size: 0.65rem;
@@ -205,6 +208,32 @@
       color: var(--text-muted);
       letter-spacing: 0.5px;
       margin-top: 0.1rem;
+    }
+
+    /* LIVE GAME DAY ACCENTS */
+    .scoreboard-live-box {
+      background: rgba(239, 68, 68, 0.12) !important;
+      border: 1px solid rgba(239, 68, 68, 0.4) !important;
+    }
+    .scoreboard-live-tag {
+      color: #f87171 !important;
+      font-weight: 800 !important;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .live-dot-pulse {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: #ef4444;
+      display: inline-block;
+      animation: pulse-dot 1.4s infinite;
+    }
+    @keyframes pulse-dot {
+      0% { transform: scale(0.9); opacity: 0.6; }
+      50% { transform: scale(1.3); opacity: 1; }
+      100% { transform: scale(0.9); opacity: 0.6; }
     }
 
     .stakes-bottom-row {
@@ -261,7 +290,6 @@
       border: 1px solid rgba(252, 181, 20, 0.3);
     }
 
-    /* INTEGRATED STAT BOX WITH AMBIENT TREND CURVE */
     .stat-row {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -282,7 +310,6 @@
       text-transform: uppercase;
     }
 
-    /* EMBEDDED INTEGRATED SPARKLINE STRIP */
     .integrated-trend-container {
       background: var(--card-inner);
       border: 1px solid var(--card-border);
@@ -430,9 +457,10 @@
             <div class="schedule-tag" id="bills-game-time">--</div>
           </div>
 
-          <div class="countdown-box">
+          <!-- DYNAMIC COUNTDOWN / LIVE SCOREBOARD BOX -->
+          <div class="countdown-box" id="bills-countdown-box">
             <div class="countdown-val" id="bills-countdown" style="color: #38bdf8;">--:--:--</div>
-            <div class="countdown-label">Kickoff In</div>
+            <div class="countdown-label" id="bills-countdown-label">Kickoff In</div>
           </div>
         </div>
 
@@ -525,9 +553,10 @@
             <div class="schedule-tag schedule-tag-sabres" id="sabres-game-time">--</div>
           </div>
 
-          <div class="countdown-box">
+          <!-- DYNAMIC COUNTDOWN / LIVE SCOREBOARD BOX -->
+          <div class="countdown-box" id="sabres-countdown-box">
             <div class="countdown-val" id="sabres-countdown" style="color: var(--sabres-gold);">--:--:--</div>
-            <div class="countdown-label">Puck Drop In</div>
+            <div class="countdown-label" id="sabres-countdown-label">Puck Drop In</div>
           </div>
         </div>
 
@@ -603,15 +632,105 @@
   </footer>
 
   <script>
-    function startCountdown(elementId, targetIso) {
+    // Live In-Game Scoreboard Poller
+    async function checkLiveScores() {
+      // 1. Check Bills Live Game (ESPN API)
+      try {
+        const res = await fetch('https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard');
+        if (res.ok) {
+          const data = await res.json();
+          const billsGame = data.events?.find(e => 
+            e.competitions?.[0]?.competitors?.some(c => c.id === '2')
+          );
+
+          if (billsGame) {
+            const comp = billsGame.competitions[0];
+            const state = comp.status?.type?.state; // 'in', 'post', or 'pre'
+
+            if (state === 'in') {
+              const buf = comp.competitors.find(c => c.id === '2');
+              const opp = comp.competitors.find(c => c.id !== '2');
+              const clock = comp.status?.displayClock || '';
+              const period = comp.status?.period || 1;
+              const periodStr = period <= 4 ? `Q${period}` : 'OT';
+
+              const box = document.getElementById('bills-countdown-box');
+              const val = document.getElementById('bills-countdown');
+              const label = document.getElementById('bills-countdown-label');
+
+              box.classList.add('scoreboard-live-box');
+              val.innerHTML = `BUF ${buf.score} - ${opp.team.abbreviation} ${opp.score}`;
+              val.style.color = '#fff';
+              label.className = 'countdown-label scoreboard-live-tag';
+              label.innerHTML = `<span class="live-dot-pulse"></span> ${periodStr} (${clock})`;
+            } else if (state === 'post') {
+              const buf = comp.competitors.find(c => c.id === '2');
+              const opp = comp.competitors.find(c => c.id !== '2');
+              const val = document.getElementById('bills-countdown');
+              const label = document.getElementById('bills-countdown-label');
+              val.innerHTML = `${buf.score} - ${opp.score}`;
+              label.textContent = 'FINAL';
+            }
+          }
+        }
+      } catch (err) {
+        console.warn('Bills live score check skipped:', err);
+      }
+
+      // 2. Check Sabres Live Game (NHL API)
+      try {
+        const res = await fetch('https://api-web.nhle.com/v1/score/now');
+        if (res.ok) {
+          const data = await res.json();
+          const sabresGame = data.games?.find(g => 
+            g.awayTeam?.abbrev === 'BUF' || g.homeTeam?.abbrev === 'BUF'
+          );
+
+          if (sabresGame) {
+            const state = sabresGame.gameState; // 'LIVE', 'CRIT', 'FINAL', 'OFF'
+
+            if (state === 'LIVE' || state === 'CRIT') {
+              const isHome = sabresGame.homeTeam.abbrev === 'BUF';
+              const bufScore = isHome ? sabresGame.homeTeam.score : sabresGame.awayTeam.score;
+              const oppScore = isHome ? sabresGame.awayTeam.score : sabresGame.homeTeam.score;
+              const oppAbbr = isHome ? sabresGame.awayTeam.abbrev : sabresGame.homeTeam.abbrev;
+              const period = sabresGame.periodDescriptor?.number || 1;
+              const clock = sabresGame.clock?.timeRemaining || '';
+
+              const box = document.getElementById('sabres-countdown-box');
+              const val = document.getElementById('sabres-countdown');
+              const label = document.getElementById('sabres-countdown-label');
+
+              box.classList.add('scoreboard-live-box');
+              val.innerHTML = `BUF ${bufScore} - ${oppAbbr} ${oppScore}`;
+              val.style.color = '#fff';
+              label.className = 'countdown-label scoreboard-live-tag';
+              label.innerHTML = `<span class="live-dot-pulse"></span> P${period} (${clock})`;
+            } else if (state === 'FINAL' || state === 'OFF') {
+              const isHome = sabresGame.homeTeam.abbrev === 'BUF';
+              const bufScore = isHome ? sabresGame.homeTeam.score : sabresGame.awayTeam.score;
+              const oppScore = isHome ? sabresGame.awayTeam.score : sabresGame.homeTeam.score;
+              const val = document.getElementById('sabres-countdown');
+              const label = document.getElementById('sabres-countdown-label');
+              val.innerHTML = `${bufScore} - ${oppScore}`;
+              label.textContent = 'FINAL';
+            }
+          }
+        }
+      } catch (err) {
+        console.warn('Sabres live score check skipped:', err);
+      }
+    }
+
+    function startCountdown(elementId, labelId, boxId, targetIso) {
       const el = document.getElementById(elementId);
+      const label = document.getElementById(labelId);
       if (!el || !targetIso) return;
 
       function update() {
         const diff = new Date(targetIso).getTime() - Date.now();
         if (diff <= 0) {
-          el.textContent = "LIVE NOW";
-          el.style.color = "#10b981";
+          checkLiveScores();
           return;
         }
 
@@ -634,7 +753,6 @@
       setInterval(update, 1000);
     }
 
-    // Mini Precision Sparkline (No cliffs, no awkward padding, perfectly framed)
     function renderSparkline(containerId, historyArr, key, strokeColor) {
       const container = document.getElementById(containerId);
       if (!container || !historyArr || historyArr.length < 2) return;
@@ -735,10 +853,9 @@
       document.getElementById('bills-leverage').textContent = `±${bLeverage}%`;
 
       if (b.nextGame.isoTime) {
-        startCountdown('bills-countdown', b.nextGame.isoTime);
+        startCountdown('bills-countdown', 'bills-countdown-label', 'bills-countdown-box', b.nextGame.isoTime);
       }
 
-      // Render Compact Precision Sparkline
       if (data.history) {
         renderSparkline('bills-trend-svg', data.history, 'bills', '#38bdf8');
         calculateDeltaBadge('bills-trend-badge', data.history, 'bills');
@@ -800,10 +917,9 @@
       document.getElementById('sabres-leverage').textContent = `±${sLeverage}%`;
 
       if (s.nextGame.isoTime) {
-        startCountdown('sabres-countdown', s.nextGame.isoTime);
+        startCountdown('sabres-countdown', 'sabres-countdown-label', 'sabres-countdown-box', s.nextGame.isoTime);
       }
 
-      // Render Compact Precision Sparkline
       if (data.history) {
         renderSparkline('sabres-trend-svg', data.history, 'sabres', '#FCB514');
         calculateDeltaBadge('sabres-trend-badge', data.history, 'sabres');
@@ -836,6 +952,11 @@
           <div class="rooting-why">${item.why}</div>
         </div>
       `).join('');
+
+      // Check for live game state on page open
+      checkLiveScores();
+      // Poll every 45 seconds while page is kept open
+      setInterval(checkLiveScores, 45000);
     }
 
     document.addEventListener('DOMContentLoaded', loadData);
