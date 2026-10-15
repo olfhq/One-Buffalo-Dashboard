@@ -293,15 +293,15 @@
       align-items: center;
     }
 
-    /* TALLER, SPACIOUS HISTORICAL TREND GRAPH WIDGET */
+    /* FULL TALL GRAPH CARD */
     .trend-card {
       background: var(--card-inner);
       border: 1px solid var(--card-border);
       border-radius: 10px;
-      padding: 1rem 1.1rem 0.75rem 1.1rem;
+      padding: 1.1rem 1.1rem 0.85rem 1.1rem;
       display: flex;
       flex-direction: column;
-      gap: 0.4rem;
+      gap: 0.5rem;
     }
     .trend-badge {
       font-weight: 700;
@@ -314,7 +314,7 @@
     
     .trend-svg-wrap {
       width: 100%;
-      height: 110px; /* Expanded from 60px to give curves room to breathe */
+      height: 165px; /* Generous height for tall, expressive curves */
     }
     .trend-svg-wrap svg {
       width: 100%;
@@ -459,7 +459,7 @@
         </div>
       </div>
 
-      <!-- BILLS HISTORICAL GRAPH -->
+      <!-- BILLS HISTORICAL GRAPH (TALLER & DYNAMICALLY SCALED) -->
       <div>
         <div class="section-subtitle">
           <span>Season Arc Trajectory</span>
@@ -556,7 +556,7 @@
         </div>
       </div>
 
-      <!-- SABRES HISTORICAL GRAPH -->
+      <!-- SABRES HISTORICAL GRAPH (TALLER & DYNAMICALLY SCALED) -->
       <div>
         <div class="section-subtitle">
           <span>Season Arc Trajectory</span>
@@ -625,26 +625,27 @@
       setInterval(update, 1000);
     }
 
-    // Refined, High-Fidelity SVG Curve with Gridlines & Date Markers
+    // High-Fidelity SVG Curve with Proportional Heights and Y-Axis Labels
     function renderSparkline(containerId, historyArr, key, strokeColor) {
       const container = document.getElementById(containerId);
       if (!container || !historyArr || historyArr.length < 2) return;
 
-      const width = 340;
-      const height = 110;
-      const padLeft = 8;
-      const padRight = 32;
-      const padTop = 16;
-      const padBottom = 22;
+      const width = 360;
+      const height = 160;
+      const padLeft = 28;
+      const padRight = 36;
+      const padTop = 20;
+      const padBottom = 26;
 
       const values = historyArr.map(h => h[key]);
       const rawMin = Math.min(...values);
       const rawMax = Math.max(...values);
       
-      // Dynamic auto-scaling bounds so trends are visually clear
-      const rangeBuffer = Math.max(6, (rawMax - rawMin) * 0.4);
-      const min = Math.max(0, Math.floor(rawMin - rangeBuffer));
-      const max = Math.min(100, Math.ceil(rawMax + rangeBuffer));
+      // Dynamic zoom-in bounds: keeps waves pronounced without flattening
+      const spread = rawMax - rawMin;
+      const buffer = Math.max(4, Math.round(spread * 0.35));
+      const min = Math.max(0, Math.floor(rawMin - buffer));
+      const max = Math.min(100, Math.ceil(rawMax + buffer));
 
       const chartW = width - padLeft - padRight;
       const chartH = height - padTop - padBottom;
@@ -668,39 +669,46 @@
       const areaPath = `${linePath} L ${points[points.length - 1].x.toFixed(1)} ${areaBottom} L ${points[0].x.toFixed(1)} ${areaBottom} Z`;
       const lastPoint = points[points.length - 1];
 
-      // Subtle horizontal gridlines
+      // Subtle horizontal gridlines with labels
       const midVal = Math.round((min + max) / 2);
       const midY = (padTop + chartH / 2).toFixed(1);
 
       container.innerHTML = `
-        <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none">
+        <svg viewBox="0 0 ${width} ${height}">
           <defs>
             <linearGradient id="grad-${key}" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="${strokeColor}" stop-opacity="0.32"/>
+              <stop offset="0%" stop-color="${strokeColor}" stop-opacity="0.38"/>
               <stop offset="100%" stop-color="${strokeColor}" stop-opacity="0.0"/>
             </linearGradient>
           </defs>
 
-          <!-- Gridlines -->
-          <line x1="${padLeft}" y1="${padTop}" x2="${width - padRight}" y2="${padTop}" stroke="rgba(255,255,255,0.05)" stroke-dasharray="3 3"/>
-          <line x1="${padLeft}" y1="${midY}" x2="${width - padRight}" y2="${midY}" stroke="rgba(255,255,255,0.05)" stroke-dasharray="3 3"/>
-          <line x1="${padLeft}" y1="${areaBottom}" x2="${width - padRight}" y2="${areaBottom}" stroke="rgba(255,255,255,0.1)"/>
+          <!-- Y-Axis Ticks & Gridlines -->
+          <text x="4" y="${padTop + 4}" fill="#64748b" font-size="8.5" font-weight="700">${max}%</text>
+          <line x1="${padLeft}" y1="${padTop}" x2="${width - padRight}" y2="${padTop}" stroke="rgba(255,255,255,0.06)" stroke-dasharray="3 3"/>
+
+          <text x="4" y="${Number(midY) + 3}" fill="#64748b" font-size="8.5" font-weight="700">${midVal}%</text>
+          <line x1="${padLeft}" y1="${midY}" x2="${width - padRight}" y2="${midY}" stroke="rgba(255,255,255,0.06)" stroke-dasharray="3 3"/>
+
+          <text x="4" y="${areaBottom + 3}" fill="#64748b" font-size="8.5" font-weight="700">${min}%</text>
+          <line x1="${padLeft}" y1="${areaBottom}" x2="${width - padRight}" y2="${areaBottom}" stroke="rgba(255,255,255,0.12)"/>
 
           <!-- Axis Date Labels -->
-          <text x="${points[0].x}" y="${height - 4}" fill="#64748b" font-size="8.5" font-weight="600">${points[0].date}</text>
-          <text x="${lastPoint.x}" y="${height - 4}" fill="#64748b" font-size="8.5" font-weight="600" text-anchor="end">${lastPoint.date}</text>
+          <text x="${points[0].x}" y="${height - 6}" fill="#94a3b8" font-size="9" font-weight="600">${points[0].date}</text>
+          <text x="${lastPoint.x}" y="${height - 6}" fill="#94a3b8" font-size="9" font-weight="600" text-anchor="end">${lastPoint.date}</text>
 
           <!-- Area Gradient & Main Curve -->
           <path d="${areaPath}" fill="url(#grad-${key})" />
-          <path d="${linePath}" fill="none" stroke="${strokeColor}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="${linePath}" fill="none" stroke="${strokeColor}" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
 
-          <!-- Data Points -->
-          ${points.map(p => `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="3" fill="#0d1422" stroke="${strokeColor}" stroke-width="2"/>`).join('')}
+          <!-- Interactive Node Dots -->
+          ${points.map(p => `
+            <circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="3.5" fill="#0d1422" stroke="${strokeColor}" stroke-width="2.2"/>
+          `).join('')}
 
-          <!-- Current End-Point Badge -->
-          <circle cx="${lastPoint.x.toFixed(1)}" cy="${lastPoint.y.toFixed(1)}" r="5" fill="${strokeColor}" />
-          <rect x="${lastPoint.x + 4}" y="${lastPoint.y - 10}" width="28" height="16" rx="4" fill="${strokeColor}" />
-          <text x="${lastPoint.x + 18}" y="${lastPoint.y + 1.5}" fill="#000" font-size="9" font-weight="800" text-anchor="middle">${lastPoint.val}%</text>
+          <!-- Current Value Badge on the End -->
+          <circle cx="${lastPoint.x.toFixed(1)}" cy="${lastPoint.y.toFixed(1)}" r="6" fill="${strokeColor}" />
+          <rect x="${lastPoint.x + 5}" y="${lastPoint.y - 10}" width="30" height="18" rx="4" fill="${strokeColor}" />
+          <text x="${lastPoint.x + 20}" y="${lastPoint.y + 3}" fill="#000" font-size="9.5" font-weight="800" text-anchor="middle">${lastPoint.val}%</text>
         </svg>
       `;
     }
@@ -771,7 +779,6 @@
         startCountdown('bills-countdown', b.nextGame.isoTime);
       }
 
-      // Render Bills Historical Sparkline with dynamic scaling
       if (data.history) {
         renderSparkline('bills-trend-svg', data.history, 'bills', '#38bdf8');
         calculateDeltaBadge('bills-trend-badge', data.history, 'bills');
@@ -836,7 +843,6 @@
         startCountdown('sabres-countdown', s.nextGame.isoTime);
       }
 
-      // Render Sabres Historical Sparkline with dynamic scaling
       if (data.history) {
         renderSparkline('sabres-trend-svg', data.history, 'sabres', '#FCB514');
         calculateDeltaBadge('sabres-trend-badge', data.history, 'sabres');
