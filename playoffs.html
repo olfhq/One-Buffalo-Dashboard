@@ -4,9 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="0">
+  <title>One Buffalo Postseason Probabilities</title>
 
+  <!-- PWA & Mobile Meta Tags -->
   <link rel="manifest" href="./manifest.json">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -16,7 +16,6 @@
   <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='110' fill='%23090d16'/%3E%3Cpath d='M70 120 L240 120 L240 392 L160 392 L160 210 L70 210 Z' fill='%23C60C30'/%3E%3Cpath d='M272 120 L442 120 L442 392 L362 392 L362 210 L272 210 Z' fill='%23FCB514'/%3E%3Ccircle cx='256' cy='440' r='18' fill='%23F37021'/%3E%3C/svg%3E">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='110' fill='%23090d16'/%3E%3Cpath d='M70 120 L240 120 L240 392 L160 392 L160 210 L70 210 Z' fill='%23C60C30'/%3E%3Cpath d='M272 120 L442 120 L442 392 L362 392 L362 210 L272 210 Z' fill='%23FCB514'/%3E%3Ccircle cx='256' cy='440' r='18' fill='%23F37021'/%3E%3C/svg%3E">
 
-  <title>One Buffalo Postseason Probabilities</title>
   <style>
     :root {
       --bills-blue: #00338D;
@@ -64,12 +63,13 @@
     .meta-bar a { color: #38bdf8; text-decoration: none; }
     .meta-bar a:hover { text-decoration: underline; }
 
-    /* VIEW SWITCHER */
+    /* TOP VIEW TOGGLE SWITCH (3 TABS) */
     .view-switcher {
       display: flex;
       justify-content: center;
       gap: 0.5rem;
       margin-bottom: 1.5rem;
+      flex-wrap: wrap;
     }
     .switch-btn {
       padding: 0.45rem 1rem;
@@ -310,13 +310,16 @@
     </div>
   </header>
 
-  <!-- NAVIGATION BAR (INDEX IS ACTIVE) -->
+  <!-- 3-TAB NAVIGATION -->
   <nav class="view-switcher">
     <a href="./index.html" class="switch-btn switch-btn-inactive">
       <span>⚡</span> Sports Command Center
     </a>
     <a href="./playoffs.html" class="switch-btn switch-btn-active">
       <span>🏆</span> Postseason Probabilities
+    </a>
+    <a href="./stats.html" class="switch-btn switch-btn-inactive">
+      <span>📊</span> Stats Lab
     </a>
   </nav>
 
