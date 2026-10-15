@@ -555,20 +555,20 @@
       </article>
     </section>
 
-    <!-- ROSTER TRANSACTIONS & INJURY WIRE FEED -->
+    <!-- ROSTER TRANSACTIONS & INJURY WIRE FEED (BILLS DEFAULT, ALL FEEDS AT END) -->
     <section class="wire-card">
       <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
         <div class="section-head" style="font-size: 0.95rem; margin: 0;">📡 One Buffalo Wire (Roster Moves & Injuries)</div>
         <div class="wire-tabs">
-          <button class="wire-tab-btn active" onclick="switchWire('all', this)">All Feeds</button>
-          <button class="wire-tab-btn" onclick="switchWire('bills', this)">Bills</button>
+          <button class="wire-tab-btn active" onclick="switchWire('bills', this)">Bills</button>
           <button class="wire-tab-btn" onclick="switchWire('sabres', this)">Sabres</button>
           <button class="wire-tab-btn" onclick="switchWire('bandits', this)">Bandits</button>
+          <button class="wire-tab-btn" onclick="switchWire('all', this)">All Feeds</button>
         </div>
       </div>
 
       <div class="wire-list" id="wire-feed-list">
-        <!-- BILLS MOVES -->
+        <!-- BILLS MOVES (DEFAULT VISIBLE) -->
         <div class="wire-item" data-team="bills">
           <div class="wire-item-main">
             <span class="wire-item-headline">Bills sign CB Anthony Kendall to the practice squad</span>
@@ -591,22 +591,22 @@
           <span class="wire-type-badge badge-sign">Extension</span>
         </div>
 
-        <!-- SABRES MOVES -->
-        <div class="wire-item" data-team="sabres">
+        <!-- SABRES MOVES (DEFAULT HIDDEN UNTIL TAB SWITCH) -->
+        <div class="wire-item" data-team="sabres" style="display: none;">
           <div class="wire-item-main">
             <span class="wire-item-headline">D Rasmus Dahlin doubtful for Toronto matchup; not traveling with team</span>
             <span class="wire-item-date">KeyBank Center • Morning Skate Report</span>
           </div>
           <span class="wire-type-badge badge-inj">Injury Update</span>
         </div>
-        <div class="wire-item" data-team="sabres">
+        <div class="wire-item" data-team="sabres" style="display: none;">
           <div class="wire-item-main">
             <span class="wire-item-headline">Sabres recall D Dennis Gilbert; place D Matt Grzelcyk on Injured Reserve</span>
             <span class="wire-item-date">NHL Roster Wire • Rochester Call-up</span>
           </div>
           <span class="wire-type-badge badge-inj">IR Move</span>
         </div>
-        <div class="wire-item" data-team="sabres">
+        <div class="wire-item" data-team="sabres" style="display: none;">
           <div class="wire-item-main">
             <span class="wire-item-headline">Sabres acquire D Caleb Jones and D Daniel Laatsch from Penguins for Ryan Johnson</span>
             <span class="wire-item-date">NHL Trade Wire • Three-Player Swap</span>
@@ -614,22 +614,22 @@
           <span class="wire-type-badge badge-trade">Trade</span>
         </div>
 
-        <!-- BANDITS MOVES -->
-        <div class="wire-item" data-team="bandits">
+        <!-- BANDITS MOVES (DEFAULT HIDDEN UNTIL TAB SWITCH) -->
+        <div class="wire-item" data-team="bandits" style="display: none;">
           <div class="wire-item-main">
             <span class="wire-item-headline">Bandits sign G Vance Shognosh to 3-year contract agreement</span>
             <span class="wire-item-date">Banditland Front Office • 2025 1st Round Pick</span>
           </div>
           <span class="wire-type-badge badge-sign">Signed</span>
         </div>
-        <div class="wire-item" data-team="bandits">
+        <div class="wire-item" data-team="bandits" style="display: none;">
           <div class="wire-item-main">
             <span class="wire-item-headline">Bandits sign D Cam Wyers to 1-year contract extension</span>
             <span class="wire-item-date">Banditland Front Office • Defensive Unit</span>
           </div>
           <span class="wire-type-badge badge-sign">Signed</span>
         </div>
-        <div class="wire-item" data-team="bandits">
+        <div class="wire-item" data-team="bandits" style="display: none;">
           <div class="wire-item-main">
             <span class="wire-item-headline">Bandits draft Syracuse product Dante Bowen with 6th-overall pick in 2026 NLL Draft</span>
             <span class="wire-item-date">NLL Draft Central • First Round</span>
