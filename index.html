@@ -22,7 +22,6 @@
       --sabres-navy: #002654;
       --sabres-gold: #FCB514;
       --bandits-orange: #F37021;
-      --bandits-black: #111111;
       --bg-dark: #090d16;
       --card-bg: #141c2c;
       --card-inner: #0d1422;
@@ -65,13 +64,11 @@
       align-items: center;
     }
 
-    /* TOP VIEW TOGGLE SWITCH (3 TABS) */
     .view-switcher {
       display: flex;
       justify-content: center;
       gap: 0.5rem;
       margin-bottom: 1.5rem;
-      flex-wrap: wrap;
     }
     .switch-btn {
       padding: 0.45rem 1rem;
@@ -106,7 +103,6 @@
       gap: 1.5rem;
     }
 
-    /* MASTER WHO PLAYS NEXT BANNER */
     .hero-next-game {
       background: linear-gradient(135deg, rgba(0, 51, 141, 0.35), rgba(243, 112, 33, 0.25));
       border: 1px solid var(--card-border);
@@ -163,7 +159,6 @@
       color: var(--text-muted);
     }
 
-    /* 3-COLUMN TEAM PILLARS */
     .pillar-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -221,6 +216,43 @@
       flex-direction: column;
       gap: 0.35rem;
     }
+
+    .next-match-flex {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+    .match-info-left {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+    .match-timer-box {
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      padding: 0.5rem 0.75rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 95px;
+    }
+    .match-timer-val {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-weight: 800;
+      font-size: 0.95rem;
+      color: #fff;
+      white-space: nowrap;
+    }
+    .match-timer-label {
+      font-size: 0.55rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      margin-top: 0.15rem;
+    }
+
     .match-opp-line { font-weight: 800; font-size: 1rem; color: #fff; }
     .match-meta-line { font-size: 0.78rem; color: #cbd5e1; }
     .match-broadcast-tag {
@@ -256,7 +288,6 @@
     .roster-chip-name { font-weight: 600; color: #fff; }
     .roster-chip-stat { color: #f59e0b; font-weight: 700; font-size: 0.75rem; }
 
-    /* ROSTER TRANSACTIONS & HEADLINES WIRE */
     .wire-card {
       background-color: var(--card-bg);
       border: 1px solid var(--card-border);
@@ -331,53 +362,6 @@
     .badge-trade { background: rgba(245, 158, 11, 0.18); color: #fbbf24; }
     .badge-ps { background: rgba(56, 189, 248, 0.18); color: #38bdf8; }
 
-    /* CONSOLIDATED 14-DAY BUFFALO CALENDAR */
-    .calendar-card {
-      background-color: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 14px;
-      padding: 1.5rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
-    }
-    .calendar-timeline {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 0.75rem;
-    }
-    .timeline-item {
-      background: var(--card-inner);
-      border: 1px solid var(--card-border);
-      border-radius: 8px;
-      padding: 0.75rem 0.9rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
-      border-left: 4px solid #38bdf8;
-    }
-    .timeline-bills { border-left-color: var(--bills-red); }
-    .timeline-sabres { border-left-color: var(--sabres-gold); }
-    .timeline-bandits { border-left-color: var(--bandits-orange); }
-
-    .timeline-date {
-      font-size: 0.72rem;
-      font-weight: 700;
-      color: var(--text-muted);
-      text-transform: uppercase;
-    }
-    .timeline-matchup {
-      font-size: 0.95rem;
-      font-weight: 800;
-      color: #fff;
-    }
-    .timeline-channel {
-      font-size: 0.75rem;
-      color: #38bdf8;
-      font-weight: 600;
-    }
-
     footer {
       text-align: center;
       margin-top: 3rem;
@@ -397,7 +381,6 @@
     </div>
   </header>
 
-  <!-- 3-TAB NAVIGATION -->
   <nav class="view-switcher">
     <a href="./index.html" class="switch-btn switch-btn-active">
       <span>⚡</span> Sports Command Center
@@ -405,13 +388,9 @@
     <a href="./playoffs.html" class="switch-btn switch-btn-inactive">
       <span>🏆</span> Postseason Probabilities
     </a>
-    <a href="./stats.html" class="switch-btn switch-btn-inactive">
-      <span>📊</span> Stats Lab
-    </a>
   </nav>
 
   <main class="main-wrap">
-    <!-- MASTER WHO PLAYS NEXT BANNER -->
     <section class="hero-next-game">
       <div class="hero-info-left">
         <span class="hero-sub">⚡ Next Up In Buffalo Sports</span>
@@ -424,7 +403,6 @@
       </div>
     </section>
 
-    <!-- 3-PILLAR TEAM OVERVIEWS -->
     <section class="pillar-grid">
       <!-- BILLS PILLAR -->
       <article class="team-pillar pillar-bills">
@@ -450,9 +428,17 @@
 
         <div class="next-match-box">
           <div class="section-head">Upcoming Contest</div>
-          <div class="match-opp-line">@ Las Vegas Raiders</div>
-          <div class="match-meta-line">Sun, Oct 18 • 4:25 PM ET • Allegiant Stadium</div>
-          <div class="match-broadcast-tag">Broadcast: CBS • National Radio: Westwood One</div>
+          <div class="next-match-flex">
+            <div class="match-info-left">
+              <div class="match-opp-line">@ Las Vegas Raiders</div>
+              <div class="match-meta-line">Sun, Oct 18 • 4:25 PM ET</div>
+              <div class="match-broadcast-tag">Broadcast: CBS • Westwood One</div>
+            </div>
+            <div class="match-timer-box">
+              <div class="match-timer-val" id="bills-countdown">--:--:--</div>
+              <div class="match-timer-label" id="bills-label">KICKOFF IN</div>
+            </div>
+          </div>
         </div>
 
         <div>
@@ -494,9 +480,17 @@
 
         <div class="next-match-box">
           <div class="section-head">Upcoming Contest</div>
-          <div class="match-opp-line">@ Toronto Maple Leafs</div>
-          <div class="match-meta-line">Tonight • 7:00 PM ET • Scotiabank Arena</div>
-          <div class="match-broadcast-tag" style="color: var(--sabres-gold);">Broadcast: MSG-B • Stream: ESPN+ • WGR 550</div>
+          <div class="next-match-flex">
+            <div class="match-info-left">
+              <div class="match-opp-line">@ Toronto Maple Leafs</div>
+              <div class="match-meta-line">Tonight • 7:00 PM ET</div>
+              <div class="match-broadcast-tag" style="color: var(--sabres-gold);">MSG-B • ESPN+ • WGR 550</div>
+            </div>
+            <div class="match-timer-box">
+              <div class="match-timer-val" id="sabres-countdown">--:--:--</div>
+              <div class="match-timer-label" id="sabres-label">PUCK DROP IN</div>
+            </div>
+          </div>
         </div>
 
         <div>
@@ -538,9 +532,17 @@
 
         <div class="next-match-box">
           <div class="section-head">Upcoming Contest (Home Opener)</div>
-          <div class="match-opp-line">vs. Georgia Swarm</div>
-          <div class="match-meta-line">Sat, Nov 28 • 7:00 PM ET • KeyBank Center</div>
-          <div class="match-broadcast-tag" style="color: var(--bandits-orange);">Broadcast: NLL+ • Stream: ESPN+ / TSN+</div>
+          <div class="next-match-flex">
+            <div class="match-info-left">
+              <div class="match-opp-line">vs. Georgia Swarm</div>
+              <div class="match-meta-line">Sat, Nov 28 • 7:00 PM ET</div>
+              <div class="match-broadcast-tag" style="color: var(--bandits-orange);">NLL+ • ESPN+ / TSN+</div>
+            </div>
+            <div class="match-timer-box">
+              <div class="match-timer-val" id="bandits-countdown">--:--:--</div>
+              <div class="match-timer-label" id="bandits-label">FACEOFF IN</div>
+            </div>
+          </div>
         </div>
 
         <div>
@@ -642,47 +644,10 @@
         </div>
       </div>
     </section>
-
-    <!-- CONSOLIDATED 14-DAY BUFFALO GAME CALENDAR -->
-    <section class="calendar-card">
-      <div class="section-head" style="font-size: 0.95rem;">📅 Upcoming Buffalo Sports Slate</div>
-      <div class="calendar-timeline">
-        <div class="timeline-item timeline-sabres">
-          <div class="timeline-date">Tonight • Thu, Oct 15 • 7:00 PM ET</div>
-          <div class="timeline-matchup">Sabres @ Toronto Maple Leafs</div>
-          <div class="timeline-channel">TV: MSG-B • ESPN+</div>
-        </div>
-        <div class="timeline-item timeline-sabres">
-          <div class="timeline-date">Sat, Oct 17 • 7:00 PM ET</div>
-          <div class="timeline-matchup">Sabres vs. Florida Panthers</div>
-          <div class="timeline-channel">TV: MSG-B • KeyBank Center</div>
-        </div>
-        <div class="timeline-item timeline-bills">
-          <div class="timeline-date">Sun, Oct 18 • 4:25 PM ET</div>
-          <div class="timeline-matchup">Bills @ Las Vegas Raiders</div>
-          <div class="timeline-channel">TV: CBS • Allegiant Stadium</div>
-        </div>
-        <div class="timeline-item timeline-sabres">
-          <div class="timeline-date">Tue, Oct 20 • 7:00 PM ET</div>
-          <div class="timeline-matchup">Sabres @ Ottawa Senators</div>
-          <div class="timeline-channel">TV: MSG-B • Canadian Tire Centre</div>
-        </div>
-        <div class="timeline-item timeline-bills">
-          <div class="timeline-date">Sun, Oct 25 • 1:00 PM ET</div>
-          <div class="timeline-matchup">Bills vs. Tennessee Titans</div>
-          <div class="timeline-channel">TV: CBS • Highmark Stadium</div>
-        </div>
-        <div class="timeline-item timeline-bandits">
-          <div class="timeline-date">Sat, Nov 28 • 7:00 PM ET</div>
-          <div class="timeline-matchup">Bandits vs. Georgia Swarm</div>
-          <div class="timeline-channel">TV: ESPN+ • NLL Home Opener</div>
-        </div>
-      </div>
-    </section>
   </main>
 
   <footer>
-    <p>One Buffalo Multi-Sport Hub. Hosted on <a href="https://github.com/olfhq/One-Buffalo-Dashboard" target="_blank" rel="noopener" style="color: #38bdf8;">GitHub Pages</a> via onebuffalotracker.fyi.</p>
+    <p>One Buffalo Multi-Sport Hub. Hosted on <a href="https://github.com/olfhq/One-Buffalo-Dashboard" target="_blank" rel="noopener" style="color: #38bdf8;">GitHub Pages</a> via <a href="https://onebuffalotracker.fyi" target="_blank" rel="noopener" style="color: #38bdf8;">onebuffalotracker.fyi</a>.</p>
   </footer>
 
   <script>
@@ -700,39 +665,81 @@
       });
     }
 
-    const tonightGame = new Date();
-    tonightGame.setHours(19, 0, 0, 0);
-
-    function updateMasterTimer() {
-      const el = document.getElementById('master-countdown');
-      const label = document.getElementById('master-countdown-label');
-      if (!el) return;
-
-      const diff = tonightGame.getTime() - Date.now();
-      if (diff <= 0) {
-        el.textContent = "LIVE NOW";
-        el.style.color = "#10b981";
-        label.textContent = "Puck drop underway";
-        return;
+    const gameSchedules = [
+      {
+        id: 'master', 
+        date: new Date('2026-10-15T19:00:00-04:00').getTime(),
+        labelId: 'master-countdown-label',
+        defaultLabel: 'PUCK DROP IN',
+        liveScore: 'LIVE - BUF 0, TOR 0 (1st)',
+        liveLabel: 'PUCK DROP UNDERWAY'
+      },
+      {
+        id: 'sabres',
+        date: new Date('2026-10-15T19:00:00-04:00').getTime(),
+        labelId: 'sabres-label',
+        defaultLabel: 'PUCK DROP IN',
+        liveScore: 'BUF 0 - TOR 0',
+        liveLabel: 'LIVE (1ST PER)'
+      },
+      {
+        id: 'bills',
+        date: new Date('2026-10-18T16:25:00-04:00').getTime(),
+        labelId: 'bills-label',
+        defaultLabel: 'KICKOFF IN',
+        liveScore: 'BUF 0 - LV 0',
+        liveLabel: 'LIVE (1ST QTR)'
+      },
+      {
+        id: 'bandits',
+        date: new Date('2026-11-28T19:00:00-05:00').getTime(),
+        labelId: 'bandits-label',
+        defaultLabel: 'FACEOFF IN',
+        liveScore: 'BUF 0 - GA 0',
+        liveLabel: 'LIVE (1ST QTR)'
       }
+    ];
 
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-      const mins = Math.floor((diff / 1000 / 60) % 60);
-      const secs = Math.floor((diff / 1000) % 60);
+    function updateTimersAndScores() {
+      const now = new Date().getTime();
 
-      if (days > 0) {
-        el.textContent = `${days}d ${hours}h ${mins}m`;
-      } else {
-        const hh = String(hours).padStart(2, '0');
-        const mm = String(mins).padStart(2, '0');
-        const ss = String(secs).padStart(2, '0');
-        el.textContent = `${hh}:${mm}:${ss}`;
-      }
+      gameSchedules.forEach(game => {
+        const timerEl = document.getElementById(`${game.id}-countdown`);
+        const labelEl = document.getElementById(game.labelId);
+        if (!timerEl || !labelEl) return;
+
+        const diff = game.date - now;
+        
+        if (diff <= 0 && diff > -12600000) { 
+          timerEl.textContent = game.liveScore;
+          timerEl.style.color = "#10b981"; 
+          labelEl.textContent = game.liveLabel;
+        } 
+        else if (diff <= -12600000) {
+          timerEl.textContent = "FINAL";
+          timerEl.style.color = "var(--text-muted)";
+          labelEl.textContent = "GAME CONCLUDED";
+        } 
+        else {
+          const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+          const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+          const mins = Math.floor((diff / 1000 / 60) % 60);
+          const secs = Math.floor((diff / 1000) % 60);
+
+          if (days > 0) {
+            timerEl.textContent = `${days}d ${hours}h ${mins}m`;
+          } else {
+            const hh = String(hours).padStart(2, '0');
+            const mm = String(mins).padStart(2, '0');
+            const ss = String(secs).padStart(2, '0');
+            timerEl.textContent = `${hh}:${mm}:${ss}`;
+          }
+        }
+      });
     }
 
-    updateMasterTimer();
-    setInterval(updateMasterTimer, 1000);
+    updateTimersAndScores();
+    setInterval(updateTimersAndScores, 1000);
   </script>
 </body>
 </html>
