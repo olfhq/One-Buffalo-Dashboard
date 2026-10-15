@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-15T05:21:26.848Z",
+  "updatedAt": "2026-10-15T05:47:21.211Z",
   "source": "http://www.playoffstatus.com & NLL Analytics",
   "bills": {
     "team": "Buffalo Bills",
@@ -283,6 +283,152 @@
         "why": "Keeps regional chasers below the Top-8 playoff cutline."
       }
     ]
+  },
+  "leaders": {
+    "bills": {
+      "ppg": "28.4",
+      "thirdDown": "46.2%",
+      "turnoverDiff": "+6",
+      "passingRushing": [
+        {
+          "player": "Josh Allen (QB)",
+          "category": "Passing Yds / TD",
+          "stat": "1,248 Yds • 10 TD"
+        },
+        {
+          "player": "James Cook (RB)",
+          "category": "Rushing Yds / YPC",
+          "stat": "432 Yds • 5.2 YPC"
+        },
+        {
+          "player": "Josh Allen (QB)",
+          "category": "Rushing Yds / TD",
+          "stat": "179 Yds • 2 TD"
+        }
+      ],
+      "receiving": [
+        {
+          "player": "Khalil Shakir (WR)",
+          "statLine": "28 Rec • 342 Yds",
+          "impact": "2 TD • 12.2 Avg"
+        },
+        {
+          "player": "Dalton Kincaid (TE)",
+          "statLine": "21 Rec • 217 Yds",
+          "impact": "1 TD • 10.3 Avg"
+        },
+        {
+          "player": "Keon Coleman (WR)",
+          "statLine": "14 Rec • 201 Yds",
+          "impact": "2 TD • 14.4 Avg"
+        }
+      ],
+      "defense": [
+        {
+          "player": "Greg Rousseau (DE)",
+          "category": "Sacks • TFL",
+          "stat": "4.5 Sacks • 8 TFL"
+        },
+        {
+          "player": "Terrel Bernard (LB)",
+          "category": "Total Tackles",
+          "stat": "44 Tackles • 1 INT"
+        },
+        {
+          "player": "Christian Benford (CB)",
+          "category": "Passes Defended",
+          "stat": "5 PD • 1 INT"
+        }
+      ]
+    },
+    "sabres": {
+      "gf": "3.14",
+      "pp": "21.8%",
+      "pk": "81.4%",
+      "skaters": [
+        {
+          "player": "Tage Thompson (C)",
+          "gp": 7,
+          "stat": "4G - 3A - 7 PTS"
+        },
+        {
+          "player": "Owen Power (D)",
+          "gp": 7,
+          "stat": "1G - 6A - 7 PTS"
+        },
+        {
+          "player": "Mattias Samuelsson (D)",
+          "gp": 7,
+          "stat": "1G - 3A - 4 PTS"
+        },
+        {
+          "player": "Rasmus Dahlin (D)",
+          "gp": 6,
+          "stat": "2G - 2A - 4 PTS"
+        },
+        {
+          "player": "Peyton Krebs (C)",
+          "gp": 7,
+          "stat": "0G - 4A - 4 PTS"
+        }
+      ],
+      "goalies": [
+        {
+          "player": "Ukko-Pekka Luukkonen",
+          "record": "2-2-1",
+          "stat": "2.84 • .908%"
+        },
+        {
+          "player": "Colten Ellis",
+          "record": "1-1-0",
+          "stat": "3.19 • .895%"
+        }
+      ]
+    },
+    "bandits": {
+      "goalsPerGame": "12.8",
+      "pp": "54.2%",
+      "champs": "6x",
+      "scoring": [
+        {
+          "player": "Josh Byrne (F) #22",
+          "role": "NLL MVP",
+          "stat": "53G - 82A - 135 PTS"
+        },
+        {
+          "player": "Dhane Smith (F) #92",
+          "role": "Finals MVP",
+          "stat": "26G - 101A - 127 PTS"
+        },
+        {
+          "player": "Tehoka Nanticoke (F)",
+          "role": "Right Forward",
+          "stat": "31G - 24A - 55 PTS"
+        },
+        {
+          "player": "Chase Fraser (F)",
+          "role": "Transition/Fwd",
+          "stat": "28G - 18A - 46 PTS"
+        }
+      ],
+      "defense": [
+        {
+          "player": "Matt Vinc (G) #48",
+          "category": "Saves / Save %",
+          "stat": "748 Saves • .801%"
+        },
+        {
+          "player": "Nick Weiss (D)",
+          "category": "Loose Balls / CTO",
+          "stat": "112 LBs • 18 CTO"
+        },
+        {
+          "player": "Cam Wyers (D)",
+          "category": "Blocked Shots",
+          "stat": "19 Blocks • 64 LBs"
+        }
+      ]
+    }
   },
   "history": [
     {
