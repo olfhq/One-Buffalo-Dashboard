@@ -65,12 +65,13 @@
       align-items: center;
     }
 
-    /* TOP VIEW TOGGLE SWITCH (COMMAND CENTER ACTIVE ON ROOT INDEX) */
+    /* TOP VIEW TOGGLE SWITCH (3 TABS) */
     .view-switcher {
       display: flex;
       justify-content: center;
       gap: 0.5rem;
       margin-bottom: 1.5rem;
+      flex-wrap: wrap;
     }
     .switch-btn {
       padding: 0.45rem 1rem;
@@ -396,13 +397,16 @@
     </div>
   </header>
 
-  <!-- NAVIGATION BAR (INDEX IS THE ACTIVE HOMEPAGE) -->
+  <!-- 3-TAB NAVIGATION -->
   <nav class="view-switcher">
     <a href="./index.html" class="switch-btn switch-btn-active">
       <span>⚡</span> Sports Command Center
     </a>
     <a href="./playoffs.html" class="switch-btn switch-btn-inactive">
       <span>🏆</span> Postseason Probabilities
+    </a>
+    <a href="./stats.html" class="switch-btn switch-btn-inactive">
+      <span>📊</span> Stats Lab
     </a>
   </nav>
 
@@ -568,7 +572,7 @@
       </div>
 
       <div class="wire-list" id="wire-feed-list">
-        <!-- BILLS MOVES (DEFAULT VISIBLE) -->
+        <!-- BILLS MOVES -->
         <div class="wire-item" data-team="bills">
           <div class="wire-item-main">
             <span class="wire-item-headline">Bills sign CB Anthony Kendall to the practice squad</span>
