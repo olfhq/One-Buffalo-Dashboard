@@ -65,7 +65,7 @@
       align-items: center;
     }
 
-    /* TOP VIEW TOGGLE SWITCH */
+    /* TOP VIEW TOGGLE SWITCH - POSITIONS SWITCHED */
     .view-switcher {
       display: flex;
       justify-content: center;
@@ -396,13 +396,13 @@
     </div>
   </header>
 
-  <!-- VIEW SWITCHER (NAVIGATE BETWEEN DASHBOARD & HUB) -->
+  <!-- VIEW SWITCHER (POSITIONS SWITCHED) -->
   <nav class="view-switcher">
-    <a href="./index.html" class="switch-btn switch-btn-inactive">
-      <span>🏆</span> Postseason Probabilities
-    </a>
     <a href="./hub.html" class="switch-btn switch-btn-active">
       <span>⚡</span> Sports Command Center
+    </a>
+    <a href="./index.html" class="switch-btn switch-btn-inactive">
+      <span>🏆</span> Postseason Probabilities
     </a>
   </nav>
 
@@ -555,7 +555,7 @@
       </article>
     </section>
 
-    <!-- ROSTER TRANSACTIONS & INJURY WIRE FEED (BILLS DEFAULT, ALL FEEDS AT END) -->
+    <!-- ROSTER TRANSACTIONS & INJURY WIRE FEED -->
     <section class="wire-card">
       <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
         <div class="section-head" style="font-size: 0.95rem; margin: 0;">📡 One Buffalo Wire (Roster Moves & Injuries)</div>
@@ -568,7 +568,7 @@
       </div>
 
       <div class="wire-list" id="wire-feed-list">
-        <!-- BILLS MOVES (DEFAULT VISIBLE) -->
+        <!-- BILLS MOVES -->
         <div class="wire-item" data-team="bills">
           <div class="wire-item-main">
             <span class="wire-item-headline">Bills sign CB Anthony Kendall to the practice squad</span>
@@ -591,7 +591,7 @@
           <span class="wire-type-badge badge-sign">Extension</span>
         </div>
 
-        <!-- SABRES MOVES (DEFAULT HIDDEN UNTIL TAB SWITCH) -->
+        <!-- SABRES MOVES -->
         <div class="wire-item" data-team="sabres" style="display: none;">
           <div class="wire-item-main">
             <span class="wire-item-headline">D Rasmus Dahlin doubtful for Toronto matchup; not traveling with team</span>
@@ -614,7 +614,7 @@
           <span class="wire-type-badge badge-trade">Trade</span>
         </div>
 
-        <!-- BANDITS MOVES (DEFAULT HIDDEN UNTIL TAB SWITCH) -->
+        <!-- BANDITS MOVES -->
         <div class="wire-item" data-team="bandits" style="display: none;">
           <div class="wire-item-main">
             <span class="wire-item-headline">Bandits sign G Vance Shognosh to 3-year contract agreement</span>
@@ -682,7 +682,6 @@
   </footer>
 
   <script>
-    // Tab Filter for Roster Wire
     function switchWire(team, btn) {
       document.querySelectorAll('.wire-tab-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
@@ -697,7 +696,6 @@
       });
     }
 
-    // Set target to tonight's Sabres game at 7:00 PM ET
     const tonightGame = new Date();
     tonightGame.setHours(19, 0, 0, 0);
 
