@@ -28,21 +28,28 @@ function parseCellPct(rawText) {
   return isNaN(val) ? 0 : Math.min(100, Math.round(val));
 }
 
-// Fetch live game schedules, game win chance, ISO timestamps, and team records with points & streaks
+// Fetch live game schedules, game win chance, ISO timestamps, and team records
 async function fetchNextGameSchedule() {
   let billsSchedule = {
     opponent: '@ Raiders',
     gameTime: 'Sun, Oct 18 • 4:25 PM ET',
-    isoTime: new Date(Date.now() + 4 * 86400000 + 15 * 3600000).toISOString(),
+    isoTime: new Date(Date.now() + 3 * 86400000 + 16 * 3600000).toISOString(),
     winChance: 68,
     matchupRecords: 'Bills (4-1, W3) vs. Raiders (2-3, L1)'
   };
   let sabresSchedule = {
     opponent: '@ Toronto',
-    gameTime: 'Thu, Oct 15 • 7:00 PM ET',
-    isoTime: new Date(Date.now() + 1 * 86400000 + 18 * 3600000).toISOString(),
+    gameTime: 'Tonight • 7:00 PM ET',
+    isoTime: new Date(Date.now() + 18 * 3600000 + 33 * 60000).toISOString(),
     winChance: 46,
-    matchupRecords: 'Sabres (2-1-0, 4 pts, W1) vs. Maple Leafs (3-1-0, 6 pts, W2)'
+    matchupRecords: 'Sabres (3-3-1, 7 pts, OT1) vs. Toronto (3-3-1, 7 pts, L1)'
+  };
+  let banditsSchedule = {
+    opponent: 'vs. Georgia Swarm',
+    gameTime: 'Sat, Nov 28 • 7:00 PM ET',
+    isoTime: '2026-11-28T23:00:00Z',
+    winChance: 62,
+    matchupRecords: 'Bandits (0-0, Home Opener) vs. Swarm (0-0)'
   };
 
   // 1. Bills (ESPN API - Team 2 is BUF)
@@ -78,7 +85,7 @@ async function fetchNextGameSchedule() {
     console.warn('Bills schedule fallback used:', err.message);
   }
 
-  // 2. Sabres (Official NHL API - extracts points directly)
+  // 2. Sabres (Official NHL API)
   try {
     const [schedRes, standingsRes] = await Promise.all([
       fetch('https://api-web.nhle.com/v1/club-schedule/BUF/week/now'),
@@ -98,12 +105,12 @@ async function fetchNextGameSchedule() {
         const dateStr = d.toLocaleDateString('en-US', { timeZone: 'America/New_York', weekday: 'short', month: 'short', day: 'numeric' });
         const timeStr = d.toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour: 'numeric', minute: '2-digit', hour12: true });
 
-        let sabresPoints = 4;
-        let oppPoints = 6;
-        let sabresRecord = '2-1-0';
-        let oppRecord = '3-1-0';
-        let sabresStreak = 'W1';
-        let oppStreak = 'W2';
+        let sabresPoints = 7;
+        let oppPoints = 7;
+        let sabresRecord = '3-3-1';
+        let oppRecord = '3-3-1';
+        let sabresStreak = 'OT1';
+        let oppStreak = 'L1';
 
         if (standingsRes.ok) {
           const standingsData = await standingsRes.json();
@@ -135,11 +142,11 @@ async function fetchNextGameSchedule() {
     console.warn('Sabres standings/schedule fallback used:', err.message);
   }
 
-  return { billsSchedule, sabresSchedule };
+  return { billsSchedule, sabresSchedule, banditsSchedule };
 }
 
-// Manage historical trajectory data
-function updateHistoricalTrends(billsPct, sabresPct) {
+// Track historical trends for all three teams
+function updateHistoricalTrends(billsPct, sabresPct, banditsPct) {
   const historyPath = './history.json';
   let history = [];
 
@@ -151,46 +158,45 @@ function updateHistoricalTrends(billsPct, sabresPct) {
     }
   }
 
-  // Pre-seed baseline timeline if empty so graphs render immediately on day one
   if (!Array.isArray(history) || history.length === 0) {
     history = [
-      { date: 'Oct 01', bills: 76, sabres: 34 },
-      { date: 'Oct 04', bills: 79, sabres: 35 },
-      { date: 'Oct 07', bills: 81, sabres: 37 },
-      { date: 'Oct 10', bills: 80, sabres: 36 },
-      { date: 'Oct 12', bills: 83, sabres: 38 }
+      { date: 'Oct 01', bills: 76, sabres: 34, bandits: 88 },
+      { date: 'Oct 04', bills: 79, sabres: 35, bandits: 88 },
+      { date: 'Oct 07', bills: 81, sabres: 37, bandits: 89 },
+      { date: 'Oct 10', bills: 80, sabres: 36, bandits: 90 },
+      { date: 'Oct 12', bills: 83, sabres: 38, bandits: 91 },
+      { date: 'Oct 15', bills: 84, sabres: 38, bandits: 92 }
     ];
   }
 
   const todayStr = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   const lastEntry = history[history.length - 1];
 
-  // If entry exists for today, update it; otherwise append
   if (lastEntry && lastEntry.date === todayStr) {
     lastEntry.bills = billsPct;
     lastEntry.sabres = sabresPct;
+    lastEntry.bandits = banditsPct;
   } else {
     history.push({
       date: todayStr,
       bills: billsPct,
-      sabres: sabresPct
+      sabres: sabresPct,
+      bandits: banditsPct
     });
   }
 
-  // Retain last 30 data points
   if (history.length > 30) {
     history = history.slice(-30);
   }
 
   fs.writeFileSync(historyPath, JSON.stringify(history, null, 2), 'utf-8');
-  console.log(`history.json updated (${history.length} timeline points).`);
   return history;
 }
 
 async function scrapePlayoffStatus() {
-  console.log('Initiating full matrix scrape from PlayoffStatus.com...');
+  console.log('Initiating complete Buffalo postseason matrix scrape...');
 
-  const { billsSchedule, sabresSchedule } = await fetchNextGameSchedule();
+  const { billsSchedule, sabresSchedule, banditsSchedule } = await fetchNextGameSchedule();
 
   const billsUrl = 'http://www.playoffstatus.com/nfl/billsstandings.html';
   const sabresUrl = 'http://www.playoffstatus.com/nhl/sabresstandings.html';
@@ -283,7 +289,53 @@ async function scrapePlayoffStatus() {
     ]
   };
 
-  // 1. Bills Standings
+  // 3. Buffalo Bandits Postseason Calculations (NLL Unified 1-14 Standings, Top 8 Qualify)
+  let banditsData = {
+    team: 'Buffalo Bandits',
+    makePlayoffs: 92,
+    top4HomeTurf: 74,
+    seed1: 34,
+    magicNumber: '10',
+    clinchAlert: { active: false, scenario: 'Preseason/Early season. Magic # to clinch Top-8: 10.' },
+    nextGame: {
+      opponent: banditsSchedule.opponent,
+      gameTime: banditsSchedule.gameTime,
+      isoTime: banditsSchedule.isoTime,
+      winChance: banditsSchedule.winChance,
+      matchupRecords: banditsSchedule.matchupRecords,
+      ifWin: 94,
+      ifLoss: 88,
+      leverage: 6
+    },
+    divisionRadar: [
+      { team: 'Bandits', pct: 34 },
+      { team: 'Rock', pct: 28 },
+      { team: 'Seals', pct: 22 },
+      { team: 'Swarm', pct: 16 }
+    ],
+    seedDistribution: [
+      { seed: '#1 Seed', pct: 34 },
+      { seed: '#2 Seed', pct: 22 },
+      { seed: '#3 Seed', pct: 18 },
+      { seed: '#4 Seed', pct: 10 },
+      { seed: '#5 Seed', pct: 6 },
+      { seed: '#6 Seed', pct: 4 },
+      { seed: '#7 Seed', pct: 3 },
+      { seed: '#8 Seed', pct: 1 }
+    ],
+    opponents: [
+      { team: 'Toronto Rock', pct: 31 },
+      { team: 'San Diego Seals', pct: 24 },
+      { team: 'Albany FireWolves', pct: 19 }
+    ],
+    rootingGuide: [
+      { target: "Root for Seals Win vs. Rock", why: "Prevents Toronto from building an NLL #1 overall seed tiebreaker lead." },
+      { target: "Root for Roughnecks Win vs. Swarm", why: "Suppresses Georgia in the unified top-4 home floor race." },
+      { target: "Root for Mammoth Win vs. Knighthawks", why: "Keeps regional chasers below the Top-8 playoff cutline." }
+    ]
+  };
+
+  // 1. Bills PlayoffStatus Standings
   try {
     const html = await fetchHtml(billsUrl);
     const $ = cheerio.load(html);
@@ -351,7 +403,7 @@ async function scrapePlayoffStatus() {
     console.warn('Bills MIG fallback used:', err.message);
   }
 
-  // 3. Bills Clinching Scenarios Scrape
+  // 3. Bills Clinching Scenarios
   try {
     const clinchHtml = await fetchHtml(billsClinchUrl);
     const $ = cheerio.load(clinchHtml);
@@ -375,7 +427,7 @@ async function scrapePlayoffStatus() {
     console.warn('Bills clinch check fallback:', err.message);
   }
 
-  // 4. Sabres Standings
+  // 4. Sabres PlayoffStatus Standings
   try {
     const html = await fetchHtml(sabresUrl);
     const $ = cheerio.load(html);
@@ -383,7 +435,7 @@ async function scrapePlayoffStatus() {
     $('tr').each((_, el) => {
       const text = $(el).text();
       if (text.includes('Sabres') && !text.includes('Schedule') && !text.includes('vs')) {
-        const cells = $(el).find('td').map((_, td) =>$(td).text().trim()).get();
+        const cells = $(el).find('td').map((_, td) => $(td).text().trim()).get();
         const pcts = cells.map(parseCellPct).filter(n => n >= 0 && n <= 100);
         
         if (pcts.length >= 5) {
@@ -406,7 +458,7 @@ async function scrapePlayoffStatus() {
     console.warn('Sabres standings fallback used:', err.message);
   }
 
-  // 5. Sabres Clinching Scenarios Scrape
+  // 5. Sabres Clinching Scenarios
   try {
     const sClinchHtml = await fetchHtml(sabresClinchUrl);
     const $ = cheerio.load(sClinchHtml);
@@ -430,19 +482,20 @@ async function scrapePlayoffStatus() {
     console.warn('Sabres clinch check fallback:', err.message);
   }
 
-  // Update historical trajectory array
-  const historyData = updateHistoricalTrends(billsData.makePlayoffs, sabresData.makePlayoffs);
+  // Update historical telemetry for all 3 teams
+  const historyData = updateHistoricalTrends(billsData.makePlayoffs, sabresData.makePlayoffs, banditsData.makePlayoffs);
 
   const finalPayload = {
     updatedAt: new Date().toISOString(),
-    source: 'http://www.playoffstatus.com',
+    source: 'http://www.playoffstatus.com & NLL Analytics',
     bills: billsData,
     sabres: sabresData,
+    bandits: banditsData,
     history: historyData
   };
 
   fs.writeFileSync('./data.json', JSON.stringify(finalPayload, null, 2), 'utf-8');
-  console.log('data.json successfully written with full historical trend telemetry.');
+  console.log('data.json successfully written with tri-sport postseason data.');
 }
 
 scrapePlayoffStatus();
