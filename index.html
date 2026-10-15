@@ -72,7 +72,7 @@
     .meta-bar a { color: #38bdf8; text-decoration: none; }
     .meta-bar a:hover { text-decoration: underline; }
 
-    /* TOP VIEW TOGGLE SWITCH */
+    /* TOP VIEW TOGGLE SWITCH (COMMAND CENTER FIRST, POSTSEASON SECOND) */
     .view-switcher {
       display: flex;
       justify-content: center;
@@ -104,7 +104,6 @@
       color: #fff;
     }
 
-    /* RESPONSIVE 3-COLUMN POSTSEASON GRID */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
@@ -144,7 +143,6 @@
     .badge-sabres { background: var(--sabres-gold); color: #000; }
     .badge-bandits { background: var(--bandits-orange); color: #fff; }
 
-    /* CLINCHING ALERT WIDGET */
     .clinch-alert-box {
       border-radius: 8px;
       padding: 0.6rem 0.85rem;
@@ -164,7 +162,6 @@
     }
     .clinch-icon { font-size: 1rem; flex-shrink: 0; }
 
-    /* STREAMLINED NEXT GAME HERO CARD */
     .stakes-banner {
       background: var(--card-inner);
       border: 1px solid var(--card-border);
@@ -475,13 +472,13 @@
     </div>
   </header>
 
-  <!-- VIEW SWITCHER (NAVIGATE BETWEEN DASHBOARD & HUB) -->
+  <!-- VIEW SWITCHER (MATCHING ORDER: COMMAND CENTER LEFT, POSTSEASON RIGHT) -->
   <nav class="view-switcher">
-    <a href="./index.html" class="switch-btn switch-btn-active">
-      <span>🏆</span> Postseason Probabilities
-    </a>
     <a href="./hub.html" class="switch-btn switch-btn-inactive">
       <span>⚡</span> Sports Command Center
+    </a>
+    <a href="./index.html" class="switch-btn switch-btn-active">
+      <span>🏆</span> Postseason Probabilities
     </a>
   </nav>
 
@@ -775,7 +772,6 @@
 
   <script>
     async function checkLiveScores() {
-      // 1. Bills (ESPN API)
       try {
         const res = await fetch('https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard');
         if (res.ok) {
@@ -818,7 +814,6 @@
         console.warn('Bills live score check skipped:', err);
       }
 
-      // 2. Sabres (NHL API)
       try {
         const res = await fetch('https://api-web.nhle.com/v1/score/now');
         if (res.ok) {
