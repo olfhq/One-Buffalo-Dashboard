@@ -288,8 +288,46 @@
       letter-spacing: 0.5px;
       color: var(--text-muted);
       margin-bottom: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
+    /* HISTORICAL TREND GRAPH WIDGET */
+    .trend-card {
+      background: var(--card-inner);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 0.85rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .trend-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+    }
+    .trend-badge {
+      font-weight: 700;
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      font-size: 0.7rem;
+    }
+    .trend-up { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+    .trend-down { background: rgba(239, 68, 68, 0.15); color: #f87171; }
+    .trend-svg-wrap {
+      width: 100%;
+      height: 60px;
+    }
+    .trend-svg-wrap svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    /* DISTRIBUTION BARS */
     .dist-bar-wrap { display: flex; flex-direction: column; gap: 0.4rem; }
     .dist-row { display: flex; align-items: center; font-size: 0.8rem; }
     .dist-name { width: 85px; color: var(--text-muted); }
@@ -426,6 +464,17 @@
         </div>
       </div>
 
+      <!-- BILLS HISTORICAL GRAPH -->
+      <div>
+        <div class="section-subtitle">
+          <span>Season Arc Trajectory</span>
+          <span class="trend-badge" id="bills-trend-badge">--</span>
+        </div>
+        <div class="trend-card">
+          <div class="trend-svg-wrap" id="bills-trend-svg"></div>
+        </div>
+      </div>
+
       <div>
         <div class="section-subtitle">AFC East Division Radar</div>
         <div class="radar-wrap" id="bills-radar"></div>
@@ -512,6 +561,17 @@
         </div>
       </div>
 
+      <!-- SABRES HISTORICAL GRAPH -->
+      <div>
+        <div class="section-subtitle">
+          <span>Season Arc Trajectory</span>
+          <span class="trend-badge" id="sabres-trend-badge">--</span>
+        </div>
+        <div class="trend-card">
+          <div class="trend-svg-wrap" id="sabres-trend-svg"></div>
+        </div>
+      </div>
+
       <div>
         <div class="section-subtitle">Atlantic Division Radar</div>
         <div class="radar-wrap" id="sabres-radar"></div>
@@ -570,6 +630,63 @@
       setInterval(update, 1000);
     }
 
+    // Dynamic SVG Trendline Generator
+    function renderSparkline(containerId, historyArr, key, strokeColor, fillColor) {
+      const container = document.getElementById(containerId);
+      if (!container || !historyArr || historyArr.length < 2) return;
+
+      const width = 300;
+      const height = 60;
+      const padding = 6;
+
+      const values = historyArr.map(h => h[key]);
+      const min = Math.max(0, Math.min(...values) - 10);
+      const max = Math.min(100, Math.max(...values) + 10);
+
+      const points = values.map((val, i) => {
+        const x = padding + (i / (values.length - 1)) * (width - 2 * padding);
+        const y = height - padding - ((val - min) / (max - min || 1)) * (height - 2 * padding);
+        return { x, y, val };
+      });
+
+      const linePath = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' ');
+      const areaPath = `${linePath} L ${points[points.length - 1].x.toFixed(1)} ${height} L ${points[0].x.toFixed(1)} ${height} Z`;
+
+      const lastPoint = points[points.length - 1];
+
+      container.innerHTML = `
+        <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="grad-${key}" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="${strokeColor}" stop-opacity="0.3"/>
+              <stop offset="100%" stop-color="${strokeColor}" stop-opacity="0.0"/>
+            </linearGradient>
+          </defs>
+          <path d="${areaPath}" fill="url(#grad-${key})" />
+          <path d="${linePath}" fill="none" stroke="${strokeColor}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+          <circle cx="${lastPoint.x}" cy="${lastPoint.y}" r="4" fill="${strokeColor}" />
+          <text x="${lastPoint.x - 12}" y="${lastPoint.y - 7}" fill="#fff" font-size="9" font-weight="700">${lastPoint.val}%</text>
+        </svg>
+      `;
+    }
+
+    function calculateDeltaBadge(badgeId, historyArr, key) {
+      const badge = document.getElementById(badgeId);
+      if (!badge || !historyArr || historyArr.length < 2) return;
+
+      const first = historyArr[0][key];
+      const last = historyArr[historyArr.length - 1][key];
+      const delta = last - first;
+
+      if (delta >= 0) {
+        badge.textContent = `▲ +${delta}% (30d)`;
+        badge.className = 'trend-badge trend-up';
+      } else {
+        badge.textContent = `▼ ${delta}% (30d)`;
+        badge.className = 'trend-badge trend-down';
+      }
+    }
+
     async function loadData() {
       const statusEl = document.getElementById('update-status');
       let data = null;
@@ -617,6 +734,12 @@
 
       if (b.nextGame.isoTime) {
         startCountdown('bills-countdown', b.nextGame.isoTime);
+      }
+
+      // Render Bills Historical Sparkline
+      if (data.history) {
+        renderSparkline('bills-trend-svg', data.history, 'bills', '#38bdf8');
+        calculateDeltaBadge('bills-trend-badge', data.history, 'bills');
       }
 
       document.getElementById('bills-radar').innerHTML = b.divisionRadar.map(r => `
@@ -676,6 +799,12 @@
 
       if (s.nextGame.isoTime) {
         startCountdown('sabres-countdown', s.nextGame.isoTime);
+      }
+
+      // Render Sabres Historical Sparkline
+      if (data.history) {
+        renderSparkline('sabres-trend-svg', data.history, 'sabres', '#FCB514');
+        calculateDeltaBadge('sabres-trend-badge', data.history, 'sabres');
       }
 
       document.getElementById('sabres-radar').innerHTML = s.divisionRadar.map(r => `
