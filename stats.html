@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <title>One Buffalo Stats Lab</title>
+
+  <!-- PWA & Mobile Meta Tags -->
+  <link rel="manifest" href="./manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="One Buffalo Stats">
+  <meta name="theme-color" content="#090d16">
+
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='110' fill='%23090d16'/%3E%3Cpath d='M70 120 L240 120 L240 392 L160 392 L160 210 L70 210 Z' fill='%23C60C30'/%3E%3Cpath d='M272 120 L442 120 L442 392 L362 392 L362 210 L272 210 Z' fill='%23FCB514'/%3E%3Ccircle cx='256' cy='440' r='18' fill='%23F37021'/%3E%3C/svg%3E">
+
+  <style>
+    :root {
+      --bills-blue: #00338D;
+      --bills-red: #C60C30;
+      --sabres-navy: #002654;
+      --sabres-gold: #FCB514;
+      --bandits-orange: #F37021;
+      --bandits-black: #111111;
+      --bg-dark: #090d16;
+      --card-bg: #141c2c;
+      --card-inner: #0d1422;
+      --card-border: #1f2c44;
+      --text-main: #f3f4f6;
+      --text-muted: #94a3b8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      padding: 1.5rem;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    header { text-align: center; margin-bottom: 1.25rem; }
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 0.3rem;
+      background: linear-gradient(90deg, #38bdf8, #FCB514, #F37021);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .meta-bar {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    /* 3-TAB VIEW SWITCHER */
+    .view-switcher {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .switch-btn {
+      padding: 0.45rem 1rem;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .switch-btn-active { background: #38bdf8; color: #000; }
+    .switch-btn-inactive {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-muted);
+      border: 1px solid var(--card-border);
+    }
+    .switch-btn-inactive:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
+
+    .main-wrap {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    /* 3-COLUMN STAT LAB GRID */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .stat-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 1.4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
+    }
+    .stat-bills { border-top: 4px solid var(--bills-red); }
+    .stat-sabres { border-top: 4px solid var(--sabres-gold); }
+    .stat-bandits { border-top: 4px solid var(--bandits-orange); }
+
+    .team-header { display: flex; justify-content: space-between; align-items: center; }
+    .team-title { font-size: 1.45rem; font-weight: 800; }
+    .badge {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      font-weight: 700;
+      padding: 0.25rem 0.65rem;
+      border-radius: 4px;
+    }
+    .badge-bills { background: var(--bills-red); color: #fff; }
+    .badge-sabres { background: var(--sabres-gold); color: #000; }
+    .badge-bandits { background: var(--bandits-orange); color: #fff; }
+
+    /* EFFICIENCY METRICS STRIP */
+    .efficiency-banner {
+      background: var(--card-inner);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      display: flex;
+      justify-content: space-around;
+      text-align: center;
+    }
+    .eff-val { font-size: 1.25rem; font-weight: 800; color: #fff; }
+    .eff-label { font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase; margin-top: 0.15rem; }
+
+    .section-title {
+      font-size: 0.8rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+    }
+
+    /* LEADER TABLES */
+    .leader-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      background: var(--card-inner);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .leader-table th {
+      background: rgba(255, 255, 255, 0.04);
+      padding: 0.5rem 0.75rem;
+      text-align: left;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+    .leader-table td {
+      padding: 0.6rem 0.75rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
+      color: #cbd5e1;
+    }
+    .player-col { font-weight: 700; color: #fff; }
+    .highlight-stat { font-weight: 800; color: #38bdf8; text-align: right; }
+    .highlight-sabres { color: var(--sabres-gold); }
+    .highlight-bandits { color: var(--bandits-orange); }
+
+    footer { text-align: center; margin-top: 3rem; font-size: 0.8rem; color: var(--text-muted); }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>ONE BUFFALO STATS LAB</h1>
+    <div class="meta-bar">
+      <span>Official Season Performance & Leaderboards</span>
+      <span>•</span>
+      <span>Bills • Sabres • Bandits</span>
+    </div>
+  </header>
+
+  <!-- 3-TAB NAVIGATION -->
+  <nav class="view-switcher">
+    <a href="./index.html" class="switch-btn switch-btn-inactive">
+      <span>⚡</span> Sports Command Center
+    </a>
+    <a href="./playoffs.html" class="switch-btn switch-btn-inactive">
+      <span>🏆</span> Postseason Probabilities
+    </a>
+    <a href="./stats.html" class="switch-btn switch-btn-active">
+      <span>📊</span> Stats Lab
+    </a>
+  </nav>
+
+  <main class="main-wrap">
+    <section class="stats-grid">
+      <!-- BUFFALO BILLS STAT LAB -->
+      <article class="stat-card stat-bills">
+        <div class="team-header">
+          <h2 class="team-title">Buffalo Bills</h2>
+          <span class="badge badge-bills">NFL Leaders</span>
+        </div>
+
+        <div class="efficiency-banner">
+          <div>
+            <div class="eff-val">28.4</div>
+            <div class="eff-label">PPG (5th)</div>
+          </div>
+          <div>
+            <div class="eff-val">46.2%</div>
+            <div class="eff-label">3rd Down %</div>
+          </div>
+          <div>
+            <div class="eff-val" style="color: #34d399;">+6</div>
+            <div class="eff-label">Turnover +/-</div>
+          </div>
+        </div>
+
+        <div>
+          <div class="section-title">Passing & Rushing Leaders</div>
+          <table class="leader-table">
+            <thead>
+              <tr>
+                <th>Player</th>
+                <th>Category</th>
+                <th style="text-align: right;">Total / TD</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="player-col">Josh Allen (QB)</td>
+                <td>Passing Yds / TD</td>
+                <td class="highlight-stat">1,248 Yds • 10 TD</td>
+              </tr>
+              <tr>
+                <td class="player-col">James Cook (RB)</td>
+                <td>Rushing Yds / YPC</td>
+                <td class="highlight-stat">432 Yds • 5.2 YPC</td>
+              </tr>
+              <tr>
+                <td class="player-col">Josh Allen (QB)</td>
+                <td>Rushing Yds / TD</td>
+                <td class="highlight-stat">179 Yds • 2 TD</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div>
+          <div class="section-title">Receiving & Defensive Leaders</div>
+          <table class="leader-table">
+            <thead>
+              <tr>
+                <th>Player</th>
+                <th>Stat Line</th>
+                <th style="text-align: right;">Impact</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="player-col">Khalil Shakir (WR)</td>
+                <td>28 Catches / 342 Yds</td>
+                <td class="highlight-stat">2 TD • 82% Catch</td>
+              </tr>
+              <tr>
+                <td class="player-col">Dalton Kincaid (TE)</td>
+                <td>21 Catches / 217 Yds</td>
+                <td class="highlight-stat">1 TD • 10.3 Avg</td>
+              </tr>
+              <tr>
+                <td class="player-col">Greg Rousseau (DE)</td>
+                <td>4.5 Sacks • 8 TFL</td>
+                <td class="highlight-stat">12 QB Hits</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+
+      <!-- BUFFALO SABRES STAT LAB -->
+      <article class="stat-card stat-sabres">
+        <div class="team-header">
+          <h2 class="team-title">Buffalo Sabres</h2>
+          <span class="badge badge-sabres">NHL Leaders</span>
+        </div>
+
+        <div class="efficiency-banner">
+          <div>
+            <div class="eff-val">3.14</div>
+            <div class="eff-label">GF / Game</div>
+          </div>
+          <div>
+            <div class="eff-val" style="color: var(--sabres-gold);">21.8%</div>
+            <div class="eff-label">Power Play</div>
+          </div>
+          <div>
+            <div class="eff-val">81.4%</div>
+            <div class="eff-label">Penalty Kill</div>
+          </div>
+        </div>
+
+        <div>
+          <div class="section-title">Top Skaters (G - A - PTS)</div>
+          <table class="leader-table">
+            <thead>
+              <tr>
+                <th>Player</th>
+                <th>GP</th>
+                <th style="text-align: right;">G - A - PTS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="player-col">Tage Thompson (C)</td>
+                <td>7</td>
+                <td class="highlight-stat highlight-sabres">4G - 3A - 7 PTS</td>
+              </tr>
+              <tr>
+                <td class="player-col">Alex Tuch (RW)</td>
+                <td>7</td>
+                <td class="highlight-stat highlight-sabres">3G - 4A - 7 PTS</td>
+              </tr>
+              <tr>
+                <td class="player-col">Rasmus Dahlin (D)</td>
+                <td>7</td>
+                <td class="highlight-stat highlight-sabres">1G - 5A - 6 PTS</td>
+              </tr>
+              <tr>
+                <td class="player-col">JJ Peterka (LW)</td>
+                <td>5</td>
+                <td class="highlight-stat highlight-sabres">3G - 2A - 5 PTS</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div>
+          <div class="section-title">Goaltending Numbers</div>
+          <table class="leader-table">
+            <thead>
+              <tr>
+                <th>Goalie</th>
+                <th>Record</th>
+                <th style="text-align: right;">GAA / SV%</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="player-col">Ukko-Pekka Luukkonen</td>
+                <td>3-2-1</td>
+                <td class="highlight-stat highlight-sabres">2.68 • .912%</td>
+              </tr>
+              <tr>
+                <td class="player-col">Devon Levi</td>
+                <td>0-1-0</td>
+                <td class="highlight-stat highlight-sabres">3.10 • .898%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+
+      <!-- BUFFALO BANDITS STAT LAB -->
+      <article class="stat-card stat-bandits">
+        <div class="team-header">
+          <h2 class="team-title">Buffalo Bandits</h2>
+          <span class="badge badge-bandits">NLL Leaders</span>
+        </div>
+
+        <div class="efficiency-banner">
+          <div>
+            <div class="eff-val">12.8</div>
+            <div class="eff-label">Goals / Game</div>
+          </div>
+          <div>
+            <div class="eff-val" style="color: var(--bandits-orange);">54.2%</div>
+            <div class="eff-label">Power Play</div>
+          </div>
+          <div>
+            <div class="eff-val">6x</div>
+            <div class="eff-label">Champions</div>
+          </div>
+        </div>
+
+        <div>
+          <div class="section-title">Offensive Firepower (G - A - PTS)</div>
+          <table class="leader-table">
+            <thead>
+              <tr>
+                <th>Player</th>
+                <th>Role</th>
+                <th style="text-align: right;">G - A - PTS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="player-col">Josh Byrne (F) #22</td>
+                <td>NLL MVP</td>
+                <td class="highlight-stat highlight-bandits">53G - 82A - 135 PTS</td>
+              </tr>
+              <tr>
+                <td class="player-col">Dhane Smith (F) #92</td>
+                <td>Finals MVP</td>
+                <td class="highlight-stat highlight-bandits">26G - 101A - 127 PTS</td>
+              </tr>
+              <tr>
+                <td class="player-col">Tehoka Nanticoke (F)</td>
+                <td>Right Forward</td>
+                <td class="highlight-stat highlight-bandits">31G - 24A - 55 PTS</td>
+              </tr>
+              <tr>
+                <td class="player-col">Chase Fraser (F)</td>
+                <td>Transition/Fwd</td>
+                <td class="highlight-stat highlight-bandits">28G - 18A - 46 PTS</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div>
+          <div class="section-title">Goaltending & Defensive Ball Control</div>
+          <table class="leader-table">
+            <thead>
+              <tr>
+                <th>Player</th>
+                <th>Category</th>
+                <th style="text-align: right;">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="player-col">Matt Vinc (G) #48</td>
+                <td>Saves / Save %</td>
+                <td class="highlight-stat highlight-bandits">748 Saves • .801%</td>
+              </tr>
+              <tr>
+                <td class="player-col">Nick Weiss (D)</td>
+                <td>Loose Balls / CTO</td>
+                <td class="highlight-stat highlight-bandits">112 LBs • 18 CTO</td>
+              </tr>
+              <tr>
+                <td class="player-col">Cam Wyers (D)</td>
+                <td>Blocked Shots</td>
+                <td class="highlight-stat highlight-bandits">19 Blocks • 64 LBs</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <footer>
+    <p>One Buffalo Stats Lab. Hosted on <a href="https://github.com/olfhq/One-Buffalo-Dashboard" target="_blank" rel="noopener" style="color: #38bdf8;">GitHub Pages</a> via onebuffalotracker.fyi.</p>
+  </footer>
+</body>
+</html>
