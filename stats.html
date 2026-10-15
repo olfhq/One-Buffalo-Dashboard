@@ -95,7 +95,6 @@
       gap: 1.5rem;
     }
 
-    /* 3-COLUMN STAT LAB GRID */
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
@@ -129,7 +128,6 @@
     .badge-sabres { background: var(--sabres-gold); color: #000; }
     .badge-bandits { background: var(--bandits-orange); color: #fff; }
 
-    /* EFFICIENCY METRICS STRIP */
     .efficiency-banner {
       background: var(--card-inner);
       border: 1px solid var(--card-border);
@@ -151,7 +149,6 @@
       margin-bottom: 0.4rem;
     }
 
-    /* LEADER TABLES */
     .leader-table {
       width: 100%;
       border-collapse: collapse;
@@ -160,6 +157,7 @@
       border: 1px solid var(--card-border);
       border-radius: 8px;
       overflow: hidden;
+      margin-bottom: 0.5rem;
     }
     .leader-table th {
       background: rgba(255, 255, 255, 0.04);
@@ -171,7 +169,7 @@
       font-weight: 700;
     }
     .leader-table td {
-      padding: 0.6rem 0.75rem;
+      padding: 0.55rem 0.75rem;
       border-top: 1px solid rgba(255, 255, 255, 0.04);
       color: #cbd5e1;
     }
@@ -188,7 +186,7 @@
   <header>
     <h1>ONE BUFFALO STATS LAB</h1>
     <div class="meta-bar">
-      <span>Official Season Performance & Leaderboards</span>
+      <span id="update-status">Loading latest leaderboards...</span>
       <span>•</span>
       <span>Bills • Sabres • Bandits</span>
     </div>
@@ -209,7 +207,7 @@
 
   <main class="main-wrap">
     <section class="stats-grid">
-      <!-- BUFFALO BILLS STAT LAB -->
+      <!-- BUFFALO BILLS -->
       <article class="stat-card stat-bills">
         <div class="team-header">
           <h2 class="team-title">Buffalo Bills</h2>
@@ -218,21 +216,21 @@
 
         <div class="efficiency-banner">
           <div>
-            <div class="eff-val">28.4</div>
+            <div class="eff-val" id="bills-eff-ppg">28.4</div>
             <div class="eff-label">PPG (5th)</div>
           </div>
           <div>
-            <div class="eff-val">46.2%</div>
+            <div class="eff-val" id="bills-eff-3rd">46.2%</div>
             <div class="eff-label">3rd Down %</div>
           </div>
           <div>
-            <div class="eff-val" style="color: #34d399;">+6</div>
+            <div class="eff-val" id="bills-eff-to" style="color: #34d399;">+6</div>
             <div class="eff-label">Turnover +/-</div>
           </div>
         </div>
 
         <div>
-          <div class="section-title">Passing & Rushing Leaders</div>
+          <div class="section-title">Passing & Rushing Attack</div>
           <table class="leader-table">
             <thead>
               <tr>
@@ -241,58 +239,40 @@
                 <th style="text-align: right;">Total / TD</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td class="player-col">Josh Allen (QB)</td>
-                <td>Passing Yds / TD</td>
-                <td class="highlight-stat">1,248 Yds • 10 TD</td>
-              </tr>
-              <tr>
-                <td class="player-col">James Cook (RB)</td>
-                <td>Rushing Yds / YPC</td>
-                <td class="highlight-stat">432 Yds • 5.2 YPC</td>
-              </tr>
-              <tr>
-                <td class="player-col">Josh Allen (QB)</td>
-                <td>Rushing Yds / TD</td>
-                <td class="highlight-stat">179 Yds • 2 TD</td>
-              </tr>
-            </tbody>
+            <tbody id="bills-pass-rush-body"></tbody>
           </table>
         </div>
 
         <div>
-          <div class="section-title">Receiving & Defensive Leaders</div>
+          <div class="section-title">Receiving Targets</div>
           <table class="leader-table">
             <thead>
               <tr>
-                <th>Player</th>
-                <th>Stat Line</th>
-                <th style="text-align: right;">Impact</th>
+                <th>Target</th>
+                <th>Receptions / Yds</th>
+                <th style="text-align: right;">TD / Avg</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody id="bills-rec-body"></tbody>
+          </table>
+        </div>
+
+        <div>
+          <div class="section-title">Defensive Front & Secondary</div>
+          <table class="leader-table">
+            <thead>
               <tr>
-                <td class="player-col">Khalil Shakir (WR)</td>
-                <td>28 Catches / 342 Yds</td>
-                <td class="highlight-stat">2 TD • 82% Catch</td>
+                <th>Defender</th>
+                <th>Category</th>
+                <th style="text-align: right;">Total</th>
               </tr>
-              <tr>
-                <td class="player-col">Dalton Kincaid (TE)</td>
-                <td>21 Catches / 217 Yds</td>
-                <td class="highlight-stat">1 TD • 10.3 Avg</td>
-              </tr>
-              <tr>
-                <td class="player-col">Greg Rousseau (DE)</td>
-                <td>4.5 Sacks • 8 TFL</td>
-                <td class="highlight-stat">12 QB Hits</td>
-              </tr>
-            </tbody>
+            </thead>
+            <tbody id="bills-def-body"></tbody>
           </table>
         </div>
       </article>
 
-      <!-- BUFFALO SABRES STAT LAB -->
+      <!-- BUFFALO SABRES -->
       <article class="stat-card stat-sabres">
         <div class="team-header">
           <h2 class="team-title">Buffalo Sabres</h2>
@@ -301,21 +281,21 @@
 
         <div class="efficiency-banner">
           <div>
-            <div class="eff-val">3.14</div>
+            <div class="eff-val" id="sabres-eff-gf">3.14</div>
             <div class="eff-label">GF / Game</div>
           </div>
           <div>
-            <div class="eff-val" style="color: var(--sabres-gold);">21.8%</div>
+            <div class="eff-val" id="sabres-eff-pp" style="color: var(--sabres-gold);">21.8%</div>
             <div class="eff-label">Power Play</div>
           </div>
           <div>
-            <div class="eff-val">81.4%</div>
+            <div class="eff-val" id="sabres-eff-pk">81.4%</div>
             <div class="eff-label">Penalty Kill</div>
           </div>
         </div>
 
         <div>
-          <div class="section-title">Top Skaters (G - A - PTS)</div>
+          <div class="section-title">Active Scoring Leaders (G - A - PTS)</div>
           <table class="leader-table">
             <thead>
               <tr>
@@ -324,28 +304,7 @@
                 <th style="text-align: right;">G - A - PTS</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td class="player-col">Tage Thompson (C)</td>
-                <td>7</td>
-                <td class="highlight-stat highlight-sabres">4G - 3A - 7 PTS</td>
-              </tr>
-              <tr>
-                <td class="player-col">Alex Tuch (RW)</td>
-                <td>7</td>
-                <td class="highlight-stat highlight-sabres">3G - 4A - 7 PTS</td>
-              </tr>
-              <tr>
-                <td class="player-col">Rasmus Dahlin (D)</td>
-                <td>7</td>
-                <td class="highlight-stat highlight-sabres">1G - 5A - 6 PTS</td>
-              </tr>
-              <tr>
-                <td class="player-col">JJ Peterka (LW)</td>
-                <td>5</td>
-                <td class="highlight-stat highlight-sabres">3G - 2A - 5 PTS</td>
-              </tr>
-            </tbody>
+            <tbody id="sabres-skaters-body"></tbody>
           </table>
         </div>
 
@@ -359,23 +318,12 @@
                 <th style="text-align: right;">GAA / SV%</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td class="player-col">Ukko-Pekka Luukkonen</td>
-                <td>3-2-1</td>
-                <td class="highlight-stat highlight-sabres">2.68 • .912%</td>
-              </tr>
-              <tr>
-                <td class="player-col">Devon Levi</td>
-                <td>0-1-0</td>
-                <td class="highlight-stat highlight-sabres">3.10 • .898%</td>
-              </tr>
-            </tbody>
+            <tbody id="sabres-goalies-body"></tbody>
           </table>
         </div>
       </article>
 
-      <!-- BUFFALO BANDITS STAT LAB -->
+      <!-- BUFFALO BANDITS -->
       <article class="stat-card stat-bandits">
         <div class="team-header">
           <h2 class="team-title">Buffalo Bandits</h2>
@@ -384,11 +332,11 @@
 
         <div class="efficiency-banner">
           <div>
-            <div class="eff-val">12.8</div>
+            <div class="eff-val" id="bandits-eff-gpg">12.8</div>
             <div class="eff-label">Goals / Game</div>
           </div>
           <div>
-            <div class="eff-val" style="color: var(--bandits-orange);">54.2%</div>
+            <div class="eff-val" id="bandits-eff-pp" style="color: var(--bandits-orange);">54.2%</div>
             <div class="eff-label">Power Play</div>
           </div>
           <div>
@@ -407,28 +355,7 @@
                 <th style="text-align: right;">G - A - PTS</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td class="player-col">Josh Byrne (F) #22</td>
-                <td>NLL MVP</td>
-                <td class="highlight-stat highlight-bandits">53G - 82A - 135 PTS</td>
-              </tr>
-              <tr>
-                <td class="player-col">Dhane Smith (F) #92</td>
-                <td>Finals MVP</td>
-                <td class="highlight-stat highlight-bandits">26G - 101A - 127 PTS</td>
-              </tr>
-              <tr>
-                <td class="player-col">Tehoka Nanticoke (F)</td>
-                <td>Right Forward</td>
-                <td class="highlight-stat highlight-bandits">31G - 24A - 55 PTS</td>
-              </tr>
-              <tr>
-                <td class="player-col">Chase Fraser (F)</td>
-                <td>Transition/Fwd</td>
-                <td class="highlight-stat highlight-bandits">28G - 18A - 46 PTS</td>
-              </tr>
-            </tbody>
+            <tbody id="bandits-scoring-body"></tbody>
           </table>
         </div>
 
@@ -442,23 +369,7 @@
                 <th style="text-align: right;">Total</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td class="player-col">Matt Vinc (G) #48</td>
-                <td>Saves / Save %</td>
-                <td class="highlight-stat highlight-bandits">748 Saves • .801%</td>
-              </tr>
-              <tr>
-                <td class="player-col">Nick Weiss (D)</td>
-                <td>Loose Balls / CTO</td>
-                <td class="highlight-stat highlight-bandits">112 LBs • 18 CTO</td>
-              </tr>
-              <tr>
-                <td class="player-col">Cam Wyers (D)</td>
-                <td>Blocked Shots</td>
-                <td class="highlight-stat highlight-bandits">19 Blocks • 64 LBs</td>
-              </tr>
-            </tbody>
+            <tbody id="bandits-defense-body"></tbody>
           </table>
         </div>
       </article>
@@ -468,5 +379,135 @@
   <footer>
     <p>One Buffalo Stats Lab. Hosted on <a href="https://github.com/olfhq/One-Buffalo-Dashboard" target="_blank" rel="noopener" style="color: #38bdf8;">GitHub Pages</a> via onebuffalotracker.fyi.</p>
   </footer>
+
+  <script>
+    async function loadStats() {
+      const statusEl = document.getElementById('update-status');
+      let data = null;
+
+      try {
+        const res = await fetch('./data.json?v=' + Date.now(), { cache: 'no-store' });
+        if (!res.ok) throw new Error('data.json not loaded');
+        data = await res.json();
+      } catch (err) {
+        console.warn('Fallback activated:', err);
+      }
+
+      // Default baseline if data.json hasn't run the new leader routine yet
+      const l = data?.leaders || {
+        bills: {
+          ppg: '28.4', thirdDown: '46.2%', turnoverDiff: '+6',
+          passingRushing: [
+            { player: 'Josh Allen (QB)', category: 'Passing Yds / TD', stat: '1,248 Yds • 10 TD' },
+            { player: 'James Cook (RB)', category: 'Rushing Yds / YPC', stat: '432 Yds • 5.2 YPC' },
+            { player: 'Josh Allen (QB)', category: 'Rushing Yds / TD', stat: '179 Yds • 2 TD' }
+          ],
+          receiving: [
+            { player: 'Khalil Shakir (WR)', statLine: '28 Rec • 342 Yds', impact: '2 TD • 12.2 Avg' },
+            { player: 'Dalton Kincaid (TE)', statLine: '21 Rec • 217 Yds', impact: '1 TD • 10.3 Avg' },
+            { player: 'Keon Coleman (WR)', statLine: '14 Rec • 201 Yds', impact: '2 TD • 14.4 Avg' }
+          ],
+          defense: [
+            { player: 'Greg Rousseau (DE)', category: 'Sacks • TFL', stat: '4.5 Sacks • 8 TFL' },
+            { player: 'Terrel Bernard (LB)', category: 'Total Tackles', stat: '44 Tackles • 1 INT' },
+            { player: 'Christian Benford (CB)', category: 'Passes Defended', stat: '5 PD • 1 INT' }
+          ]
+        },
+        sabres: {
+          gf: '3.14', pp: '21.8%', pk: '81.4%',
+          skaters: [
+            { player: 'Tage Thompson (C)', gp: 7, stat: '4G - 3A - 7 PTS' },
+            { player: 'Owen Power (D)', gp: 7, stat: '1G - 6A - 7 PTS' },
+            { player: 'Rasmus Dahlin (D)', gp: 7, stat: '2G - 2A - 4 PTS' },
+            { player: 'Ryan McLeod (C)', gp: 7, stat: '2G - 2A - 4 PTS' },
+            { player: 'Zach Benson (LW)', gp: 7, stat: '1G - 3A - 4 PTS' }
+          ],
+          goalies: [
+            { player: 'Ukko-Pekka Luukkonen', record: '2-2-1', stat: '2.84 • .908%' },
+            { player: 'Colten Ellis', record: '1-1-0', stat: '3.19 • .895%' }
+          ]
+        },
+        bandits: {
+          goalsPerGame: '12.8', pp: '54.2%', champs: '6x',
+          scoring: [
+            { player: 'Josh Byrne (F) #22', role: 'NLL MVP', stat: '53G - 82A - 135 PTS' },
+            { player: 'Dhane Smith (F) #92', role: 'Finals MVP', stat: '26G - 101A - 127 PTS' },
+            { player: 'Tehoka Nanticoke (F)', role: 'Right Forward', stat: '31G - 24A - 55 PTS' },
+            { player: 'Chase Fraser (F)', role: 'Transition/Fwd', stat: '28G - 18A - 46 PTS' }
+          ],
+          defense: [
+            { player: 'Matt Vinc (G) #48', category: 'Saves / Save %', stat: '748 Saves • .801%' },
+            { player: 'Nick Weiss (D)', category: 'Loose Balls / CTO', stat: '112 LBs • 18 CTO' },
+            { player: 'Cam Wyers (D)', category: 'Blocked Shots', stat: '19 Blocks • 64 LBs' }
+          ]
+        }
+      };
+
+      if (data?.updatedAt) {
+        statusEl.textContent = `Updated: ${new Date(data.updatedAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}`;
+      }
+
+      // Populate Bills
+      document.getElementById('bills-pass-rush-body').innerHTML = l.bills.passingRushing.map(row => `
+        <tr>
+          <td class="player-col">${row.player}</td>
+          <td>${row.category}</td>
+          <td class="highlight-stat">${row.stat}</td>
+        </tr>
+      `).join('');
+
+      document.getElementById('bills-rec-body').innerHTML = l.bills.receiving.map(row => `
+        <tr>
+          <td class="player-col">${row.player}</td>
+          <td>${row.statLine}</td>
+          <td class="highlight-stat">${row.impact}</td>
+        </tr>
+      `).join('');
+
+      document.getElementById('bills-def-body').innerHTML = l.bills.defense.map(row => `
+        <tr>
+          <td class="player-col">${row.player}</td>
+          <td>${row.category}</td>
+          <td class="highlight-stat">${row.stat}</td>
+        </tr>
+      `).join('');
+
+      // Populate Sabres
+      document.getElementById('sabres-skaters-body').innerHTML = l.sabres.skaters.map(row => `
+        <tr>
+          <td class="player-col">${row.player}</td>
+          <td>${row.gp}</td>
+          <td class="highlight-stat highlight-sabres">${row.stat}</td>
+        </tr>
+      `).join('');
+
+      document.getElementById('sabres-goalies-body').innerHTML = l.sabres.goalies.map(row => `
+        <tr>
+          <td class="player-col">${row.player}</td>
+          <td>${row.record}</td>
+          <td class="highlight-stat highlight-sabres">${row.stat}</td>
+        </tr>
+      `).join('');
+
+      // Populate Bandits
+      document.getElementById('bandits-scoring-body').innerHTML = l.bandits.scoring.map(row => `
+        <tr>
+          <td class="player-col">${row.player}</td>
+          <td>${row.role}</td>
+          <td class="highlight-stat highlight-bandits">${row.stat}</td>
+        </tr>
+      `).join('');
+
+      document.getElementById('bandits-defense-body').innerHTML = l.bandits.defense.map(row => `
+        <tr>
+          <td class="player-col">${row.player}</td>
+          <td>${row.category}</td>
+          <td class="highlight-stat highlight-bandits">${row.stat}</td>
+        </tr>
+      `).join('');
+    }
+
+    document.addEventListener('DOMContentLoaded', loadStats);
+  </script>
 </body>
 </html>
