@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-14T23:18:26.002Z",
+  "updatedAt": "2026-10-15T03:22:18.974Z",
   "source": "http://www.playoffstatus.com",
   "bills": {
     "team": "Buffalo Bills",
@@ -182,5 +182,37 @@
         "why": "Protects Eastern Conference Wild Card slot thresholds."
       }
     ]
-  }
+  },
+  "history": [
+    {
+      "date": "Oct 01",
+      "bills": 76,
+      "sabres": 34
+    },
+    {
+      "date": "Oct 04",
+      "bills": 79,
+      "sabres": 35
+    },
+    {
+      "date": "Oct 07",
+      "bills": 81,
+      "sabres": 37
+    },
+    {
+      "date": "Oct 10",
+      "bills": 80,
+      "sabres": 36
+    },
+    {
+      "date": "Oct 12",
+      "bills": 83,
+      "sabres": 38
+    },
+    {
+      "date": "Oct 15",
+      "bills": 84,
+      "sabres": 38
+    }
+  ]
 }
