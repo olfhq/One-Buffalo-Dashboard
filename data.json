@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-10-15T03:22:18.974Z",
-  "source": "http://www.playoffstatus.com",
+  "updatedAt": "2026-10-15T04:32:44.923Z",
+  "source": "http://www.playoffstatus.com & NLL Analytics",
   "bills": {
     "team": "Buffalo Bills",
     "makePlayoffs": 84,
@@ -183,36 +183,143 @@
       }
     ]
   },
+  "bandits": {
+    "team": "Buffalo Bandits",
+    "makePlayoffs": 92,
+    "top4HomeTurf": 74,
+    "seed1": 34,
+    "magicNumber": "10",
+    "clinchAlert": {
+      "active": false,
+      "scenario": "Preseason/Early season. Magic # to clinch Top-8: 10."
+    },
+    "nextGame": {
+      "opponent": "vs. Georgia Swarm",
+      "gameTime": "Sat, Nov 28 • 7:00 PM ET",
+      "isoTime": "2026-11-28T23:00:00Z",
+      "winChance": 62,
+      "matchupRecords": "Bandits (0-0, Home Opener) vs. Swarm (0-0)",
+      "ifWin": 94,
+      "ifLoss": 88,
+      "leverage": 6
+    },
+    "divisionRadar": [
+      {
+        "team": "Bandits",
+        "pct": 34
+      },
+      {
+        "team": "Rock",
+        "pct": 28
+      },
+      {
+        "team": "Seals",
+        "pct": 22
+      },
+      {
+        "team": "Swarm",
+        "pct": 16
+      }
+    ],
+    "seedDistribution": [
+      {
+        "seed": "#1 Seed",
+        "pct": 34
+      },
+      {
+        "seed": "#2 Seed",
+        "pct": 22
+      },
+      {
+        "seed": "#3 Seed",
+        "pct": 18
+      },
+      {
+        "seed": "#4 Seed",
+        "pct": 10
+      },
+      {
+        "seed": "#5 Seed",
+        "pct": 6
+      },
+      {
+        "seed": "#6 Seed",
+        "pct": 4
+      },
+      {
+        "seed": "#7 Seed",
+        "pct": 3
+      },
+      {
+        "seed": "#8 Seed",
+        "pct": 1
+      }
+    ],
+    "opponents": [
+      {
+        "team": "Toronto Rock",
+        "pct": 31
+      },
+      {
+        "team": "San Diego Seals",
+        "pct": 24
+      },
+      {
+        "team": "Albany FireWolves",
+        "pct": 19
+      }
+    ],
+    "rootingGuide": [
+      {
+        "target": "Root for Seals Win vs. Rock",
+        "why": "Prevents Toronto from building an NLL #1 overall seed tiebreaker lead."
+      },
+      {
+        "target": "Root for Roughnecks Win vs. Swarm",
+        "why": "Suppresses Georgia in the unified top-4 home floor race."
+      },
+      {
+        "target": "Root for Mammoth Win vs. Knighthawks",
+        "why": "Keeps regional chasers below the Top-8 playoff cutline."
+      }
+    ]
+  },
   "history": [
     {
       "date": "Oct 01",
       "bills": 76,
-      "sabres": 34
+      "sabres": 34,
+      "bandits": 88
     },
     {
       "date": "Oct 04",
       "bills": 79,
-      "sabres": 35
+      "sabres": 35,
+      "bandits": 88
     },
     {
       "date": "Oct 07",
       "bills": 81,
-      "sabres": 37
+      "sabres": 37,
+      "bandits": 89
     },
     {
       "date": "Oct 10",
       "bills": 80,
-      "sabres": 36
+      "sabres": 36,
+      "bandits": 90
     },
     {
       "date": "Oct 12",
       "bills": 83,
-      "sabres": 38
+      "sabres": 38,
+      "bandits": 91
     },
     {
       "date": "Oct 15",
       "bills": 84,
-      "sabres": 38
+      "sabres": 38,
+      "bandits": 92
     }
   ]
 }
