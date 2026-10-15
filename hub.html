@@ -13,6 +13,8 @@
   <meta name="apple-mobile-web-app-title" content="One Buffalo Hub">
   <meta name="theme-color" content="#090d16">
 
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='110' fill='%23090d16'/%3E%3Cpath d='M70 120 L240 120 L240 392 L160 392 L160 210 L70 210 Z' fill='%23C60C30'/%3E%3Cpath d='M272 120 L442 120 L442 392 L362 392 L362 210 L272 210 Z' fill='%23FCB514'/%3E%3Ccircle cx='256' cy='440' r='18' fill='%23F37021'/%3E%3C/svg%3E">
+
   <style>
     :root {
       --bills-blue: #00338D;
@@ -41,7 +43,7 @@
 
     header {
       text-align: center;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.25rem;
     }
 
     h1 {
@@ -52,6 +54,15 @@
       background: linear-gradient(90deg, #38bdf8, #FCB514, #F37021);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+    }
+
+    .meta-bar {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      align-items: center;
     }
 
     /* TOP VIEW TOGGLE SWITCH */
@@ -105,7 +116,7 @@
       align-items: center;
       flex-wrap: wrap;
       gap: 1rem;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+      box-shadow: 0 6px 24px rgba(0,0,0,0.45);
     }
     .hero-info-left {
       display: flex;
@@ -129,7 +140,7 @@
       color: #cbd5e1;
     }
     .hero-clock-box {
-      background: rgba(0, 0, 0, 0.4);
+      background: rgba(0, 0, 0, 0.45);
       border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 10px;
       padding: 0.6rem 1.25rem;
@@ -244,6 +255,81 @@
     .roster-chip-name { font-weight: 600; color: #fff; }
     .roster-chip-stat { color: #f59e0b; font-weight: 700; font-size: 0.75rem; }
 
+    /* ROSTER TRANSACTIONS & HEADLINES WIRE */
+    .wire-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
+    }
+    .wire-tabs {
+      display: flex;
+      gap: 0.5rem;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 0.75rem;
+    }
+    .wire-tab-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 0.35rem 0.85rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .wire-tab-btn.active {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+    }
+
+    .wire-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+    .wire-item {
+      background: var(--card-inner);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      font-size: 0.85rem;
+    }
+    .wire-item-main {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+    .wire-item-headline {
+      font-weight: 600;
+      color: #fff;
+    }
+    .wire-item-date {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+    .wire-type-badge {
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.2rem 0.55rem;
+      border-radius: 4px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .badge-sign { background: rgba(16, 185, 129, 0.18); color: #34d399; }
+    .badge-inj { background: rgba(239, 68, 68, 0.18); color: #f87171; }
+    .badge-trade { background: rgba(245, 158, 11, 0.18); color: #fbbf24; }
+    .badge-ps { background: rgba(56, 189, 248, 0.18); color: #38bdf8; }
+
     /* CONSOLIDATED 14-DAY BUFFALO CALENDAR */
     .calendar-card {
       background-color: var(--card-bg);
@@ -326,7 +412,7 @@
       <div class="hero-info-left">
         <span class="hero-sub">⚡ Next Up In Buffalo Sports</span>
         <div class="hero-matchup" id="master-hero-matchup">Buffalo Sabres @ Toronto Maple Leafs</div>
-        <div class="hero-details" id="master-hero-details">Thursday, Oct 15 • 7:00 PM ET • Scotiabank Arena • TV: MSG-B / ESPN+</div>
+        <div class="hero-details" id="master-hero-details">Tonight • 7:00 PM ET • Scotiabank Arena • TV: MSG-B / ESPN+</div>
       </div>
       <div class="hero-clock-box">
         <div class="hero-clock-val" id="master-countdown">--:--:--</div>
@@ -405,7 +491,7 @@
         <div class="next-match-box">
           <div class="section-head">Upcoming Contest</div>
           <div class="match-opp-line">@ Toronto Maple Leafs</div>
-          <div class="match-meta-line">Thu, Oct 15 • 7:00 PM ET • Scotiabank Arena</div>
+          <div class="match-meta-line">Tonight • 7:00 PM ET • Scotiabank Arena</div>
           <div class="match-broadcast-tag" style="color: var(--sabres-gold);">Broadcast: MSG-B • Stream: ESPN+ • WGR 550</div>
         </div>
 
@@ -469,6 +555,90 @@
       </article>
     </section>
 
+    <!-- ROSTER TRANSACTIONS & INJURY WIRE FEED -->
+    <section class="wire-card">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+        <div class="section-head" style="font-size: 0.95rem; margin: 0;">📡 One Buffalo Wire (Roster Moves & Injuries)</div>
+        <div class="wire-tabs">
+          <button class="wire-tab-btn active" onclick="switchWire('all', this)">All Feeds</button>
+          <button class="wire-tab-btn" onclick="switchWire('bills', this)">Bills</button>
+          <button class="wire-tab-btn" onclick="switchWire('sabres', this)">Sabres</button>
+          <button class="wire-tab-btn" onclick="switchWire('bandits', this)">Bandits</button>
+        </div>
+      </div>
+
+      <div class="wire-list" id="wire-feed-list">
+        <!-- BILLS MOVES -->
+        <div class="wire-item" data-team="bills">
+          <div class="wire-item-main">
+            <span class="wire-item-headline">Bills sign CB Anthony Kendall to the practice squad</span>
+            <span class="wire-item-date">One Bills Drive • Official Transaction</span>
+          </div>
+          <span class="wire-type-badge badge-ps">Practice Squad</span>
+        </div>
+        <div class="wire-item" data-team="bills">
+          <div class="wire-item-main">
+            <span class="wire-item-headline">Bills sign OLB Mike Danna; release CB Anthony Kendall</span>
+            <span class="wire-item-date">One Bills Drive • Active Roster Move</span>
+          </div>
+          <span class="wire-type-badge badge-sign">Roster Sign</span>
+        </div>
+        <div class="wire-item" data-team="bills">
+          <div class="wire-item-main">
+            <span class="wire-item-headline">LB Joe Andreessen signed to two-year contract extension thru 2028</span>
+            <span class="wire-item-date">One Bills Drive • Front Office</span>
+          </div>
+          <span class="wire-type-badge badge-sign">Extension</span>
+        </div>
+
+        <!-- SABRES MOVES -->
+        <div class="wire-item" data-team="sabres">
+          <div class="wire-item-main">
+            <span class="wire-item-headline">D Rasmus Dahlin doubtful for Toronto matchup; not traveling with team</span>
+            <span class="wire-item-date">KeyBank Center • Morning Skate Report</span>
+          </div>
+          <span class="wire-type-badge badge-inj">Injury Update</span>
+        </div>
+        <div class="wire-item" data-team="sabres">
+          <div class="wire-item-main">
+            <span class="wire-item-headline">Sabres recall D Dennis Gilbert; place D Matt Grzelcyk on Injured Reserve</span>
+            <span class="wire-item-date">NHL Roster Wire • Rochester Call-up</span>
+          </div>
+          <span class="wire-type-badge badge-inj">IR Move</span>
+        </div>
+        <div class="wire-item" data-team="sabres">
+          <div class="wire-item-main">
+            <span class="wire-item-headline">Sabres acquire D Caleb Jones and D Daniel Laatsch from Penguins for Ryan Johnson</span>
+            <span class="wire-item-date">NHL Trade Wire • Three-Player Swap</span>
+          </div>
+          <span class="wire-type-badge badge-trade">Trade</span>
+        </div>
+
+        <!-- BANDITS MOVES -->
+        <div class="wire-item" data-team="bandits">
+          <div class="wire-item-main">
+            <span class="wire-item-headline">Bandits sign G Vance Shognosh to 3-year contract agreement</span>
+            <span class="wire-item-date">Banditland Front Office • 2025 1st Round Pick</span>
+          </div>
+          <span class="wire-type-badge badge-sign">Signed</span>
+        </div>
+        <div class="wire-item" data-team="bandits">
+          <div class="wire-item-main">
+            <span class="wire-item-headline">Bandits sign D Cam Wyers to 1-year contract extension</span>
+            <span class="wire-item-date">Banditland Front Office • Defensive Unit</span>
+          </div>
+          <span class="wire-type-badge badge-sign">Signed</span>
+        </div>
+        <div class="wire-item" data-team="bandits">
+          <div class="wire-item-main">
+            <span class="wire-item-headline">Bandits draft Syracuse product Dante Bowen with 6th-overall pick in 2026 NLL Draft</span>
+            <span class="wire-item-date">NLL Draft Central • First Round</span>
+          </div>
+          <span class="wire-type-badge badge-ps">Draft Pick</span>
+        </div>
+      </div>
+    </section>
+
     <!-- CONSOLIDATED 14-DAY BUFFALO GAME CALENDAR -->
     <section class="calendar-card">
       <div class="section-head" style="font-size: 0.95rem;">📅 Upcoming Buffalo Sports Slate</div>
@@ -512,19 +682,35 @@
   </footer>
 
   <script>
-    // Live Master Countdown to Tonight's Sabres Game
-    const targetGameIso = new Date(Date.now() + 18 * 3600000 + 38 * 60000).toISOString();
+    // Tab Filter for Roster Wire
+    function switchWire(team, btn) {
+      document.querySelectorAll('.wire-tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const items = document.querySelectorAll('.wire-item');
+      items.forEach(item => {
+        if (team === 'all' || item.getAttribute('data-team') === team) {
+          item.style.display = 'flex';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    }
+
+    // Set target to tonight's Sabres game at 7:00 PM ET
+    const tonightGame = new Date();
+    tonightGame.setHours(19, 0, 0, 0);
 
     function updateMasterTimer() {
       const el = document.getElementById('master-countdown');
       const label = document.getElementById('master-countdown-label');
       if (!el) return;
 
-      const diff = new Date(targetGameIso).getTime() - Date.now();
+      const diff = tonightGame.getTime() - Date.now();
       if (diff <= 0) {
         el.textContent = "LIVE NOW";
         el.style.color = "#10b981";
-        label.textContent = "Game in progress";
+        label.textContent = "Puck drop underway";
         return;
       }
 
