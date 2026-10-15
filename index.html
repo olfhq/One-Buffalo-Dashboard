@@ -46,7 +46,7 @@
 
     header {
       text-align: center;
-      margin-bottom: 2rem;
+      margin-bottom: 1.25rem;
     }
 
     h1 {
@@ -69,6 +69,38 @@
     }
     .meta-bar a { color: #38bdf8; text-decoration: none; }
     .meta-bar a:hover { text-decoration: underline; }
+
+    /* TOP VIEW TOGGLE SWITCH */
+    .view-switcher {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .switch-btn {
+      padding: 0.45rem 1rem;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .switch-btn-active {
+      background: #38bdf8;
+      color: #000;
+    }
+    .switch-btn-inactive {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-muted);
+      border: 1px solid var(--card-border);
+    }
+    .switch-btn-inactive:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
 
     .grid {
       display: grid;
@@ -180,7 +212,6 @@
     }
     .schedule-tag-sabres { color: var(--sabres-gold); }
 
-    /* COUNTDOWN OR LIVE SCOREBOARD TICKER */
     .countdown-box {
       display: flex;
       flex-direction: column;
@@ -210,7 +241,6 @@
       margin-top: 0.1rem;
     }
 
-    /* LIVE GAME DAY ACCENTS */
     .scoreboard-live-box {
       background: rgba(239, 68, 68, 0.12) !important;
       border: 1px solid rgba(239, 68, 68, 0.4) !important;
@@ -433,6 +463,16 @@
     </div>
   </header>
 
+  <!-- VIEW SWITCHER (NAVIGATE BETWEEN DASHBOARD & HUB) -->
+  <nav class="view-switcher">
+    <a href="./index.html" class="switch-btn switch-btn-active">
+      <span>🏆</span> Postseason Probabilities
+    </a>
+    <a href="./hub.html" class="switch-btn switch-btn-inactive">
+      <span>⚡</span> Sports Command Center
+    </a>
+  </nav>
+
   <main class="grid">
     <!-- BILLS CARD -->
     <article class="card card-bills">
@@ -457,7 +497,6 @@
             <div class="schedule-tag" id="bills-game-time">--</div>
           </div>
 
-          <!-- DYNAMIC COUNTDOWN / LIVE SCOREBOARD BOX -->
           <div class="countdown-box" id="bills-countdown-box">
             <div class="countdown-val" id="bills-countdown" style="color: #38bdf8;">--:--:--</div>
             <div class="countdown-label" id="bills-countdown-label">Kickoff In</div>
@@ -500,7 +539,6 @@
         </div>
       </div>
 
-      <!-- COMPACT INTEGRATED TRAJECTORY STRIP -->
       <div class="integrated-trend-container">
         <div class="trend-info-left">
           <span class="trend-text-title">30-Day Arc:</span>
@@ -553,7 +591,6 @@
             <div class="schedule-tag schedule-tag-sabres" id="sabres-game-time">--</div>
           </div>
 
-          <!-- DYNAMIC COUNTDOWN / LIVE SCOREBOARD BOX -->
           <div class="countdown-box" id="sabres-countdown-box">
             <div class="countdown-val" id="sabres-countdown" style="color: var(--sabres-gold);">--:--:--</div>
             <div class="countdown-label" id="sabres-countdown-label">Puck Drop In</div>
@@ -596,7 +633,6 @@
         </div>
       </div>
 
-      <!-- COMPACT INTEGRATED TRAJECTORY STRIP -->
       <div class="integrated-trend-container">
         <div class="trend-info-left">
           <span class="trend-text-title">30-Day Arc:</span>
@@ -632,9 +668,7 @@
   </footer>
 
   <script>
-    // Live In-Game Scoreboard Poller
     async function checkLiveScores() {
-      // 1. Check Bills Live Game (ESPN API)
       try {
         const res = await fetch('https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard');
         if (res.ok) {
@@ -645,7 +679,7 @@
 
           if (billsGame) {
             const comp = billsGame.competitions[0];
-            const state = comp.status?.type?.state; // 'in', 'post', or 'pre'
+            const state = comp.status?.type?.state;
 
             if (state === 'in') {
               const buf = comp.competitors.find(c => c.id === '2');
@@ -677,7 +711,6 @@
         console.warn('Bills live score check skipped:', err);
       }
 
-      // 2. Check Sabres Live Game (NHL API)
       try {
         const res = await fetch('https://api-web.nhle.com/v1/score/now');
         if (res.ok) {
@@ -687,7 +720,7 @@
           );
 
           if (sabresGame) {
-            const state = sabresGame.gameState; // 'LIVE', 'CRIT', 'FINAL', 'OFF'
+            const state = sabresGame.gameState;
 
             if (state === 'LIVE' || state === 'CRIT') {
               const isHome = sabresGame.homeTeam.abbrev === 'BUF';
@@ -953,9 +986,7 @@
         </div>
       `).join('');
 
-      // Check for live game state on page open
       checkLiveScores();
-      // Poll every 45 seconds while page is kept open
       setInterval(checkLiveScores, 45000);
     }
 
