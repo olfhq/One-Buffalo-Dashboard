@@ -17,7 +17,8 @@
       "sport": "NFL",
       "venue": "Allegiant Stadium — Las Vegas, NV",
       "gameTime": "Sunday, October 18, 2026 • 4:25 PM EDT",
-      "isoTime": "2026-10-18T20:25Z",
+      "isoTime": "2026-10-18T20:25:00Z"
+
       "winChance": 68,
       "matchupRecords": "Bills (4-1, W3) vs. Raiders (2-3, L1)",
       "broadcast": "Broadcast: CBS • National Radio: Westwood One",

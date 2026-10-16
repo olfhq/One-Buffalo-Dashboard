@@ -82,19 +82,13 @@
       align-items: center;
       gap: 0.35rem;
     }
-    .switch-btn-active {
-      background: #38bdf8;
-      color: #000;
-    }
+    .switch-btn-active { background: #38bdf8; color: #000; }
     .switch-btn-inactive {
       background: rgba(255, 255, 255, 0.05);
       color: var(--text-muted);
       border: 1px solid var(--card-border);
     }
-    .switch-btn-inactive:hover {
-      background: rgba(255, 255, 255, 0.1);
-      color: #fff;
-    }
+    .switch-btn-inactive:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
 
     .grid {
       display: grid;
@@ -625,7 +619,6 @@
 
   <script>
     async function checkLiveScores() {
-      // Check Bills / NFL via ESPN
       try {
         const res = await fetch('https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard');
         if (res.ok) {
@@ -658,10 +651,9 @@
           }
         }
       } catch (err) {
-        console.warn('NFL live score check skipped:', err);
+        console.warn('Bills live score check skipped:', err);
       }
 
-      // Check Sabres / NHL via ESPN Stable Scoreboard Endpoint
       try {
         const res = await fetch('https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard');
         if (res.ok) {
@@ -694,7 +686,7 @@
           }
         }
       } catch (err) {
-        console.warn('NHL live score check skipped:', err);
+        console.warn('Sabres live score check skipped:', err);
       }
     }
 
@@ -704,7 +696,11 @@
       if (!el || !targetIso) return;
 
       function update() {
-        const diff = new Date(targetIso).getTime() - Date.now();
+        // Safe timestamp parsing for iPad WebKit
+        const parsedTime = Date.parse(targetIso);
+        if (isNaN(parsedTime)) return;
+
+        const diff = parsedTime - Date.now();
         if (diff <= 0) {
           checkLiveScores();
           return;
@@ -796,138 +792,162 @@
         return;
       }
 
-      const dateStr = new Date(data.updatedAt).toLocaleDateString(undefined, {
+      const dateStr = new Date(data.updatedAt || Date.now()).toLocaleDateString(undefined, {
         month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
       });
       statusEl.textContent = `Updated: ${dateStr}`;
 
       // Populate Bills
-      const b = data.bills;
-      document.getElementById('bills-playoff-pct').textContent = `${b.makePlayoffs}%`;
-      document.getElementById('bills-div-pct').textContent = `${b.winDivision}%`;
-      document.getElementById('bills-bye-pct').textContent = `${b.seed1}%`;
-      document.getElementById('bills-magic-num').textContent = b.magicNumber || '--';
-      
-      const bClinchBox = document.getElementById('bills-clinch-box');
-      const bClinchText = document.getElementById('bills-clinch-text');
-      if (b.clinchAlert && b.clinchAlert.active) {
-        bClinchBox.classList.add('clinch-alert-active');
-        bClinchText.textContent = `⚡ CLINCHING ACTIVE: ${b.clinchAlert.scenario}`;
-      } else {
-        bClinchBox.classList.remove('clinch-alert-active');
-        bClinchText.textContent = `No clinching scenarios available this week (Magic #: ${b.magicNumber || '--'})`;
+      if (data.bills) {
+        const b = data.bills;
+        document.getElementById('bills-playoff-pct').textContent = `${b.makePlayoffs || 0}%`;
+        document.getElementById('bills-div-pct').textContent = `${b.winDivision || 0}%`;
+        document.getElementById('bills-bye-pct').textContent = `${b.seed1 || 0}%`;
+        document.getElementById('bills-magic-num').textContent = b.magicNumber || '--';
+        
+        const bClinchBox = document.getElementById('bills-clinch-box');
+        const bClinchText = document.getElementById('bills-clinch-text');
+        if (b.clinchAlert && b.clinchAlert.active) {
+          bClinchBox.classList.add('clinch-alert-active');
+          bClinchText.textContent = `⚡ CLINCHING ACTIVE: ${b.clinchAlert.scenario}`;
+        } else {
+          bClinchBox.classList.remove('clinch-alert-active');
+          bClinchText.textContent = `No clinching scenarios available this week (Magic #: ${b.magicNumber || '--'})`;
+        }
+
+        if (b.nextGame) {
+          document.getElementById('bills-next-opp').textContent = b.nextGame.opponent || '--';
+          document.getElementById('bills-game-time').textContent = b.nextGame.gameTime || '';
+          document.getElementById('bills-win-chance').textContent = `${b.nextGame.winChance || 68}%`;
+          document.getElementById('bills-records').textContent = b.nextGame.matchupRecords || '';
+          document.getElementById('bills-if-win').textContent = `Win: ${b.nextGame.ifWin || 0}%`;
+          document.getElementById('bills-if-loss').textContent = `Loss: ${b.nextGame.ifLoss || 0}%`;
+          
+          const bLeverage = b.nextGame.leverage || ((b.nextGame.ifWin || 0) - (b.nextGame.ifLoss || 0));
+          document.getElementById('bills-leverage').textContent = `±${bLeverage}%`;
+
+          if (b.nextGame.isoTime) {
+            startCountdown('bills-countdown', 'bills-countdown-label', 'bills-countdown-box', b.nextGame.isoTime);
+          }
+        }
+
+        if (data.history) {
+          renderSparkline('bills-trend-svg', data.history, 'bills', '#38bdf8');
+          calculateDeltaBadge('bills-trend-badge', data.history, 'bills');
+        }
+
+        if (b.divisionRadar) {
+          document.getElementById('bills-radar').innerHTML = b.divisionRadar.map(r => `
+            <div class="radar-item">
+              <div class="radar-team">${r.team}</div>
+              <div class="radar-val">${r.pct}%</div>
+            </div>
+          `).join('');
+        }
+
+        if (b.seedDistribution) {
+          document.getElementById('bills-distribution').innerHTML = b.seedDistribution.map(item => `
+            <div class="dist-row">
+              <span class="dist-name">${item.seed}</span>
+              <div class="dist-track">
+                <div class="dist-fill-bills" style="width: ${item.pct}%"></div>
+              </div>
+              <span class="dist-pct">${item.pct}%</span>
+            </div>
+          `).join('');
+        }
+
+        if (b.opponents) {
+          document.getElementById('bills-opponents').innerHTML = b.opponents.map(o => `
+            <div class="opp-chip">${o.team} <span class="opp-pct">${o.pct}%</span></div>
+          `).join('');
+        }
+
+        if (b.rootingGuide) {
+          document.getElementById('bills-rooting-container').innerHTML = b.rootingGuide.map(item => `
+            <div class="rooting-item">
+              <div class="rooting-target">${item.target}</div>
+              <div class="rooting-why">${item.why}</div>
+            </div>
+          `).join('');
+        }
       }
-
-      document.getElementById('bills-next-opp').textContent = b.nextGame.opponent;
-      document.getElementById('bills-game-time').textContent = b.nextGame.gameTime || '';
-      document.getElementById('bills-win-chance').textContent = `${b.nextGame.winChance || 68}%`;
-      document.getElementById('bills-records').textContent = b.nextGame.matchupRecords || '';
-      document.getElementById('bills-if-win').textContent = `Win: ${b.nextGame.ifWin}%`;
-      document.getElementById('bills-if-loss').textContent = `Loss: ${b.nextGame.ifLoss}%`;
-      
-      const bLeverage = b.nextGame.leverage || (b.nextGame.ifWin - b.nextGame.ifLoss);
-      document.getElementById('bills-leverage').textContent = `±${bLeverage}%`;
-
-      if (b.nextGame.isoTime) {
-        startCountdown('bills-countdown', 'bills-countdown-label', 'bills-countdown-box', b.nextGame.isoTime);
-      }
-
-      if (data.history) {
-        renderSparkline('bills-trend-svg', data.history, 'bills', '#38bdf8');
-        calculateDeltaBadge('bills-trend-badge', data.history, 'bills');
-      }
-
-      document.getElementById('bills-radar').innerHTML = b.divisionRadar.map(r => `
-        <div class="radar-item">
-          <div class="radar-team">${r.team}</div>
-          <div class="radar-val">${r.pct}%</div>
-        </div>
-      `).join('');
-
-      document.getElementById('bills-distribution').innerHTML = b.seedDistribution.map(item => `
-        <div class="dist-row">
-          <span class="dist-name">${item.seed}</span>
-          <div class="dist-track">
-            <div class="dist-fill-bills" style="width: ${item.pct}%"></div>
-          </div>
-          <span class="dist-pct">${item.pct}%</span>
-        </div>
-      `).join('');
-
-      document.getElementById('bills-opponents').innerHTML = b.opponents.map(o => `
-        <div class="opp-chip">${o.team} <span class="opp-pct">${o.pct}%</span></div>
-      `).join('');
-
-      document.getElementById('bills-rooting-container').innerHTML = b.rootingGuide.map(item => `
-        <div class="rooting-item">
-          <div class="rooting-target">${item.target}</div>
-          <div class="rooting-why">${item.why}</div>
-        </div>
-      `).join('');
 
       // Populate Sabres
-      const s = data.sabres;
-      document.getElementById('sabres-playoff-pct').textContent = `${s.makePlayoffs}%`;
-      document.getElementById('sabres-div-pct').textContent = `${s.winDivision}%`;
-      document.getElementById('sabres-wc-pct').textContent = `${s.wildcard}%`;
-      document.getElementById('sabres-tragic-num').textContent = s.tragicNumber || '--';
+      if (data.sabres) {
+        const s = data.sabres;
+        document.getElementById('sabres-playoff-pct').textContent = `${s.makePlayoffs || 0}%`;
+        document.getElementById('sabres-div-pct').textContent = `${s.winDivision || 0}%`;
+        document.getElementById('sabres-wc-pct').textContent = `${s.wildcard || 0}%`;
+        document.getElementById('sabres-tragic-num').textContent = s.tragicNumber || '--';
 
-      const sClinchBox = document.getElementById('sabres-clinch-box');
-      const sClinchText = document.getElementById('sabres-clinch-text');
-      if (s.clinchAlert && s.clinchAlert.active) {
-        sClinchBox.classList.add('clinch-alert-active');
-        sClinchText.textContent = `⚡ CLINCHING ACTIVE: ${s.clinchAlert.scenario}`;
-      } else {
-        sClinchBox.classList.remove('clinch-alert-active');
-        sClinchText.textContent = `No clinching scenarios available this week (${s.tragicNumber || 'Tracking Target'})`;
+        const sClinchBox = document.getElementById('sabres-clinch-box');
+        const sClinchText = document.getElementById('sabres-clinch-text');
+        if (s.clinchAlert && s.clinchAlert.active) {
+          sClinchBox.classList.add('clinch-alert-active');
+          sClinchText.textContent = `⚡ CLINCHING ACTIVE: ${s.clinchAlert.scenario}`;
+        } else {
+          sClinchBox.classList.remove('clinch-alert-active');
+          sClinchText.textContent = `No clinching scenarios available this week (${s.tragicNumber || 'Tracking Target'})`;
+        }
+
+        if (s.nextGame) {
+          document.getElementById('sabres-next-opp').textContent = s.nextGame.opponent || '--';
+          document.getElementById('sabres-game-time').textContent = s.nextGame.gameTime || '';
+          document.getElementById('sabres-win-chance').textContent = `${s.nextGame.winChance || 46}%`;
+          document.getElementById('sabres-records').textContent = s.nextGame.matchupRecords || '';
+          document.getElementById('sabres-if-win').textContent = `Win: ${s.nextGame.ifWin || 0}%`;
+          document.getElementById('sabres-if-loss').textContent = `Loss: ${s.nextGame.ifLoss || 0}%`;
+          
+          const sLeverage = s.nextGame.leverage || ((s.nextGame.ifWin || 0) - (s.nextGame.ifLoss || 0));
+          document.getElementById('sabres-leverage').textContent = `±${sLeverage}%`;
+
+          if (s.nextGame.isoTime) {
+            startCountdown('sabres-countdown', 'sabres-countdown-label', 'sabres-countdown-box', s.nextGame.isoTime);
+          }
+        }
+
+        if (data.history) {
+          renderSparkline('sabres-trend-svg', data.history, 'sabres', '#FCB514');
+          calculateDeltaBadge('sabres-trend-badge', data.history, 'sabres');
+        }
+
+        if (s.divisionRadar) {
+          document.getElementById('sabres-radar').innerHTML = s.divisionRadar.map(r => `
+            <div class="radar-item">
+              <div class="radar-team">${r.team}</div>
+              <div class="radar-val" style="color: var(--sabres-gold);">${r.pct}%</div>
+            </div>
+          `).join('');
+        }
+
+        if (s.seedDistribution) {
+          document.getElementById('sabres-distribution').innerHTML = s.seedDistribution.map(item => `
+            <div class="dist-row">
+              <span class="dist-name">${item.seed}</span>
+              <div class="dist-track">
+                <div class="dist-fill-sabres" style="width: ${item.pct}%"></div>
+              </div>
+              <span class="dist-pct">${item.pct}%</span>
+            </div>
+          `).join('');
+        }
+
+        if (s.opponents) {
+          document.getElementById('sabres-opponents').innerHTML = s.opponents.map(o => `
+            <div class="opp-chip">${o.team} <span class="opp-pct">${o.pct}%</span></div>
+          `).join('');
+        }
+
+        if (s.rootingGuide) {
+          document.getElementById('sabres-rooting-container').innerHTML = s.rootingGuide.map(item => `
+            <div class="rooting-item" style="border-left-color: var(--sabres-gold);">
+              <div class="rooting-target">${item.target}</div>
+              <div class="rooting-why">${item.why}</div>
+            </div>
+          `).join('');
+        }
       }
-
-      document.getElementById('sabres-next-opp').textContent = s.nextGame.opponent;
-      document.getElementById('sabres-game-time').textContent = s.nextGame.gameTime || '';
-      document.getElementById('sabres-win-chance').textContent = `${s.nextGame.winChance || 46}%`;
-      document.getElementById('sabres-records').textContent = s.nextGame.matchupRecords || '';
-      document.getElementById('sabres-if-win').textContent = `Win: ${s.nextGame.ifWin}%`;
-      document.getElementById('sabres-if-loss').textContent = `Loss: ${s.nextGame.ifLoss}%`;
-      
-      const sLeverage = s.nextGame.leverage || (s.nextGame.ifWin - s.nextGame.ifLoss);
-      document.getElementById('sabres-leverage').textContent = `±${sLeverage}%`;
-
-      if (s.nextGame.isoTime) {
-        startCountdown('sabres-countdown', 'sabres-countdown-label', 'sabres-countdown-box', s.nextGame.isoTime);
-      }
-
-      if (data.history) {
-        renderSparkline('sabres-trend-svg', data.history, 'sabres', '#FCB514');
-        calculateDeltaBadge('sabres-trend-badge', data.history, 'sabres');
-      }
-
-      document.getElementById('sabres-radar').innerHTML = s.divisionRadar.map(r => `
-        <div class="radar-item">
-          <div class="radar-team">${r.team}</div>
-          <div class="radar-val" style="color: var(--sabres-gold);">${r.pct}%</div>
-        </div>
-      `).join('');
-
-      document.getElementById('sabres-distribution').innerHTML = s.seedDistribution.map(item => `
-        <div class="dist-row">
-          <span class="dist-name">${item.seed}</span>
-          <div class="dist-track">
-            <div class="dist-fill-sabres" style="width: ${item.pct}%"></div>
-          </div>
-          <span class="dist-pct">${item.pct}%</span>
-        </div>
-      `).join('');
-
-      document.getElementById('sabres-opponents').innerHTML = s.opponents.map(o => `
-        <div class="opp-chip">${o.team} <span class="opp-pct">${o.pct}%</span></div>
-      `).join('');
-
-      document.getElementById('sabres-rooting-container').innerHTML = s.rootingGuide.map(item => `
-        <div class="rooting-item" style="border-left-color: var(--sabres-gold);">
-          <div class="rooting-target">${item.target}</div>
-          <div class="rooting-why">${item.why}</div>
-        </div>
-      `).join('');
 
       // Populate Bandits
       const ban = data.bandits || {
