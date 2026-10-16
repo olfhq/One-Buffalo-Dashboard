@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-15T20:20:22.996Z",
+  "updatedAt": "2026-10-16T04:34:36.820Z",
   "source": "http://www.playoffstatus.com & NLL Analytics",
   "bills": {
     "team": "Buffalo Bills",
@@ -109,11 +109,11 @@
       "scenario": "No clinching scenarios available this week."
     },
     "nextGame": {
-      "opponent": "@ Toronto",
-      "gameTime": "Thu, Oct 15 • 7:00 PM ET",
-      "isoTime": "2026-10-15T23:00:00Z",
+      "opponent": "@ Montréal",
+      "gameTime": "Sat, Oct 17 • 7:00 PM ET",
+      "isoTime": "2026-10-17T23:00:00Z",
       "winChance": 46,
-      "matchupRecords": "Sabres (3-3-1, 7 pts, OT1) vs. Toronto (3-3-1, 7 pts, L1)",
+      "matchupRecords": "Sabres (4-3-1, 9 pts, W1) vs. Montréal (3-3-1, 7 pts, L1)",
       "ifWin": 44,
       "ifLoss": 33,
       "leverage": 11
@@ -463,6 +463,12 @@
     },
     {
       "date": "Oct 15",
+      "bills": 84,
+      "sabres": 38,
+      "bandits": 92
+    },
+    {
+      "date": "Oct 16",
       "bills": 84,
       "sabres": 38,
       "bandits": 92
