@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-15T03:22:18.974Z",
+  "updatedAt": "2026-10-16T23:09:08.045Z",
   "source": "http://www.playoffstatus.com",
   "bills": {
     "team": "Buffalo Bills",
@@ -85,16 +85,16 @@
     ],
     "rootingGuide": [
       {
-        "target": "Root for Jets Win",
-        "why": "Matchup: Jets (2‑3)vsPatriots (3‑2). Neutral AFC leverage for Buffalo's seeding."
-      },
-      {
         "target": "Root for Texans Win",
         "why": "Matchup: Texans (1‑4)vsJaguars (4‑1). Neutral AFC leverage for Buffalo's seeding."
       },
       {
-        "target": "Root for Seahawks Win",
-        "why": "Matchup: Seahawks (3‑2)vsBroncos (3‑2). Neutral AFC leverage for Buffalo's seeding."
+        "target": "Root for Jets Win",
+        "why": "Matchup: Jets (2‑3)vsPatriots (3‑2). Neutral AFC leverage for Buffalo's seeding."
+      },
+      {
+        "target": "Root for Chargers Win",
+        "why": "Matchup: Chargers (0‑5)vsChiefs (4‑0). Neutral AFC leverage for Buffalo's seeding."
       }
     ]
   },
@@ -109,11 +109,11 @@
       "scenario": "No clinching scenarios available this week."
     },
     "nextGame": {
-      "opponent": "@ Toronto",
-      "gameTime": "Thu, Oct 15 • 7:00 PM ET",
-      "isoTime": "2026-10-15T23:00:00Z",
+      "opponent": "@ Montréal",
+      "gameTime": "Sat, Oct 17 • 7:00 PM ET",
+      "isoTime": "2026-10-17T23:00:00Z",
       "winChance": 46,
-      "matchupRecords": "Sabres (3-3-1, 7 pts, OT1) vs. Toronto (3-3-1, 7 pts, L1)",
+      "matchupRecords": "Sabres (4-3-1, 9 pts, W1) vs. Montréal (3-3-1, 7 pts, L1)",
       "ifWin": 44,
       "ifLoss": 33,
       "leverage": 11
@@ -210,7 +210,7 @@
       "sabres": 38
     },
     {
-      "date": "Oct 15",
+      "date": "Oct 16",
       "bills": 84,
       "sabres": 38
     }
