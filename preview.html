@@ -7,14 +7,18 @@
     <title>One Buffalo Tracker - Matchup Intel & Head-to-Head Preview</title>
     <style>
         :root {
-            --bg-primary: #0f172a;
-            --bg-secondary: #1e293b;
-            --bg-card: rgba(30, 41, 59, 0.7);
-            --border-color: rgba(255, 255, 255, 0.1);
-            --text-main: #f8fafc;
+            --bills-blue: #00338D;
+            --bills-red: #C60C30;
+            --sabres-navy: #002654;
+            --sabres-gold: #FCB514;
+            --bandits-orange: #F37021;
+            --bandits-black: #111111;
+            --bg-dark: #090d16;
+            --card-bg: #141c2c;
+            --card-inner: #0d1422;
+            --card-border: #1f2c44;
+            --text-main: #f3f4f6;
             --text-muted: #94a3b8;
-            --accent-bills: #00338D;
-            --accent-sabres: #002654;
             --accent-gold: #FFB81C;
             --accent-red: #C60C30;
             --success-green: #22c55e;
@@ -28,40 +32,37 @@
         }
 
         body {
-            background-color: var(--bg-primary);
+            background-color: var(--bg-dark);
             color: var(--text-main);
             min-height: 100vh;
-            padding-bottom: 4rem;
+            padding: 1.5rem;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* Navigation Header */
-        .navbar {
-            background: var(--bg-secondary);
-            border-bottom: 1px solid var(--border-color);
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            backdrop-filter: blur(8px);
-            flex-wrap: wrap;
-            gap: 1rem;
+        header {
+            text-align: center;
+            margin-bottom: 1.25rem;
         }
 
-        .nav-brand {
+        h1 {
+            font-size: 2.2rem;
             font-weight: 800;
-            font-size: 1.25rem;
-            letter-spacing: 0.05em;
-            color: var(--text-main);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+            letter-spacing: -0.5px;
+            margin-bottom: 0.3rem;
+            background: linear-gradient(90deg, #38bdf8, #FCB514, #F37021);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        .nav-brand span {
-            color: var(--accent-gold);
+        .meta-bar {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            align-items: center;
+            margin-bottom: 1.25rem;
         }
 
         /* 5-TAB NAVIGATION BAR */
@@ -69,6 +70,7 @@
             display: flex;
             justify-content: center;
             gap: 0.4rem;
+            margin-bottom: 1.5rem;
             flex-wrap: wrap;
         }
         .switch-btn {
@@ -89,7 +91,7 @@
         .switch-btn-inactive {
             background: rgba(255, 255, 255, 0.05);
             color: var(--text-muted);
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--card-border);
         }
         .switch-btn-inactive:hover {
             background: rgba(255, 255, 255, 0.1);
@@ -97,20 +99,21 @@
         }
 
         .container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
+            max-width: 1250px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
         }
 
         /* Hero Banner */
         .hero-banner {
-            background: linear-gradient(135deg, var(--bg-secondary), #090d16);
-            border: 1px solid var(--border-color);
-            border-radius: 1rem;
-            padding: 2.5rem 2rem;
+            background: linear-gradient(135deg, rgba(0, 51, 141, 0.35), rgba(243, 112, 33, 0.25));
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 2rem;
             text-align: center;
-            margin-bottom: 2rem;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
             position: relative;
             overflow: hidden;
         }
@@ -156,15 +159,18 @@
         }
 
         .game-meta {
-            color: var(--text-muted);
+            color: #cbd5e1;
             font-size: 0.95rem;
             margin-top: 1rem;
         }
 
         /* Section Layout */
         .section-title {
-            font-size: 1.25rem;
-            font-weight: 700;
+            font-size: 0.95rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #38bdf8;
             margin-bottom: 1rem;
             display: flex;
             align-items: center;
@@ -177,7 +183,6 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 1.5rem;
-            margin-bottom: 2rem;
         }
 
         @media(max-width: 768px) {
@@ -190,12 +195,11 @@
         }
 
         .card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 0.75rem;
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
             padding: 1.5rem;
-            backdrop-filter: blur(4px);
-            margin-bottom: 2rem;
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
         }
 
         /* Tale of the Tape Bars */
@@ -230,7 +234,7 @@
             border-radius: 5px;
             overflow: hidden;
             display: flex;
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--card-border);
         }
 
         .bar-buffalo {
@@ -249,10 +253,10 @@
 
         /* Key Matchups Cards */
         .matchup-card {
-            background: rgba(15, 23, 42, 0.5);
-            border: 1px solid var(--border-color);
-            border-radius: 0.5rem;
-            padding: 1.25rem;
+            background: var(--card-inner);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 1.15rem;
             margin-bottom: 1rem;
         }
 
@@ -264,7 +268,7 @@
             font-weight: 700;
             font-size: 1rem;
             color: var(--accent-gold);
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.35rem;
         }
 
         .matchup-desc {
@@ -274,18 +278,12 @@
         }
 
         /* Injury Report */
-        .injury-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-        }
-
         .injury-team-title {
             font-weight: 700;
-            font-size: 1rem;
+            font-size: 0.9rem;
             margin-bottom: 0.75rem;
             color: var(--text-main);
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--card-border);
             padding-bottom: 0.35rem;
         }
 
@@ -299,6 +297,7 @@
             font-size: 0.85rem;
             padding: 0.35rem 0;
             border-bottom: 1px dashed rgba(255, 255, 255, 0.05);
+            color: #cbd5e1;
         }
 
         .status-out { color: var(--accent-red); font-weight: 700; }
@@ -314,15 +313,15 @@
         }
 
         .bet-card {
-            background: rgba(15, 23, 42, 0.5);
-            border: 1px solid var(--border-color);
-            border-radius: 0.5rem;
+            background: var(--card-inner);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
             padding: 1rem;
             text-align: center;
         }
 
         .bet-label {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 0.05em;
@@ -332,6 +331,7 @@
         .bet-value {
             font-size: 1.25rem;
             font-weight: 800;
+            color: #fff;
         }
 
         .consensus-bar-wrapper {
@@ -345,34 +345,44 @@
             font-weight: 600;
             margin-bottom: 0.35rem;
         }
+
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
     </style>
 </head>
 <body>
 
-    <!-- Navigation Header -->
-    <header class="navbar">
-        <div class="nav-brand">
-            ONE BUFFALO <span>TRACKER</span>
+    <header>
+        <h1>ONE BUFFALO TRACKER</h1>
+        <div class="meta-bar">
+            <span>Matchup Intel & Head-to-Head Preview</span>
+            <span>•</span>
+            <span>Bills • Sabres • Bandits</span>
         </div>
-        <!-- 5-TAB NAVIGATION BAR -->
-        <nav class="view-switcher">
-            <a href="./index.html" class="switch-btn switch-btn-inactive">
-                <span>⚡</span> Command Center
-            </a>
-            <a href="./preview.html" class="switch-btn switch-btn-active">
-                <span>⚔️</span> Matchup Intel
-            </a>
-            <a href="./playoffs.html" class="switch-btn switch-btn-inactive">
-                <span>🏆</span> Postseason
-            </a>
-            <a href="./stats.html" class="switch-btn switch-btn-inactive">
-                <span>📊</span> Stats Lab
-            </a>
-            <a href="./history.html" class="switch-btn switch-btn-inactive">
-                <span>📜</span> History & Milestones
-            </a>
-        </nav>
     </header>
+
+    <!-- 5-TAB NAVIGATION BAR -->
+    <nav class="view-switcher">
+        <a href="./index.html" class="switch-btn switch-btn-inactive">
+            <span>⚡</span> Command Center
+        </a>
+        <a href="./preview.html" class="switch-btn switch-btn-active">
+            <span>⚔️</span> Matchup Intel
+        </a>
+        <a href="./playoffs.html" class="switch-btn switch-btn-inactive">
+            <span>🏆</span> Postseason
+        </a>
+        <a href="./stats.html" class="switch-btn switch-btn-inactive">
+            <span>📊</span> Stats Lab
+        </a>
+        <a href="./history.html" class="switch-btn switch-btn-inactive">
+            <span>📜</span> History & Milestones
+        </a>
+    </nav>
 
     <main class="container" id="app">
         <!-- Dynamically injected preview content based on closest game timestamp -->
@@ -384,10 +394,11 @@
         </div>
     </main>
 
+    <footer>
+        <p>One Buffalo Multi-Sport Hub. Hosted on <a href="https://github.com/olfhq/One-Buffalo-Dashboard" target="_blank" rel="noopener" style="color: #38bdf8;">GitHub Pages</a> via onebuffalotracker.fyi.</p>
+    </footer>
+
     <script>
-        // Mock Schedule & Matchup Data Engine (Auto-evaluating closest upcoming game)
-        // Comparing Buffalo Bills (NFL) next game vs Buffalo Sabres (NHL) next game
-        
         const nextMatchups = [
             {
                 team: "Buffalo Bills",
@@ -463,13 +474,11 @@
 
         function renderClosestMatchup() {
             const now = Date.now();
-            // Filter future or closest upcoming game
             const upcoming = nextMatchups
                 .filter(m => m.timestamp > now)
                 .sort((a, b) => a.timestamp - b.timestamp);
 
-            const activeGame = upcoming.length > 0 ? upcoming[0] : nextMatchups[0]; // Fallback to first if none strictly in future
-
+            const activeGame = upcoming.length > 0 ? upcoming[0] : nextMatchups[0];
             const container = document.getElementById('preview-content');
             
             container.innerHTML = `
