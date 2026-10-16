@@ -384,7 +384,7 @@
     <header>
         <h1>ONE BUFFALO INTEL</h1>
         <div class="meta-bar">
-            <span id="update-status">Matchup Intel & Head-to-Head Preview</span>
+            <span>Matchup Intel & Head-to-Head Preview</span>
             <span>•</span>
             <span>Bills • Sabres • Bandits</span>
         </div>
@@ -419,17 +419,17 @@
 
         <div id="preview-content">
             <div style="text-align: center; padding: 4rem; color: var(--text-muted);">
-                Loading matchup intel from data.json...
+                Loading matchup intel...
             </div>
         </div>
     </main>
 
     <footer>
-        <p>One Buffalo Multi-Sport Hub. Hosted on <a href="https://github.com" target="_blank" rel="noopener" style="color: #38bdf8;">GitHub Pages</a> via onebuffalotracker.fyi.</p>
+        <p>One Buffalo Multi-Sport Hub. Hosted on <a href="https://github.com/olfhq/One-Buffalo-Dashboard" target="_blank" rel="noopener" style="color: #38bdf8;">GitHub Pages</a> via onebuffalotracker.fyi.</p>
     </footer>
 
     <script>
-        // Built-in baseline data fallback ensuring the UI never fails to render
+        // Built-in baseline data fallback ensuring the UI renders immediately without error
         const fallbackIntel = {
             bills: {
                 team: "Buffalo Bills",
@@ -551,7 +551,7 @@
                     }
                 }
             } catch (err) {
-                console.warn('data.json fetch failed, using fallback data:', err);
+                console.warn('data.json fetch failed, using fallback baseline:', err);
             }
             renderPreview(activeTeamSelection);
         }
@@ -679,6 +679,5 @@
 
         window.addEventListener('DOMContentLoaded', loadPreviewData);
     </script>
-
 </body>
 </html>
