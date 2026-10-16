@@ -60,32 +60,38 @@
       align-items: center;
     }
 
-    /* 3-TAB VIEW SWITCHER */
+    /* 5-TAB NAVIGATION BAR */
     .view-switcher {
       display: flex;
       justify-content: center;
-      gap: 0.5rem;
+      gap: 0.4rem;
       margin-bottom: 1.5rem;
       flex-wrap: wrap;
     }
     .switch-btn {
-      padding: 0.45rem 1rem;
+      padding: 0.45rem 0.85rem;
       border-radius: 8px;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       font-weight: 700;
       text-decoration: none;
       transition: all 0.2s ease;
       display: inline-flex;
       align-items: center;
-      gap: 0.4rem;
+      gap: 0.35rem;
     }
-    .switch-btn-active { background: #38bdf8; color: #000; }
+    .switch-btn-active {
+      background: #38bdf8;
+      color: #000;
+    }
     .switch-btn-inactive {
       background: rgba(255, 255, 255, 0.05);
       color: var(--text-muted);
       border: 1px solid var(--card-border);
     }
-    .switch-btn-inactive:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
+    .switch-btn-inactive:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
 
     .main-wrap {
       max-width: 1400px;
@@ -192,16 +198,22 @@
     </div>
   </header>
 
-  <!-- 3-TAB NAVIGATION -->
+  <!-- 5-TAB NAVIGATION BAR -->
   <nav class="view-switcher">
     <a href="./index.html" class="switch-btn switch-btn-inactive">
-      <span>⚡</span> Sports Command Center
+      <span>⚡</span> Command Center
+    </a>
+    <a href="./preview.html" class="switch-btn switch-btn-inactive">
+      <span>⚔️</span> Matchup Intel
     </a>
     <a href="./playoffs.html" class="switch-btn switch-btn-inactive">
-      <span>🏆</span> Postseason Probabilities
+      <span>🏆</span> Postseason
     </a>
     <a href="./stats.html" class="switch-btn switch-btn-active">
       <span>📊</span> Stats Lab
+    </a>
+    <a href="./history.html" class="switch-btn switch-btn-inactive">
+      <span>📜</span> History & Milestones
     </a>
   </nav>
 
@@ -393,7 +405,6 @@
         console.warn('Fallback activated:', err);
       }
 
-      // Default baseline if data.json hasn't run the new leader routine yet
       const l = data?.leaders || {
         bills: {
           ppg: '28.4', thirdDown: '46.2%', turnoverDiff: '+6',
