@@ -546,7 +546,7 @@
                 const res = await fetch('./data.json?v=' + Date.now(), { cache: 'no-store' });
                 if (res.ok) {
                     const data = await res.json();
-                    if (data.bills?.nextGame && data.sabres?.nextGame) {
+                    if (data.bills && data.bills.nextGame && data.sabres && data.sabres.nextGame) {
                         currentIntelData = data;
                     }
                 }
@@ -557,7 +557,9 @@
         }
 
         function switchPreviewTeam(teamKey, btn) {
-            document.querySelectorAll('.preview-filter-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.preview-filter-btn').forEach(function(b) {
+                b.classList.remove('active');
+            });
             btn.classList.add('active');
             activeTeamSelection = teamKey;
             renderPreview(teamKey);
@@ -568,6 +570,57 @@
             if (!teamObj || !teamObj.nextGame) return;
             const game = teamObj.nextGame;
             const container = document.getElementById('preview-content');
+
+            const tapeRows = (game.taleOfTheTape || []).map(function(tape) {
+                return `
+                    <div class="tape-row">
+                        <div class="tape-title">${tape.title}</div>
+                        <div class="tape-labels">
+                            <span style="color: #60a5fa;">${tape.bufLabel}</span>
+                            <span style="color: #f87171;">${tape.oppLabel}</span>
+                        </div>
+                        <div class="bar-container">
+                            <div class="bar-buffalo" style="width: ${tape.bufPct}%;"></div>
+                            <div class="bar-opponent"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            const matchupRows = (game.keyMatchups || []).map(function(m) {
+                return `
+                    <div class="matchup-card">
+                        <div class="matchup-combatants">${m.combatants}</div>
+                        <div class="matchup-desc">${m.desc}</div>
+                    </div>
+                `;
+            }).join('');
+
+            const bufInjuries = (game.injuries && game.injuries.buffalo ? game.injuries.buffalo : []).map(function(i) {
+                const statusClass = i.status ? i.status.toLowerCase() : '';
+                return `
+                    <li class="injury-item">
+                        <span>${i.player} (${i.position})</span>
+                        <span class="status-${statusClass}">${i.status}</span>
+                    </li>
+                `;
+            }).join('');
+
+            const oppInjuries = (game.injuries && game.injuries.opponent ? game.injuries.opponent : []).map(function(i) {
+                const statusClass = i.status ? i.status.toLowerCase() : '';
+                return `
+                    <li class="injury-item">
+                        <span>${i.player} (${i.position})</span>
+                        <span class="status-${statusClass}">${i.status}</span>
+                    </li>
+                `;
+            }).join('');
+
+            const spreadVal = game.betting && game.betting.spread ? game.betting.spread : '--';
+            const moneyVal = game.betting && game.betting.moneyline ? game.betting.moneyline : '--';
+            const ouVal = game.betting && game.betting.overUnder ? game.betting.overUnder : '--';
+            const bufConsensus = game.betting && game.betting.buffaloConsensus ? game.betting.buffaloConsensus : 50;
+            const oppConsensus = game.betting && game.betting.opponentConsensus ? game.betting.opponentConsensus : 50;
 
             container.innerHTML = `
                 <div class="hero-banner">
@@ -588,34 +641,13 @@
 
                 <div class="card">
                     <h2 class="section-title">📊 Tale of the Tape: Offense vs. Defense</h2>
-                    <div>
-                        ${(game.taleOfTheTape || []).map(tape => `
-                            <div class="tape-row">
-                                <div class="tape-title">${tape.title}</div>
-                                <div class="tape-labels">
-                                    <span style="color: #60a5fa;">${tape.bufLabel}</span>
-                                    <span style="color: #f87171;">${tape.oppLabel}</span>
-                                </div>
-                                <div class="bar-container">
-                                    <div class="bar-buffalo" style="width: ${tape.bufPct}%;"></div>
-                                    <div class="bar-opponent"></div>
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
+                    <div>${tapeRows}</div>
                 </div>
 
                 <div class="grid-2">
                     <div class="card" style="margin-bottom: 0;">
                         <h2 class="section-title">⚔️ Key Matchups to Watch</h2>
-                        <div>
-                            ${(game.keyMatchups || []).map(m => `
-                                <div class="matchup-card">
-                                    <div class="matchup-combatants">${m.combatants}</div>
-                                    <div class="matchup-desc">${m.desc}</div>
-                                </div>
-                            `).join('')}
-                        </div>
+                        <div>${matchupRows}</div>
                     </div>
 
                     <div class="card" style="margin-bottom: 0;">
@@ -623,25 +655,11 @@
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                             <div>
                                 <div class="injury-team-title">${teamObj.team}</div>
-                                <ul class="injury-list">
-                                    ${((game.injuries && game.injuries.buffalo) || []).map(i => `
-                                        <li class="injury-item">
-                                            <span>${i.player} (${i.position})</span>
-                                            <span class="status-${(i.status \vert{}\vert{} '').toLowerCase()}">${i.status}</span>
-                                        </li>
-                                    `).join('')}
-                                </ul>
+                                <ul class="injury-list">${bufInjuries}</ul>
                             </div>
                             <div>
                                 <div class="injury-team-title">${game.opponent}</div>
-                                <ul class="injury-list">
-                                    ${((game.injuries && game.injuries.opponent) || []).map(i => `
-                                        <li class="injury-item">
-                                            <span>${i.player} (${i.position})</span>
-                                            <span class="status-${(i.status \vert{}\vert{} '').toLowerCase()}">${i.status}</span>
-                                        </li>
-                                    `).join('')}
-                                </ul>
+                                <ul class="injury-list">${oppInjuries}</ul>
                             </div>
                         </div>
                     </div>
@@ -652,24 +670,24 @@
                     <div class="betting-grid">
                         <div class="bet-card">
                             <div class="bet-label">Spread</div>
-                            <div class="bet-value">${game.betting?.spread || '--'}</div>
+                            <div class="bet-value">${spreadVal}</div>
                         </div>
                         <div class="bet-card">
                             <div class="bet-label">Moneyline</div>
-                            <div class="bet-value">${game.betting?.moneyline || '--'}</div>
+                            <div class="bet-value">${moneyVal}</div>
                         </div>
                         <div class="bet-card">
                             <div class="bet-label">Over / Under</div>
-                            <div class="bet-value">${game.betting?.overUnder || '--'}</div>
+                            <div class="bet-value">${ouVal}</div>
                         </div>
                     </div>
                     <div class="consensus-bar-wrapper">
                         <div class="consensus-labels">
-                            <span style="color: #60a5fa;">${teamObj.team} Pick (${game.betting?.buffaloConsensus || 50}%)</span>
-                            <span style="color: #f87171;">${game.opponent} Pick (${game.betting?.opponentConsensus || 50}%)</span>
+                            <span style="color: #60a5fa;">${teamObj.team} Pick (${bufConsensus}%)</span>
+                            <span style="color: #f87171;">${game.opponent} Pick (${oppConsensus}%)</span>
                         </div>
                         <div class="bar-container">
-                            <div class="bar-buffalo" style="width: ${game.betting?.buffaloConsensus || 50}%;"></div>
+                            <div class="bar-buffalo" style="width: ${bufConsensus}%;"></div>
                             <div class="bar-opponent"></div>
                         </div>
                     </div>
