@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-15T20:20:22.996Z",
+  "updatedAt": "2026-10-16T02:52:00.000Z",
   "source": "http://www.playoffstatus.com & NLL Analytics",
   "bills": {
     "team": "Buffalo Bills",
@@ -12,90 +12,80 @@
       "scenario": "No clinching scenarios available this week."
     },
     "nextGame": {
-      "opponent": "@ Raiders",
-      "gameTime": "Sun, Oct 18 • 4:25 PM ET",
+      "opponent": "vs. Las Vegas Raiders",
+      "opponentCode": "LV",
+      "sport": "NFL",
+      "venue": "Allegiant Stadium — Las Vegas, NV",
+      "gameTime": "Sunday, October 18, 2026 • 4:25 PM EDT",
       "isoTime": "2026-10-18T20:25Z",
       "winChance": 68,
       "matchupRecords": "Bills (4-1, W3) vs. Raiders (2-3, L1)",
+      "broadcast": "Broadcast: CBS • National Radio: Westwood One",
       "ifWin": 91,
       "ifLoss": 74,
-      "leverage": 17
+      "leverage": 17,
+      "h2h": {
+        "series": "24 - 20",
+        "leader": "Buffalo Leads Series",
+        "history": [
+          { "date": "Oct 9, 2023 • Highmark Stadium", "score": "Bills 38 - Raiders 10", "result": "WIN" },
+          { "date": "Sep 25, 2022 • Allegiant Stadium", "score": "Raiders 15 - Bills 23", "result": "WIN" },
+          { "date": "Oct 4, 2020 • Bills Stadium", "score": "Bills 30 - Raiders 23", "result": "WIN" },
+          { "date": "Oct 29, 2017 • New Era Field", "score": "Bills 34 - Raiders 14", "result": "WIN" }
+        ]
+      },
+      "injuries": {
+        "buffalo": [
+          { "player": "Matt Milano", "position": "LB", "status": "Questionable" },
+          { "player": "Taron Johnson", "position": "CB", "status": "Out" }
+        ],
+        "opponent": [
+          { "player": "Maxx Crosby", "position": "DE", "status": "Doubtful" },
+          { "player": "Kolton Miller", "position": "OT", "status": "Questionable" }
+        ]
+      },
+      "taleOfTheTape": [
+        { "title": "Passing Offense vs. Defense", "bufLabel": "Bills 4th (278.4 YPG)", "oppLabel": "Raiders 18th (215.2 YPG)", "bufPct": 65 },
+        { "title": "Rushing Offense vs. Defense", "bufLabel": "Bills 2nd (148.5 YPG)", "oppLabel": "Raiders 22nd (124.0 YPG)", "bufPct": 70 },
+        { "title": "Red Zone Conversion Efficiency", "bufLabel": "Bills 68.4%", "oppLabel": "Raiders 54.2%", "bufPct": 60 },
+        { "title": "Third-Down Conversion Rate", "bufLabel": "Bills 46.5%", "oppLabel": "Raiders 39.1%", "bufPct": 55 }
+      ],
+      "keyMatchups": [
+        { "combatants": "Josh Allen vs. Maxx Crosby", "desc": "Crosby anchors the Raiders' pass rush off the edge. Allen's mobility and pocket presence under heavy pressure will dictate whether explosive downfield throws open up for Keon Coleman and Khalil Shakir." },
+        { "combatants": "Christian Benford vs. Davante Adams", "desc": "Benford draws the primary coverage assignment against Las Vegas's premier playmaker. Neutralizing Adams on crucial 3rd-down slants is imperative to stalling the Raiders' drive rhythm." }
+      ],
+      "betting": {
+        "spread": "BUF -4.5",
+        "moneyline": "-210 / +175",
+        "overUnder": "48.5",
+        "buffaloConsensus": 69,
+        "opponentConsensus": 31
+      }
     },
     "divisionRadar": [
-      {
-        "team": "Bills",
-        "pct": 62
-      },
-      {
-        "team": "Patriots",
-        "pct": 22
-      },
-      {
-        "team": "Dolphins",
-        "pct": 11
-      },
-      {
-        "team": "Jets",
-        "pct": 5
-      }
+      { "team": "Bills", "pct": 62 },
+      { "team": "Patriots", "pct": 22 },
+      { "team": "Dolphins", "pct": 11 },
+      { "team": "Jets", "pct": 5 }
     ],
     "seedDistribution": [
-      {
-        "seed": "#1 Seed",
-        "pct": 18
-      },
-      {
-        "seed": "#2 Seed",
-        "pct": 24
-      },
-      {
-        "seed": "#3 Seed",
-        "pct": 12
-      },
-      {
-        "seed": "#4 Seed",
-        "pct": 8
-      },
-      {
-        "seed": "#5 Seed",
-        "pct": 11
-      },
-      {
-        "seed": "#6 Seed",
-        "pct": 7
-      },
-      {
-        "seed": "#7 Seed",
-        "pct": 4
-      }
+      { "seed": "#1 Seed", "pct": 18 },
+      { "seed": "#2 Seed", "pct": 24 },
+      { "seed": "#3 Seed", "pct": 12 },
+      { "seed": "#4 Seed", "pct": 8 },
+      { "seed": "#5 Seed", "pct": 11 },
+      { "seed": "#6 Seed", "pct": 7 },
+      { "seed": "#7 Seed", "pct": 4 }
     ],
     "opponents": [
-      {
-        "team": "LA Chargers",
-        "pct": 26
-      },
-      {
-        "team": "Pittsburgh Steelers",
-        "pct": 19
-      },
-      {
-        "team": "Jacksonville Jaguars",
-        "pct": 15
-      }
+      { "team": "LA Chargers", "pct": 26 },
+      { "team": "Pittsburgh Steelers", "pct": 19 },
+      { "team": "Jacksonville Jaguars", "pct": 15 }
     ],
     "rootingGuide": [
-      {
-        "target": "Root for Jets Win",
-        "why": "Matchup: Jets (2‑3)vsPatriots (3‑2). Neutral AFC leverage for Buffalo's seeding."
-      },
-      {
-        "target": "Root for Texans Win",
-        "why": "Matchup: Texans (1‑4)vsJaguars (4‑1). Neutral AFC leverage for Buffalo's seeding."
-      },
-      {
-        "target": "Root for Seahawks Win",
-        "why": "Matchup: Seahawks (3‑2)vsBroncos (3‑2). Neutral AFC leverage for Buffalo's seeding."
-      }
+      { "target": "Root for Jets Win", "why": "Matchup: Jets (2‑3)vsPatriots (3‑2). Neutral AFC leverage for Buffalo's seeding." },
+      { "target": "Root for Texans Win", "why": "Matchup: Texans (1‑4)vsJaguars (4‑1). Neutral AFC leverage for Buffalo's seeding." },
+      { "target": "Root for Seahawks Win", "why": "Matchup: Seahawks (3‑2)vsBroncos (3‑2). Neutral AFC leverage for Buffalo's seeding." }
     ]
   },
   "sabres": {
@@ -109,78 +99,76 @@
       "scenario": "No clinching scenarios available this week."
     },
     "nextGame": {
-      "opponent": "@ Toronto",
-      "gameTime": "Thu, Oct 15 • 7:00 PM ET",
+      "opponent": "@ Toronto Maple Leafs",
+      "opponentCode": "TOR",
+      "sport": "NHL",
+      "venue": "Centre Bell / Scotiabank Arena — Toronto, ON",
+      "gameTime": "Thursday, October 15, 2026 • 7:00 PM EDT",
       "isoTime": "2026-10-15T23:00:00Z",
       "winChance": 46,
       "matchupRecords": "Sabres (3-3-1, 7 pts, OT1) vs. Toronto (3-3-1, 7 pts, L1)",
+      "broadcast": "Broadcast: MSG-B • Stream: ESPN+",
       "ifWin": 44,
       "ifLoss": 33,
-      "leverage": 11
+      "leverage": 11,
+      "h2h": {
+        "series": "112 - 95",
+        "leader": "Sabres Lead All-Time Series",
+        "history": [
+          { "date": "Apr 5, 2026 • KeyBank Center", "score": "Sabres 4 - Maple Leafs 3", "result": "WIN" },
+          { "date": "Jan 18, 2026 • Scotiabank Arena", "score": "Maple Leafs 5 - Sabres 2", "result": "LOSS" },
+          { "date": "Nov 24, 2025 • KeyBank Center", "score": "Sabres 3 - Maple Leafs 2 (OT)", "result": "WIN" },
+          { "date": "Oct 12, 2025 • Scotiabank Arena", "score": "Maple Leafs 4 - Sabres 1", "result": "LOSS" }
+        ]
+      },
+      "injuries": {
+        "buffalo": [
+          { "player": "Zach Benson", "position": "LW", "status": "Questionable" }
+        ],
+        "opponent": [
+          { "player": "Calle Jarnkrok", "position": "RW", "status": "Out" },
+          { "player": "Jani Hakanpaa", "position": "D", "status": "Questionable" }
+        ]
+      },
+      "taleOfTheTape": [
+        { "title": "Power Play vs. Penalty Kill", "bufLabel": "Sabres 24.5%", "oppLabel": "Maple Leafs 79.2%", "bufPct": 58 },
+        { "title": "Goals For / Game vs. Goals Against", "bufLabel": "Sabres 3.40 GF", "oppLabel": "Maple Leafs 3.10 GA", "bufPct": 52 },
+        { "title": "Faceoff Win Percentage", "bufLabel": "Sabres 51.2%", "oppLabel": "Maple Leafs 48.8%", "bufPct": 53 },
+        { "title": "High-Danger Corsi For %", "bufLabel": "Sabres 54.1%", "oppLabel": "Maple Leafs 49.0%", "bufPct": 56 }
+      ],
+      "keyMatchups": [
+        { "combatants": "Tage Thompson vs. Auston Matthews", "desc": "High-powered center matchup. Thompson's lethal one-timer on the power play goes head-to-head against Toronto's elite goal-scoring sniper." },
+        { "combatants": "Ukko-Pekka Luukkonen vs. Toronto Top Line", desc: "UPL needs to anchor down early against Toronto's quick transition rush off neutral zone turnovers to secure valuable road points." }
+      ],
+      "betting": {
+        "spread": "BUF -1.5 (+195)",
+        "moneyline": "-130 / +110",
+        "overUnder": "6.5",
+        "buffaloConsensus": 62,
+        "opponentConsensus": 38
+      }
     },
     "divisionRadar": [
-      {
-        "team": "Panthers",
-        "pct": 36
-      },
-      {
-        "team": "Lightning",
-        "pct": 28
-      },
-      {
-        "team": "Bruins",
-        "pct": 16
-      },
-      {
-        "team": "Sabres",
-        "pct": 11
-      }
+      { "team": "Panthers", "pct": 36 },
+      { "team": "Lightning", "pct": 28 },
+      { "team": "Bruins", "pct": 16 },
+      { "team": "Sabres", "pct": 11 }
     ],
     "seedDistribution": [
-      {
-        "seed": "Div 1",
-        "pct": 11
-      },
-      {
-        "seed": "Div 2",
-        "pct": 14
-      },
-      {
-        "seed": "Div 3",
-        "pct": 13
-      },
-      {
-        "seed": "Wildcard 1",
-        "pct": 16
-      },
-      {
-        "seed": "Wildcard 2",
-        "pct": 11
-      }
+      { "seed": "Div 1", "pct": 11 },
+      { "seed": "Div 2", "pct": 14 },
+      { "seed": "Div 3", "pct": 13 },
+      { "seed": "Wildcard 1", "pct": 16 },
+      { "seed": "Wildcard 2", "pct": 11 }
     ],
     "opponents": [
-      {
-        "team": "Florida Panthers",
-        "pct": 22
-      },
-      {
-        "team": "Tampa Bay Lightning",
-        "pct": 18
-      },
-      {
-        "team": "Toronto Maple Leafs",
-        "pct": 14
-      }
+      { "team": "Florida Panthers", "pct": 22 },
+      { "team": "Tampa Bay Lightning", "pct": 18 },
+      { "team": "Toronto Maple Leafs", "pct": 14 }
     ],
     "rootingGuide": [
-      {
-        "target": "Regulation Losses for Atlantic Rivals",
-        "why": "Ensure games involving BOS, TBL, and FLA do not go to 3-point overtimes."
-      },
-      {
-        "target": "Western Conference Wins vs. Metro",
-        "why": "Protects Eastern Conference Wild Card slot thresholds."
-      }
+      { "target": "Regulation Losses for Atlantic Rivals", "why": "Ensure games involving BOS, TBL, and FLA do not go to 3-point overtimes." },
+      { "target": "Western Conference Wins vs. Metro", "why": "Protects Eastern Conference Wild Card slot thresholds." }
     ]
   },
   "bandits": {
@@ -195,93 +183,78 @@
     },
     "nextGame": {
       "opponent": "vs. Georgia Swarm",
+      "opponentCode": "GA",
+      "sport": "NLL",
+      "venue": "KeyBank Center — Buffalo, NY",
       "gameTime": "Sat, Nov 28 • 7:00 PM ET",
       "isoTime": "2026-11-28T23:00:00Z",
       "winChance": 62,
       "matchupRecords": "Bandits (0-0, Home Opener) vs. Swarm (0-0)",
+      "broadcast": "Broadcast: NLL+ • Stream: ESPN+",
       "ifWin": 94,
       "ifLoss": 88,
-      "leverage": 6
+      "leverage": 6,
+      "h2h": {
+        "series": "18 - 12",
+        "leader": "Bandits Lead All-Time Series",
+        "history": [
+          { "date": "May 4, 2026 • KeyBank Center", "score": "Bandits 13 - Swarm 10", "result": "WIN" },
+          { "date": "Mar 22, 2026 • Gas South Arena", "score": "Swarm 14 - Bandits 11", "result": "LOSS" },
+          { "date": "Jan 11, 2026 • KeyBank Center", "score": "Bandits 14 - Swarm 9", "result": "WIN" },
+          { "date": "Apr 13, 2025 • Gas South Arena", "score": "Bandits 12 - Swarm 8", "result": "WIN" }
+        ]
+      },
+      "injuries": {
+        "buffalo": [
+          { "player": "Dhane Smith", "position": "F", "status": "Probable" }
+        ],
+        "opponent": [
+          { "player": "Lyle Thompson", "position": "F", "status": "Questionable" }
+        ]
+      },
+      "taleOfTheTape": [
+        { "title": "Offense vs. Defense Rating", "bufLabel": "Bandits 1st (12.8 GPG)", "oppLabel": "Swarm 5th (11.2 GPG)", "bufPct": 64 },
+        { "title": "Power Play Efficiency", "bufLabel": "Bandits 54.2%", "oppLabel": "Swarm 48.1%", "bufPct": 56 },
+        { "title": "Faceoff & Possession Control", "bufLabel": "Bandits 56.4%", "oppLabel": "Swarm 49.8%", "bufPct": 55 },
+        { "title": "Goaltending Save Percentage", "bufLabel": "Bandits .801%", "oppLabel": "Swarm .779%", "bufPct": 58 }
+      ],
+      "keyMatchups": [
+        { "combatants": "Josh Byrne vs. Georgia Defense", "desc": "Byrne's perimeter vision and outside shooting gravity must break down Georgia's zone scheme early to open up interior lanes." },
+        { "combatants": "Matt Vinc vs. Lyle Thompson", "desc": "The veteran goaltender anchors Banditland against one of the most dynamic playmakers in the NLL." }
+      ],
+      "betting": {
+        "spread": "BUF -2.5",
+        "moneyline": "-180 / +150",
+        "overUnder": "23.5",
+        "buffaloConsensus": 74,
+        "opponentConsensus": 26
+      }
     },
     "divisionRadar": [
-      {
-        "team": "Bandits",
-        "pct": 34
-      },
-      {
-        "team": "Rock",
-        "pct": 28
-      },
-      {
-        "team": "Seals",
-        "pct": 22
-      },
-      {
-        "team": "Swarm",
-        "pct": 16
-      }
+      { "team": "Bandits", "pct": 34 },
+      { "team": "Rock", "pct": 28 },
+      { "team": "Seals", "pct": 22 },
+      { "team": "Swarm", "pct": 16 }
     ],
     "seedDistribution": [
-      {
-        "seed": "#1 Seed",
-        "pct": 34
-      },
-      {
-        "seed": "#2 Seed",
-        "pct": 22
-      },
-      {
-        "seed": "#3 Seed",
-        "pct": 18
-      },
-      {
-        "seed": "#4 Seed",
-        "pct": 10
-      },
-      {
-        "seed": "#5 Seed",
-        "pct": 6
-      },
-      {
-        "seed": "#6 Seed",
-        "pct": 4
-      },
-      {
-        "seed": "#7 Seed",
-        "pct": 3
-      },
-      {
-        "seed": "#8 Seed",
-        "pct": 1
-      }
+      { "seed": "#1 Seed", "pct": 34 },
+      { "seed": "#2 Seed", "pct": 22 },
+      { "seed": "#3 Seed", "pct": 18 },
+      { "seed": "#4 Seed", "pct": 10 },
+      { "seed": "#5 Seed", "pct": 6 },
+      { "seed": "#6 Seed", "pct": 4 },
+      { "seed": "#7 Seed", "pct": 3 },
+      { "seed": "#8 Seed", "pct": 1 }
     ],
     "opponents": [
-      {
-        "team": "Toronto Rock",
-        "pct": 31
-      },
-      {
-        "team": "San Diego Seals",
-        "pct": 24
-      },
-      {
-        "team": "Albany FireWolves",
-        "pct": 19
-      }
+      { "team": "Toronto Rock", "pct": 31 },
+      { "team": "San Diego Seals", "pct": 24 },
+      { "team": "Albany FireWolves", "pct": 19 }
     ],
     "rootingGuide": [
-      {
-        "target": "Root for Seals Win vs. Rock",
-        "why": "Prevents Toronto from building an NLL #1 overall seed tiebreaker lead."
-      },
-      {
-        "target": "Root for Roughnecks Win vs. Swarm",
-        "why": "Suppresses Georgia in the unified top-4 home floor race."
-      },
-      {
-        "target": "Root for Mammoth Win vs. Knighthawks",
-        "why": "Keeps regional chasers below the Top-8 playoff cutline."
-      }
+      { "target": "Root for Seals Win vs. Rock", "why": "Prevents Toronto from building an NLL #1 overall seed tiebreaker lead." },
+      { "target": "Root for Roughnecks Win vs. Swarm", "why": "Suppresses Georgia in the unified top-4 home floor race." },
+      { "target": "Root for Mammoth Win vs. Knighthawks", "why": "Keeps regional chasers below the Top-8 playoff cutline." }
     ]
   },
   "leaders": {
@@ -290,55 +263,19 @@
       "thirdDown": "46.2%",
       "turnoverDiff": "+6",
       "passingRushing": [
-        {
-          "player": "Josh Allen (QB)",
-          "category": "Passing Yds / TD",
-          "stat": "1,248 Yds • 10 TD"
-        },
-        {
-          "player": "James Cook (RB)",
-          "category": "Rushing Yds / YPC",
-          "stat": "432 Yds • 5.2 YPC"
-        },
-        {
-          "player": "Josh Allen (QB)",
-          "category": "Rushing Yds / TD",
-          "stat": "179 Yds • 2 TD"
-        }
+        { "player": "Josh Allen (QB)", "category": "Passing Yds / TD", "stat": "1,248 Yds • 10 TD" },
+        { "player": "James Cook (RB)", "category": "Rushing Yds / YPC", "stat": "432 Yds • 5.2 YPC" },
+        { "player": "Josh Allen (QB)", "category": "Rushing Yds / TD", "stat": "179 Yds • 2 TD" }
       ],
       "receiving": [
-        {
-          "player": "Khalil Shakir (WR)",
-          "statLine": "28 Rec • 342 Yds",
-          "impact": "2 TD • 12.2 Avg"
-        },
-        {
-          "player": "Dalton Kincaid (TE)",
-          "statLine": "21 Rec • 217 Yds",
-          "impact": "1 TD • 10.3 Avg"
-        },
-        {
-          "player": "Keon Coleman (WR)",
-          "statLine": "14 Rec • 201 Yds",
-          "impact": "2 TD • 14.4 Avg"
-        }
+        { "player": "Khalil Shakir (WR)", "statLine": "28 Rec • 342 Yds", "impact": "2 TD • 12.2 Avg" },
+        { "player": "Dalton Kincaid (TE)", "statLine": "21 Rec • 217 Yds", "impact": "1 TD • 10.3 Avg" },
+        { "player": "Keon Coleman (WR)", "statLine": "14 Rec • 201 Yds", "impact": "2 TD • 14.4 Avg" }
       ],
       "defense": [
-        {
-          "player": "Greg Rousseau (DE)",
-          "category": "Sacks • TFL",
-          "stat": "4.5 Sacks • 8 TFL"
-        },
-        {
-          "player": "Terrel Bernard (LB)",
-          "category": "Total Tackles",
-          "stat": "44 Tackles • 1 INT"
-        },
-        {
-          "player": "Christian Benford (CB)",
-          "category": "Passes Defended",
-          "stat": "5 PD • 1 INT"
-        }
+        { "player": "Greg Rousseau (DE)", "category": "Sacks • TFL", "stat": "4.5 Sacks • 8 TFL" },
+        { "player": "Terrel Bernard (LB)", "category": "Total Tackles", "stat": "44 Tackles • 1 INT" },
+        { "player": "Christian Benford (CB)", "category": "Passes Defended", "stat": "5 PD • 1 INT" }
       ]
     },
     "sabres": {
@@ -346,43 +283,15 @@
       "pp": "21.8%",
       "pk": "81.4%",
       "skaters": [
-        {
-          "player": "Tage Thompson (C)",
-          "gp": 7,
-          "stat": "4G - 3A - 7 PTS"
-        },
-        {
-          "player": "Owen Power (D)",
-          "gp": 7,
-          "stat": "1G - 6A - 7 PTS"
-        },
-        {
-          "player": "Mattias Samuelsson (D)",
-          "gp": 7,
-          "stat": "1G - 3A - 4 PTS"
-        },
-        {
-          "player": "Rasmus Dahlin (D)",
-          "gp": 6,
-          "stat": "2G - 2A - 4 PTS"
-        },
-        {
-          "player": "Peyton Krebs (C)",
-          "gp": 7,
-          "stat": "0G - 4A - 4 PTS"
-        }
+        { "player": "Tage Thompson (C)", "gp": 7, "stat": "4G - 3A - 7 PTS" },
+        { "player": "Owen Power (D)", "gp": 7, "stat": "1G - 6A - 7 PTS" },
+        { "player": "Mattias Samuelsson (D)", "gp": 7, "stat": "1G - 3A - 4 PTS" },
+        { "player": "Rasmus Dahlin (D)", "gp": 6, "stat": "2G - 2A - 4 PTS" },
+        { "player": "Peyton Krebs (C)", "gp": 7, "stat": "0G - 4A - 4 PTS" }
       ],
       "goalies": [
-        {
-          "player": "Ukko-Pekka Luukkonen",
-          "record": "2-2-1",
-          "stat": "2.84 • .908%"
-        },
-        {
-          "player": "Colten Ellis",
-          "record": "1-1-0",
-          "stat": "3.19 • .895%"
-        }
+        { "player": "Ukko-Pekka Luukkonen", "record": "2-2-1", "stat": "2.84 • .908%" },
+        { "player": "Colten Ellis", "record": "1-1-0", "stat": "3.19 • .895%" }
       ]
     },
     "bandits": {
@@ -390,82 +299,24 @@
       "pp": "54.2%",
       "champs": "6x",
       "scoring": [
-        {
-          "player": "Josh Byrne (F) #22",
-          "role": "NLL MVP",
-          "stat": "53G - 82A - 135 PTS"
-        },
-        {
-          "player": "Dhane Smith (F) #92",
-          "role": "Finals MVP",
-          "stat": "26G - 101A - 127 PTS"
-        },
-        {
-          "player": "Tehoka Nanticoke (F)",
-          "role": "Right Forward",
-          "stat": "31G - 24A - 55 PTS"
-        },
-        {
-          "player": "Chase Fraser (F)",
-          "role": "Transition/Fwd",
-          "stat": "28G - 18A - 46 PTS"
-        }
+        { "player": "Josh Byrne (F) #22", "role": "NLL MVP", "stat": "53G - 82A - 135 PTS" },
+        { "player": "Dhane Smith (F) #92", "role": "Finals MVP", "stat": "26G - 101A - 127 PTS" },
+        { "player": "Tehoka Nanticoke (F)", "role": "Right Forward", "stat": "31G - 24A - 55 PTS" },
+        { "player": "Chase Fraser (F)", "role": "Transition/Fwd", "stat": "28G - 18A - 46 PTS" }
       ],
       "defense": [
-        {
-          "player": "Matt Vinc (G) #48",
-          "category": "Saves / Save %",
-          "stat": "748 Saves • .801%"
-        },
-        {
-          "player": "Nick Weiss (D)",
-          "category": "Loose Balls / CTO",
-          "stat": "112 LBs • 18 CTO"
-        },
-        {
-          "player": "Cam Wyers (D)",
-          "category": "Blocked Shots",
-          "stat": "19 Blocks • 64 LBs"
-        }
+        { "player": "Matt Vinc (G) #48", "category": "Saves / Save %", "stat": "748 Saves • .801%" },
+        { "player": "Nick Weiss (D)", "category": "Loose Balls / CTO", "stat": "112 LBs • 18 CTO" },
+        { "player": "Cam Wyers (D)", "category": "Blocked Shots", "stat": "19 Blocks • 64 LBs" }
       ]
     }
   },
   "history": [
-    {
-      "date": "Oct 01",
-      "bills": 76,
-      "sabres": 34,
-      "bandits": 88
-    },
-    {
-      "date": "Oct 04",
-      "bills": 79,
-      "sabres": 35,
-      "bandits": 88
-    },
-    {
-      "date": "Oct 07",
-      "bills": 81,
-      "sabres": 37,
-      "bandits": 89
-    },
-    {
-      "date": "Oct 10",
-      "bills": 80,
-      "sabres": 36,
-      "bandits": 90
-    },
-    {
-      "date": "Oct 12",
-      "bills": 83,
-      "sabres": 38,
-      "bandits": 91
-    },
-    {
-      "date": "Oct 15",
-      "bills": 84,
-      "sabres": 38,
-      "bandits": 92
-    }
+    { "date": "Oct 01", "bills": 76, "sabres": 34, "bandits": 88 },
+    { "date": "Oct 04", "bills": 79, "sabres": 35, "bandits": 88 },
+    { "date": "Oct 07", "bills": 81, "sabres": 37, "bandits": 89 },
+    { "date": "Oct 10", "bills": 80, "sabres": 36, "bandits": 90 },
+    { "date": "Oct 12", "bills": 83, "sabres": 38, "bandits": 91 },
+    { "date": "Oct 15", "bills": 84, "sabres": 38, "bandits": 92 }
   ]
 }

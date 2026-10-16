@@ -106,6 +106,30 @@
             gap: 1.5rem;
         }
 
+        /* Team Selector Toggle Bar */
+        .preview-filter-bar {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .preview-filter-btn {
+            background: var(--card-inner);
+            border: 1px solid var(--card-border);
+            color: var(--text-muted);
+            padding: 0.35rem 1rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .preview-filter-btn.active {
+            background: rgba(56, 189, 248, 0.15);
+            color: #38bdf8;
+            border-color: #38bdf8;
+        }
+
         /* Hero Banner */
         .hero-banner {
             background: linear-gradient(135deg, rgba(0, 51, 141, 0.35), rgba(243, 112, 33, 0.25));
@@ -303,6 +327,7 @@
         .status-out { color: var(--accent-red); font-weight: 700; }
         .status-questionable { color: var(--accent-gold); font-weight: 700; }
         .status-doubtful { color: #f97316; font-weight: 700; }
+        .status-probable { color: var(--success-green); font-weight: 700; }
 
         /* Betting Intel */
         .betting-grid {
@@ -359,7 +384,7 @@
     <header>
         <h1>ONE BUFFALO INTEL</h1>
         <div class="meta-bar">
-            <span>Matchup Intel & Head-to-Head Preview</span>
+            <span id="update-status">Matchup Intel & Head-to-Head Preview</span>
             <span>•</span>
             <span>Bills • Sabres • Bandits</span>
         </div>
@@ -385,117 +410,70 @@
     </nav>
 
     <main class="container" id="app">
-        <!-- Dynamically injected preview content based on closest game timestamp -->
+        <!-- Team Selector Bar -->
+        <div class="preview-filter-bar">
+            <button class="preview-filter-btn active" onclick="switchPreviewTeam('bills', this)">Buffalo Bills</button>
+            <button class="preview-filter-btn" onclick="switchPreviewTeam('sabres', this)">Buffalo Sabres</button>
+            <button class="preview-filter-btn" onclick="switchPreviewTeam('bandits', this)">Buffalo Bandits</button>
+        </div>
+
         <div id="preview-content">
-            <!-- Loading state placeholder -->
             <div style="text-align: center; padding: 4rem; color: var(--text-muted);">
-                Calculating closest upcoming Buffalo matchup...
+                Loading matchup intel from data.json...
             </div>
         </div>
     </main>
 
     <footer>
-        <p>One Buffalo Multi-Sport Hub. Hosted on <a href="https://github.com/olfhq/One-Buffalo-Dashboard" target="_blank" rel="noopener" style="color: #38bdf8;">GitHub Pages</a> via onebuffalotracker.fyi.</p>
+        <p>One Buffalo Multi-Sport Hub. Hosted on <a href="https://github.com" target="_blank" rel="noopener" style="color: #38bdf8;">GitHub Pages</a> via onebuffalotracker.fyi.</p>
     </footer>
 
     <script>
-        const nextMatchups = [
-            {
-                team: "Buffalo Bills",
-                sport: "NFL",
-                opponent: "Las Vegas Raiders",
-                opponentCode: "LV",
-                venue: "Allegiant Stadium — Las Vegas, NV",
-                date: "Sunday, October 18, 2026 • 4:25 PM EDT",
-                timestamp: new Date("2026-10-18T16:25:00-04:00").getTime(),
-                taleOfTheTape: [
-                    { title: "Passing Offense vs. Defense", bufLabel: "Bills 4th (278.4 YPG)", oppLabel: "Raiders 18th (215.2 YPG)", bufPct: 65 },
-                    { title: "Rushing Offense vs. Defense", bufLabel: "Bills 2nd (148.5 YPG)", oppLabel: "Raiders 22nd (124.0 YPG)", bufPct: 70 },
-                    { title: "Red Zone Conversion Efficiency", bufLabel: "Bills 68.4%", oppLabel: "Raiders 54.2%", bufPct: 60 },
-                    { title: "Third-Down Conversion Rate", bufLabel: "Bills 46.5%", oppLabel: "Raiders 39.1%", bufPct: 55 }
-                ],
-                keyMatchups: [
-                    { combatants: "Josh Allen vs. Maxx Crosby", desc: "Crosby anchors the Raiders' pass rush off the edge. Allen's mobility and pocket presence under heavy pressure will dictate whether explosive downfield throws open up for Keon Coleman and Khalil Shakir." },
-                    { combatants: "Christian Benford vs. Davante Adams", desc: "Benford draws the primary coverage assignment against Las Vegas's premier playmaker. Neutralizing Adams on crucial 3rd-down slants is imperative to stalling the Raiders' drive rhythm." }
-                ],
-                injuries: {
-                    buffalo: [
-                        { player: "Matt Milano", position: "LB", status: "Questionable" },
-                        { player: "Taron Johnson", position: "CB", status: "Out" }
-                    ],
-                    opponent: [
-                        { player: "Star Pass Rusher", position: "DE", status: "Doubtful" },
-                        { player: "Starting Tackle", position: "OT", status: "Questionable" }
-                    ]
-                },
-                betting: {
-                    spread: "BUF -4.5",
-                    moneyline: "-210 / +175",
-                    overUnder: "48.5",
-                    buffaloConsensus: 69,
-                    opponentConsensus: 31
-                }
-            },
-            {
-                team: "Buffalo Sabres",
-                sport: "NHL",
-                opponent: "Montreal Canadiens",
-                opponentCode: "MTL",
-                venue: "Centre Bell — Montreal, QC",
-                date: "Saturday, October 17, 2026 • 7:00 PM EDT",
-                timestamp: new Date("2026-10-17T19:00:00-04:00").getTime(),
-                taleOfTheTape: [
-                    { title: "Power Play vs. Penalty Kill", bufLabel: "Sabres 24.5%", oppLabel: "Canadiens 79.2%", bufPct: 58 },
-                    { title: "Goals For / Game vs. Goals Against", bufLabel: "Sabres 3.40 GF", oppLabel: "Canadiens 3.10 GA", bufPct: 52 },
-                    { title: "Faceoff Win Percentage", bufLabel: "Sabres 51.2%", oppLabel: "Canadiens 48.8%", bufPct: 53 },
-                    { title: "High-Danger Corsi For %", bufLabel: "Sabres 54.1%", oppLabel: "Canadiens 49.0%", bufPct: 56 }
-                ],
-                keyMatchups: [
-                    { combatants: "Tage Thompson vs. Nick Suzuki", desc: "Center ice battle featuring elite scoring touch. Thompson's lethal one-timer on the power play must be fed by Dahlin and Power against Suzuki's physical two-way checking line." },
-                    { combatants: "Ukko-Pekka Luukkonen vs. Canadiens Top Line", desc: "UPL needs to anchor down early against Montreal's quick transition rush off neutral zone turnovers to secure valuable road points." }
-                ],
-                injuries: {
-                    buffalo: [
-                        { player: "Depth Forward", position: "LW", status: "Out" }
-                    ],
-                    opponent: [
-                        { player: "Top-4 Defenceman", position: "D", status: "Questionable" }
-                    ]
-                },
-                betting: {
-                    spread: "BUF -1.5 (+195)",
-                    moneyline: "-130 / +110",
-                    overUnder: "6.5",
-                    buffaloConsensus: 62,
-                    opponentConsensus: 38
-                }
+        let globalData = null;
+
+        async function loadPreviewData() {
+            try {
+                const res = await fetch('./data.json?v=' + Date.now(), { cache: 'no-store' });
+                if (!res.ok) throw new Error('data.json not loaded');
+                globalData = await res.json();
+                renderPreview('bills'); // Default to Bills
+            } catch (err) {
+                console.warn('Preview load fallback:', err);
+                document.getElementById('preview-content').innerHTML = `
+                    <div style="text-align: center; padding: 4rem; color: #f87171;">
+                        Error loading data.json feed. Please verify local server or file path.
+                    </div>
+                `;
             }
-        ];
+        }
 
-        function renderClosestMatchup() {
-            const now = Date.now();
-            const upcoming = nextMatchups
-                .filter(m => m.timestamp > now)
-                .sort((a, b) => a.timestamp - b.timestamp);
+        function switchPreviewTeam(teamKey, btn) {
+            document.querySelectorAll('.preview-filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderPreview(teamKey);
+        }
 
-            const activeGame = upcoming.length > 0 ? upcoming[0] : nextMatchups[0];
+        function renderPreview(teamKey) {
+            if (!globalData || !globalData[teamKey]) return;
+            const teamObj = globalData[teamKey];
+            const game = teamObj.nextGame;
             const container = document.getElementById('preview-content');
-            
+
             container.innerHTML = `
                 <!-- Hero Banner -->
                 <div class="hero-banner">
-                    <span class="team-badge">${activeGame.sport} Matchup Preview</span>
+                    <span class="team-badge">${game.sport} Matchup Preview</span>
                     <div class="matchup-teams">
                         <div class="team-block">
-                            <div class="team-name" style="color: var(--accent-gold);">${activeGame.team}</div>
+                            <div class="team-name" style="color: var(--accent-gold);">${teamObj.team}</div>
                         </div>
-                        <div class="vs-tag">@</div>
+                        <div class="vs-tag">vs</div>
                         <div class="team-block">
-                            <div class="team-name">${activeGame.opponent}</div>
+                            <div class="team-name">${game.opponent}</div>
                         </div>
                     </div>
                     <div class="game-meta">
-                        📍 ${activeGame.venue} &nbsp;•&nbsp; 🕒 ${activeGame.date}
+                        📍 ${game.venue} &nbsp;•&nbsp; 🕒 ${game.gameTime}
                     </div>
                 </div>
 
@@ -503,7 +481,7 @@
                 <div class="card">
                     <h2 class="section-title">📊 Tale of the Tape: Offense vs. Defense</h2>
                     <div>
-                        ${activeGame.taleOfTheTape.map(tape => `
+                        ${game.taleOfTheTape.map(tape => `
                             <div class="tape-row">
                                 <div class="tape-title">${tape.title}</div>
                                 <div class="tape-labels">
@@ -524,7 +502,7 @@
                     <div class="card" style="margin-bottom: 0;">
                         <h2 class="section-title">⚔️ Key Matchups to Watch</h2>
                         <div>
-                            ${activeGame.keyMatchups.map(m => `
+                            ${game.keyMatchups.map(m => `
                                 <div class="matchup-card">
                                     <div class="matchup-combatants">${m.combatants}</div>
                                     <div class="matchup-desc">${m.desc}</div>
@@ -537,9 +515,9 @@
                         <h2 class="section-title">🏥 Injury & Inactive Report</h2>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                             <div>
-                                <div class="injury-team-title">${activeGame.team}</div>
+                                <div class="injury-team-title">${teamObj.team}</div>
                                 <ul class="injury-list">
-                                    ${activeGame.injuries.buffalo.map(i => `
+                                    ${game.injuries.buffalo.map(i => `
                                         <li class="injury-item">
                                             <span>${i.player} (${i.position})</span>
                                             <span class="status-${i.status.toLowerCase()}">${i.status}</span>
@@ -548,9 +526,9 @@
                                 </ul>
                             </div>
                             <div>
-                                <div class="injury-team-title">${activeGame.opponent}</div>
+                                <div class="injury-team-title">${game.opponent}</div>
                                 <ul class="injury-list">
-                                    ${activeGame.injuries.opponent.map(i => `
+                                    ${game.injuries.opponent.map(i => `
                                         <li class="injury-item">
                                             <span>${i.player} (${i.position})</span>
                                             <span class="status-${i.status.toLowerCase()}">${i.status}</span>
@@ -568,24 +546,24 @@
                     <div class="betting-grid">
                         <div class="bet-card">
                             <div class="bet-label">Spread</div>
-                            <div class="bet-value">${activeGame.betting.spread}</div>
+                            <div class="bet-value">${game.betting.spread}</div>
                         </div>
                         <div class="bet-card">
                             <div class="bet-label">Moneyline</div>
-                            <div class="bet-value">${activeGame.betting.moneyline}</div>
+                            <div class="bet-value">${game.betting.moneyline}</div>
                         </div>
                         <div class="bet-card">
                             <div class="bet-label">Over / Under</div>
-                            <div class="bet-value">${activeGame.betting.overUnder}</div>
+                            <div class="bet-value">${game.betting.overUnder}</div>
                         </div>
                     </div>
                     <div class="consensus-bar-wrapper">
                         <div class="consensus-labels">
-                            <span style="color: #60a5fa;">${activeGame.team} Public Pick (${activeGame.betting.buffaloConsensus}%)</span>
-                            <span style="color: #f87171;">${activeGame.opponent} Public Pick (${activeGame.betting.opponentConsensus}%)</span>
+                            <span style="color: #60a5fa;">${teamObj.team} Public Pick (${game.betting.buffaloConsensus}%)</span>
+                            <span style="color: #f87171;">${game.opponent} Public Pick (${game.betting.opponentConsensus}%)</span>
                         </div>
                         <div class="bar-container">
-                            <div class="bar-buffalo" style="width: ${activeGame.betting.buffaloConsensus}%;"></div>
+                            <div class="bar-buffalo" style="width: ${game.betting.buffaloConsensus}%;"></div>
                             <div class="bar-opponent"></div>
                         </div>
                     </div>
@@ -593,7 +571,7 @@
             `;
         }
 
-        window.addEventListener('DOMContentLoaded', renderClosestMatchup);
+        window.addEventListener('DOMContentLoaded', loadPreviewData);
     </script>
 </body>
 </html>

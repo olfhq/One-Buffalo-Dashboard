@@ -625,6 +625,7 @@
 
   <script>
     async function checkLiveScores() {
+      // Check Bills / NFL via ESPN
       try {
         const res = await fetch('https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard');
         if (res.ok) {
@@ -638,7 +639,6 @@
               const opp = comp.competitors.find(c => c.id !== '2');
               const clock = comp.status?.displayClock || '';
               const period = comp.status?.period || 1;
-              const periodStr = period <= 4 ? `Q${period}` : 'OT';
               const box = document.getElementById('bills-countdown-box');
               const val = document.getElementById('bills-countdown');
               const label = document.getElementById('bills-countdown-label');
@@ -646,7 +646,7 @@
               val.innerHTML = `BUF ${buf.score} - ${opp.team.abbreviation} ${opp.score}`;
               val.style.color = '#fff';
               label.className = 'countdown-label scoreboard-live-tag';
-              label.innerHTML = `<span class="live-dot-pulse"></span> ${periodStr} (${clock})`;
+              label.innerHTML = `<span class="live-dot-pulse"></span> Q${period} (${clock})`;
             } else if (state === 'post') {
               const buf = comp.competitors.find(c => c.id === '2');
               const opp = comp.competitors.find(c => c.id !== '2');
@@ -658,44 +658,43 @@
           }
         }
       } catch (err) {
-        console.warn('Bills live score check skipped:', err);
+        console.warn('NFL live score check skipped:', err);
       }
 
+      // Check Sabres / NHL via ESPN Stable Scoreboard Endpoint
       try {
-        const res = await fetch('https://api-web.nhle.com/v1/score/now');
+        const res = await fetch('https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard');
         if (res.ok) {
           const data = await res.json();
-          const sabresGame = data.games?.find(g => g.awayTeam?.abbrev === 'BUF' || g.homeTeam?.abbrev === 'BUF');
+          const sabresGame = data.events?.find(e => e.competitions?.[0]?.competitors?.some(c => c.team?.abbreviation === 'BUF'));
           if (sabresGame) {
-            const state = sabresGame.gameState;
-            if (state === 'LIVE' || state === 'CRIT') {
-              const isHome = sabresGame.homeTeam.abbrev === 'BUF';
-              const bufScore = isHome ? sabresGame.homeTeam.score : sabresGame.awayTeam.score;
-              const oppScore = isHome ? sabresGame.awayTeam.score : sabresGame.homeTeam.score;
-              const oppAbbr = isHome ? sabresGame.awayTeam.abbrev : sabresGame.homeTeam.abbrev;
-              const period = sabresGame.periodDescriptor?.number || 1;
-              const clock = sabresGame.clock?.timeRemaining || '';
+            const comp = sabresGame.competitions[0];
+            const state = comp.status?.type?.state;
+            if (state === 'in') {
+              const buf = comp.competitors.find(c => c.team?.abbreviation === 'BUF');
+              const opp = comp.competitors.find(c => c.team?.abbreviation !== 'BUF');
+              const clock = comp.status?.displayClock || '';
+              const period = comp.status?.period || 1;
               const box = document.getElementById('sabres-countdown-box');
               const val = document.getElementById('sabres-countdown');
               const label = document.getElementById('sabres-countdown-label');
               box.classList.add('scoreboard-live-box');
-              val.innerHTML = `BUF ${bufScore} - ${oppAbbr} ${oppScore}`;
+              val.innerHTML = `BUF ${buf.score} - ${opp.team.abbreviation} ${opp.score}`;
               val.style.color = '#fff';
               label.className = 'countdown-label scoreboard-live-tag';
               label.innerHTML = `<span class="live-dot-pulse"></span> P${period} (${clock})`;
-            } else if (state === 'FINAL' || state === 'OFF') {
-              const isHome = sabresGame.homeTeam.abbrev === 'BUF';
-              const bufScore = isHome ? sabresGame.homeTeam.score : sabresGame.awayTeam.score;
-              const oppScore = isHome ? sabresGame.awayTeam.score : sabresGame.homeTeam.score;
+            } else if (state === 'post') {
+              const buf = comp.competitors.find(c => c.team?.abbreviation === 'BUF');
+              const opp = comp.competitors.find(c => c.team?.abbreviation !== 'BUF');
               const val = document.getElementById('sabres-countdown');
               const label = document.getElementById('sabres-countdown-label');
-              val.innerHTML = `${bufScore} - ${oppScore}`;
+              val.innerHTML = `${buf.score} - ${opp.score}`;
               label.textContent = 'FINAL';
             }
           }
         }
       } catch (err) {
-        console.warn('Sabres live score check skipped:', err);
+        console.warn('NHL live score check skipped:', err);
       }
     }
 

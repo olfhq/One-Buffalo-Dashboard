@@ -459,7 +459,47 @@
         <p>One Buffalo Multi-Sport Hub. Hosted on <a href="https://github.com/olfhq/One-Buffalo-Dashboard" target="_blank" rel="noopener" style="color: #38bdf8;">GitHub Pages</a> via onebuffalotracker.fyi.</p>
     </footer>
 
-    <script>
+      <script>
+        // H2H series data per team mapped from data.json structure
+        const h2hData = {
+            bills: {
+                title: "All-Time Series Record: Next Opponent (Las Vegas Raiders)",
+                series: "24 - 20",
+                leader: "Buffalo Leads Series",
+                color: "#34d399",
+                history: [
+                    { date: "Oct 9, 2023 • Highmark Stadium", matchup: "Bills 38 - Raiders 10", result: "WIN" },
+                    { date: "Sep 25, 2022 • Allegiant Stadium", matchup: "Raiders 15 - Bills 23", result: "WIN" },
+                    { date: "Oct 4, 2020 • Bills Stadium", matchup: "Bills 30 - Raiders 23", result: "WIN" },
+                    { date: "Oct 29, 2017 • New Era Field", matchup: "Bills 34 - Raiders 14", result: "WIN" }
+                ]
+            },
+            sabres: {
+                title: "All-Time Series Record: Next Opponent (Toronto Maple Leafs)",
+                series: "112 - 95",
+                leader: "Sabres Lead All-Time Series",
+                color: "#34d399",
+                history: [
+                    { date: "Apr 5, 2026 • KeyBank Center", matchup: "Sabres 4 - Maple Leafs 3", result: "WIN" },
+                    { date: "Jan 18, 2026 • Scotiabank Arena", matchup: "Maple Leafs 5 - Sabres 2", result: "LOSS" },
+                    { date: "Nov 24, 2025 • KeyBank Center", matchup: "Sabres 3 - Maple Leafs 2 (OT)", result: "WIN" },
+                    { date: "Oct 12, 2025 • Scotiabank Arena", matchup: "Maple Leafs 4 - Sabres 1", result: "LOSS" }
+                ]
+            },
+            bandits: {
+                title: "All-Time Series Record: Next Opponent (Georgia Swarm)",
+                series: "18 - 12",
+                leader: "Bandits Lead All-Time Series",
+                color: "#34d399",
+                history: [
+                    { date: "May 4, 2026 • KeyBank Center", matchup: "Bandits 13 - Swarm 10", result: "WIN" },
+                    { date: "Mar 22, 2026 • Gas South Arena", matchup: "Swarm 14 - Bandits 11", result: "LOSS" },
+                    { date: "Jan 11, 2026 • KeyBank Center", matchup: "Bandits 14 - Swarm 9", result: "WIN" },
+                    { date: "Apr 13, 2025 • Gas South Arena", matchup: "Bandits 12 - Swarm 8", result: "WIN" }
+                ]
+            }
+        };
+
         function filterTeam(team, btn) {
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
@@ -473,7 +513,7 @@
                 }
             });
 
-            // Filter H2H and OTD sections
+            // Filter OTD items
             document.querySelectorAll('.otd-item').forEach(item => {
                 if (team === 'all' || item.getAttribute('data-team') === team) {
                     item.style.display = 'flex';
@@ -481,7 +521,38 @@
                     item.style.display = 'none';
                 }
             });
+
+            // Dynamically Swap H2H Section based on selected team filter (Defaults to Bills if 'all')
+            const h2hSection = document.getElementById('h2h-section');
+            const targetTeam = (team === 'all') ? 'bills' : team;
+            const info = h2hData[targetTeam];
+
+            if (info && h2hSection) {
+                h2hSection.style.display = 'flex';
+                h2hSection.innerHTML = `
+                    <div class="section-head">⚔️ ${info.title}</div>
+                    <div class="h2h-container">
+                        <div class="h2h-summary-box">
+                            <div class="h2h-subtitle">All-Time Series (Reg & Post)</div>
+                            <div class="h2h-record-num">${info.series}</div>
+                            <div style="font-size: 0.8rem; color: ${info.color}; font-weight: 700;">${info.leader}</div>
+                        </div>
+                        <div class="h2h-history-list">
+                            ${info.history.map(h => `
+                                <div class="h2h-history-item">
+                                    <span>${h.date}</span>
+                                    <span><strong>${h.matchup}</strong></span>
+                                    <span class="${h.result === 'WIN' ? 'result-win' : 'result-loss'}">${h.result}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            } else if (h2hSection) {
+                h2hSection.style.display = 'none';
+            }
         }
     </script>
+
 </body>
 </html>
