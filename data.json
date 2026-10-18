@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-18T08:45:20.302Z",
+  "updatedAt": "2026-10-18T17:34:32.966Z",
   "source": "http://www.playoffstatus.com",
   "bills": {
     "team": "Buffalo Bills",
@@ -17,6 +17,7 @@
       "isoTime": "2026-10-18T20:25Z",
       "winChance": 68,
       "matchupRecords": "Bills (4-1, W1) vs. Raiders (3-2, L2)",
+      "broadcast": "CBS",
       "ifWin": 91,
       "ifLoss": 74,
       "leverage": 17
@@ -85,16 +86,16 @@
     ],
     "rootingGuide": [
       {
-        "target": "Root for Texans Win",
-        "why": "Matchup: Texans (1‑4)vsJaguars (4‑1). Neutral AFC leverage for Buffalo's seeding."
+        "target": "Root for Chargers Win",
+        "why": "Matchup: Chargers (0‑5)vsChiefs (4‑0). Neutral AFC leverage for Buffalo's seeding."
       },
       {
         "target": "Root for Jets Win",
         "why": "Matchup: Jets (2‑3)vsPatriots (3‑2). Neutral AFC leverage for Buffalo's seeding."
       },
       {
-        "target": "Root for Chargers Win",
-        "why": "Matchup: Chargers (0‑5)vsChiefs (4‑0). Neutral AFC leverage for Buffalo's seeding."
+        "target": "Root for Buccaneers Win",
+        "why": "Matchup: Buccaneers (1‑4)vsSteelers (3‑2). Neutral AFC leverage for Buffalo's seeding."
       }
     ]
   },
@@ -114,6 +115,7 @@
       "isoTime": "2026-10-21T23:30:00Z",
       "winChance": 52,
       "matchupRecords": "Sabres (4-3-2, 10 pts, OT1) vs. Philadelphia (1-6-3, 5 pts, W1)",
+      "broadcast": "TNT",
       "ifWin": 44,
       "ifLoss": 33,
       "leverage": 11
@@ -121,19 +123,19 @@
     "divisionRadar": [
       {
         "team": "Bruins",
-        "pct": 21
-      },
-      {
-        "team": "Senators",
-        "pct": 22
+        "pct": 24
       },
       {
         "team": "Lightning",
-        "pct": 20
+        "pct": 22
+      },
+      {
+        "team": "Senators",
+        "pct": 24
       },
       {
         "team": "Panthers",
-        "pct": 25
+        "pct": 28
       }
     ],
     "seedDistribution": [
