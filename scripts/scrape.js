@@ -28,21 +28,23 @@ function parseCellPct(rawText) {
   return isNaN(val) ? 0 : Math.min(100, Math.round(val));
 }
 
-// Fetch live game schedules, game win chance, ISO timestamps, and team records with points & streaks
+// Fetch live game schedules, game win chance, ISO timestamps, team records, and broadcast networks
 async function fetchNextGameSchedule() {
   let billsSchedule = {
     opponent: '@ Raiders',
     gameTime: 'Sun, Oct 18 • 4:25 PM ET',
     isoTime: null,
     winChance: 68,
-    matchupRecords: 'Bills vs. Raiders'
+    matchupRecords: 'Bills vs. Raiders',
+    broadcast: 'CBS'
   };
   let sabresSchedule = {
     opponent: 'vs. Philadelphia',
     gameTime: 'Wed, Oct 21 • 7:30 PM ET',
     isoTime: null,
     winChance: 52,
-    matchupRecords: 'Sabres vs. Philadelphia'
+    matchupRecords: 'Sabres vs. Philadelphia',
+    broadcast: 'MSG-B'
   };
 
   // 1. Bills (ESPN Schedule + Live Standings API)
@@ -67,6 +69,9 @@ async function fetchNextGameSchedule() {
 
         const dateStr = d.toLocaleDateString('en-US', { timeZone: 'America/New_York', weekday: 'short', month: 'short', day: 'numeric' });
         const timeStr = d.toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour: 'numeric', minute: '2-digit', hour12: true });
+
+        // Extract live TV broadcast network (CBS, FOX, NBC, ESPN, Amazon Prime, etc.)
+        const tvNetwork = comp.broadcasts?.[0]?.names?.[0] || 'CBS';
 
         let winChance = 68;
         if (comp.predictor?.homeTeam) {
@@ -110,7 +115,8 @@ async function fetchNextGameSchedule() {
           gameTime: `${dateStr} • ${timeStr} ET`,
           isoTime: nextGame.date,
           winChance: winChance,
-          matchupRecords: `${bufDisplay} vs. ${oppDisplay}`
+          matchupRecords: `${bufDisplay} vs. ${oppDisplay}`,
+          broadcast: tvNetwork
         };
       }
     }
@@ -137,6 +143,13 @@ async function fetchNextGameSchedule() {
 
         const dateStr = d.toLocaleDateString('en-US', { timeZone: 'America/New_York', weekday: 'short', month: 'short', day: 'numeric' });
         const timeStr = d.toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour: 'numeric', minute: '2-digit', hour12: true });
+
+        // Extract live TV broadcast network (MSG-B, ESPN+, TNT, Sportsnet, etc.)
+        let tvNetwork = 'MSG-B';
+        if (Array.isArray(nextGame.tvBroadcasts) && nextGame.tvBroadcasts.length > 0) {
+          const homeOrNational = nextGame.tvBroadcasts.find(b => b.market === 'H' || b.market === 'N') || nextGame.tvBroadcasts[0];
+          tvNetwork = homeOrNational.network || 'MSG-B';
+        }
 
         let sabresPoints = 10;
         let oppPoints = 0;
@@ -170,7 +183,8 @@ async function fetchNextGameSchedule() {
           gameTime: `${dateStr} • ${timeStr} ET`,
           isoTime: nextGame.startTimeUTC,
           winChance: isHome ? 52 : 46,
-          matchupRecords: `${bufInfo} vs. ${oppInfo}`
+          matchupRecords: `${bufInfo} vs. ${oppInfo}`,
+          broadcast: tvNetwork
         };
       }
     }
@@ -205,6 +219,7 @@ async function scrapePlayoffStatus() {
       isoTime: billsSchedule.isoTime,
       winChance: billsSchedule.winChance,
       matchupRecords: billsSchedule.matchupRecords,
+      broadcast: billsSchedule.broadcast,
       ifWin: 91,
       ifLoss: 74,
       leverage: 17
@@ -249,6 +264,7 @@ async function scrapePlayoffStatus() {
       isoTime: sabresSchedule.isoTime,
       winChance: sabresSchedule.winChance,
       matchupRecords: sabresSchedule.matchupRecords,
+      broadcast: sabresSchedule.broadcast,
       ifWin: 44,
       ifLoss: 33,
       leverage: 11
@@ -404,7 +420,7 @@ async function scrapePlayoffStatus() {
           const pcts = cells.map(parseCellPct).filter(n => n >= 0 && n <= 100);
           
           if (pcts.length >= 5) {
-            const seeds = pcts.slice(0, 5); // Division 1-3, WC 1-2
+            const seeds = pcts.slice(0, 5);
             const totalPlayoffs = Math.min(100, seeds.reduce((a, b) => a + b, 0));
             
             if (sabresRadar.length < 4 && !sabresRadar.some(r => r.team === foundTeam)) {
@@ -468,7 +484,7 @@ async function scrapePlayoffStatus() {
   };
 
   fs.writeFileSync('./data.json', JSON.stringify(finalPayload, null, 2), 'utf-8');
-  console.log('data.json successfully written with dynamic values.');
+  console.log('data.json successfully written with dynamic records and broadcasts.');
 }
 
 scrapePlayoffStatus();
