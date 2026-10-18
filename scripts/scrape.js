@@ -37,7 +37,8 @@ async function fetchNflScoreboard() {
     const data = await res.json();
     const events = data.events || [];
 
-    const afcEastTeams = ['New England Patriots', 'Miami Dolphins', 'New York Jets'];
+    // Threat hierarchy within AFC East
+    const afcEastPriority = ['New England Patriots', 'Miami Dolphins', 'New York Jets'];
     const afcContenders = ['Kansas City Chiefs', 'Baltimore Ravens', 'Houston Texans', 'Pittsburgh Steelers', 'Los Angeles Chargers'];
 
     for (const ev of events) {
@@ -53,6 +54,7 @@ async function fetchNflScoreboard() {
       const homeName = home.team?.displayName || 'Home Team';
       const awayName = away.team?.displayName || 'Away Team';
 
+      // Skip the Bills game (featured on Matchup Intel tab)
       if (homeName.includes('Bills') || awayName.includes('Bills')) continue;
 
       const homeScore = home.score || '0';
@@ -70,17 +72,73 @@ async function fetchNflScoreboard() {
       let target = 'Neutral Matchup';
       let why = 'Non-conference game with zero immediate AFC tiebreaker leverage.';
 
-      const rival = [awayName, homeName].find(n => afcEastTeams.includes(n));
-      const contender = [awayName, homeName].find(n => afcContenders.includes(n));
+      const isAwayEast = afcEastPriority.includes(awayName);
+      const isHomeEast = afcEastPriority.includes(homeName);
+      const hasChiefs = awayName === 'Kansas City Chiefs' || homeName === 'Kansas City Chiefs';
 
-      if (rival) {
-        const opponent = rival === awayName ? homeName : awayName;
+      // CASE 1: Intra-division match (e.g. Jets vs. Patriots)
+      if (isAwayEast && isHomeEast) {
+        const awayIndex = afcEastPriority.indexOf(awayName);
+        const homeIndex = afcEastPriority.indexOf(homeName);
+        const biggerThreat = awayIndex <= homeIndex ? awayName : homeName;
+        const underdog = biggerThreat === awayName ? homeName : awayName;
+
+        target = `Root for ${underdog}`;
+        why = `A ${biggerThreat} loss knocks down Buffalo's closest challenger in the AFC East.`;
+
+        if (statusState === 'post') {
+          const biggerScore = biggerThreat === awayName ? parseInt(awayScore) : parseInt(homeScore);
+          const underScore = underdog === awayName ? parseInt(awayScore) : parseInt(homeScore);
+
+          if (underScore > biggerScore) {
+            verdict = 'GOOD FOR BUFFALO';
+            impactClass = 'good';
+            why = `${underdog} beat ${biggerThreat}, pulling Buffalo further ahead in the division.`;
+          } else {
+            verdict = 'BAD FOR BUFFALO';
+            impactClass = 'bad';
+            why = `${biggerThreat} win keeps division pressure on the Bills.`;
+          }
+        } else {
+          verdict = 'AFC EAST WATCH';
+          impactClass = 'bad';
+        }
+      }
+      // CASE 2: Kansas City vs. AFC East Rival (Priority: Protect the Division)
+      else if (hasChiefs && (isAwayEast || isHomeEast)) {
+        const rival = isAwayEast ? awayName : homeName;
+        target = `Root for Kansas City Chiefs`;
+        why = `AFC East division title takes precedence: A ${rival} loss widens Buffalo's division lead.`;
+        verdict = 'AFC EAST WATCH';
+        impactClass = 'good';
+
+        if (statusState === 'post') {
+          const rivalScore = rival === awayName ? parseInt(awayScore) : parseInt(homeScore);
+          const kcScore = rival === awayName ? parseInt(homeScore) : parseInt(awayScore);
+
+          if (kcScore > rivalScore) {
+            verdict = 'GOOD FOR BUFFALO';
+            impactClass = 'good';
+            why = `Kansas City defeated ${rival}, protecting Buffalo's lead in the AFC East.`;
+          } else {
+            verdict = 'BAD FOR BUFFALO';
+            impactClass = 'bad';
+            why = `${rival} won, keeping division pressure on the Bills.`;
+          }
+        }
+      }
+      // CASE 3: Single AFC East Rival vs. Any Other Opponent
+      else if (isAwayEast || isHomeEast) {
+        const rival = isAwayEast ? awayName : homeName;
+        const opponent = isAwayEast ? homeName : awayName;
+
         target = `Root for ${opponent}`;
         why = `${rival} loss suppresses division pressure in the AFC East standings.`;
 
         if (statusState === 'post') {
           const rivalScore = rival === awayName ? parseInt(awayScore) : parseInt(homeScore);
           const oppScore = rival === awayName ? parseInt(homeScore) : parseInt(awayScore);
+
           if (rivalScore > oppScore) {
             verdict = 'BAD FOR BUFFALO';
             impactClass = 'bad';
@@ -88,28 +146,33 @@ async function fetchNflScoreboard() {
           } else {
             verdict = 'GOOD FOR BUFFALO';
             impactClass = 'good';
-            why = `${rival} dropped a division game, widening Buffalo's lead.`;
+            why = `${rival} dropped a game, widening Buffalo's division lead.`;
           }
         } else {
           verdict = 'AFC EAST WATCH';
           impactClass = 'bad';
         }
-      } else if (contender) {
+      }
+      // CASE 4: Top AFC Contenders (Chiefs vs. non-division, Ravens, Texans, Chargers, Steelers)
+      else if (afcContenders.some(c => awayName === c || homeName === c)) {
+        const contender = afcContenders.find(c => awayName === c || homeName === c);
         const opponent = contender === awayName ? homeName : awayName;
+
         target = `Root for ${opponent}`;
-        why = `${contender} loss clears seeding tiebreakers for the AFC #1 overall seed.`;
+        why = `${contender} loss clears tiebreaker paths for Buffalo's AFC conference seeding & bye week odds.`;
         verdict = 'SEEDING WATCH';
         impactClass = 'good';
 
         if (statusState === 'post') {
           const contScore = contender === awayName ? parseInt(awayScore) : parseInt(homeScore);
           const oppScore = contender === awayName ? parseInt(homeScore) : parseInt(awayScore);
-          if (contScore < oppScore) {
+
+          if (oppScore > contScore) {
             verdict = 'GOOD FOR BUFFALO';
             impactClass = 'good';
-            why = `${contender} loss opened up Buffalo's path to a higher AFC playoff seed.`;
+            why = `${contender} lost, boosting Buffalo's path to a higher AFC playoff seed.`;
           } else {
-            verdict = 'NEUTRAL / RIVAL WIN';
+            verdict = 'RIVAL WIN';
             impactClass = 'neutral';
           }
         }
@@ -143,7 +206,6 @@ async function fetchNflScoreboard() {
 async function fetchGameInjuries(eventId, oppName, oppId) {
   const injuries = [];
 
-  // 1. Try Game Summary endpoint first (live active/inactive sheets near kickoff)
   if (eventId) {
     try {
       const sumRes = await fetch(`https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event=${eventId}`);
@@ -173,7 +235,6 @@ async function fetchGameInjuries(eventId, oppName, oppId) {
     }
   }
 
-  // 2. Fallback to weekly team injury feeds if game summary list has not populated
   if (injuries.length === 0) {
     async function fetchFromTeam(id, label) {
       try {
@@ -313,7 +374,6 @@ async function fetchNextGameSchedule() {
         billsSchedule.broadcast = tvNetwork;
         billsSchedule.venue = venueName;
 
-        // Fetch live game summary or practice report injuries
         const matchupInjuries = await fetchGameInjuries(nextGame.id, oppName, oppId);
         if (matchupInjuries.length > 0) {
           billsSchedule.injuries = matchupInjuries;
@@ -628,7 +688,7 @@ async function scrapePlayoffStatus() {
   };
 
   fs.writeFileSync('./data.json', JSON.stringify(finalPayload, null, 2), 'utf-8');
-  console.log('data.json successfully written with complete Matchup Intel and scoreboard.');
+  console.log('data.json successfully written with dynamic matchup leverage engine.');
 }
 
 scrapePlayoffStatus();
