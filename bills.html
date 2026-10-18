@@ -3,19 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Buffalo Bills Hub | One Buffalo Tracker</title>
+  <title>Buffalo Bills | One Buffalo Tracker</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg-base: #060a12;
-      --card-bg: #0c1322;
-      --subcard-bg: #101a2e;
-      --border-color: #1a263e;
-      --text-main: #f1f5f9;
+      --bg-base: #060a13;
+      --card-bg: #0c1424;
+      --subcard-bg: #101c33;
+      --border-color: #1a2942;
+      --text-main: #f8fafc;
       --text-muted: #64748b;
       --text-secondary: #94a3b8;
+      --accent-blue: #00338d;
+      --accent-red: #c60c30;
+      --bills-gradient: linear-gradient(135deg, #00338d 0%, #c60c30 100%);
       --badge-neutral-bg: #1e293b;
       --badge-neutral-text: #94a3b8;
       --badge-good-bg: rgba(16, 185, 129, 0.16);
@@ -24,8 +27,6 @@
       --badge-bad-bg: rgba(239, 68, 68, 0.16);
       --badge-bad-text: #f87171;
       --badge-bad-border: rgba(239, 68, 68, 0.3);
-      --accent-blue: #00338d;
-      --accent-red: #c60c30;
     }
 
     * {
@@ -38,7 +39,7 @@
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       background-color: var(--bg-base);
       color: var(--text-main);
-      padding: 24px 16px;
+      padding: 20px 16px 48px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -53,52 +54,112 @@
       gap: 16px;
     }
 
-    .header-nav {
+    /* Top Brand & Portal Bar */
+    .top-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding-bottom: 8px;
+      padding-bottom: 12px;
       border-bottom: 1px solid var(--border-color);
     }
 
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
     .brand-title {
-      font-size: 1.25rem;
+      font-size: 1.35rem;
       font-weight: 800;
       letter-spacing: -0.02em;
       color: #ffffff;
-      display: flex;
-      align-items: center;
-      gap: 8px;
     }
 
-    .back-link {
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--text-secondary);
-      text-decoration: none;
-      transition: color 0.15s ease;
-    }
-
-    .back-link:hover {
-      color: #38bdf8;
-    }
-
-    .section-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 4px;
-    }
-
-    .section-title {
-      font-size: 0.85rem;
+    .team-pill {
+      font-size: 0.72rem;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.05em;
+      padding: 3px 8px;
+      border-radius: 9999px;
+      background: var(--bills-gradient);
+      color: #ffffff;
+    }
+
+    .home-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: color 0.15s ease;
+    }
+
+    .home-link:hover {
+      color: #38bdf8;
+    }
+
+    /* Team Hub Navigation Buttons */
+    .hub-navigation {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .nav-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 10px 6px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-decoration: none;
+      color: var(--text-secondary);
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .nav-btn:hover {
+      background-color: #162238;
+      color: #ffffff;
+      border-color: #2b3d5c;
+    }
+
+    .nav-btn.active {
+      background: var(--bills-gradient);
+      color: #ffffff;
+      border-color: transparent;
+      box-shadow: 0 2px 8px rgba(0, 51, 141, 0.4);
+    }
+
+    /* Out-of-town / Section Header */
+    .section-meta-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 8px;
+    }
+
+    .section-title {
+      font-size: 0.82rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
       color: var(--text-secondary);
     }
 
-    .cards-list {
+    .sync-timestamp {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    /* Rooting Cards */
+    .cards-stack {
       display: flex;
       flex-direction: column;
       gap: 14px;
@@ -108,11 +169,11 @@
       background-color: var(--card-bg);
       border: 1px solid var(--border-color);
       border-radius: 12px;
-      padding: 18px;
+      padding: 16px 18px;
       display: flex;
       flex-direction: column;
       gap: 14px;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
     }
 
     .card-meta {
@@ -121,38 +182,33 @@
       align-items: center;
       font-size: 0.75rem;
       font-weight: 600;
-      letter-spacing: 0.02em;
     }
 
-    .game-info {
+    .game-timing {
       display: flex;
       align-items: center;
       gap: 6px;
       color: var(--text-secondary);
     }
 
-    .status-text {
-      color: #e2e8f0;
-      font-weight: 700;
-    }
-
-    .meta-separator {
-      color: var(--text-muted);
+    .game-timing .status-tag {
+      font-weight: 800;
+      color: #f1f5f9;
     }
 
     .network-badge {
-      background-color: #1a263e;
+      background: #1a2844;
       color: #93c5fd;
       padding: 2px 6px;
       border-radius: 4px;
       font-size: 0.68rem;
       font-weight: 700;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.03em;
     }
 
     .impact-pill {
       font-size: 0.68rem;
-      font-weight: 700;
+      font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.05em;
       padding: 3px 8px;
@@ -176,14 +232,13 @@
       border: 1px solid var(--badge-bad-border);
     }
 
-    .teams-container {
+    .scoreboard {
       display: flex;
       flex-direction: column;
       gap: 8px;
-      padding: 2px 0;
     }
 
-    .team-line {
+    .team-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -192,7 +247,7 @@
       color: #cbd5e1;
     }
 
-    .team-line.winner {
+    .team-row.winner {
       color: #ffffff;
       font-weight: 700;
     }
@@ -204,13 +259,14 @@
       font-variant-numeric: tabular-nums;
     }
 
-    .team-score.winner-score {
+    .team-row.winner .team-score {
       color: #38bdf8;
     }
 
+    /* Intel Subcard */
     .intel-subcard {
       background-color: var(--subcard-bg);
-      border: 1px solid rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.05);
       border-radius: 8px;
       padding: 12px 14px;
       display: flex;
@@ -218,45 +274,64 @@
       gap: 4px;
     }
 
-    .intel-title {
-      font-size: 0.9rem;
+    .intel-headline {
+      font-size: 0.88rem;
       font-weight: 700;
       color: #ffffff;
     }
 
-    .intel-desc {
-      font-size: 0.8rem;
+    .intel-body {
+      font-size: 0.78rem;
       line-height: 1.45;
       color: var(--text-secondary);
+    }
+
+    @media (max-width: 520px) {
+      .hub-navigation {
+        grid-template-columns: repeat(2, 1fr);
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="header-nav">
-      <div class="brand-title">
-        <span>Bills Command Center</span>
+    <!-- Top Bar -->
+    <header class="top-bar">
+      <div class="brand-group">
+        <h1 class="brand-title">One Buffalo Tracker</h1>
+        <span class="team-pill">Bills Hub</span>
       </div>
-      <a href="https://onebuffalotracker.fyi" class="back-link">← Dashboard</a>
+      <a href="https://onebuffalotracker.fyi" class="home-link">← Portal Home</a>
+    </header>
+
+    <!-- Hub Navigation Tabs -->
+    <nav class="hub-navigation" aria-label="Bills Hub Navigation">
+      <a href="https://onebuffalotracker.fyi" class="nav-btn">Command Center</a>
+      <a href="#playoffs" class="nav-btn">Playoff Leverage</a>
+      <a href="#companion" class="nav-btn active">Rooting Guide</a>
+      <a href="#stats" class="nav-btn">Stats Lab</a>
+    </nav>
+
+    <!-- Out-of-Town Title & Timestamp -->
+    <div class="section-meta-header">
+      <h2 class="section-title">Rooting Companion • Week 7 Slate</h2>
+      <span id="sync-time" class="sync-timestamp">Updated: Oct 18, 2026</span>
     </div>
 
-    <div class="section-header">
-      <div class="section-title">Rooting Companion • Out-of-Town Scoreboard</div>
-    </div>
-
-    <div id="rooting-container" class="cards-list"></div>
+    <!-- Cards Stream -->
+    <main id="rooting-container" class="cards-stack"></main>
   </div>
 
   <script>
-    // Fallback data reflecting active status and post-game leverage
-    const fallbackRootingData = [
+    // Complete Week 7 slate fallback data
+    const billsWeek7Slate = [
       {
         awayTeam: "Tennessee Titans",
         awayScore: 26,
         homeTeam: "Indianapolis Colts",
         homeScore: 20,
         status: "FINAL",
-        time: "Sun, Oct 18 • 1:00 PM ET",
+        kickoff: "Sun, Oct 18 • 1:00 PM ET",
         network: "FOX",
         impact: "neutral",
         preferredTeam: null,
@@ -269,11 +344,11 @@
         homeTeam: "New England Patriots",
         homeScore: 26,
         status: "FINAL",
-        time: "Sun, Oct 18 • 1:00 PM ET",
+        kickoff: "Sun, Oct 18 • 1:00 PM ET",
         network: "CBS",
         impact: "favorable",
         preferredTeam: "New England Patriots",
-        intelHeadline: null, // Dynamically computed based on final outcome
+        intelHeadline: null,
         intelDescription: "New York Jets dropped a division game, widening Buffalo's lead."
       },
       {
@@ -282,12 +357,12 @@
         homeTeam: "New York Giants",
         homeScore: 27,
         status: "FINAL",
-        time: "Sun, Oct 18 • 1:00 PM ET",
+        kickoff: "Sun, Oct 18 • 1:00 PM ET",
         network: "FOX",
         impact: "neutral",
         preferredTeam: null,
         intelHeadline: "Neutral Matchup",
-        intelDescription: "Non-conference game with zero immediate AFC tiebreaker leverage."
+        intelDescription: "NFC vs NFC matchup with zero effect on AFC wildcard tiebreakers."
       },
       {
         awayTeam: "Carolina Panthers",
@@ -295,12 +370,38 @@
         homeTeam: "Philadelphia Eagles",
         homeScore: 14,
         status: "FINAL",
-        time: "Sun, Oct 18 • 1:00 PM ET",
+        kickoff: "Sun, Oct 18 • 1:00 PM ET",
         network: "CBS",
         impact: "neutral",
         preferredTeam: null,
         intelHeadline: "Neutral Matchup",
-        intelDescription: "Non-conference game with zero immediate AFC tiebreaker leverage."
+        intelDescription: "NFC matchup with zero AFC playoff leverage."
+      },
+      {
+        awayTeam: "Miami Dolphins",
+        awayScore: 17,
+        homeTeam: "Cleveland Browns",
+        homeScore: 24,
+        status: "FINAL",
+        kickoff: "Sun, Oct 18 • 1:00 PM ET",
+        network: "CBS",
+        impact: "favorable",
+        preferredTeam: "Cleveland Browns",
+        intelHeadline: null,
+        intelDescription: "Miami loss creates a multi-game separation for Buffalo in the AFC East."
+      },
+      {
+        awayTeam: "Kansas City Chiefs",
+        awayScore: 28,
+        homeTeam: "Denver Broncos",
+        homeScore: 21,
+        status: "FINAL",
+        kickoff: "Sun, Oct 18 • 4:25 PM ET",
+        network: "CBS",
+        impact: "unfavorable",
+        preferredTeam: "Denver Broncos",
+        intelHeadline: null,
+        intelDescription: "Kansas City victory keeps pressure on the AFC #1 seed race."
       }
     ];
 
@@ -311,8 +412,8 @@
 
       games.forEach(game => {
         const isFinal = (game.status || "").toUpperCase().includes("FINAL");
-        const awayScore = game.awayScore !== null && game.awayScore !== undefined ? Number(game.awayScore) : null;
-        const homeScore = game.homeScore !== null && game.homeScore !== undefined ? Number(game.homeScore) : null;
+        const awayScore = (game.awayScore !== null && game.awayScore !== undefined) ? Number(game.awayScore) : null;
+        const homeScore = (game.homeScore !== null && game.homeScore !== undefined) ? Number(game.homeScore) : null;
 
         let winner = null;
         if (awayScore !== null && homeScore !== null) {
@@ -320,60 +421,63 @@
           else if (homeScore > awayScore) winner = game.homeTeam;
         }
 
-        // Determine Impact Badge
+        const preferred = game.preferredTeam;
+        const isHelpful = preferred && winner === preferred;
+
+        // Badge determination
         let badgeClass = "impact-neutral";
         let badgeLabel = "NEUTRAL";
 
         if (game.impact === "favorable") {
           badgeClass = "impact-good";
-          badgeLabel = "GOOD FOR BUFFALO";
+          badgeLabel = isFinal ? "GOOD FOR BUFFALO" : "ROOT FOR TARGET";
         } else if (game.impact === "unfavorable") {
           badgeClass = "impact-bad";
-          badgeLabel = "HURT BUFFALO";
+          badgeLabel = isFinal ? "HURT BUFFALO" : "UNFAVORABLE TARGET";
         }
 
-        // Resolve Intel Headline (Active vs. Final)
+        // Subcard intel headline
         let headline = game.intelHeadline;
         if (!headline) {
-          if (!game.preferredTeam) {
+          if (!preferred) {
             headline = "Neutral Matchup";
           } else if (isFinal) {
-            headline = winner === game.preferredTeam
-              ? `Favorable Outcome: ${game.preferredTeam} Won`
-              : `Result: ${winner || 'Game'} (Preferred ${game.preferredTeam})`;
+            headline = isHelpful 
+              ? `Favorable Outcome: ${winner} Won`
+              : `Result: ${winner || 'Game'} (${preferred} Needed)`;
           } else {
-            headline = `Root for ${game.preferredTeam}`;
+            headline = `Root for ${preferred}`;
           }
         }
 
-        const card = document.createElement("div");
+        const card = document.createElement("article");
         card.className = "game-card";
 
         card.innerHTML = `
           <div class="card-meta">
-            <div class="game-info">
-              <span class="status-text">${game.status}</span>
-              <span class="meta-separator">•</span>
-              <span>${game.time}</span>
+            <div class="game-timing">
+              <span class="status-tag">${game.status}</span>
+              <span>•</span>
+              <span>${game.kickoff || game.time}</span>
               ${game.network ? `<span class="network-badge">${game.network}</span>` : ""}
             </div>
             <div class="impact-pill ${badgeClass}">${badgeLabel}</div>
           </div>
 
-          <div class="teams-container">
-            <div class="team-line ${isFinal && winner === game.awayTeam ? 'winner' : ''}">
+          <div class="scoreboard">
+            <div class="team-row ${isFinal && winner === game.awayTeam ? 'winner' : ''}">
               <span>${game.awayTeam}</span>
-              <span class="team-score ${isFinal && winner === game.awayTeam ? 'winner-score' : ''}">${awayScore ?? ''}</span>
+              <span class="team-score">${awayScore ?? '-'}</span>
             </div>
-            <div class="team-line ${isFinal && winner === game.homeTeam ? 'winner' : ''}">
+            <div class="team-row ${isFinal && winner === game.homeTeam ? 'winner' : ''}">
               <span>${game.homeTeam}</span>
-              <span class="team-score ${isFinal && winner === game.homeTeam ? 'winner-score' : ''}">${homeScore ?? ''}</span>
+              <span class="team-score">${homeScore ?? '-'}</span>
             </div>
           </div>
 
           <div class="intel-subcard">
-            <div class="intel-title">${headline}</div>
-            <div class="intel-desc">${game.intelDescription || ""}</div>
+            <div class="intel-headline">${headline}</div>
+            <div class="intel-body">${game.intelDescription || game.reason || ''}</div>
           </div>
         `;
 
@@ -381,21 +485,26 @@
       });
     }
 
-    async function initRootingCompanion() {
+    async function loadSlateData() {
       try {
         const response = await fetch("data.json", { cache: "no-store" });
-        if (!response.ok) throw new Error("Network response was not ok");
+        if (!response.ok) throw new Error("Local data not found");
         const data = await response.json();
-        
-        // Use rooting companion payload from scrape.js if available, else fallback
-        const games = data.rootingCompanion || data.billsCompanion || fallbackRootingData;
+
+        if (data.lastUpdated) {
+          const syncEl = document.getElementById("sync-time");
+          if (syncEl) syncEl.textContent = `Updated: ${data.lastUpdated}`;
+        }
+
+        const games = data.rootingCompanion || data.billsSlate || billsWeek7Slate;
         renderCompanionCards(games);
       } catch (err) {
-        renderCompanionCards(fallbackRootingData);
+        // Render complete fallback slate if dynamic payload is unavailable
+        renderCompanionCards(billsWeek7Slate);
       }
     }
 
-    document.addEventListener("DOMContentLoaded", initRootingCompanion);
+    document.addEventListener("DOMContentLoaded", loadSlateData);
   </script>
 </body>
 </html>
