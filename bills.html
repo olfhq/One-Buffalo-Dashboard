@@ -112,7 +112,7 @@
     }
 
     .container {
-      max-width: 820px;
+      max-width: 840px;
       margin: 0 auto;
     }
 
@@ -151,7 +151,7 @@
       font-weight: 600;
     }
 
-    /* MATCHUP INTEL BANNER */
+    /* MATCHUP INTEL HERO BANNER */
     .stakes-banner {
       background: var(--card-inner);
       border: 1px solid var(--card-border);
@@ -297,6 +297,92 @@
       align-items: center;
     }
 
+    /* TALE OF THE TAPE MATRIX TABLE */
+    .intel-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      margin-top: 0.3rem;
+    }
+    .intel-table th {
+      text-align: left;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+      padding: 0.45rem 0.6rem;
+      border-bottom: 1px solid var(--card-border);
+    }
+    .intel-table td {
+      padding: 0.55rem 0.6rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+    .intel-table tr:last-child td { border-bottom: none; }
+    .intel-col-metric { font-weight: 600; color: #cbd5e1; }
+    .intel-col-buf { font-weight: 800; color: #38bdf8; }
+    .intel-col-opp { font-weight: 700; color: #fff; text-align: right; }
+
+    /* CONTEXT CARDS (REST & TURNOVER) */
+    .context-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+    .context-card {
+      background: var(--card-inner);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 0.75rem 0.9rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .context-card-title {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .context-card-val {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #fff;
+    }
+    .context-card-note {
+      font-size: 0.75rem;
+      color: #34d399;
+      font-weight: 600;
+    }
+
+    /* INJURY WIRE CHIPS */
+    .injury-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 0.5rem;
+    }
+    .injury-chip {
+      background: var(--card-inner);
+      border: 1px solid var(--card-border);
+      border-radius: 6px;
+      padding: 0.45rem 0.65rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+    }
+    .injury-name { font-weight: 700; color: #fff; }
+    .injury-tag {
+      font-size: 0.65rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+    }
+    .tag-questionable { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
+    .tag-active { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
+    .tag-out { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); }
+
     /* DISTRIBUTION BARS */
     .dist-bar-wrap { display: flex; flex-direction: column; gap: 0.4rem; }
     .dist-row { display: flex; align-items: center; font-size: 0.8rem; }
@@ -422,17 +508,8 @@
       gap: 0.2rem;
     }
 
-    .score-target-title {
-      font-size: 0.85rem;
-      font-weight: 800;
-      color: #fff;
-    }
-
-    .score-why-detail {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      line-height: 1.35;
-    }
+    .score-target-title { font-size: 0.85rem; font-weight: 800; color: #fff; }
+    .score-why-detail { font-size: 0.75rem; color: var(--text-muted); line-height: 1.35; }
   </style>
 </head>
 <body>
@@ -497,13 +574,14 @@
       </div>
     </section>
 
-    <!-- TAB 2: MATCHUP INTEL -->
+    <!-- TAB 2: MATCHUP INTEL (TACTICAL PRE-GAME PREP) -->
     <section id="tab-intel" class="tab-content">
       <div class="card">
+        <!-- Hero Stakes Banner -->
         <div class="stakes-banner">
           <div class="stakes-top-row">
             <div class="matchup-main">
-              <div class="matchup-prefix">Next Game:</div>
+              <div class="matchup-prefix">Next Matchup:</div>
               <div class="matchup-opp" id="bills-next-opp">--</div>
               <div class="matchup-records-line" id="bills-records">--</div>
               <div class="schedule-tag">
@@ -532,6 +610,51 @@
                 <span class="pill pill-swing" id="bills-leverage">±--%</span>
               </div>
             </div>
+          </div>
+        </div>
+
+        <!-- Rest & Turnover Differential Context -->
+        <div>
+          <div class="section-subtitle">Game Context & Edge Indicators</div>
+          <div class="context-grid">
+            <div class="context-card">
+              <span class="context-card-title">Rest Differential</span>
+              <span class="context-card-val" id="intel-rest-diff">--</span>
+              <span class="context-card-note" id="intel-rest-sub">Both teams on full week</span>
+            </div>
+            <div class="context-card">
+              <span class="context-card-title">Turnover Margin</span>
+              <span class="context-card-val" id="intel-to-margin">--</span>
+              <span class="context-card-note" id="intel-to-sub">Bills +7 Margin Edge</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tale of the Tape Efficiency Table -->
+        <div>
+          <div class="section-subtitle">
+            <span>Tale of the Tape: Team Efficiency</span>
+            <span style="font-size: 0.7rem; color: var(--accent-blue);" id="intel-opp-header">vs. Opponent</span>
+          </div>
+          <table class="intel-table">
+            <thead>
+              <tr>
+                <th style="width: 44%;">Metric Category</th>
+                <th style="width: 28%;">Buffalo Bills</th>
+                <th style="width: 28%; text-align: right;" id="th-opp-name">Opponent</th>
+              </tr>
+            </thead>
+            <tbody id="intel-efficiency-tbody">
+              <!-- Populated dynamically via JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Key Starter Availability / Injury Wire -->
+        <div>
+          <div class="section-subtitle">Key Starter Availability Wire</div>
+          <div class="injury-list" id="intel-injuries-container">
+            <!-- Populated dynamically via JS -->
           </div>
         </div>
       </div>
@@ -642,6 +765,7 @@
         startCountdown('bills-countdown', b.nextGame.isoTime);
       }
 
+      // Populate Postseason Radar
       document.getElementById('bills-radar').innerHTML = b.divisionRadar.map(r => `
         <div class="radar-item">
           <div class="radar-team">${r.team}</div>
@@ -663,7 +787,48 @@
         <div class="opp-chip">${o.team} <span class="opp-pct">${o.pct}%</span></div>
       `).join('');
 
-      // Populate Chronological Out-of-Town Scoreboard & Rooting Pulse
+      // Populate Matchup Intel Tab
+      const oppShort = b.nextGame.oppShortName || 'Opponent';
+      document.getElementById('intel-opp-header').textContent = `vs. ${oppShort}`;
+      document.getElementById('th-opp-name').textContent = oppShort;
+
+      if (b.nextGame.restAdvantage) {
+        document.getElementById('intel-rest-diff').textContent = b.nextGame.restAdvantage.summary || 'Even';
+        document.getElementById('intel-rest-sub').textContent = `Bills: ${b.nextGame.restAdvantage.billsDays}d | ${oppShort}: ${b.nextGame.restAdvantage.oppDays}d`;
+      }
+      if (b.nextGame.turnoverRatio) {
+        document.getElementById('intel-to-margin').textContent = b.nextGame.turnoverRatio.advantage || 'Even Margin';
+        document.getElementById('intel-to-sub').textContent = `BUF: ${b.nextGame.turnoverRatio.bills.split(' ')[0]} | ${oppShort}: ${b.nextGame.turnoverRatio.opp.split(' ')[0]}`;
+      }
+
+      const tbody = document.getElementById('intel-efficiency-tbody');
+      if (tbody && Array.isArray(b.nextGame.efficiency)) {
+        tbody.innerHTML = b.nextGame.efficiency.map(row => `
+          <tr>
+            <td class="intel-col-metric">${row.metric}</td>
+            <td class="intel-col-buf">${row.bills}</td>
+            <td class="intel-col-opp">${row.opp}</td>
+          </tr>
+        `).join('');
+      }
+
+      const injuryContainer = document.getElementById('intel-injuries-container');
+      if (injuryContainer && Array.isArray(b.nextGame.injuries)) {
+        injuryContainer.innerHTML = b.nextGame.injuries.map(inj => {
+          let tagClass = 'tag-questionable';
+          if (inj.status.toLowerCase() === 'active') tagClass = 'tag-active';
+          if (inj.status.toLowerCase() === 'out') tagClass = 'tag-out';
+
+          return `
+            <div class="injury-chip">
+              <span class="injury-name">${inj.player} (${inj.team} ${inj.pos})</span>
+              <span class="injury-tag ${tagClass}">${inj.status} • ${inj.injury}</span>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // Populate Chronological Out-of-Town Scoreboard
       const scoreContainer = document.getElementById('bills-scoreboard-grid');
       if (scoreContainer && Array.isArray(b.outOfTownGames) && b.outOfTownGames.length > 0) {
         scoreContainer.innerHTML = b.outOfTownGames.map(g => {
