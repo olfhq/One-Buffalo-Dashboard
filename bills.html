@@ -574,10 +574,9 @@
       </div>
     </section>
 
-    <!-- TAB 2: MATCHUP INTEL (TACTICAL PRE-GAME PREP) -->
+    <!-- TAB 2: MATCHUP INTEL -->
     <section id="tab-intel" class="tab-content">
       <div class="card">
-        <!-- Hero Stakes Banner -->
         <div class="stakes-banner">
           <div class="stakes-top-row">
             <div class="matchup-main">
@@ -613,7 +612,6 @@
           </div>
         </div>
 
-        <!-- Rest & Turnover Differential Context -->
         <div>
           <div class="section-subtitle">Game Context & Edge Indicators</div>
           <div class="context-grid">
@@ -630,7 +628,6 @@
           </div>
         </div>
 
-        <!-- Tale of the Tape Efficiency Table -->
         <div>
           <div class="section-subtitle">
             <span>Tale of the Tape: Team Efficiency</span>
@@ -650,7 +647,6 @@
           </table>
         </div>
 
-        <!-- Key Starter Availability / Injury Wire -->
         <div>
           <div class="section-subtitle">Key Starter Availability Wire</div>
           <div class="injury-list" id="intel-injuries-container">
@@ -660,7 +656,7 @@
       </div>
     </section>
 
-    <!-- TAB 3: ROOTING COMPANION (SCORES + ROOTING GUIDE) -->
+    <!-- TAB 3: ROOTING COMPANION -->
     <section id="tab-rooting" class="tab-content">
       <div class="card">
         <div class="section-subtitle">
@@ -812,12 +808,14 @@
         `).join('');
       }
 
+      // Populate Full Dynamic Injury Wire
       const injuryContainer = document.getElementById('intel-injuries-container');
-      if (injuryContainer && Array.isArray(b.nextGame.injuries)) {
+      if (injuryContainer && Array.isArray(b.nextGame.injuries) && b.nextGame.injuries.length > 0) {
         injuryContainer.innerHTML = b.nextGame.injuries.map(inj => {
           let tagClass = 'tag-questionable';
-          if (inj.status.toLowerCase() === 'active') tagClass = 'tag-active';
-          if (inj.status.toLowerCase() === 'out') tagClass = 'tag-out';
+          const st = (inj.status || '').toLowerCase();
+          if (st.includes('active') || st.includes('probable')) tagClass = 'tag-active';
+          else if (st.includes('out') || st.includes('ir') || st.includes('reserve')) tagClass = 'tag-out';
 
           return `
             <div class="injury-chip">
@@ -826,6 +824,12 @@
             </div>
           `;
         }).join('');
+      } else if (injuryContainer) {
+        injuryContainer.innerHTML = `
+          <div style="color: var(--text-muted); font-size: 0.8rem; padding: 0.5rem;">
+            No official injury designations submitted for this game window yet.
+          </div>
+        `;
       }
 
       // Populate Chronological Out-of-Town Scoreboard
