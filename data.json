@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-18T18:34:42.779Z",
+  "updatedAt": "2026-10-18T18:54:40.799Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
   "bills": {
     "team": "Buffalo Bills",
@@ -13,14 +13,88 @@
     },
     "nextGame": {
       "opponent": "@ Raiders",
+      "oppShortName": "Raiders",
       "gameTime": "Sun, Oct 18 • 4:25 PM ET",
       "isoTime": "2026-10-18T20:25Z",
       "winChance": 68,
       "matchupRecords": "Bills (4-1, W1) vs. Raiders (3-2, L2)",
       "broadcast": "CBS",
+      "venue": "Allegiant Stadium, Las Vegas",
       "ifWin": 91,
       "ifLoss": 74,
-      "leverage": 17
+      "leverage": 17,
+      "restAdvantage": {
+        "billsDays": 7,
+        "oppDays": 7,
+        "summary": "Even (7 Days Each)"
+      },
+      "efficiency": [
+        {
+          "metric": "Points / Game",
+          "bills": "28.4 (4th)",
+          "opp": "18.2 (26th)"
+        },
+        {
+          "metric": "Total Yards / Game",
+          "bills": "374.2 (5th)",
+          "opp": "295.6 (24th)"
+        },
+        {
+          "metric": "Passing Yards / Game",
+          "bills": "248.5 (6th)",
+          "opp": "188.4 (25th)"
+        },
+        {
+          "metric": "Rushing Yards / Game",
+          "bills": "125.7 (8th)",
+          "opp": "107.2 (21st)"
+        },
+        {
+          "metric": "3rd Down Conversion %",
+          "bills": "46.8% (3rd)",
+          "opp": "34.1% (28th)"
+        },
+        {
+          "metric": "Red Zone TD %",
+          "bills": "68.2% (4th)",
+          "opp": "48.0% (25th)"
+        }
+      ],
+      "turnoverRatio": {
+        "bills": "+4 (8 Takeaways / 4 Giveaways)",
+        "opp": "-3 (5 Takeaways / 8 Giveaways)",
+        "advantage": "Bills (+7 Differential Margin)"
+      },
+      "injuries": [
+        {
+          "player": "Ed Oliver",
+          "pos": "DT",
+          "status": "Questionable",
+          "injury": "Hamstring",
+          "team": "Bills"
+        },
+        {
+          "player": "Taylor Rapp",
+          "pos": "S",
+          "status": "Active",
+          "injury": "Hip",
+          "team": "Bills"
+        },
+        {
+          "player": "Maxx Crosby",
+          "pos": "DE",
+          "status": "Active",
+          "injury": "Ankle",
+          "team": "Opponent"
+        },
+        {
+          "player": "Kolton Miller",
+          "pos": "OT",
+          "status": "Questionable",
+          "injury": "Knee",
+          "team": "Opponent"
+        }
+      ]
     },
     "divisionRadar": [
       {
@@ -134,7 +208,7 @@
         "slot": "Sun, Oct 18 • 1:00 PM ET",
         "broadcast": "Fox",
         "statusState": "in",
-        "statusDetail": "Halftime",
+        "statusDetail": "11:23 - 3rd",
         "awayName": "Chicago Bears",
         "awayScore": "21",
         "homeName": "Atlanta Falcons",
@@ -149,11 +223,11 @@
         "slot": "Sun, Oct 18 • 1:00 PM ET",
         "broadcast": "Fox",
         "statusState": "in",
-        "statusDetail": "Halftime",
+        "statusDetail": "5:03 - 3rd",
         "awayName": "Baltimore Ravens",
         "awayScore": "10",
         "homeName": "Cleveland Browns",
-        "homeScore": "0",
+        "homeScore": "3",
         "verdict": "SEEDING WATCH",
         "impactClass": "good",
         "target": "Root for Cleveland Browns",
@@ -164,9 +238,9 @@
         "slot": "Sun, Oct 18 • 1:00 PM ET",
         "broadcast": "Fox",
         "statusState": "in",
-        "statusDetail": "Halftime",
+        "statusDetail": "9:38 - 3rd",
         "awayName": "Tennessee Titans",
-        "awayScore": "0",
+        "awayScore": "3",
         "homeName": "Indianapolis Colts",
         "homeScore": "13",
         "verdict": "NEUTRAL",
@@ -179,9 +253,9 @@
         "slot": "Sun, Oct 18 • 1:00 PM ET",
         "broadcast": "CBS",
         "statusState": "in",
-        "statusDetail": "Halftime",
+        "statusDetail": "10:24 - 3rd",
         "awayName": "New York Jets",
-        "awayScore": "3",
+        "awayScore": "10",
         "homeName": "New England Patriots",
         "homeScore": "17",
         "verdict": "AFC EAST WATCH",
@@ -194,9 +268,9 @@
         "slot": "Sun, Oct 18 • 1:00 PM ET",
         "broadcast": "Fox",
         "statusState": "in",
-        "statusDetail": "Halftime",
+        "statusDetail": "11:38 - 3rd",
         "awayName": "New Orleans Saints",
-        "awayScore": "10",
+        "awayScore": "17",
         "homeName": "New York Giants",
         "homeScore": "10",
         "verdict": "NEUTRAL",
@@ -209,7 +283,7 @@
         "slot": "Sun, Oct 18 • 1:00 PM ET",
         "broadcast": "CBS",
         "statusState": "in",
-        "statusDetail": "2:00 - 2nd",
+        "statusDetail": "14:54 - 3rd",
         "awayName": "Carolina Panthers",
         "awayScore": "10",
         "homeName": "Philadelphia Eagles",
@@ -224,7 +298,7 @@
         "slot": "Sun, Oct 18 • 1:00 PM ET",
         "broadcast": "CBS",
         "statusState": "in",
-        "statusDetail": "Halftime",
+        "statusDetail": "11:02 - 3rd",
         "awayName": "Pittsburgh Steelers",
         "awayScore": "3",
         "homeName": "Tampa Bay Buccaneers",
