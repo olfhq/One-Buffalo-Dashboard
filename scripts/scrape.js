@@ -139,32 +139,67 @@ async function fetchNflScoreboard() {
   return outOfTownGames;
 }
 
-// Fetch complete, live official injuries for both teams from ESPN
-async function fetchTeamInjuries(teamId, label) {
+// Fetch complete official injuries & inactives from Game Summary or Team feeds
+async function fetchGameInjuries(eventId, oppName, oppId) {
   const injuries = [];
-  try {
-    const res = await fetch(`https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/${teamId}/injuries`);
-    if (res.ok) {
-      const data = await res.json();
-      const list = data.injuries || data.items || [];
-      for (const item of list) {
-        const name = item.athlete?.displayName || item.athlete?.shortName || item.displayName || 'Player';
-        const pos = item.athlete?.position?.abbreviation || item.position || '';
-        const status = item.status || item.type || 'Questionable';
-        const detail = item.details?.type || item.injury || item.shortComment || 'Undisclosed';
 
-        injuries.push({
-          player: name,
-          pos: pos,
-          status: status,
-          injury: detail,
+  // 1. Try Game Summary endpoint first (live active/inactive sheets near kickoff)
+  if (eventId) {
+    try {
+      const sumRes = await fetch(`https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event=${eventId}`);
+      if (sumRes.ok) {
+        const sumData = await sumRes.json();
+        const injuryGroups = sumData.injuries || [];
+        for (const group of injuryGroups) {
+          const teamLabel = (group.team?.abbreviation === 'BUF' || (group.team?.displayName || '').includes('Bills')) ? 'Bills' : oppName;
+          for (const inj of (group.injuries || [])) {
+            const name = inj.athlete?.displayName || inj.athlete?.shortName || 'Player';
+            const pos = inj.athlete?.position?.abbreviation || '';
+            const status = inj.status || inj.type || 'Inactive';
+            const detail = inj.details?.type || inj.injury || inj.type?.detail || 'Undisclosed';
+
+            injuries.push({
+              player: name,
+              pos: pos,
+              status: status,
+              injury: detail,
+              team: teamLabel
+            });
+          }
+        }
+      }
+    } catch (e) {
+      console.warn('Game summary injury fetch fallback:', e.message);
+    }
+  }
+
+  // 2. Fallback to weekly team injury feeds if game summary list has not populated
+  if (injuries.length === 0) {
+    async function fetchFromTeam(id, label) {
+      try {
+        const res = await fetch(`https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/${id}/injuries`);
+        if (!res.ok) return [];
+        const data = await res.json();
+        const list = data.injuries || data.items || [];
+        return list.map(item => ({
+          player: item.athlete?.displayName || item.displayName || 'Player',
+          pos: item.athlete?.position?.abbreviation || item.position || '',
+          status: item.status || item.type || 'Questionable',
+          injury: item.details?.type || item.injury || 'Undisclosed',
           team: label
-        });
+        }));
+      } catch {
+        return [];
       }
     }
-  } catch (err) {
-    console.warn(`Live injury fetch fallback for team ${teamId}:`, err.message);
+
+    const [bInj, oInj] = await Promise.all([
+      fetchFromTeam('2', 'Bills'),
+      fetchFromTeam(oppId || '13', oppName)
+    ]);
+    injuries.push(...bInj, ...oInj);
   }
+
   return injuries;
 }
 
@@ -278,15 +313,10 @@ async function fetchNextGameSchedule() {
         billsSchedule.broadcast = tvNetwork;
         billsSchedule.venue = venueName;
 
-        // Fetch official injury report for Bills and opponent
-        const [bufInjuries, oppInjuries] = await Promise.all([
-          fetchTeamInjuries('2', 'Bills'),
-          fetchTeamInjuries(oppId, oppName)
-        ]);
-
-        const combined = [...bufInjuries, ...oppInjuries];
-        if (combined.length > 0) {
-          billsSchedule.injuries = combined;
+        // Fetch live game summary or practice report injuries
+        const matchupInjuries = await fetchGameInjuries(nextGame.id, oppName, oppId);
+        if (matchupInjuries.length > 0) {
+          billsSchedule.injuries = matchupInjuries;
         }
       }
     }
