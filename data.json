@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-17T20:20:20.380Z",
+  "updatedAt": "2026-10-18T06:48:14.988Z",
   "source": "http://www.playoffstatus.com",
   "bills": {
     "team": "Buffalo Bills",
@@ -109,11 +109,11 @@
       "scenario": "No clinching scenarios available this week."
     },
     "nextGame": {
-      "opponent": "@ Montréal",
-      "gameTime": "Sat, Oct 17 • 7:00 PM ET",
-      "isoTime": "2026-10-17T23:00:00Z",
-      "winChance": 46,
-      "matchupRecords": "Sabres (4-3-1, 9 pts, W1) vs. Montréal (3-3-1, 7 pts, L1)",
+      "opponent": "vs. Philadelphia",
+      "gameTime": "Wed, Oct 21 • 7:30 PM ET",
+      "isoTime": "2026-10-21T23:30:00Z",
+      "winChance": 52,
+      "matchupRecords": "Sabres (4-3-2, 10 pts, OT1) vs. Philadelphia (1-6-3, 5 pts, W1)",
       "ifWin": 44,
       "ifLoss": 33,
       "leverage": 11
@@ -182,37 +182,5 @@
         "why": "Protects Eastern Conference Wild Card slot thresholds."
       }
     ]
-  },
-  "history": [
-    {
-      "date": "Oct 01",
-      "bills": 76,
-      "sabres": 34
-    },
-    {
-      "date": "Oct 04",
-      "bills": 79,
-      "sabres": 35
-    },
-    {
-      "date": "Oct 07",
-      "bills": 81,
-      "sabres": 37
-    },
-    {
-      "date": "Oct 10",
-      "bills": 80,
-      "sabres": 36
-    },
-    {
-      "date": "Oct 12",
-      "bills": 83,
-      "sabres": 38
-    },
-    {
-      "date": "Oct 17",
-      "bills": 84,
-      "sabres": 38
-    }
-  ]
+  }
 }
