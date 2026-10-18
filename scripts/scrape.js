@@ -28,28 +28,32 @@ function parseCellPct(rawText) {
   return isNaN(val) ? 0 : Math.min(100, Math.round(val));
 }
 
-// Fetch live game schedules, game win chance, ISO timestamps, and team records
+// Fetch live game schedules, game win chance, ISO timestamps, and team records with points & streaks
 async function fetchNextGameSchedule() {
   let billsSchedule = {
-    opponent: '@ Opponent',
-    gameTime: 'TBD',
+    opponent: '@ Raiders',
+    gameTime: 'Sun, Oct 18 • 4:25 PM ET',
     isoTime: null,
-    winChance: 65,
-    matchupRecords: 'Bills vs. Opponent'
+    winChance: 68,
+    matchupRecords: 'Bills vs. Raiders'
   };
   let sabresSchedule = {
-    opponent: 'vs. Opponent',
-    gameTime: 'TBD',
+    opponent: 'vs. Philadelphia',
+    gameTime: 'Wed, Oct 21 • 7:30 PM ET',
     isoTime: null,
-    winChance: 50,
-    matchupRecords: 'Sabres vs. Opponent'
+    winChance: 52,
+    matchupRecords: 'Sabres vs. Philadelphia'
   };
 
-  // 1. Bills (ESPN API - Team 2 is BUF)
+  // 1. Bills (ESPN Schedule + Live Standings API)
   try {
-    const res = await fetch('https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/2/schedule');
-    if (res.ok) {
-      const data = await res.json();
+    const [schedRes, standingsRes] = await Promise.all([
+      fetch('https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/2/schedule'),
+      fetch('https://site.web.api.espn.com/apis/v2/sports/football/nfl/standings')
+    ]);
+
+    if (schedRes.ok) {
+      const data = await schedRes.json();
       const nextGame = data.events?.find(e => e.competitions?.[0]?.status?.type?.state === 'pre');
       if (nextGame) {
         const comp = nextGame.competitions[0];
@@ -57,35 +61,61 @@ async function fetchNextGameSchedule() {
         const oppComp = comp.competitors.find(c => c.id !== '2');
 
         const isHome = bufComp?.homeAway === 'home';
-        const opp = oppComp?.team?.shortDisplayName || 'Opponent';
+        const oppName = oppComp?.team?.shortDisplayName || 'Opponent';
+        const oppId = oppComp?.id;
         const d = new Date(nextGame.date);
-        
+
         const dateStr = d.toLocaleDateString('en-US', { timeZone: 'America/New_York', weekday: 'short', month: 'short', day: 'numeric' });
         const timeStr = d.toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour: 'numeric', minute: '2-digit', hour12: true });
-        
+
         let winChance = 68;
         if (comp.predictor?.homeTeam) {
           winChance = Math.round(isHome ? comp.predictor.homeTeam.gameProjection : (100 - comp.predictor.homeTeam.gameProjection));
         }
 
-        // Dynamically pull records from ESPN
-        const bufRec = bufComp?.records?.find(r => r.type === 'total')?.summary || '';
-        const oppRec = oppComp?.records?.find(r => r.type === 'total')?.summary || '';
-        const recordsStr = bufRec && oppRec 
-          ? `Bills (${bufRec}) vs. ${opp} (${oppRec})` 
-          : 'Bills vs. ' + opp;
+        // Parse records & streaks from ESPN NFL Standings
+        let bufRecord = '';
+        let oppRecord = '';
+
+        if (standingsRes.ok) {
+          const standData = await standingsRes.json();
+          const allTeams = [];
+          function extractTeams(node) {
+            if (node.standings?.entries) {
+              allTeams.push(...node.standings.entries);
+            }
+            if (node.children) {
+              node.children.forEach(extractTeams);
+            }
+          }
+          extractTeams(standData);
+
+          const findStats = (id) => {
+            const entry = allTeams.find(t => t.team?.id === id);
+            if (!entry) return '';
+            const wlt = entry.stats?.find(s => s.name === 'overall')?.displayValue || '';
+            const streak = entry.stats?.find(s => s.name === 'streak')?.displayValue || '';
+            return streak ? `${wlt}, ${streak}` : wlt;
+          };
+
+          bufRecord = findStats('2');
+          oppRecord = findStats(oppId);
+        }
+
+        const bufDisplay = bufRecord ? `Bills (${bufRecord})` : 'Bills';
+        const oppDisplay = oppRecord ? `${oppName} (${oppRecord})` : oppName;
 
         billsSchedule = {
-          opponent: `${isHome ? 'vs.' : '@'} ${opp}`,
+          opponent: `${isHome ? 'vs.' : '@'} ${oppName}`,
           gameTime: `${dateStr} • ${timeStr} ET`,
           isoTime: nextGame.date,
           winChance: winChance,
-          matchupRecords: recordsStr
+          matchupRecords: `${bufDisplay} vs. ${oppDisplay}`
         };
       }
     }
   } catch (err) {
-    console.warn('Bills schedule fallback used:', err.message);
+    console.warn('Bills schedule/standings fallback used:', err.message);
   }
 
   // 2. Sabres (Official NHL API)
