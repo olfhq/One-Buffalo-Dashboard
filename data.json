@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-18T20:45:21.882Z",
+  "updatedAt": "2026-10-18T21:21:54.670Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
   "bills": {
     "team": "Buffalo Bills",
@@ -67,6 +67,13 @@
       },
       "injuries": [
         {
+          "player": "Bradley Chubb",
+          "pos": "LB",
+          "status": "Questionable",
+          "injury": "Ribs",
+          "team": "Bills"
+        },
+        {
           "player": "Ed Oliver",
           "pos": "DT",
           "status": "Out",
@@ -92,13 +99,6 @@
           "pos": "OT",
           "status": "Out",
           "injury": "Coach's Decision",
-          "team": "Bills"
-        },
-        {
-          "player": "DJ Moore",
-          "pos": "WR",
-          "status": "Out",
-          "injury": "Shoulder - AC Joint",
           "team": "Bills"
         },
         {
@@ -240,25 +240,10 @@
         "awayScore": "34",
         "homeName": "Jacksonville Jaguars",
         "homeScore": "31",
-        "verdict": "NEUTRAL / RIVAL WIN",
+        "verdict": "RIVAL WIN",
         "impactClass": "neutral",
         "target": "Root for Jacksonville Jaguars",
-        "why": "Houston Texans loss clears seeding tiebreakers for the AFC #1 overall seed."
-      },
-      {
-        "isoTime": "2026-10-18T17:00Z",
-        "slot": "Sun, Oct 18 • 1:00 PM ET",
-        "broadcast": "CBS",
-        "statusState": "post",
-        "statusDetail": "Final/OT",
-        "awayName": "Pittsburgh Steelers",
-        "awayScore": "26",
-        "homeName": "Tampa Bay Buccaneers",
-        "homeScore": "19",
-        "verdict": "NEUTRAL / RIVAL WIN",
-        "impactClass": "neutral",
-        "target": "Root for Tampa Bay Buccaneers",
-        "why": "Pittsburgh Steelers loss clears seeding tiebreakers for the AFC #1 overall seed."
+        "why": "Houston Texans loss clears tiebreaker paths for Buffalo's AFC conference seeding & bye week odds."
       },
       {
         "isoTime": "2026-10-18T17:00Z",
@@ -288,7 +273,7 @@
         "verdict": "GOOD FOR BUFFALO",
         "impactClass": "good",
         "target": "Root for Cleveland Browns",
-        "why": "Baltimore Ravens loss opened up Buffalo's path to a higher AFC playoff seed."
+        "why": "Baltimore Ravens lost, boosting Buffalo's path to a higher AFC playoff seed."
       },
       {
         "isoTime": "2026-10-18T17:00Z",
@@ -315,10 +300,10 @@
         "awayScore": "19",
         "homeName": "New England Patriots",
         "homeScore": "26",
-        "verdict": "GOOD FOR BUFFALO",
-        "impactClass": "good",
-        "target": "Root for New England Patriots",
-        "why": "New York Jets dropped a division game, widening Buffalo's lead."
+        "verdict": "BAD FOR BUFFALO",
+        "impactClass": "bad",
+        "target": "Root for New York Jets",
+        "why": "New England Patriots win keeps division pressure on the Bills."
       },
       {
         "isoTime": "2026-10-18T17:00Z",
@@ -351,15 +336,30 @@
         "why": "Non-conference game with zero immediate AFC tiebreaker leverage."
       },
       {
+        "isoTime": "2026-10-18T17:00Z",
+        "slot": "Sun, Oct 18 • 1:00 PM ET",
+        "broadcast": "CBS",
+        "statusState": "post",
+        "statusDetail": "Final/OT",
+        "awayName": "Pittsburgh Steelers",
+        "awayScore": "26",
+        "homeName": "Tampa Bay Buccaneers",
+        "homeScore": "19",
+        "verdict": "RIVAL WIN",
+        "impactClass": "neutral",
+        "target": "Root for Tampa Bay Buccaneers",
+        "why": "Pittsburgh Steelers loss clears tiebreaker paths for Buffalo's AFC conference seeding & bye week odds."
+      },
+      {
         "isoTime": "2026-10-18T20:05Z",
         "slot": "Sun, Oct 18 • 4:05 PM ET",
         "broadcast": "Fox",
         "statusState": "in",
-        "statusDetail": "14:51 - 2nd",
+        "statusDetail": "0:46 - 2nd",
         "awayName": "Arizona Cardinals",
-        "awayScore": "6",
+        "awayScore": "9",
         "homeName": "Los Angeles Rams",
-        "homeScore": "3",
+        "homeScore": "9",
         "verdict": "NEUTRAL",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
@@ -370,15 +370,15 @@
         "slot": "Sun, Oct 18 • 4:25 PM ET",
         "broadcast": "CBS",
         "statusState": "in",
-        "statusDetail": "6:45 - 1st",
+        "statusDetail": "7:15 - 2nd",
         "awayName": "Los Angeles Chargers",
-        "awayScore": "0",
+        "awayScore": "3",
         "homeName": "Kansas City Chiefs",
         "homeScore": "9",
         "verdict": "SEEDING WATCH",
         "impactClass": "good",
-        "target": "Root for Kansas City Chiefs",
-        "why": "Los Angeles Chargers loss clears seeding tiebreakers for the AFC #1 overall seed."
+        "target": "Root for Los Angeles Chargers",
+        "why": "Kansas City Chiefs loss clears tiebreaker paths for Buffalo's AFC conference seeding & bye week odds."
       },
       {
         "isoTime": "2026-10-19T00:20Z",
