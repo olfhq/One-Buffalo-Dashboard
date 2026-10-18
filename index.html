@@ -67,8 +67,6 @@
       gap: 1rem;
       align-items: center;
     }
-    .meta-bar a { color: #38bdf8; text-decoration: none; }
-    .meta-bar a:hover { text-decoration: underline; }
 
     .grid {
       display: grid;
@@ -172,13 +170,35 @@
       color: #cbd5e1;
       font-weight: 500;
     }
+    
     .schedule-tag {
       font-size: 0.75rem;
       color: #38bdf8;
       font-weight: 600;
-      margin-top: 0.15rem;
+      margin-top: 0.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      flex-wrap: wrap;
     }
     .schedule-tag-sabres { color: var(--sabres-gold); }
+
+    .tv-badge {
+      font-size: 0.65rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      color: #38bdf8;
+      text-transform: uppercase;
+    }
+    .tv-badge-sabres {
+      background: rgba(252, 181, 20, 0.15);
+      border: 1px solid rgba(252, 181, 20, 0.35);
+      color: var(--sabres-gold);
+    }
 
     .countdown-box {
       display: flex;
@@ -342,13 +362,6 @@
     }
     .rooting-target { font-weight: 700; color: #fff; }
     .rooting-why { color: var(--text-muted); font-size: 0.75rem; }
-
-    footer {
-      text-align: center;
-      margin-top: 3rem;
-      font-size: 0.8rem;
-      color: var(--text-muted);
-    }
   </style>
 </head>
 <body>
@@ -381,7 +394,10 @@
               <span class="matchup-opp" id="bills-next-opp">--</span>
             </div>
             <div class="matchup-records-line" id="bills-records">--</div>
-            <div class="schedule-tag" id="bills-game-time">--</div>
+            <div class="schedule-tag">
+              <span id="bills-game-time">--</span>
+              <span class="tv-badge" id="bills-broadcast">--</span>
+            </div>
           </div>
 
           <div class="countdown-box">
@@ -467,7 +483,10 @@
               <span class="matchup-opp" id="sabres-next-opp">--</span>
             </div>
             <div class="matchup-records-line" id="sabres-records">--</div>
-            <div class="schedule-tag schedule-tag-sabres" id="sabres-game-time">--</div>
+            <div class="schedule-tag schedule-tag-sabres">
+              <span id="sabres-game-time">--</span>
+              <span class="tv-badge tv-badge-sabres" id="sabres-broadcast">--</span>
+            </div>
           </div>
 
           <div class="countdown-box">
@@ -533,9 +552,6 @@
       </div>
     </article>
   </main>
-
-  <footer>
-  </footer>
 
   <script>
     function startCountdown(elementId, targetIso) {
@@ -606,6 +622,7 @@
 
       document.getElementById('bills-next-opp').textContent = b.nextGame.opponent;
       document.getElementById('bills-game-time').textContent = b.nextGame.gameTime || '';
+      document.getElementById('bills-broadcast').textContent = b.nextGame.broadcast || 'CBS';
       document.getElementById('bills-win-chance').textContent = `${b.nextGame.winChance || 68}%`;
       document.getElementById('bills-records').textContent = b.nextGame.matchupRecords || '';
       document.getElementById('bills-if-win').textContent = `Win: ${b.nextGame.ifWin}%`;
@@ -665,6 +682,7 @@
 
       document.getElementById('sabres-next-opp').textContent = s.nextGame.opponent;
       document.getElementById('sabres-game-time').textContent = s.nextGame.gameTime || '';
+      document.getElementById('sabres-broadcast').textContent = s.nextGame.broadcast || 'MSG-B';
       document.getElementById('sabres-win-chance').textContent = `${s.nextGame.winChance || 46}%`;
       document.getElementById('sabres-records').textContent = s.nextGame.matchupRecords || '';
       document.getElementById('sabres-if-win').textContent = `Win: ${s.nextGame.ifWin}%`;
