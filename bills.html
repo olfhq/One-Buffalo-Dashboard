@@ -7,12 +7,18 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
 
+  <!-- PWA & Mobile App Meta Tags -->
   <link rel="manifest" href="./manifest.json">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="One Buffalo">
   <meta name="theme-color" content="#090d16">
 
-  <title>Buffalo Bills Command Center</title>
+  <!-- Vector App Icons -->
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='110' fill='%23090d16'/%3E%3Cpath d='M70 120 L240 120 L240 392 L160 392 L160 210 L70 210 Z' fill='%23C60C30'/%3E%3Cpath d='M272 120 L442 120 L442 392 L362 392 L362 210 L272 210 Z' fill='%23FCB514'/%3E%3Ccircle cx='256' cy='440' r='18' fill='%2338bdf8'/%3E%3C/svg%3E">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='110' fill='%23090d16'/%3E%3Cpath d='M70 120 L240 120 L240 392 L160 392 L160 210 L70 210 Z' fill='%23C60C30'/%3E%3Cpath d='M272 120 L442 120 L442 392 L362 392 L362 210 L272 210 Z' fill='%23FCB514'/%3E%3Ccircle cx='256' cy='440' r='18' fill='%2338bdf8'/%3E%3C/svg%3E">
+
+  <title>Buffalo Bills Hub | One Buffalo Tracker</title>
   <style>
     :root {
       --bills-blue: #00338D;
@@ -39,7 +45,7 @@
 
     header {
       text-align: center;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.25rem;
     }
 
     .back-nav {
@@ -50,15 +56,16 @@
       text-decoration: none;
       font-size: 0.85rem;
       font-weight: 700;
-      margin-bottom: 0.75rem;
+      margin-bottom: 0.65rem;
+      transition: opacity 0.2s;
     }
-    .back-nav:hover { text-decoration: underline; }
+    .back-nav:hover { opacity: 0.8; text-decoration: underline; }
 
     h1 {
       font-size: 2.1rem;
       font-weight: 800;
       letter-spacing: -0.5px;
-      margin-bottom: 0.3rem;
+      margin-bottom: 0.25rem;
       background: linear-gradient(90deg, #38bdf8, #C60C30);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -69,13 +76,13 @@
       color: var(--text-muted);
     }
 
-    /* SEGMENTED TAB CONTROLS */
+    /* SEGMENTED TAB NAVIGATION */
     .tab-bar {
       display: flex;
       justify-content: center;
-      gap: 0.5rem;
-      margin: 1.25rem auto 1.75rem auto;
-      max-width: 540px;
+      gap: 0.4rem;
+      margin: 1.25rem auto 1.5rem auto;
+      max-width: 580px;
       background: var(--card-inner);
       padding: 0.3rem;
       border-radius: 10px;
@@ -84,7 +91,7 @@
 
     .tab-btn {
       flex: 1;
-      padding: 0.55rem 0.75rem;
+      padding: 0.55rem 0.65rem;
       font-size: 0.8rem;
       font-weight: 700;
       color: var(--text-muted);
@@ -94,6 +101,7 @@
       cursor: pointer;
       transition: all 0.2s ease;
       text-align: center;
+      white-space: nowrap;
     }
 
     .tab-btn.active {
@@ -169,14 +177,14 @@
       color: var(--text-muted);
       letter-spacing: 0.5px;
     }
-    .matchup-opp { font-size: 1.15rem; font-weight: 800; color: #fff; }
-    .matchup-records-line { font-size: 0.8rem; color: #cbd5e1; font-weight: 500; }
+    .matchup-opp { font-size: 1.25rem; font-weight: 800; color: #fff; }
+    .matchup-records-line { font-size: 0.82rem; color: #cbd5e1; font-weight: 500; }
     
     .schedule-tag {
       font-size: 0.75rem;
       color: var(--accent-blue);
       font-weight: 600;
-      margin-top: 0.2rem;
+      margin-top: 0.25rem;
       display: flex;
       align-items: center;
       gap: 0.45rem;
@@ -328,18 +336,55 @@
     .opp-pct { font-weight: 700; color: #f59e0b; margin-left: 0.3rem; }
 
     /* ROOTING COMPANION CARDS */
-    .rooting-item {
-      background: rgba(255, 255, 255, 0.02);
-      border-left: 4px solid var(--accent-blue);
-      padding: 0.75rem 0.9rem;
-      border-radius: 0 8px 8px 0;
-      font-size: 0.85rem;
-      margin-bottom: 0.65rem;
+    .rooting-card {
+      background: var(--card-inner);
       border: 1px solid var(--card-border);
-      border-left-width: 4px;
+      border-radius: 8px;
+      padding: 0.85rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
     }
-    .rooting-target { font-weight: 800; color: #fff; font-size: 0.95rem; margin-bottom: 0.15rem; }
-    .rooting-why { color: var(--text-muted); font-size: 0.8rem; }
+
+    .rooting-card-good { border-left: 4px solid var(--accent-green); }
+    .rooting-card-bad { border-left: 4px solid #f87171; }
+    .rooting-card-neutral { border-left: 4px solid #64748b; }
+
+    .rooting-header-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+    }
+
+    .rooting-slot {
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .rooting-badge {
+      font-size: 0.65rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+    }
+    .badge-good { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
+    .badge-bad { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); }
+    .badge-neutral { background: rgba(100, 116, 139, 0.2); color: #94a3b8; border: 1px solid rgba(100, 116, 139, 0.4); }
+
+    .rooting-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .rooting-detail {
+      font-size: 0.8rem;
+      color: #cbd5e1;
+      line-height: 1.35;
+    }
   </style>
 </head>
 <body>
@@ -447,8 +492,11 @@
     <!-- TAB 3: ROOTING COMPANION -->
     <section id="tab-rooting" class="tab-content">
       <div class="card">
-        <div class="section-subtitle">Weekly Out-Of-Town Rooting Priority</div>
-        <div id="bills-rooting-container"></div>
+        <div class="section-subtitle">
+          <span>Weekly Rooting Companion</span>
+          <span style="font-size: 0.7rem; color: var(--accent-blue);">Out-of-Town AFC Leverage</span>
+        </div>
+        <div id="bills-rooting-grid" style="display: flex; flex-direction: column; gap: 0.75rem;"></div>
       </div>
     </section>
   </main>
@@ -563,12 +611,39 @@
         <div class="opp-chip">${o.team} <span class="opp-pct">${o.pct}%</span></div>
       `).join('');
 
-      document.getElementById('bills-rooting-container').innerHTML = b.rootingGuide.map(item => `
-        <div class="rooting-item">
-          <div class="rooting-target">${item.target}</div>
-          <div class="rooting-why">${item.why}</div>
-        </div>
-      `).join('');
+      // Populate Rooting Companion Cards
+      const rootingGrid = document.getElementById('bills-rooting-grid');
+      if (rootingGrid && b.rootingGuide) {
+        rootingGrid.innerHTML = b.rootingGuide.map(item => {
+          let impactClass = 'rooting-card-good';
+          let badgeClass = 'badge-good';
+          let badgeText = 'Good for Buffalo';
+
+          const lowerTarget = item.target.toLowerCase();
+          const lowerWhy = item.why.toLowerCase();
+
+          if (lowerTarget.includes('jets') || lowerTarget.includes('patriots') || lowerTarget.includes('dolphins')) {
+            impactClass = 'rooting-card-bad';
+            badgeClass = 'badge-bad';
+            badgeText = 'AFC East Watch';
+          } else if (lowerWhy.includes('neutral') || lowerWhy.includes('zero') || lowerWhy.includes('nfc')) {
+            impactClass = 'rooting-card-neutral';
+            badgeClass = 'badge-neutral';
+            badgeText = 'Neutral / Tiebreaker';
+          }
+
+          return `
+            <div class="rooting-card ${impactClass}">
+              <div class="rooting-header-line">
+                <span class="rooting-slot">NFL Week Slate</span>
+                <span class="rooting-badge ${badgeClass}">${badgeText}</span>
+              </div>
+              <div class="rooting-title">${item.target}</div>
+              <div class="rooting-detail">${item.why}</div>
+            </div>
+          `;
+        }).join('');
+      }
     }
 
     document.addEventListener('DOMContentLoaded', loadData);
