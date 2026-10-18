@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-18T19:24:15.679Z",
+  "updatedAt": "2026-10-18T19:30:41.032Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
   "bills": {
     "team": "Buffalo Bills",
@@ -65,7 +65,78 @@
         "opp": "-3 (5 Takeaways / 8 Giveaways)",
         "advantage": "Bills (+7 Differential Margin)"
       },
-      "injuries": []
+      "injuries": [
+        {
+          "player": "Aidan O'Connell",
+          "pos": "QB",
+          "status": "Out",
+          "injury": "Coach's Decision",
+          "team": "Raiders"
+        },
+        {
+          "player": "Cian Slone",
+          "pos": "DE",
+          "status": "Out",
+          "injury": "Coach's Decision",
+          "team": "Raiders"
+        },
+        {
+          "player": "Tristin McCollum",
+          "pos": "S",
+          "status": "Out",
+          "injury": "Coach's Decision",
+          "team": "Raiders"
+        },
+        {
+          "player": "Tonka Hemingway",
+          "pos": "DT",
+          "status": "Out",
+          "injury": "Concussion",
+          "team": "Raiders"
+        },
+        {
+          "player": "Dalton Johnson",
+          "pos": "S",
+          "status": "Out",
+          "injury": "Coach's Decision",
+          "team": "Raiders"
+        },
+        {
+          "player": "Ed Oliver",
+          "pos": "DT",
+          "status": "Out",
+          "injury": "Knee",
+          "team": "Bills"
+        },
+        {
+          "player": "Ar'maj Reed-Adams",
+          "pos": "G",
+          "status": "Out",
+          "injury": "Coach's Decision",
+          "team": "Bills"
+        },
+        {
+          "player": "Mike Danna",
+          "pos": "DE",
+          "status": "Out",
+          "injury": "Coach's Decision",
+          "team": "Bills"
+        },
+        {
+          "player": "Jude Bowry",
+          "pos": "OT",
+          "status": "Out",
+          "injury": "Coach's Decision",
+          "team": "Bills"
+        },
+        {
+          "player": "DJ Moore",
+          "pos": "WR",
+          "status": "Out",
+          "injury": "Shoulder - AC Joint",
+          "team": "Bills"
+        }
+      ]
     },
     "divisionRadar": [
       {
@@ -179,7 +250,7 @@
         "slot": "Sun, Oct 18 • 1:00 PM ET",
         "broadcast": "Fox",
         "statusState": "in",
-        "statusDetail": "1:48 - 3rd",
+        "statusDetail": "15:00 - 4th",
         "awayName": "Chicago Bears",
         "awayScore": "28",
         "homeName": "Atlanta Falcons",
@@ -194,11 +265,11 @@
         "slot": "Sun, Oct 18 • 1:00 PM ET",
         "broadcast": "Fox",
         "statusState": "in",
-        "statusDetail": "9:15 - 4th",
+        "statusDetail": "7:14 - 4th",
         "awayName": "Baltimore Ravens",
         "awayScore": "10",
         "homeName": "Cleveland Browns",
-        "homeScore": "3",
+        "homeScore": "10",
         "verdict": "SEEDING WATCH",
         "impactClass": "good",
         "target": "Root for Cleveland Browns",
@@ -209,7 +280,7 @@
         "slot": "Sun, Oct 18 • 1:00 PM ET",
         "broadcast": "Fox",
         "statusState": "in",
-        "statusDetail": "13:00 - 4th",
+        "statusDetail": "11:11 - 4th",
         "awayName": "Tennessee Titans",
         "awayScore": "13",
         "homeName": "Indianapolis Colts",
@@ -224,7 +295,7 @@
         "slot": "Sun, Oct 18 • 1:00 PM ET",
         "broadcast": "CBS",
         "statusState": "in",
-        "statusDetail": "14:10 - 4th",
+        "statusDetail": "12:53 - 4th",
         "awayName": "New York Jets",
         "awayScore": "13",
         "homeName": "New England Patriots",
@@ -239,7 +310,7 @@
         "slot": "Sun, Oct 18 • 1:00 PM ET",
         "broadcast": "Fox",
         "statusState": "in",
-        "statusDetail": "1:12 - 3rd",
+        "statusDetail": "14:50 - 4th",
         "awayName": "New Orleans Saints",
         "awayScore": "27",
         "homeName": "New York Giants",
@@ -254,7 +325,7 @@
         "slot": "Sun, Oct 18 • 1:00 PM ET",
         "broadcast": "CBS",
         "statusState": "in",
-        "statusDetail": "6:30 - 3rd",
+        "statusDetail": "1:53 - 3rd",
         "awayName": "Carolina Panthers",
         "awayScore": "13",
         "homeName": "Philadelphia Eagles",
@@ -269,9 +340,9 @@
         "slot": "Sun, Oct 18 • 1:00 PM ET",
         "broadcast": "CBS",
         "statusState": "in",
-        "statusDetail": "15:00 - 4th",
+        "statusDetail": "13:48 - 4th",
         "awayName": "Pittsburgh Steelers",
-        "awayScore": "3",
+        "awayScore": "10",
         "homeName": "Tampa Bay Buccaneers",
         "homeScore": "16",
         "verdict": "SEEDING WATCH",
