@@ -48,18 +48,32 @@
       margin-bottom: 1.25rem;
     }
 
-    .back-nav {
+    /* GRADIENT BACK BUTTON */
+    .back-nav-btn {
       display: inline-flex;
+      justify-content: center;
       align-items: center;
-      gap: 0.35rem;
-      color: var(--accent-blue);
+      gap: 0.45rem;
+      background: linear-gradient(135deg, rgba(0, 51, 141, 0.65), rgba(198, 12, 48, 0.65));
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      color: #fff;
       text-decoration: none;
-      font-size: 0.85rem;
-      font-weight: 700;
-      margin-bottom: 0.65rem;
-      transition: opacity 0.2s;
+      font-size: 0.8rem;
+      font-weight: 800;
+      padding: 0.55rem 1.1rem;
+      border-radius: 8px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+      margin-bottom: 0.9rem;
     }
-    .back-nav:hover { opacity: 0.8; text-decoration: underline; }
+    .back-nav-btn:hover {
+      background: linear-gradient(135deg, rgba(0, 51, 141, 0.9), rgba(198, 12, 48, 0.9));
+      border-color: var(--accent-blue);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
+    }
 
     h1 {
       font-size: 2.1rem;
@@ -515,7 +529,7 @@
 <body>
 
   <header>
-    <a href="./index.html" class="back-nav">‹ Back to One Buffalo Portal</a>
+    <a href="./index.html" class="back-nav-btn">‹ Back to One Buffalo Portal</a>
     <h1>BUFFALO BILLS HUB</h1>
     <div class="meta-bar">
       <span id="update-status">Loading data...</span>
