@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-18T06:48:14.988Z",
+  "updatedAt": "2026-10-18T07:09:52.789Z",
   "source": "http://www.playoffstatus.com",
   "bills": {
     "team": "Buffalo Bills",
@@ -16,7 +16,7 @@
       "gameTime": "Sun, Oct 18 • 4:25 PM ET",
       "isoTime": "2026-10-18T20:25Z",
       "winChance": 68,
-      "matchupRecords": "Bills (4-1, W3) vs. Raiders (2-3, L1)",
+      "matchupRecords": "Bills vs. Raiders",
       "ifWin": 91,
       "ifLoss": 74,
       "leverage": 17
@@ -120,20 +120,20 @@
     },
     "divisionRadar": [
       {
-        "team": "Panthers",
-        "pct": 36
+        "team": "Bruins",
+        "pct": 21
+      },
+      {
+        "team": "Senators",
+        "pct": 22
       },
       {
         "team": "Lightning",
-        "pct": 28
+        "pct": 20
       },
       {
-        "team": "Bruins",
-        "pct": 16
-      },
-      {
-        "team": "Sabres",
-        "pct": 11
+        "team": "Panthers",
+        "pct": 25
       }
     ],
     "seedDistribution": [
