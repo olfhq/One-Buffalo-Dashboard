@@ -293,35 +293,6 @@
       align-items: center;
     }
 
-    /* TALLER, SPACIOUS HISTORICAL TREND GRAPH WIDGET */
-    .trend-card {
-      background: var(--card-inner);
-      border: 1px solid var(--card-border);
-      border-radius: 10px;
-      padding: 1rem 1.1rem 0.75rem 1.1rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.4rem;
-    }
-    .trend-badge {
-      font-weight: 700;
-      padding: 0.15rem 0.45rem;
-      border-radius: 4px;
-      font-size: 0.7rem;
-    }
-    .trend-up { background: rgba(16, 185, 129, 0.15); color: #34d399; }
-    .trend-down { background: rgba(239, 68, 68, 0.15); color: #f87171; }
-    
-    .trend-svg-wrap {
-      width: 100%;
-      height: 110px; /* Expanded from 60px to give curves room to breathe */
-    }
-    .trend-svg-wrap svg {
-      width: 100%;
-      height: 100%;
-      overflow: visible;
-    }
-
     /* DISTRIBUTION BARS */
     .dist-bar-wrap { display: flex; flex-direction: column; gap: 0.4rem; }
     .dist-row { display: flex; align-items: center; font-size: 0.8rem; }
@@ -603,103 +574,6 @@
       setInterval(update, 1000);
     }
 
-    // Refined, High-Fidelity SVG Curve with Gridlines & Date Markers
-    function renderSparkline(containerId, historyArr, key, strokeColor) {
-      const container = document.getElementById(containerId);
-      if (!container || !historyArr || historyArr.length < 2) return;
-
-      const width = 340;
-      const height = 110;
-      const padLeft = 8;
-      const padRight = 32;
-      const padTop = 16;
-      const padBottom = 22;
-
-      const values = historyArr.map(h => h[key]);
-      const rawMin = Math.min(...values);
-      const rawMax = Math.max(...values);
-      
-      // Dynamic auto-scaling bounds so trends are visually clear
-      const rangeBuffer = Math.max(6, (rawMax - rawMin) * 0.4);
-      const min = Math.max(0, Math.floor(rawMin - rangeBuffer));
-      const max = Math.min(100, Math.ceil(rawMax + rangeBuffer));
-
-      const chartW = width - padLeft - padRight;
-      const chartH = height - padTop - padBottom;
-
-      const points = values.map((val, i) => {
-        const x = padLeft + (i / (values.length - 1)) * chartW;
-        const y = padTop + chartH - ((val - min) / (max - min || 1)) * chartH;
-        return { x, y, val, date: historyArr[i].date };
-      });
-
-      // Smooth Bezier Curve Path
-      let linePath = `M ${points[0].x.toFixed(1)} ${points[0].y.toFixed(1)}`;
-      for (let i = 0; i < points.length - 1; i++) {
-        const p0 = points[i];
-        const p1 = points[i + 1];
-        const mx = (p0.x + p1.x) / 2;
-        linePath += ` C ${mx.toFixed(1)} ${p0.y.toFixed(1)}, ${mx.toFixed(1)} ${p1.y.toFixed(1)}, ${p1.x.toFixed(1)} ${p1.y.toFixed(1)}`;
-      }
-
-      const areaBottom = padTop + chartH;
-      const areaPath = `${linePath} L ${points[points.length - 1].x.toFixed(1)} ${areaBottom} L ${points[0].x.toFixed(1)} ${areaBottom} Z`;
-      const lastPoint = points[points.length - 1];
-
-      // Subtle horizontal gridlines
-      const midVal = Math.round((min + max) / 2);
-      const midY = (padTop + chartH / 2).toFixed(1);
-
-      container.innerHTML = `
-        <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none">
-          <defs>
-            <linearGradient id="grad-${key}" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="${strokeColor}" stop-opacity="0.32"/>
-              <stop offset="100%" stop-color="${strokeColor}" stop-opacity="0.0"/>
-            </linearGradient>
-          </defs>
-
-          <!-- Gridlines -->
-          <line x1="${padLeft}" y1="${padTop}" x2="${width - padRight}" y2="${padTop}" stroke="rgba(255,255,255,0.05)" stroke-dasharray="3 3"/>
-          <line x1="${padLeft}" y1="${midY}" x2="${width - padRight}" y2="${midY}" stroke="rgba(255,255,255,0.05)" stroke-dasharray="3 3"/>
-          <line x1="${padLeft}" y1="${areaBottom}" x2="${width - padRight}" y2="${areaBottom}" stroke="rgba(255,255,255,0.1)"/>
-
-          <!-- Axis Date Labels -->
-          <text x="${points[0].x}" y="${height - 4}" fill="#64748b" font-size="8.5" font-weight="600">${points[0].date}</text>
-          <text x="${lastPoint.x}" y="${height - 4}" fill="#64748b" font-size="8.5" font-weight="600" text-anchor="end">${lastPoint.date}</text>
-
-          <!-- Area Gradient & Main Curve -->
-          <path d="${areaPath}" fill="url(#grad-${key})" />
-          <path d="${linePath}" fill="none" stroke="${strokeColor}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
-
-          <!-- Data Points -->
-          ${points.map(p => `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="3" fill="#0d1422" stroke="${strokeColor}" stroke-width="2"/>`).join('')}
-
-          <!-- Current End-Point Badge -->
-          <circle cx="${lastPoint.x.toFixed(1)}" cy="${lastPoint.y.toFixed(1)}" r="5" fill="${strokeColor}" />
-          <rect x="${lastPoint.x + 4}" y="${lastPoint.y - 10}" width="28" height="16" rx="4" fill="${strokeColor}" />
-          <text x="${lastPoint.x + 18}" y="${lastPoint.y + 1.5}" fill="#000" font-size="9" font-weight="800" text-anchor="middle">${lastPoint.val}%</text>
-        </svg>
-      `;
-    }
-
-    function calculateDeltaBadge(badgeId, historyArr, key) {
-      const badge = document.getElementById(badgeId);
-      if (!badge || !historyArr || historyArr.length < 2) return;
-
-      const first = historyArr[0][key];
-      const last = historyArr[historyArr.length - 1][key];
-      const delta = last - first;
-
-      if (delta >= 0) {
-        badge.textContent = `▲ +${delta}% (30d)`;
-        badge.className = 'trend-badge trend-up';
-      } else {
-        badge.textContent = `▼ ${delta}% (30d)`;
-        badge.className = 'trend-badge trend-down';
-      }
-    }
-
     async function loadData() {
       const statusEl = document.getElementById('update-status');
       let data = null;
@@ -747,12 +621,6 @@
 
       if (b.nextGame.isoTime) {
         startCountdown('bills-countdown', b.nextGame.isoTime);
-      }
-
-      // Render Bills Historical Sparkline with dynamic scaling
-      if (data.history) {
-        renderSparkline('bills-trend-svg', data.history, 'bills', '#38bdf8');
-        calculateDeltaBadge('bills-trend-badge', data.history, 'bills');
       }
 
       document.getElementById('bills-radar').innerHTML = b.divisionRadar.map(r => `
@@ -812,12 +680,6 @@
 
       if (s.nextGame.isoTime) {
         startCountdown('sabres-countdown', s.nextGame.isoTime);
-      }
-
-      // Render Sabres Historical Sparkline with dynamic scaling
-      if (data.history) {
-        renderSparkline('sabres-trend-svg', data.history, 'sabres', '#FCB514');
-        calculateDeltaBadge('sabres-trend-badge', data.history, 'sabres');
       }
 
       document.getElementById('sabres-radar').innerHTML = s.divisionRadar.map(r => `
