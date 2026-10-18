@@ -28,7 +28,7 @@ function parseCellPct(rawText) {
   return isNaN(val) ? 0 : Math.min(100, Math.round(val));
 }
 
-// Fetch live game schedules, game win chance, ISO timestamps, and team records with points & streaks
+// Fetch live game schedules, game win chance, ISO timestamps, and team records
 async function fetchNextGameSchedule() {
   let billsSchedule = {
     opponent: '@ Raiders',
@@ -78,7 +78,7 @@ async function fetchNextGameSchedule() {
     console.warn('Bills schedule fallback used:', err.message);
   }
 
-  // 2. Sabres (Official NHL API - extracts points directly)
+  // 2. Sabres (Official NHL API)
   try {
     const [schedRes, standingsRes] = await Promise.all([
       fetch('https://api-web.nhle.com/v1/club-schedule/BUF/week/now'),
@@ -136,55 +136,6 @@ async function fetchNextGameSchedule() {
   }
 
   return { billsSchedule, sabresSchedule };
-}
-
-// Manage historical trajectory data
-function updateHistoricalTrends(billsPct, sabresPct) {
-  const historyPath = './history.json';
-  let history = [];
-
-  if (fs.existsSync(historyPath)) {
-    try {
-      history = JSON.parse(fs.readFileSync(historyPath, 'utf-8'));
-    } catch (e) {
-      console.warn('Could not read history.json, resetting.');
-    }
-  }
-
-  // Pre-seed baseline timeline if empty so graphs render immediately on day one
-  if (!Array.isArray(history) || history.length === 0) {
-    history = [
-      { date: 'Oct 01', bills: 76, sabres: 34 },
-      { date: 'Oct 04', bills: 79, sabres: 35 },
-      { date: 'Oct 07', bills: 81, sabres: 37 },
-      { date: 'Oct 10', bills: 80, sabres: 36 },
-      { date: 'Oct 12', bills: 83, sabres: 38 }
-    ];
-  }
-
-  const todayStr = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-  const lastEntry = history[history.length - 1];
-
-  // If entry exists for today, update it; otherwise append
-  if (lastEntry && lastEntry.date === todayStr) {
-    lastEntry.bills = billsPct;
-    lastEntry.sabres = sabresPct;
-  } else {
-    history.push({
-      date: todayStr,
-      bills: billsPct,
-      sabres: sabresPct
-    });
-  }
-
-  // Retain last 30 data points
-  if (history.length > 30) {
-    history = history.slice(-30);
-  }
-
-  fs.writeFileSync(historyPath, JSON.stringify(history, null, 2), 'utf-8');
-  console.log(`history.json updated (${history.length} timeline points).`);
-  return history;
 }
 
 async function scrapePlayoffStatus() {
@@ -291,7 +242,7 @@ async function scrapePlayoffStatus() {
     $('tr').each((_, el) => {
       const text = $(el).text();
       if (text.includes('Bills') && !text.includes('Schedule') && !text.includes('vs')) {
-        const cells = $(el).find('td').map((_, td) => $(td).text().trim()).get();
+        const cells = $(el).find('td').map((_, td) =>$(td).text().trim()).get();
         const pcts = cells.map(parseCellPct).filter(n => n >= 0 && n <= 100);
         
         if (pcts.length >= 7) {
@@ -329,7 +280,7 @@ async function scrapePlayoffStatus() {
         (rowText.includes('vs') || rowText.includes('@')) && 
         !rowText.includes('Bills')
       ) {
-        const cells = $(el).find('td').map((_, td) => $(td).text().trim()).get();
+        const cells = $(el).find('td').map((_, td) =>$(td).text().trim()).get();
         if (cells.length >= 3) {
           const matchup = cells[0].replace(/\s+/g, ' ');
           const preference = cells.find(c => c.includes('Wins'));
@@ -388,7 +339,7 @@ async function scrapePlayoffStatus() {
         
         if (pcts.length >= 5) {
           const seeds = pcts.slice(-5);
-          billsData.winDivision = seeds[0];
+          sabresData.winDivision = seeds[0];
           sabresData.wildcard = seeds[3] + seeds[4];
           sabresData.makePlayoffs = Math.min(100, seeds.reduce((a, b) => a + b, 0));
 
@@ -430,19 +381,15 @@ async function scrapePlayoffStatus() {
     console.warn('Sabres clinch check fallback:', err.message);
   }
 
-  // Update historical trajectory array
-  const historyData = updateHistoricalTrends(billsData.makePlayoffs, sabresData.makePlayoffs);
-
   const finalPayload = {
     updatedAt: new Date().toISOString(),
     source: 'http://www.playoffstatus.com',
     bills: billsData,
-    sabres: sabresData,
-    history: historyData
+    sabres: sabresData
   };
 
   fs.writeFileSync('./data.json', JSON.stringify(finalPayload, null, 2), 'utf-8');
-  console.log('data.json successfully written with full historical trend telemetry.');
+  console.log('data.json successfully written.');
 }
 
 scrapePlayoffStatus();
