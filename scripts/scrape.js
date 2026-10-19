@@ -156,6 +156,9 @@ async function fetchNflScoreboard() {
             impactClass = 'bad';
             why = `${rival} won, keeping division pressure on the Bills.`;
           }
+        } else {
+          verdict = 'AFC EAST WATCH';
+          impactClass = 'bad';
         }
       } else if (isAwayEast || isHomeEast) {
         const rival = isAwayEast ? awayName : homeName;
@@ -294,31 +297,31 @@ async function fetchGameInjuries(eventId, oppName, oppId) {
 // Fetch live game schedules, game win chance, ISO timestamps, team records, broadcast networks, and matchup intel
 async function fetchNextGameSchedule() {
   let billsSchedule = {
-    opponent: '@ Raiders',
-    oppShortName: 'Raiders',
-    oppId: '13',
-    oppCity: 'Las Vegas',
-    gameTime: 'Sun, Oct 18 • 4:25 PM ET',
+    opponent: 'vs. Ravens',
+    oppShortName: 'Ravens',
+    oppId: '33',
+    oppCity: 'Baltimore',
+    gameTime: 'Sun, Nov 1 • 1:00 PM ET',
     isoTime: null,
     winChance: 60,
-    matchupRecords: 'Bills vs. Raiders',
+    matchupRecords: 'Bills vs. Ravens',
     broadcast: 'CBS',
-    venue: 'Allegiant Stadium, Las Vegas',
-    restBills: 7,
+    venue: 'Highmark Stadium, Orchard Park',
+    restBills: 14,
     restOpp: 7,
-    restDiff: 'Even (7 Days Each)',
+    restDiff: 'Bills +7 (Post-Bye Week)',
     efficiency: [
-      { metric: 'Points / Game', bills: '28.4 (4th)', opp: '18.2 (26th)' },
-      { metric: 'Total Yards / Game', bills: '374.2 (5th)', opp: '295.6 (24th)' },
-      { metric: 'Passing Yards / Game', bills: '248.5 (6th)', opp: '188.4 (25th)' },
-      { metric: 'Rushing Yards / Game', bills: '125.7 (8th)', opp: '107.2 (21st)' },
-      { metric: '3rd Down Conversion %', bills: '46.8% (3rd)', opp: '34.1% (28th)' },
-      { metric: 'Red Zone TD %', bills: '68.2% (4th)', opp: '48.0% (25th)' }
+      { metric: 'Points / Game', bills: '28.4 (4th)', opp: '24.5 (10th)' },
+      { metric: 'Total Yards / Game', bills: '374.2 (5th)', opp: '360.2 (7th)' },
+      { metric: 'Passing Yards / Game', bills: '248.5 (6th)', opp: '215.4 (15th)' },
+      { metric: 'Rushing Yards / Game', bills: '125.7 (8th)', opp: '144.8 (3rd)' },
+      { metric: '3rd Down Conversion %', bills: '46.8% (3rd)', opp: '41.2% (9th)' },
+      { metric: 'Red Zone TD %', bills: '68.2% (4th)', opp: '58.0% (11th)' }
     ],
     turnoverRatio: {
       bills: '+4 (8 Takeaways / 4 Giveaways)',
-      opp: '-3 (5 Takeaways / 8 Giveaways)',
-      advantage: 'Bills (+7 Differential Margin)'
+      opp: '+1 (7 Takeaways / 6 Giveaways)',
+      advantage: 'Bills (+3 Differential Margin)'
     },
     injuries: []
   };
@@ -350,7 +353,7 @@ async function fetchNextGameSchedule() {
         const isHome = bufComp?.homeAway === 'home';
         const oppName = oppComp?.team?.shortDisplayName || 'Opponent';
         const oppCity = oppComp?.team?.location || '';
-        const oppId = oppComp?.id || '13';
+        const oppId = oppComp?.id || '33';
         const d = new Date(nextGame.date);
 
         const dateStr = d.toLocaleDateString('en-US', { timeZone: 'America/New_York', weekday: 'short', month: 'short', day: 'numeric' });
@@ -554,9 +557,9 @@ async function scrapePlayoffStatus() {
       { seed: '#7 Seed', pct: 8 }
     ],
     opponents: [
-      { team: 'LA Chargers', pct: 26 },
-      { team: 'Pittsburgh Steelers', pct: 19 },
-      { team: 'Jacksonville Jaguars', pct: 15 }
+      { team: 'New England Patriots', pct: 10 },
+      { team: 'Denver Broncos', pct: 7 },
+      { team: 'Cleveland Browns', pct: 7 }
     ],
     rootingGuide: [
       { target: "Root for Chargers Win", why: "Maximizes odds for Buffalo's AFC #1 overall seed & bye week." },
@@ -608,7 +611,7 @@ async function scrapePlayoffStatus() {
     ]
   };
 
-  // 1. Bills Standings & AFC East Radar Scrape (Robust parsing targeting table cells directly)
+  // 1. Scrape AFC Standings & AFC East Radar
   try {
     const html = await fetchHtml(billsUrl);
     const $ = cheerio.load(html);
@@ -621,12 +624,10 @@ async function scrapePlayoffStatus() {
 
       if (foundTeam) {
         const cells = $(el).find('td').map((_, td) =>$(td).text().trim()).get();
-        // Extract all numeric percentage columns (Seeds 1..7 and No Playoffs 8)
         const pcts = cells.map(parseCellPct).filter(n => n >= 0 && n <= 100);
 
         if (pcts.length >= 7) {
-          // PlayoffStatus columns: Record info, then [1*, 2**, 3**, 4**, 5, 6, 7, 8]
-          const seeds = pcts.slice(-8, -1); // Extract Seeds 1 through 7
+          const seeds = pcts.slice(-8, -1);
           const winDiv = seeds.slice(0, 4).reduce((a, b) => a + b, 0);
 
           if (!radarResults.some(r => r.team === foundTeam)) {
@@ -653,17 +654,40 @@ async function scrapePlayoffStatus() {
     });
 
     if (radarResults.length === 4) billsData.divisionRadar = radarResults;
+
+    // 2. Scrape Table (2) Bills 1st Round Playoff Matchup Probabilities
+    const scrapedOpponents = [];
+    $('tr').each((_, el) => {
+      const rowText = $(el).text();
+      // Match opponent rows with a numeric seed prefix e.g., "(5) Patriots", "(6) Broncos"
+      const match = rowText.match(/\((\d+)\)\s+([A-Za-z\s]+)/);
+      if (match && !rowText.includes('Bye') && !rowText.includes('Elimination')) {
+        const rawOpp = match[2].trim();
+        const cells = $(el).find('td').map((_, td) =>$(td).text().trim()).get();
+        const pcts = cells.map(parseCellPct).filter(n => n > 0 && n <= 100);
+        if (pcts.length > 0) {
+          const totalPct = pcts[0]; // First percentage cell is the Total %
+          scrapedOpponents.push({ team: rawOpp, pct: totalPct });
+        }
+      }
+    });
+
+    if (scrapedOpponents.length >= 3) {
+      // Sort by highest probability and grab top 3
+      scrapedOpponents.sort((a, b) => b.pct - a.pct);
+      billsData.opponents = scrapedOpponents.slice(0, 3);
+    }
   } catch (err) {
     console.warn('Bills standings parse fallback:', err.message);
   }
 
-  // 2. Scrape Opponent Leverage from PlayoffStatus billsmig.html
+  // 3. Scrape Opponent Leverage from PlayoffStatus billsmig.html
   const migLeverage = await fetchBillsLeverage(billsSchedule.oppShortName, billsData.makePlayoffs);
   billsData.nextGame.ifWin = migLeverage.ifWin;
   billsData.nextGame.ifLoss = migLeverage.ifLoss;
   billsData.nextGame.leverage = migLeverage.leverage;
 
-  // 3. Bills Clinching Scenarios Scrape
+  // 4. Bills Clinching Scenarios Scrape
   try {
     const clinchHtml = await fetchHtml(billsClinchUrl);
     const $ = cheerio.load(clinchHtml);
@@ -684,7 +708,7 @@ async function scrapePlayoffStatus() {
     console.warn('Bills clinch check fallback:', err.message);
   }
 
-  // 4. Sabres Standings & Atlantic Radar Scrape
+  // 5. Sabres Standings & Atlantic Radar Scrape
   try {
     const html = await fetchHtml(sabresUrl);
     const $ = cheerio.load(html);
@@ -737,7 +761,7 @@ async function scrapePlayoffStatus() {
   };
 
   fs.writeFileSync('./data.json', JSON.stringify(finalPayload, null, 2), 'utf-8');
-  console.log('data.json successfully written with live PlayoffStatus Week 6 matrix.');
+  console.log('data.json successfully written with live 1st Round Matchup table.');
 }
 
 scrapePlayoffStatus();
