@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-18T23:45:20.752Z",
+  "updatedAt": "2026-10-19T00:08:21.551Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
   "bills": {
     "team": "Buffalo Bills",
@@ -16,13 +16,13 @@
       "oppShortName": "Ravens",
       "gameTime": "Sun, Nov 1 • 1:00 PM ET",
       "isoTime": "2026-11-01T18:00Z",
-      "winChance": 68,
+      "winChance": 60,
       "matchupRecords": "Bills (5-1, W2) vs. Ravens (4-2, L1)",
       "broadcast": "CBS",
       "venue": "Highmark Stadium, Orchard Park",
-      "ifWin": 91,
+      "ifWin": 90,
       "ifLoss": 74,
-      "leverage": 17,
+      "leverage": 16,
       "restAdvantage": {
         "billsDays": 7,
         "oppDays": 7,
