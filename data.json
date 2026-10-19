@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-19T20:45:22.212Z",
+  "updatedAt": "2026-10-19T23:45:22.461Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
   "bills": {
     "team": "Buffalo Bills",
@@ -74,13 +74,6 @@
           "team": "Bills"
         },
         {
-          "player": "Dalton Kincaid",
-          "pos": "TE",
-          "status": "Questionable",
-          "injury": "Ribs",
-          "team": "Bills"
-        },
-        {
           "player": "Ed Oliver",
           "pos": "DT",
           "status": "Out",
@@ -98,6 +91,13 @@
           "player": "Te'Cory Couch",
           "pos": "CB",
           "status": "Questionable",
+          "injury": "Hamstring",
+          "team": "Bills"
+        },
+        {
+          "player": "Jordan Hancock",
+          "pos": "CB",
+          "status": "Injured Reserve",
           "injury": "Hamstring",
           "team": "Bills"
         },
