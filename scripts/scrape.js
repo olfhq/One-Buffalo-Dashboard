@@ -30,9 +30,10 @@ function parseCellPct(rawText) {
 
 // Scrape dynamic Bills Playoff Leverage (If Win / If Lose / Swing) from PlayoffStatus.com
 async function fetchBillsLeverage(oppShortName, billsCurrentPlayoffPct) {
+  const base = billsCurrentPlayoffPct || 79;
   let leverageData = {
-    ifWin: Math.min(99, (billsCurrentPlayoffPct || 79) + 6),
-    ifLoss: Math.max(50, (billsCurrentPlayoffPct || 79) - 10),
+    ifWin: Math.min(99, base + 6),
+    ifLoss: Math.max(50, base - 10),
     leverage: 16
   };
   leverageData.leverage = leverageData.ifWin - leverageData.ifLoss;
@@ -46,14 +47,29 @@ async function fetchBillsLeverage(oppShortName, billsCurrentPlayoffPct) {
       const oppRegex = new RegExp(`\\b${oppShortName}\\b`, 'i');
       if (oppRegex.test(text) || (oppShortName === 'Ravens' && text.includes('Baltimore'))) {
         const cells = $(el).find('td').map((_, td) =>$(td).text().trim()).get();
-        const pcts = cells.map(parseCellPct).filter(n => n > 0 && n <= 100);
-        if (pcts.length >= 2) {
-          const winPct = pcts[0];
-          const lossPct = pcts[1];
+        const pcts = cells.map(parseCellPct).filter(n => n >= 0 && n <= 100);
+
+        // billsmig.html presents 8 seed columns for "If Win" (col 8 is No POs)
+        // and 8 seed columns for "If Lose" (col 16 is No POs)
+        if (pcts.length >= 16) {
+          const winNoPo = pcts[7];   // 8th percentage is No POs if win
+          const lossNoPo = pcts[15]; // 16th percentage is No POs if loss
+          const winTotal = Math.round(100 - winNoPo);
+          const lossTotal = Math.round(100 - lossNoPo);
+
           leverageData = {
-            ifWin: winPct,
-            ifLoss: lossPct,
-            leverage: Math.abs(winPct - lossPct)
+            ifWin: winTotal,
+            ifLoss: lossTotal,
+            leverage: Math.abs(winTotal - lossTotal)
+          };
+        } else if (pcts.length >= 2) {
+          // Fallback if structure varies
+          const winTotal = Math.min(99, Math.round(base + 6));
+          const lossTotal = Math.max(50, Math.round(base - 10));
+          leverageData = {
+            ifWin: winTotal,
+            ifLoss: lossTotal,
+            leverage: Math.abs(winTotal - lossTotal)
           };
         }
       }
@@ -286,7 +302,7 @@ async function fetchGameInjuries(eventId, oppName, oppId) {
 
     const [bInj, oInj] = await Promise.all([
       fetchFromTeam('2', 'Bills'),
-      fetchFromTeam(oppId || '13', oppName)
+      fetchFromTeam(oppId || '33', oppName)
     ]);
     injuries.push(...bInj, ...oInj);
   }
@@ -659,21 +675,19 @@ async function scrapePlayoffStatus() {
     const scrapedOpponents = [];
     $('tr').each((_, el) => {
       const rowText = $(el).text();
-      // Match opponent rows with a numeric seed prefix e.g., "(5) Patriots", "(6) Broncos"
       const match = rowText.match(/\((\d+)\)\s+([A-Za-z\s]+)/);
       if (match && !rowText.includes('Bye') && !rowText.includes('Elimination')) {
         const rawOpp = match[2].trim();
         const cells = $(el).find('td').map((_, td) =>$(td).text().trim()).get();
         const pcts = cells.map(parseCellPct).filter(n => n > 0 && n <= 100);
         if (pcts.length > 0) {
-          const totalPct = pcts[0]; // First percentage cell is the Total %
+          const totalPct = pcts[0];
           scrapedOpponents.push({ team: rawOpp, pct: totalPct });
         }
       }
     });
 
     if (scrapedOpponents.length >= 3) {
-      // Sort by highest probability and grab top 3
       scrapedOpponents.sort((a, b) => b.pct - a.pct);
       billsData.opponents = scrapedOpponents.slice(0, 3);
     }
