@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-19T02:45:21.154Z",
+  "updatedAt": "2026-10-19T03:45:25.209Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
   "bills": {
     "team": "Buffalo Bills",
@@ -385,11 +385,11 @@
         "slot": "Sun, Oct 18 • 8:20 PM ET",
         "broadcast": "NBC",
         "statusState": "in",
-        "statusDetail": "0:10 - 3rd",
+        "statusDetail": "0:44 - 4th",
         "awayName": "Dallas Cowboys",
-        "awayScore": "7",
+        "awayScore": "13",
         "homeName": "Green Bay Packers",
-        "homeScore": "20",
+        "homeScore": "23",
         "verdict": "NEUTRAL",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
