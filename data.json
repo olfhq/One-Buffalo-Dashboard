@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-19T18:56:28.551Z",
+  "updatedAt": "2026-10-19T19:03:00.041Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
   "bills": {
     "team": "Buffalo Bills",
@@ -24,46 +24,46 @@
       "ifLoss": 1,
       "leverage": 3,
       "restAdvantage": {
-        "billsDays": 7,
+        "billsDays": 14,
         "oppDays": 7,
-        "summary": "Even (7 Days Each)"
+        "summary": "Bills +7 (Post-Bye Week)"
       },
       "efficiency": [
         {
           "metric": "Points / Game",
           "bills": "28.4 (4th)",
-          "opp": "18.2 (26th)"
+          "opp": "24.5 (10th)"
         },
         {
           "metric": "Total Yards / Game",
           "bills": "374.2 (5th)",
-          "opp": "295.6 (24th)"
+          "opp": "360.2 (7th)"
         },
         {
           "metric": "Passing Yards / Game",
           "bills": "248.5 (6th)",
-          "opp": "188.4 (25th)"
+          "opp": "215.4 (15th)"
         },
         {
           "metric": "Rushing Yards / Game",
           "bills": "125.7 (8th)",
-          "opp": "107.2 (21st)"
+          "opp": "144.8 (3rd)"
         },
         {
           "metric": "3rd Down Conversion %",
           "bills": "46.8% (3rd)",
-          "opp": "34.1% (28th)"
+          "opp": "41.2% (9th)"
         },
         {
           "metric": "Red Zone TD %",
           "bills": "68.2% (4th)",
-          "opp": "48.0% (25th)"
+          "opp": "58.0% (11th)"
         }
       ],
       "turnoverRatio": {
         "bills": "+4 (8 Takeaways / 4 Giveaways)",
-        "opp": "-3 (5 Takeaways / 8 Giveaways)",
-        "advantage": "Bills (+7 Differential Margin)"
+        "opp": "+1 (7 Takeaways / 6 Giveaways)",
+        "advantage": "Bills (+3 Differential Margin)"
       },
       "injuries": [
         {
@@ -188,16 +188,16 @@
     ],
     "opponents": [
       {
-        "team": "LA Chargers",
-        "pct": 26
+        "team": "New England Patriots",
+        "pct": 10
       },
       {
-        "team": "Pittsburgh Steelers",
-        "pct": 19
+        "team": "Denver Broncos",
+        "pct": 7
       },
       {
-        "team": "Jacksonville Jaguars",
-        "pct": 15
+        "team": "Cleveland Browns",
+        "pct": 7
       }
     ],
     "rootingGuide": [
