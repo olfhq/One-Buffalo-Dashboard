@@ -1,12 +1,12 @@
 {
-  "updatedAt": "2026-10-19T08:45:21.965Z",
+  "updatedAt": "2026-10-19T18:56:28.551Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
   "bills": {
     "team": "Buffalo Bills",
-    "makePlayoffs": 84,
-    "winDivision": 62,
-    "seed1": 18,
-    "magicNumber": "11",
+    "makePlayoffs": 79,
+    "winDivision": 53,
+    "seed1": 17,
+    "magicNumber": "10",
     "clinchAlert": {
       "active": false,
       "scenario": "No clinching scenarios available this week."
@@ -81,53 +81,25 @@
           "team": "Bills"
         },
         {
-          "player": "Ar'maj Reed-Adams",
-          "pos": "G",
-          "status": "Out",
-          "injury": "Coach's Decision",
-          "team": "Bills"
-        },
-        {
-          "player": "Mike Danna",
-          "pos": "DE",
-          "status": "Out",
-          "injury": "Coach's Decision",
-          "team": "Bills"
-        },
-        {
-          "player": "Jude Bowry",
-          "pos": "OT",
-          "status": "Out",
-          "injury": "Coach's Decision",
-          "team": "Bills"
-        },
-        {
-          "player": "Rashod Bateman",
-          "pos": "WR",
-          "status": "Questionable",
-          "injury": "Shoulder",
-          "team": "Ravens"
-        },
-        {
-          "player": "Andrew Vorhees",
-          "pos": "G",
-          "status": "Out",
-          "injury": "Foot",
-          "team": "Ravens"
-        },
-        {
-          "player": "Elijah Sarratt",
+          "player": "DJ Moore",
           "pos": "WR",
           "status": "Out",
-          "injury": "Coach's Decision",
-          "team": "Ravens"
+          "injury": "Shoulder - AC Joint",
+          "team": "Bills"
         },
         {
-          "player": "K'Von Wallace",
+          "player": "Te'Cory Couch",
           "pos": "CB",
-          "status": "Out",
-          "injury": "Coach's Decision",
-          "team": "Ravens"
+          "status": "Questionable",
+          "injury": "Hamstring",
+          "team": "Bills"
+        },
+        {
+          "player": "Jordan Hancock",
+          "pos": "CB",
+          "status": "Injured Reserve",
+          "injury": "Hamstring",
+          "team": "Bills"
         },
         {
           "player": "Broderick Washington Jr.",
@@ -135,39 +107,67 @@
           "status": "Out",
           "injury": "Ankle",
           "team": "Ravens"
+        },
+        {
+          "player": "Cam Jurgens",
+          "pos": "C",
+          "status": "Out",
+          "injury": "Concussion",
+          "team": "Ravens"
+        },
+        {
+          "player": "Matt Hibner",
+          "pos": "TE",
+          "status": "Out",
+          "injury": "Hand",
+          "team": "Ravens"
+        },
+        {
+          "player": "Lamar Jackson",
+          "pos": "QB",
+          "status": "Out",
+          "injury": "Ankle",
+          "team": "Ravens"
+        },
+        {
+          "player": "Rashod Bateman",
+          "pos": "WR",
+          "status": "Questionable",
+          "injury": "Shoulder",
+          "team": "Ravens"
         }
       ]
     },
     "divisionRadar": [
       {
         "team": "Bills",
-        "pct": 62
+        "pct": 53
       },
       {
         "team": "Patriots",
-        "pct": 22
-      },
-      {
-        "team": "Dolphins",
-        "pct": 11
+        "pct": 40
       },
       {
         "team": "Jets",
-        "pct": 5
+        "pct": 5.5
+      },
+      {
+        "team": "Dolphins",
+        "pct": 2.5
       }
     ],
     "seedDistribution": [
       {
         "seed": "#1 Seed",
-        "pct": 18
+        "pct": 17
       },
       {
         "seed": "#2 Seed",
-        "pct": 24
+        "pct": 14
       },
       {
         "seed": "#3 Seed",
-        "pct": 12
+        "pct": 14
       },
       {
         "seed": "#4 Seed",
@@ -175,15 +175,15 @@
       },
       {
         "seed": "#5 Seed",
-        "pct": 11
+        "pct": 10
       },
       {
         "seed": "#6 Seed",
-        "pct": 7
+        "pct": 8
       },
       {
         "seed": "#7 Seed",
-        "pct": 4
+        "pct": 8
       }
     ],
     "opponents": [
@@ -414,9 +414,9 @@
   },
   "sabres": {
     "team": "Buffalo Sabres",
-    "makePlayoffs": 38,
-    "winDivision": 11,
-    "wildcard": 27,
+    "makePlayoffs": 9,
+    "winDivision": 0,
+    "wildcard": 5,
     "tragicNumber": "Cutoff: 92 Pts",
     "clinchAlert": {
       "active": false,
@@ -436,41 +436,41 @@
     "divisionRadar": [
       {
         "team": "Bruins",
-        "pct": 24
+        "pct": 9
       },
       {
         "team": "Lightning",
-        "pct": 22
+        "pct": 8
       },
       {
         "team": "Senators",
-        "pct": 24
+        "pct": 9
       },
       {
         "team": "Panthers",
-        "pct": 28
+        "pct": 9
       }
     ],
     "seedDistribution": [
       {
         "seed": "Div 1",
-        "pct": 11
+        "pct": 0
       },
       {
         "seed": "Div 2",
-        "pct": 14
+        "pct": 0
       },
       {
         "seed": "Div 3",
-        "pct": 13
+        "pct": 4
       },
       {
         "seed": "Wildcard 1",
-        "pct": 16
+        "pct": 3
       },
       {
         "seed": "Wildcard 2",
-        "pct": 11
+        "pct": 2
       }
     ],
     "opponents": [
