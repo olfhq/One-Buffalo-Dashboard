@@ -31,8 +31,8 @@ function parseCellPct(rawText) {
 // Scrape dynamic Bills Playoff Leverage (If Win / If Lose / Swing) from PlayoffStatus.com
 async function fetchBillsLeverage(oppShortName, billsCurrentPlayoffPct) {
   let leverageData = {
-    ifWin: Math.min(99, (billsCurrentPlayoffPct || 84) + 6),
-    ifLoss: Math.max(50, (billsCurrentPlayoffPct || 84) - 10),
+    ifWin: Math.min(99, (billsCurrentPlayoffPct || 79) + 6),
+    ifLoss: Math.max(50, (billsCurrentPlayoffPct || 79) - 10),
     leverage: 16
   };
   leverageData.leverage = leverageData.ifWin - leverageData.ifLoss;
@@ -93,7 +93,7 @@ async function fetchNflScoreboard() {
 
       const homeScore = home.score || '0';
       const awayScore = away.score || '0';
-      const statusState = comp.status?.type?.state; // 'pre', 'in', 'post'
+      const statusState = comp.status?.type?.state;
       const statusDetail = comp.status?.type?.shortDetail || 'Scheduled';
       const broadcast = comp.broadcasts?.[0]?.names?.[0] || 'TV';
 
@@ -110,7 +110,6 @@ async function fetchNflScoreboard() {
       const isHomeEast = afcEastPriority.includes(homeName);
       const hasChiefs = awayName === 'Kansas City Chiefs' || homeName === 'Kansas City Chiefs';
 
-      // CASE 1: Intra-division match (e.g. Jets vs. Patriots)
       if (isAwayEast && isHomeEast) {
         const awayIndex = afcEastPriority.indexOf(awayName);
         const homeIndex = afcEastPriority.indexOf(homeName);
@@ -137,9 +136,7 @@ async function fetchNflScoreboard() {
           verdict = 'AFC EAST WATCH';
           impactClass = 'bad';
         }
-      }
-      // CASE 2: Kansas City vs. AFC East Rival (Priority: Protect the Division)
-      else if (hasChiefs && (isAwayEast || isHomeEast)) {
+      } else if (hasChiefs && (isAwayEast || isHomeEast)) {
         const rival = isAwayEast ? awayName : homeName;
         target = `Root for Kansas City Chiefs`;
         why = `AFC East division title takes precedence: A ${rival} loss widens Buffalo's division lead.`;
@@ -160,9 +157,7 @@ async function fetchNflScoreboard() {
             why = `${rival} won, keeping division pressure on the Bills.`;
           }
         }
-      }
-      // CASE 3: Single AFC East Rival vs. Any Other Opponent
-      else if (isAwayEast || isHomeEast) {
+      } else if (isAwayEast || isHomeEast) {
         const rival = isAwayEast ? awayName : homeName;
         const opponent = isAwayEast ? homeName : awayName;
 
@@ -186,9 +181,7 @@ async function fetchNflScoreboard() {
           verdict = 'AFC EAST WATCH';
           impactClass = 'bad';
         }
-      }
-      // CASE 4: Top AFC Contenders (Chiefs vs. non-division, Ravens, Texans, Chargers, Steelers)
-      else if (afcContenders.some(c => awayName === c || homeName === c)) {
+      } else if (afcContenders.some(c => awayName === c || homeName === c)) {
         const contender = afcContenders.find(c => awayName === c || homeName === c);
         const opponent = contender === awayName ? homeName : awayName;
 
@@ -367,9 +360,9 @@ async function fetchNextGameSchedule() {
 
         let bufRecord = '';
         let oppRecord = '';
-        let bufWins = 4;
+        let bufWins = 5;
         let bufLosses = 1;
-        let oppWins = 3;
+        let oppWins = 4;
         let oppLosses = 2;
 
         if (standingsRes.ok) {
@@ -400,7 +393,6 @@ async function fetchNextGameSchedule() {
           if (oppStats.w + oppStats.l > 0) { oppWins = oppStats.w; oppLosses = oppStats.l; }
         }
 
-        // Win chance: ESPN predictor if in 7-day window, or dynamic relative win-rate model
         let winChance = 60;
         if (comp.predictor?.homeTeam) {
           winChance = Math.round(isHome ? comp.predictor.homeTeam.gameProjection : (100 - comp.predictor.homeTeam.gameProjection));
@@ -520,10 +512,10 @@ async function scrapePlayoffStatus() {
 
   let billsData = {
     team: 'Buffalo Bills',
-    makePlayoffs: 84,
-    winDivision: 62,
-    seed1: 18,
-    magicNumber: '11',
+    makePlayoffs: 79,
+    winDivision: 53,
+    seed1: 17,
+    magicNumber: '10',
     clinchAlert: { active: false, scenario: 'No clinching scenarios available this week.' },
     nextGame: {
       opponent: billsSchedule.opponent,
@@ -534,9 +526,9 @@ async function scrapePlayoffStatus() {
       matchupRecords: billsSchedule.matchupRecords,
       broadcast: billsSchedule.broadcast,
       venue: billsSchedule.venue,
-      ifWin: 91,
-      ifLoss: 74,
-      leverage: 17,
+      ifWin: 85,
+      ifLoss: 69,
+      leverage: 16,
       restAdvantage: {
         billsDays: billsSchedule.restBills,
         oppDays: billsSchedule.restOpp,
@@ -547,19 +539,19 @@ async function scrapePlayoffStatus() {
       injuries: billsSchedule.injuries
     },
     divisionRadar: [
-      { team: 'Bills', pct: 62 },
-      { team: 'Patriots', pct: 22 },
-      { team: 'Dolphins', pct: 11 },
-      { team: 'Jets', pct: 5 }
+      { team: 'Bills', pct: 53 },
+      { team: 'Patriots', pct: 40 },
+      { team: 'Jets', pct: 4 },
+      { team: 'Dolphins', pct: 3 }
     ],
     seedDistribution: [
-      { seed: '#1 Seed', pct: 18 },
-      { seed: '#2 Seed', pct: 24 },
-      { seed: '#3 Seed', pct: 12 },
+      { seed: '#1 Seed', pct: 17 },
+      { seed: '#2 Seed', pct: 14 },
+      { seed: '#3 Seed', pct: 14 },
       { seed: '#4 Seed', pct: 8 },
-      { seed: '#5 Seed', pct: 11 },
-      { seed: '#6 Seed', pct: 7 },
-      { seed: '#7 Seed', pct: 4 }
+      { seed: '#5 Seed', pct: 10 },
+      { seed: '#6 Seed', pct: 8 },
+      { seed: '#7 Seed', pct: 8 }
     ],
     opponents: [
       { team: 'LA Chargers', pct: 26 },
@@ -616,7 +608,7 @@ async function scrapePlayoffStatus() {
     ]
   };
 
-  // 1. Bills Standings & AFC East Radar Scrape
+  // 1. Bills Standings & AFC East Radar Scrape (Robust parsing targeting table cells directly)
   try {
     const html = await fetchHtml(billsUrl);
     const $ = cheerio.load(html);
@@ -624,36 +616,37 @@ async function scrapePlayoffStatus() {
     const radarResults = [];
 
     $('tr').each((_, el) => {
-      const text = $(el).text();
-      if (!text.includes('Schedule') && !text.includes('vs')) {
-        const foundTeam = afcEastTeams.find(t => text.includes(t));
-        if (foundTeam) {
-          const cells = $(el).find('td').map((_, td) =>$(td).text().trim()).get();
-          const pcts = cells.map(parseCellPct).filter(n => n >= 0 && n <= 100);
+      const firstCell = $(el).find('td').first().text().trim();
+      const foundTeam = afcEastTeams.find(t => firstCell === t || firstCell.startsWith(t));
 
-          if (pcts.length >= 7) {
-            const seeds = pcts.slice(-7);
-            const winDiv = seeds.slice(0, 4).reduce((a, b) => a + b, 0);
+      if (foundTeam) {
+        const cells = $(el).find('td').map((_, td) =>$(td).text().trim()).get();
+        // Extract all numeric percentage columns (Seeds 1..7 and No Playoffs 8)
+        const pcts = cells.map(parseCellPct).filter(n => n >= 0 && n <= 100);
 
-            if (!radarResults.some(r => r.team === foundTeam)) {
-              radarResults.push({ team: foundTeam, pct: winDiv });
-            }
+        if (pcts.length >= 7) {
+          // PlayoffStatus columns: Record info, then [1*, 2**, 3**, 4**, 5, 6, 7, 8]
+          const seeds = pcts.slice(-8, -1); // Extract Seeds 1 through 7
+          const winDiv = seeds.slice(0, 4).reduce((a, b) => a + b, 0);
 
-            if (foundTeam === 'Bills') {
-              billsData.seed1 = seeds[0];
-              billsData.winDivision = winDiv;
-              billsData.makePlayoffs = Math.min(100, seeds.reduce((a, b) => a + b, 0));
-              
-              billsData.seedDistribution = [
-                { seed: '#1 Seed', pct: seeds[0] },
-                { seed: '#2 Seed', pct: seeds[1] },
-                { seed: '#3 Seed', pct: seeds[2] },
-                { seed: '#4 Seed', pct: seeds[3] },
-                { seed: '#5 Seed', pct: seeds[4] },
-                { seed: '#6 Seed', pct: seeds[5] },
-                { seed: '#7 Seed', pct: seeds[6] }
-              ];
-            }
+          if (!radarResults.some(r => r.team === foundTeam)) {
+            radarResults.push({ team: foundTeam, pct: winDiv });
+          }
+
+          if (foundTeam === 'Bills') {
+            billsData.seed1 = seeds[0];
+            billsData.winDivision = winDiv;
+            billsData.makePlayoffs = Math.min(100, Math.round(seeds.reduce((a, b) => a + b, 0)));
+            
+            billsData.seedDistribution = [
+              { seed: '#1 Seed', pct: seeds[0] },
+              { seed: '#2 Seed', pct: seeds[1] },
+              { seed: '#3 Seed', pct: seeds[2] },
+              { seed: '#4 Seed', pct: seeds[3] },
+              { seed: '#5 Seed', pct: seeds[4] },
+              { seed: '#6 Seed', pct: seeds[5] },
+              { seed: '#7 Seed', pct: seeds[6] }
+            ];
           }
         }
       }
@@ -661,10 +654,10 @@ async function scrapePlayoffStatus() {
 
     if (radarResults.length === 4) billsData.divisionRadar = radarResults;
   } catch (err) {
-    console.warn('Bills standings fallback used:', err.message);
+    console.warn('Bills standings parse fallback:', err.message);
   }
 
-  // 2. Dynamically Scrape Opponent Leverage from PlayoffStatus
+  // 2. Scrape Opponent Leverage from PlayoffStatus billsmig.html
   const migLeverage = await fetchBillsLeverage(billsSchedule.oppShortName, billsData.makePlayoffs);
   billsData.nextGame.ifWin = migLeverage.ifWin;
   billsData.nextGame.ifLoss = migLeverage.ifLoss;
@@ -699,34 +692,33 @@ async function scrapePlayoffStatus() {
     const sabresRadar = [];
 
     $('tr').each((_, el) => {
-      const text = $(el).text();
-      if (!text.includes('Schedule') && !text.includes('vs')) {
-        const foundTeam = atlanticTeams.find(t => text.includes(t));
-        if (foundTeam) {
-          const cells = $(el).find('td').map((_, td) =>$(td).text().trim()).get();
-          const pcts = cells.map(parseCellPct).filter(n => n >= 0 && n <= 100);
+      const firstCell = $(el).find('td').first().text().trim();
+      const foundTeam = atlanticTeams.find(t => firstCell === t || firstCell.startsWith(t));
+
+      if (foundTeam) {
+        const cells = $(el).find('td').map((_, td) =>$(td).text().trim()).get();
+        const pcts = cells.map(parseCellPct).filter(n => n >= 0 && n <= 100);
+        
+        if (pcts.length >= 5) {
+          const seeds = pcts.slice(0, 5);
+          const totalPlayoffs = Math.min(100, seeds.reduce((a, b) => a + b, 0));
           
-          if (pcts.length >= 5) {
-            const seeds = pcts.slice(0, 5);
-            const totalPlayoffs = Math.min(100, seeds.reduce((a, b) => a + b, 0));
-            
-            if (sabresRadar.length < 4 && !sabresRadar.some(r => r.team === foundTeam)) {
-              sabresRadar.push({ team: foundTeam.replace('Maple Leafs', 'Leafs'), pct: totalPlayoffs });
-            }
+          if (sabresRadar.length < 4 && !sabresRadar.some(r => r.team === foundTeam)) {
+            sabresRadar.push({ team: foundTeam.replace('Maple Leafs', 'Leafs'), pct: totalPlayoffs });
+          }
 
-            if (foundTeam === 'Sabres') {
-              sabresData.winDivision = seeds[0];
-              sabresData.wildcard = (seeds[3] || 0) + (seeds[4] || 0);
-              sabresData.makePlayoffs = totalPlayoffs;
+          if (foundTeam === 'Sabres') {
+            sabresData.winDivision = seeds[0];
+            sabresData.wildcard = (seeds[3] || 0) + (seeds[4] || 0);
+            sabresData.makePlayoffs = totalPlayoffs;
 
-              sabresData.seedDistribution = [
-                { seed: 'Div 1', pct: seeds[0] || 0 },
-                { seed: 'Div 2', pct: seeds[1] || 0 },
-                { seed: 'Div 3', pct: seeds[2] || 0 },
-                { seed: 'Wildcard 1', pct: seeds[3] || 0 },
-                { seed: 'Wildcard 2', pct: seeds[4] || 0 }
-              ];
-            }
+            sabresData.seedDistribution = [
+              { seed: 'Div 1', pct: seeds[0] || 0 },
+              { seed: 'Div 2', pct: seeds[1] || 0 },
+              { seed: 'Div 3', pct: seeds[2] || 0 },
+              { seed: 'Wildcard 1', pct: seeds[3] || 0 },
+              { seed: 'Wildcard 2', pct: seeds[4] || 0 }
+            ];
           }
         }
       }
@@ -745,7 +737,7 @@ async function scrapePlayoffStatus() {
   };
 
   fs.writeFileSync('./data.json', JSON.stringify(finalPayload, null, 2), 'utf-8');
-  console.log('data.json successfully written with dynamic matchup leverage engine.');
+  console.log('data.json successfully written with live PlayoffStatus Week 6 matrix.');
 }
 
 scrapePlayoffStatus();
