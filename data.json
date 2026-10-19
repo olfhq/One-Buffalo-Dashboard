@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-19T03:45:25.209Z",
+  "updatedAt": "2026-10-19T05:45:21.501Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
   "bills": {
     "team": "Buffalo Bills",
@@ -20,8 +20,8 @@
       "matchupRecords": "Bills (5-1, W2) vs. Ravens (4-2, L1)",
       "broadcast": "CBS",
       "venue": "Highmark Stadium, Orchard Park",
-      "ifWin": 18,
-      "ifLoss": 15,
+      "ifWin": 4,
+      "ifLoss": 1,
       "leverage": 3,
       "restAdvantage": {
         "billsDays": 7,
@@ -384,8 +384,8 @@
         "isoTime": "2026-10-19T00:20Z",
         "slot": "Sun, Oct 18 • 8:20 PM ET",
         "broadcast": "NBC",
-        "statusState": "in",
-        "statusDetail": "0:44 - 4th",
+        "statusState": "post",
+        "statusDetail": "Final",
         "awayName": "Dallas Cowboys",
         "awayScore": "13",
         "homeName": "Green Bay Packers",
