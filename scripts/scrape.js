@@ -28,6 +28,42 @@ function parseCellPct(rawText) {
   return isNaN(val) ? 0 : Math.min(100, Math.round(val));
 }
 
+// Scrape dynamic Bills Playoff Leverage (If Win / If Lose / Swing) from PlayoffStatus.com
+async function fetchBillsLeverage(oppShortName, billsCurrentPlayoffPct) {
+  let leverageData = {
+    ifWin: Math.min(99, (billsCurrentPlayoffPct || 84) + 6),
+    ifLoss: Math.max(50, (billsCurrentPlayoffPct || 84) - 10),
+    leverage: 16
+  };
+  leverageData.leverage = leverageData.ifWin - leverageData.ifLoss;
+
+  try {
+    const html = await fetchHtml('http://www.playoffstatus.com/nfl/billsmig.html');
+    const $ = cheerio.load(html);
+
+    $('tr').each((_, el) => {
+      const text = $(el).text();
+      const oppRegex = new RegExp(`\\b${oppShortName}\\b`, 'i');
+      if (oppRegex.test(text) || (oppShortName === 'Ravens' && text.includes('Baltimore'))) {
+        const cells = $(el).find('td').map((_, td) =>$(td).text().trim()).get();
+        const pcts = cells.map(parseCellPct).filter(n => n > 0 && n <= 100);
+        if (pcts.length >= 2) {
+          const winPct = pcts[0];
+          const lossPct = pcts[1];
+          leverageData = {
+            ifWin: winPct,
+            ifLoss: lossPct,
+            leverage: Math.abs(winPct - lossPct)
+          };
+        }
+      }
+    });
+  } catch (err) {
+    console.warn('Bills MIG leverage scrape fallback:', err.message);
+  }
+  return leverageData;
+}
+
 // Fetch live out-of-town scoreboard and rooting leverage tags
 async function fetchNflScoreboard() {
   const outOfTownGames = [];
@@ -37,7 +73,6 @@ async function fetchNflScoreboard() {
     const data = await res.json();
     const events = data.events || [];
 
-    // Threat hierarchy within AFC East
     const afcEastPriority = ['New England Patriots', 'Miami Dolphins', 'New York Jets'];
     const afcContenders = ['Kansas City Chiefs', 'Baltimore Ravens', 'Houston Texans', 'Pittsburgh Steelers', 'Los Angeles Chargers'];
 
@@ -54,7 +89,6 @@ async function fetchNflScoreboard() {
       const homeName = home.team?.displayName || 'Home Team';
       const awayName = away.team?.displayName || 'Away Team';
 
-      // Skip the Bills game (featured on Matchup Intel tab)
       if (homeName.includes('Bills') || awayName.includes('Bills')) continue;
 
       const homeScore = home.score || '0';
@@ -273,7 +307,7 @@ async function fetchNextGameSchedule() {
     oppCity: 'Las Vegas',
     gameTime: 'Sun, Oct 18 • 4:25 PM ET',
     isoTime: null,
-    winChance: 68,
+    winChance: 60,
     matchupRecords: 'Bills vs. Raiders',
     broadcast: 'CBS',
     venue: 'Allegiant Stadium, Las Vegas',
@@ -331,13 +365,12 @@ async function fetchNextGameSchedule() {
         const tvNetwork = comp.broadcasts?.[0]?.names?.[0] || 'CBS';
         const venueName = comp.venue ? `${comp.venue.fullName || ''}, ${comp.venue.address?.city || ''}` : 'NFL Stadium';
 
-        let winChance = 68;
-        if (comp.predictor?.homeTeam) {
-          winChance = Math.round(isHome ? comp.predictor.homeTeam.gameProjection : (100 - comp.predictor.homeTeam.gameProjection));
-        }
-
         let bufRecord = '';
         let oppRecord = '';
+        let bufWins = 4;
+        let bufLosses = 1;
+        let oppWins = 3;
+        let oppLosses = 2;
 
         if (standingsRes.ok) {
           const standData = await standingsRes.json();
@@ -350,14 +383,32 @@ async function fetchNextGameSchedule() {
 
           const findStats = (id) => {
             const entry = allTeams.find(t => t.team?.id === id);
-            if (!entry) return '';
+            if (!entry) return { display: '', w: 0, l: 0 };
             const wlt = entry.stats?.find(s => s.name === 'overall')?.displayValue || '';
             const streak = entry.stats?.find(s => s.name === 'streak')?.displayValue || '';
-            return streak ? `${wlt}, ${streak}` : wlt;
+            const w = parseInt(entry.stats?.find(s => s.name === 'wins')?.value || '0');
+            const l = parseInt(entry.stats?.find(s => s.name === 'losses')?.value || '0');
+            return { display: streak ? `${wlt}, ${streak}` : wlt, w, l };
           };
 
-          bufRecord = findStats('2');
-          oppRecord = findStats(oppId);
+          const bufStats = findStats('2');
+          const oppStats = findStats(oppId);
+
+          bufRecord = bufStats.display;
+          oppRecord = oppStats.display;
+          if (bufStats.w + bufStats.l > 0) { bufWins = bufStats.w; bufLosses = bufStats.l; }
+          if (oppStats.w + oppStats.l > 0) { oppWins = oppStats.w; oppLosses = oppStats.l; }
+        }
+
+        // Win chance: ESPN predictor if in 7-day window, or dynamic relative win-rate model
+        let winChance = 60;
+        if (comp.predictor?.homeTeam) {
+          winChance = Math.round(isHome ? comp.predictor.homeTeam.gameProjection : (100 - comp.predictor.homeTeam.gameProjection));
+        } else {
+          const bufPct = bufWins / (bufWins + bufLosses || 1);
+          const oppPct = oppWins / (oppWins + oppLosses || 1);
+          const homeBonus = isHome ? 0.04 : -0.04;
+          winChance = Math.min(88, Math.max(30, Math.round(((bufPct / (bufPct + oppPct || 1)) + homeBonus) * 100)));
         }
 
         const bufDisplay = bufRecord ? `Bills (${bufRecord})` : 'Bills';
@@ -613,7 +664,13 @@ async function scrapePlayoffStatus() {
     console.warn('Bills standings fallback used:', err.message);
   }
 
-  // 2. Bills Clinching Scenarios Scrape
+  // 2. Dynamically Scrape Opponent Leverage from PlayoffStatus
+  const migLeverage = await fetchBillsLeverage(billsSchedule.oppShortName, billsData.makePlayoffs);
+  billsData.nextGame.ifWin = migLeverage.ifWin;
+  billsData.nextGame.ifLoss = migLeverage.ifLoss;
+  billsData.nextGame.leverage = migLeverage.leverage;
+
+  // 3. Bills Clinching Scenarios Scrape
   try {
     const clinchHtml = await fetchHtml(billsClinchUrl);
     const $ = cheerio.load(clinchHtml);
@@ -634,7 +691,7 @@ async function scrapePlayoffStatus() {
     console.warn('Bills clinch check fallback:', err.message);
   }
 
-  // 3. Sabres Standings & Atlantic Radar Scrape
+  // 4. Sabres Standings & Atlantic Radar Scrape
   try {
     const html = await fetchHtml(sabresUrl);
     const $ = cheerio.load(html);
