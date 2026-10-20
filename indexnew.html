@@ -12,369 +12,406 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="One Buffalo">
-  <meta name="theme-color" content="#070a10">
+  <meta name="theme-color" content="#060911">
 
-  <!-- App Icons -->
   <link rel="apple-touch-icon" href="./icon-192.png">
   <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
-  <link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png">
 
-  <title>One Buffalo Portal</title>
+  <title>One Buffalo • Executive Command</title>
+
   <style>
     :root {
-      --bg: #070a10;
-      --surface-glass: rgba(14, 20, 32, 0.78);
-      --surface-sub: rgba(21, 30, 48, 0.6);
-      --border-subtle: rgba(255, 255, 255, 0.08);
-
+      --bg-dark: #060911;
+      --card-bg: rgba(13, 20, 36, 0.7);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --border-glow: rgba(56, 189, 248, 0.25);
+      
       --bills-blue: #00338D;
-      --bills-crimson: #C60C30;
-      --bills-neon: #38bdf8;
-
+      --bills-red: #C60C30;
+      --bills-cyan: #38bdf8;
+      
       --sabres-gold: #FCB514;
       --sabres-navy: #041E42;
-
-      --text-pri: #f8fafc;
-      --text-sec: #94a3b8;
+      
+      --text-main: #f8fafc;
+      --text-dim: #94a3b8;
       --text-muted: #64748b;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background-color: var(--bg);
+      background-color: var(--bg-dark);
       background-image: 
-        radial-gradient(at 0% 0%, rgba(0, 51, 141, 0.22) 0px, transparent 45%),
-        radial-gradient(at 100% 100%, rgba(252, 181, 20, 0.12) 0px, transparent 40%);
-      background-attachment: fixed;
-      color: var(--text-pri);
-      padding: 1.5rem 1rem 3rem 1rem;
+        radial-gradient(circle at 15% 10%, rgba(0, 51, 141, 0.3) 0%, transparent 40%),
+        radial-gradient(circle at 85% 85%, rgba(252, 181, 20, 0.15) 0%, transparent 40%),
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 28px 28px, 28px 28px;
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       min-height: 100vh;
+      padding: 1.5rem 1rem 3rem 1rem;
       -webkit-font-smoothing: antialiased;
     }
 
-    .wrapper {
-      max-width: 900px;
+    .shell {
+      max-width: 860px;
       margin: 0 auto;
       display: flex;
       flex-direction: column;
       gap: 1.5rem;
     }
 
-    /* HEADER */
-    header {
+    /* TOP BAR CONSOLE */
+    .telemetry-bar {
       display: flex;
-      flex-direction: column;
+      justify-content: space-between;
       align-items: center;
-      gap: 0.75rem;
-      text-align: center;
-      padding: 0.5rem 0;
+      padding: 0.6rem 1rem;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--card-border);
+      border-radius: 9999px;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
 
-    .brand-eyebrow {
-      font-size: 0.68rem;
-      font-weight: 800;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--bills-neon);
+    .brand-cluster {
       display: flex;
       align-items: center;
       gap: 0.5rem;
+      font-weight: 800;
+      color: var(--bills-cyan);
     }
 
-    .pulse-dot {
-      width: 6px;
-      height: 6px;
+    .radar-ping {
+      width: 7px;
+      height: 7px;
       background-color: #10b981;
       border-radius: 50%;
       box-shadow: 0 0 8px #10b981;
-      animation: beacon 2s infinite cubic-bezier(0.4, 0, 0.6, 1);
+      animation: flash 2s infinite ease-in-out;
     }
 
-    @keyframes beacon {
+    @keyframes flash {
       0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(0.85); }
+      50% { opacity: 0.3; transform: scale(0.85); }
     }
 
-    h1 {
-      font-size: 2.3rem;
-      font-weight: 900;
-      letter-spacing: -0.04em;
-      line-height: 1.1;
-      background: linear-gradient(135deg, #ffffff 30%, #94a3b8 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .meta-time {
-      font-size: 0.75rem;
+    .timestamp {
       color: var(--text-muted);
       font-variant-numeric: tabular-nums;
+      font-weight: 600;
     }
 
-    /* ACADEMY PROMOTIONAL PILL */
-    .academy-banner {
-      width: 100%;
+    /* PROMOTIONAL ACADEMY MARQUEE */
+    .academy-marquee {
       display: flex;
       justify-content: center;
+      margin: 0.25rem 0;
     }
 
-    .academy-link {
+    .academy-pill {
       display: inline-flex;
       align-items: center;
-      gap: 0.6rem;
-      background: linear-gradient(135deg, rgba(0, 51, 141, 0.5) 0%, rgba(198, 12, 48, 0.5) 100%);
-      border: 1px solid rgba(56, 189, 248, 0.28);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      padding: 0.65rem 1.25rem;
+      gap: 0.75rem;
+      background: linear-gradient(90deg, rgba(0, 51, 141, 0.6) 0%, rgba(198, 12, 48, 0.6) 100%);
+      border: 1px solid rgba(56, 189, 248, 0.35);
       border-radius: 9999px;
+      padding: 0.6rem 1.25rem;
       color: #fff;
+      text-decoration: none;
       font-size: 0.8rem;
       font-weight: 700;
-      text-decoration: none;
-      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-      text-align: center;
-      max-width: 90vw;
+      letter-spacing: 0.02em;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    .academy-link:hover {
-      transform: translateY(-2px) scale(1.01);
-      border-color: var(--bills-neon);
-      background: linear-gradient(135deg, rgba(0, 51, 141, 0.75) 0%, rgba(198, 12, 48, 0.75) 100%);
+    .academy-pill:hover {
+      transform: translateY(-2px);
+      border-color: var(--bills-cyan);
+      box-shadow: 0 8px 24px rgba(56, 189, 248, 0.25);
     }
 
-    .academy-badge {
-      background: rgba(255, 255, 255, 0.15);
+    .academy-tag {
+      background: rgba(255, 255, 255, 0.2);
       font-size: 0.65rem;
+      text-transform: uppercase;
       padding: 0.15rem 0.45rem;
       border-radius: 4px;
-      text-transform: uppercase;
       letter-spacing: 0.05em;
     }
 
-    /* BENTO CONSOLE GRID */
-    .portal-grid {
+    /* GRID ARCHITECTURE */
+    .hud-grid {
       display: grid;
       grid-template-columns: 1fr;
       gap: 1.5rem;
     }
 
-    .hub-panel {
-      background: var(--surface-glass);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid var(--border-subtle);
-      border-radius: 20px;
-      padding: 1.5rem;
-      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4);
+    .hud-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 1.75rem;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
     }
 
-    .panel-bills {
-      border-top: 3px solid var(--bills-crimson);
-      background: linear-gradient(180deg, rgba(0, 51, 141, 0.14) 0%, var(--surface-glass) 30%);
+    /* HERO BILLS CARD */
+    .hud-card-bills {
+      border-top: 3px solid var(--bills-red);
+      background: linear-gradient(180deg, rgba(0, 51, 141, 0.18) 0%, var(--card-bg) 40%);
     }
 
-    .panel-sabres {
-      border-top: 3px solid var(--sabres-gold);
-      background: linear-gradient(180deg, rgba(252, 181, 20, 0.1) 0%, var(--surface-glass) 30%);
-    }
-
-    .hub-header {
+    .card-eyebrow {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 1.25rem;
     }
 
-    .team-identity {
+    .team-badge-group {
       display: flex;
-      align-items: center;
+      align-items: baseline;
       gap: 0.6rem;
     }
 
-    .team-name {
-      font-size: 1.4rem;
+    .team-title {
+      font-size: 1.6rem;
       font-weight: 900;
-      letter-spacing: -0.02em;
+      letter-spacing: -0.03em;
     }
 
-    .tier-badge {
-      font-size: 0.65rem;
+    .status-capsule {
+      font-size: 0.68rem;
       font-weight: 800;
-      text-transform: uppercase;
       letter-spacing: 0.08em;
+      text-transform: uppercase;
       padding: 0.25rem 0.6rem;
       border-radius: 6px;
-    }
-
-    .tier-bills {
-      background: rgba(56, 189, 248, 0.15);
-      color: var(--bills-neon);
+      background: rgba(56, 189, 248, 0.12);
+      color: var(--bills-cyan);
       border: 1px solid rgba(56, 189, 248, 0.25);
     }
 
-    .tier-sabres {
-      background: rgba(252, 181, 20, 0.15);
-      color: var(--sabres-gold);
-      border: 1px solid rgba(252, 181, 20, 0.3);
-    }
-
-    .stat-matrix {
+    /* ASYMMETRIC BILLS METRIC COCKPIT */
+    .bills-cockpit {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 0.65rem;
-      margin-bottom: 1.25rem;
+      grid-template-columns: 1.3fr 1fr 1fr;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
     }
 
-    .stat-pod {
-      background: var(--surface-sub);
+    @media (max-width: 600px) {
+      .bills-cockpit {
+        grid-template-columns: 1fr 1fr;
+      }
+      .cockpit-hero {
+        grid-column: span 2;
+      }
+    }
+
+    .cockpit-box {
+      background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(255, 255, 255, 0.04);
-      border-radius: 12px;
-      padding: 0.85rem 0.5rem;
+      border-radius: 16px;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
       text-align: center;
+      position: relative;
     }
 
-    .stat-value {
-      font-size: 1.45rem;
-      font-weight: 800;
-      color: #fff;
+    .cockpit-hero {
+      background: linear-gradient(135deg, rgba(0, 51, 141, 0.35) 0%, rgba(56, 189, 248, 0.08) 100%);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+    }
+
+    .hero-number {
+      font-size: 2.6rem;
+      font-weight: 900;
       line-height: 1;
+      color: #fff;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -0.04em;
+    }
+
+    .metric-number {
+      font-size: 1.6rem;
+      font-weight: 800;
+      line-height: 1.1;
+      color: #fff;
       font-variant-numeric: tabular-nums;
     }
 
-    .stat-tag {
-      font-size: 0.65rem;
+    .metric-caption {
+      font-size: 0.68rem;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--text-sec);
+      letter-spacing: 0.08em;
+      color: var(--text-dim);
       margin-top: 0.4rem;
     }
 
-    .command-cta {
+    /* LAUNCH PROTOCOL BUTTON */
+    .cockpit-action {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: linear-gradient(135deg, rgba(0, 51, 141, 0.7), rgba(198, 12, 48, 0.7));
-      border: 1px solid rgba(56, 189, 248, 0.4);
+      background: linear-gradient(90deg, #00338D 0%, #C60C30 100%);
       color: #fff;
       text-decoration: none;
-      padding: 0.95rem 1.25rem;
-      border-radius: 12px;
+      padding: 1rem 1.35rem;
+      border-radius: 14px;
       font-weight: 800;
       font-size: 0.85rem;
-      letter-spacing: 0.03em;
+      letter-spacing: 0.05em;
       text-transform: uppercase;
-      transition: all 0.25s ease;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+      transition: all 0.2s ease;
+      box-shadow: 0 8px 24px rgba(198, 12, 48, 0.25);
     }
 
-    .command-cta:hover {
-      background: linear-gradient(135deg, rgba(0, 51, 141, 0.95), rgba(198, 12, 48, 0.95));
-      border-color: var(--bills-neon);
+    .cockpit-action:hover {
       transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(198, 12, 48, 0.45);
     }
 
-    .module-heading {
-      font-size: 0.7rem;
+    /* SABRES INTELLIGENCE PANEL */
+    .hud-card-sabres {
+      border-top: 3px solid var(--sabres-gold);
+      background: linear-gradient(180deg, rgba(252, 181, 20, 0.1) 0%, var(--card-bg) 40%);
+    }
+
+    .status-capsule-sabres {
+      background: rgba(252, 181, 20, 0.12);
+      color: var(--sabres-gold);
+      border: 1px solid rgba(252, 181, 20, 0.25);
+    }
+
+    .sabres-cockpit {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.6rem;
+      margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 600px) {
+      .sabres-cockpit {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .section-eyebrow {
+      font-size: 0.68rem;
       font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.1em;
       color: var(--text-muted);
-      margin-bottom: 0.65rem;
+      margin-bottom: 0.75rem;
     }
 
-    .radar-grid {
+    /* RADAR PODS */
+    .division-radar {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 0.5rem;
-      margin-bottom: 1.25rem;
+      margin-bottom: 1.5rem;
     }
 
-    .radar-card {
-      background: var(--surface-sub);
+    .radar-pod {
+      background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(255, 255, 255, 0.04);
-      border-radius: 8px;
-      padding: 0.5rem;
+      border-radius: 10px;
+      padding: 0.6rem 0.4rem;
       text-align: center;
     }
 
-    .radar-team-lbl {
+    .radar-name {
       font-size: 0.72rem;
       font-weight: 700;
-      color: #e2e8f0;
+      color: #cbd5e1;
     }
 
-    .radar-rate {
-      font-size: 0.95rem;
-      font-weight: 800;
+    .radar-pct {
+      font-size: 1rem;
+      font-weight: 900;
       color: var(--sabres-gold);
       margin-top: 0.2rem;
     }
 
+    /* PROGRESS METERS */
     .meter-stack {
       display: flex;
       flex-direction: column;
-      gap: 0.45rem;
-      margin-bottom: 1.25rem;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
     }
 
-    .meter-row {
+    .meter-rail {
       display: flex;
       align-items: center;
       font-size: 0.78rem;
     }
 
-    .meter-key {
+    .meter-label {
       width: 90px;
-      color: var(--text-sec);
-      font-weight: 500;
+      color: var(--text-dim);
+      font-weight: 600;
     }
 
-    .meter-trough {
+    .meter-track {
       flex: 1;
-      height: 6px;
-      background: rgba(255, 255, 255, 0.06);
-      border-radius: 999px;
+      height: 7px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 9999px;
       overflow: hidden;
-      margin: 0 0.65rem;
+      margin: 0 0.75rem;
     }
 
-    .meter-fill {
+    .meter-bar {
       height: 100%;
-      background: var(--sabres-gold);
-      border-radius: 999px;
+      background: linear-gradient(90deg, #FCB514 0%, #f59e0b 100%);
+      border-radius: 9999px;
+      transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .meter-val {
-      width: 35px;
+      width: 36px;
       text-align: right;
-      font-weight: 700;
+      font-weight: 800;
       font-variant-numeric: tabular-nums;
     }
 
-    .chip-cluster {
+    /* OPPONENT CAPSULES */
+    .opponent-deck {
       display: flex;
       flex-wrap: wrap;
       gap: 0.5rem;
     }
 
-    .chip-item {
-      background: var(--surface-sub);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      padding: 0.4rem 0.75rem;
-      border-radius: 8px;
-      font-size: 0.78rem;
+    .opponent-chip {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 0.45rem 0.8rem;
+      border-radius: 10px;
+      font-size: 0.8rem;
       font-weight: 600;
       display: flex;
       align-items: center;
-      gap: 0.4rem;
+      gap: 0.5rem;
     }
 
-    .chip-prob {
+    .chip-pct {
       font-weight: 800;
       color: var(--sabres-gold);
     }
@@ -382,102 +419,97 @@
 </head>
 <body>
 
-  <div class="wrapper">
-    <header>
-      <div class="brand-eyebrow">
-        <span class="pulse-dot"></span>
-        <span>Telemetry Live Engine</span>
+  <div class="shell">
+    <!-- TELEMETRY MASTER BAR -->
+    <div class="telemetry-bar">
+      <div class="brand-cluster">
+        <span class="radar-ping"></span>
+        <span>One Buffalo Live Portal</span>
       </div>
-      <h1>ONE BUFFALO</h1>
-      <div class="meta-time">
-        <span id="update-status">Connecting to cluster...</span>
-      </div>
-    </header>
+      <div class="timestamp" id="update-status">Ingesting feeds...</div>
+    </div>
 
-    <div class="academy-banner">
-      <a href="https://youtu.be/s33Te8CpEPU?is=NhuZtRpQ5-AoV2Nh" target="_blank" rel="noopener noreferrer" class="academy-link">
+    <!-- TRE'DAVIOUS WHITE GOALIE ACADEMY -->
+    <div class="academy-marquee">
+      <a href="https://youtu.be/s33Te8CpEPU?is=NhuZtRpQ5-AoV2Nh" target="_blank" rel="noopener noreferrer" class="academy-pill">
         <span>🥅</span>
         <span>The Tre’Davious White Goalie Academy of Louisiana at Buffalo</span>
-        <span class="academy-badge">Watch</span>
+        <span class="academy-tag">Stream</span>
       </a>
     </div>
 
-    <main class="portal-grid">
-      <!-- BUFFALO BILLS -->
-      <section class="hub-panel panel-bills">
-        <div class="hub-header">
-          <div class="team-identity">
-            <span class="team-name" style="color: #fff;">Buffalo Bills</span>
+    <main class="hud-grid">
+      <!-- BUFFALO BILLS HUD -->
+      <section class="hud-card hud-card-bills">
+        <div class="card-eyebrow">
+          <div class="team-badge-group">
+            <span class="team-title" style="color: #fff;">Buffalo Bills</span>
           </div>
-          <span class="tier-badge tier-bills">AFC Contender</span>
+          <span class="status-capsule">AFC Contender</span>
         </div>
 
-        <div class="stat-matrix">
-          <div class="stat-pod">
-            <div class="stat-value" id="bills-playoff-pct">--%</div>
-            <div class="stat-tag">Playoffs</div>
+        <div class="bills-cockpit">
+          <div class="cockpit-box cockpit-hero">
+            <div class="hero-number" id="bills-playoff-pct">--%</div>
+            <div class="metric-caption" style="color: var(--bills-cyan);">Playoff Lock</div>
           </div>
-          <div class="stat-pod">
-            <div class="stat-value" id="bills-div-pct">--%</div>
-            <div class="stat-tag">AFC East</div>
+          <div class="cockpit-box">
+            <div class="metric-number" id="bills-div-pct">--%</div>
+            <div class="metric-caption">AFC East</div>
           </div>
-          <div class="stat-pod">
-            <div class="stat-value" id="bills-bye-pct">--%</div>
-            <div class="stat-tag">#1 Bye</div>
-          </div>
-          <div class="stat-pod">
-            <div class="stat-value" id="bills-magic-num" style="color: var(--bills-neon);">--</div>
-            <div class="stat-tag">Magic #</div>
+          <div class="cockpit-box">
+            <div class="metric-number" id="bills-bye-pct">--%</div>
+            <div class="metric-caption">#1 Seed Bye</div>
           </div>
         </div>
 
-        <a href="./bills.html" class="command-cta">
+        <a href="./bills.html" class="cockpit-action">
           <span>Launch Bills Command Center</span>
           <span>→</span>
         </a>
       </section>
 
-      <!-- BUFFALO SABRES -->
-      <section class="hub-panel panel-sabres">
-        <div class="hub-header">
-          <div class="team-identity">
-            <span class="team-name" style="color: #fff;">Buffalo Sabres</span>
+      <!-- BUFFALO SABRES HUD -->
+      <section class="hud-card hud-card-sabres">
+        <div class="card-eyebrow">
+          <div class="team-badge-group">
+            <span class="team-title" style="color: #fff;">Buffalo Sabres</span>
           </div>
-          <span class="tier-badge tier-sabres">Wildcard Race</span>
+          <span class="status-capsule status-capsule-sabres">Wildcard Race</span>
         </div>
 
-        <div class="stat-matrix">
-          <div class="stat-pod">
-            <div class="stat-value" id="sabres-playoff-pct">--%</div>
-            <div class="stat-tag">Playoffs</div>
+        <div class="sabres-cockpit">
+          <div class="cockpit-box">
+            <div class="metric-number" id="sabres-playoff-pct">--%</div>
+            <div class="metric-caption">Playoffs</div>
           </div>
-          <div class="stat-pod">
-            <div class="stat-value" id="sabres-div-pct">--%</div>
-            <div class="stat-tag">Atlantic</div>
+          <div class="cockpit-box">
+            <div class="metric-number" id="sabres-div-pct">--%</div>
+            <div class="metric-caption">Atlantic</div>
           </div>
-          <div class="stat-pod">
-            <div class="stat-value" id="sabres-wc-pct">--%</div>
-            <div class="stat-tag">Wildcard</div>
+          <div class="cockpit-box">
+            <div class="metric-number" id="sabres-wc-pct">--%</div>
+            <div class="metric-caption">Wildcard</div>
           </div>
-          <div class="stat-pod">
-            <div class="stat-value" id="sabres-tragic-num" style="font-size: 1.1rem; line-height: 1.35;">--</div>
-            <div class="stat-tag">Target</div>
+          <div class="cockpit-box">
+            <div class="metric-number" id="sabres-tragic-num" style="font-size: 1.15rem; line-height: 1.35;">--</div>
+            <div class="metric-caption">Target Pace</div>
           </div>
-        </div>
-
-        <div>
-          <div class="module-heading">Atlantic Division Radar</div>
-          <div class="radar-grid" id="sabres-radar"></div>
         </div>
 
         <div>
-          <div class="module-heading">Seeding Probabilities</div>
+          <div class="section-eyebrow">Atlantic Division Contenders</div>
+          <div class="division-radar" id="sabres-radar"></div>
+        </div>
+
+        <div>
+          <div class="section-eyebrow">Seeding Matrix Probabilities</div>
           <div class="meter-stack" id="sabres-distribution"></div>
         </div>
 
         <div>
-          <div class="module-heading">Projected 1st Round Opponents</div>
-          <div class="chip-cluster" id="sabres-opponents"></div>
+          <div class="section-eyebrow">Likely 1st Round Opponents</div>
+          <div class="opponent-deck" id="sabres-opponents"></div>
         </div>
       </section>
     </main>
@@ -490,26 +522,25 @@
 
       try {
         const res = await fetch('./data.json?v=' + Date.now(), { cache: 'no-store' });
-        if (!res.ok) throw new Error('data.json payload unreachable');
+        if (!res.ok) throw new Error('data.json offline');
         data = await res.json();
       } catch (err) {
-        console.warn('Fallback activated:', err);
+        console.warn('Scraper stream fallback:', err);
         return;
       }
 
       const dateStr = new Date(data.updatedAt).toLocaleDateString(undefined, {
         month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
       });
-      statusEl.textContent = `Updated: ${dateStr}`;
+      statusEl.textContent = `Live Synced: ${dateStr}`;
 
-      // Bills
+      // Bills Elements
       const b = data.bills;
       document.getElementById('bills-playoff-pct').textContent = `${b.makePlayoffs}%`;
       document.getElementById('bills-div-pct').textContent = `${b.winDivision}%`;
       document.getElementById('bills-bye-pct').textContent = `${b.seed1}%`;
-      document.getElementById('bills-magic-num').textContent = b.magicNumber || '--';
 
-      // Sabres
+      // Sabres Elements
       const s = data.sabres;
       document.getElementById('sabres-playoff-pct').textContent = `${s.makePlayoffs}%`;
       document.getElementById('sabres-div-pct').textContent = `${s.winDivision}%`;
@@ -517,30 +548,31 @@
       document.getElementById('sabres-tragic-num').textContent = s.tragicNumber || '92 Pts';
 
       document.getElementById('sabres-radar').innerHTML = s.divisionRadar.map(r => `
-        <div class="radar-card">
-          <div class="radar-team-lbl">${r.team}</div>
-          <div class="radar-rate">${r.pct}%</div>
+        <div class="radar-pod">
+          <div class="radar-name">${r.team}</div>
+          <div class="radar-pct">${r.pct}%</div>
         </div>
       `).join('');
 
       document.getElementById('sabres-distribution').innerHTML = s.seedDistribution.map(item => `
-        <div class="meter-row">
-          <span class="meter-key">${item.seed}</span>
-          <div class="meter-trough">
-            <div class="meter-fill" style="width: ${item.pct}%"></div>
+        <div class="meter-rail">
+          <span class="meter-label">${item.seed}</span>
+          <div class="meter-track">
+            <div class="meter-bar" style="width: ${item.pct}%"></div>
           </div>
           <span class="meter-val">${item.pct}%</span>
         </div>
       `).join('');
 
       document.getElementById('sabres-opponents').innerHTML = s.opponents.map(o => `
-        <div class="chip-item">
+        <div class="opponent-chip">
           <span>${o.team}</span>
-          <span class="chip-prob">${o.pct}%</span>
+          <span class="chip-pct">${o.pct}%</span>
         </div>
       `).join('');
     }
 
+    // Foreground wake triggers for iOS WebKit PWA containers
     window.addEventListener('pageshow', () => { loadData(); });
     setInterval(loadData, 5 * 60 * 1000);
     document.addEventListener('DOMContentLoaded', loadData);
