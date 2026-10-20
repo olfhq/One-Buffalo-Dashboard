@@ -14,23 +14,16 @@
   <meta name="apple-mobile-web-app-title" content="One Buffalo">
   <meta name="theme-color" content="#090d16">
 
-  <!-- OpenGraph Metadata -->
-  <meta property="og:title" content="One Buffalo Tracker">
-  <meta property="og:description" content="Live postseason odds, matchup intelligence, and rooting guides for Buffalo sports.">
-  <meta property="og:url" content="https://onebuffalotracker.fyi/">
-  <meta property="og:type" content="website">
-
-    <!-- Vector & App Icons -->
+  <!-- App Icons -->
   <link rel="apple-touch-icon" href="./icon-192.png">
   <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png">
 
-  <title>One Buffalo Tracker</title>
+  <title>One Buffalo Sports Tracker</title>
   <style>
     :root {
       --bills-blue: #00338D;
       --bills-red: #C60C30;
-      --sabres-blue: #002654;
       --sabres-gold: #FCB514;
       --bg-dark: #090d16;
       --card-bg: #141c2c;
@@ -54,11 +47,11 @@
 
     header {
       text-align: center;
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
     }
 
     h1 {
-      font-size: 2.2rem;
+      font-size: 2.1rem;
       font-weight: 800;
       letter-spacing: -0.5px;
       margin-bottom: 0.25rem;
@@ -72,16 +65,46 @@
       color: var(--text-muted);
     }
 
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1.5rem;
+    /* PROMOTIONAL PILL BANNER */
+    .academy-banner-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1.75rem;
     }
 
-    @media (min-width: 900px) {
-      .container { grid-template-columns: 1fr 1fr; }
+    .academy-pill-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 0.5rem;
+      background: linear-gradient(135deg, rgba(0, 51, 141, 0.75), rgba(198, 12, 48, 0.75));
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      color: #fff;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 800;
+      padding: 0.65rem 1.35rem;
+      border-radius: 9999px;
+      letter-spacing: 0.3px;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+      max-width: 90vw;
+    }
+
+    .academy-pill-btn:hover {
+      background: linear-gradient(135deg, rgba(0, 51, 141, 0.95), rgba(198, 12, 48, 0.95));
+      border-color: var(--accent-blue);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
+    }
+
+    .container {
+      max-width: 840px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1.75rem;
     }
 
     .card {
@@ -102,134 +125,47 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid var(--card-border);
-      padding-bottom: 0.75rem;
     }
 
-    .card-header h2 { font-size: 1.35rem; font-weight: 800; }
-    .badge {
+    .team-title {
+      font-size: 1.35rem;
+      font-weight: 800;
+    }
+
+    .status-badge {
       font-size: 0.75rem;
       font-weight: 700;
-      padding: 0.2rem 0.5rem;
-      border-radius: 4px;
+      padding: 0.2rem 0.55rem;
+      border-radius: 5px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
-    .badge-bills { background: rgba(198, 12, 48, 0.2); color: #f87171; border: 1px solid rgba(198, 12, 48, 0.4); }
-    .badge-sabres { background: rgba(252, 181, 20, 0.2); color: #fbbf24; border: 1px solid rgba(252, 181, 20, 0.4); }
 
-    /* STAKES / NEXT GAME BANNER */
-    .stakes-banner {
-      background: var(--card-inner);
-      border: 1px solid var(--card-border);
-      border-radius: 10px;
-      padding: 1rem 1.1rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.85rem;
-    }
+    .badge-in { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .badge-hunt { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
 
-    .stakes-top-row {
+    .hub-launch-btn {
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
-      gap: 0.75rem;
-    }
-
-    .matchup-main { display: flex; flex-direction: column; gap: 0.2rem; }
-    .matchup-prefix {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      font-weight: 700;
-      color: var(--text-muted);
-      letter-spacing: 0.5px;
-    }
-    .matchup-opp { font-size: 1.25rem; font-weight: 800; color: #fff; }
-    .matchup-records-line { font-size: 0.82rem; color: #cbd5e1; font-weight: 500; }
-
-    .schedule-tag {
-      font-size: 0.75rem;
-      color: var(--accent-blue);
-      font-weight: 600;
-      margin-top: 0.25rem;
-      display: flex;
       align-items: center;
-      gap: 0.45rem;
-      flex-wrap: wrap;
-    }
-
-    .tv-badge {
-      font-size: 0.65rem;
-      font-weight: 800;
-      letter-spacing: 0.5px;
-      padding: 0.1rem 0.4rem;
-      border-radius: 4px;
-      background: rgba(56, 189, 248, 0.15);
+      background: linear-gradient(135deg, rgba(0, 51, 141, 0.65), rgba(198, 12, 48, 0.65));
       border: 1px solid rgba(56, 189, 248, 0.35);
-      color: var(--accent-blue);
-      text-transform: uppercase;
-    }
-
-    .countdown-box {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.07);
-      border-radius: 8px;
-      padding: 0.4rem 0.8rem;
-      min-width: 105px;
-      flex-shrink: 0;
-    }
-    .countdown-val {
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      color: #fff;
+      text-decoration: none;
+      font-size: 0.85rem;
       font-weight: 800;
-      font-size: 0.95rem;
+      padding: 0.8rem 1rem;
+      border-radius: 9px;
       letter-spacing: 0.5px;
-      color: var(--accent-blue);
-    }
-    .countdown-label {
-      font-size: 0.65rem;
       text-transform: uppercase;
-      color: var(--text-muted);
-      letter-spacing: 0.5px;
-      margin-top: 0.1rem;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
     }
 
-    .stakes-bottom-row {
-      display: grid;
-      grid-template-columns: 1fr 1.6fr;
-      gap: 0.75rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.07);
-      padding-top: 0.75rem;
-      align-items: center;
-    }
-
-    .metric-panel { display: flex; flex-direction: column; gap: 0.25rem; }
-    .metric-label {
-      font-size: 0.65rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: var(--text-muted);
-      font-weight: 700;
-    }
-    .win-chance-value { font-size: 1.15rem; font-weight: 800; color: #34d399; line-height: 1.1; }
-
-    .impact-badges-group { display: flex; gap: 0.35rem; align-items: center; flex-wrap: nowrap; }
-    .pill {
-      font-size: 0.75rem;
-      padding: 0.22rem 0.5rem;
-      border-radius: 5px;
-      font-weight: 700;
-      white-space: nowrap;
-    }
-    .pill-win { background: rgba(16, 185, 129, 0.18); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
-    .pill-loss { background: rgba(239, 68, 68, 0.18); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
-    .pill-swing {
-      background: rgba(56, 189, 248, 0.15);
-      color: var(--accent-blue);
-      border: 1px solid rgba(56, 189, 248, 0.3);
+    .hub-launch-btn:hover {
+      background: linear-gradient(135deg, rgba(0, 51, 141, 0.9), rgba(198, 12, 48, 0.9));
+      border-color: var(--accent-blue);
+      transform: translateY(-1px);
     }
 
     .stat-row {
@@ -238,19 +174,16 @@
       gap: 0.5rem;
       text-align: center;
     }
+
     .stat-box {
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(255, 255, 255, 0.05);
       padding: 0.6rem 0.3rem;
       border-radius: 8px;
     }
+
     .stat-val { font-size: 1.35rem; font-weight: 800; color: #fff; }
-    .stat-label {
-      font-size: 0.7rem;
-      color: var(--text-muted);
-      margin-top: 0.2rem;
-      text-transform: uppercase;
-    }
+    .stat-label { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.2rem; text-transform: uppercase; }
 
     .section-subtitle {
       font-size: 0.8rem;
@@ -259,49 +192,7 @@
       letter-spacing: 0.5px;
       color: var(--text-muted);
       margin-bottom: 0.5rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
     }
-
-    /* HUB LAUNCH BUTTON */
-    .hub-link-btn {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 0.5rem;
-      background: linear-gradient(135deg, rgba(0, 51, 141, 0.6), rgba(198, 12, 48, 0.6));
-      border: 1px solid rgba(56, 189, 248, 0.3);
-      color: #fff;
-      text-decoration: none;
-      font-size: 0.85rem;
-      font-weight: 800;
-      padding: 0.85rem 1rem;
-      border-radius: 8px;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-      transition: all 0.2s ease;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    }
-    .hub-link-btn:hover {
-      background: linear-gradient(135deg, rgba(0, 51, 141, 0.85), rgba(198, 12, 48, 0.85));
-      border-color: var(--accent-blue);
-      transform: translateY(-1px);
-    }
-
-    /* SABRES CLASSIC SECTIONS (LEFT AS-IS) */
-    .radar-wrap { display: flex; gap: 0.5rem; }
-    .radar-item {
-      flex: 1;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid var(--card-border);
-      border-radius: 6px;
-      padding: 0.45rem;
-      text-align: center;
-      font-size: 0.75rem;
-    }
-    .radar-team { font-weight: 700; color: #e2e8f0; }
-    .radar-val { font-size: 0.95rem; font-weight: 800; color: var(--accent-blue); margin-top: 0.1rem; }
 
     .dist-bar-wrap { display: flex; flex-direction: column; gap: 0.4rem; }
     .dist-row { display: flex; align-items: center; font-size: 0.8rem; }
@@ -317,6 +208,19 @@
     .dist-fill-sabres { height: 100%; background: var(--sabres-gold); border-radius: 4px; }
     .dist-pct { width: 35px; text-align: right; font-weight: 600; }
 
+    .radar-wrap { display: flex; gap: 0.5rem; }
+    .radar-item {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--card-border);
+      border-radius: 6px;
+      padding: 0.45rem;
+      text-align: center;
+      font-size: 0.75rem;
+    }
+    .radar-team { font-weight: 700; color: #e2e8f0; }
+    .radar-val { font-size: 0.95rem; font-weight: 800; color: var(--sabres-gold); margin-top: 0.1rem; }
+
     .opponent-chips { display: flex; gap: 0.5rem; flex-wrap: wrap; }
     .opp-chip {
       background: rgba(255, 255, 255, 0.04);
@@ -325,25 +229,7 @@
       border-radius: 6px;
       font-size: 0.8rem;
     }
-    .opp-pct { font-weight: 700; color: #f59e0b; margin-left: 0.3rem; }
-
-    .rooting-item {
-      background: rgba(255, 255, 255, 0.02);
-      border-left: 3px solid var(--accent-green);
-      padding: 0.5rem 0.75rem;
-      margin-bottom: 0.4rem;
-      border-radius: 0 4px 4px 0;
-      font-size: 0.8rem;
-    }
-    .rooting-target { font-weight: 700; color: #e2e8f0; }
-    .rooting-why { color: var(--text-muted); font-size: 0.75rem; }
-
-    footer {
-      text-align: center;
-      margin-top: 2rem;
-      font-size: 0.75rem;
-      color: var(--text-muted);
-    }
+    .opp-pct { font-weight: 700; color: var(--sabres-gold); margin-left: 0.3rem; }
   </style>
 </head>
 <body>
@@ -351,55 +237,27 @@
   <header>
     <h1>ONE BUFFALO TRACKER</h1>
     <div class="meta-bar">
-      <span id="update-status">Loading latest data...</span>
+      <span id="update-status">Loading data...</span>
     </div>
   </header>
 
+  <!-- TEMPORARY PILL BANNER -->
+  <div class="academy-banner-wrap">
+    <a href="https://youtu.be/s33Te8CpEPU?is=NhuZtRpQ5-AoV2Nh" target="_blank" rel="noopener noreferrer" class="academy-pill-btn">
+      <span>🥅</span>
+      <span>The Tre’Davious White Goalie Academy of Louisiana at Buffalo</span>
+      <span style="opacity: 0.8;">↗</span>
+    </a>
+  </div>
+
   <main class="container">
     <!-- BUFFALO BILLS CARD -->
-    <article class="card card-bills">
+    <section class="card card-bills">
       <div class="card-header">
-        <h2>Buffalo Bills</h2>
-        <span class="badge badge-bills">AFC</span>
+        <span class="team-title" style="color: #38bdf8;">Buffalo Bills</span>
+        <span class="status-badge badge-in">AFC Contender</span>
       </div>
 
-      <!-- Next Matchup / Hero Banner -->
-      <div class="stakes-banner">
-        <div class="stakes-top-row">
-          <div class="matchup-main">
-            <div class="matchup-prefix">Next Matchup:</div>
-            <div class="matchup-opp" id="bills-next-opp">--</div>
-            <div class="matchup-records-line" id="bills-records">--</div>
-            <div class="schedule-tag">
-              <span id="bills-game-time">--</span>
-              <span class="tv-badge" id="bills-broadcast">--</span>
-            </div>
-          </div>
-
-          <div class="countdown-box">
-            <div class="countdown-val" id="bills-countdown">--:--:--</div>
-            <div class="countdown-label">Kickoff In</div>
-          </div>
-        </div>
-
-        <div class="stakes-bottom-row">
-          <div class="metric-panel">
-            <span class="metric-label">Game Win Chance</span>
-            <span class="win-chance-value" id="bills-win-chance">--%</span>
-          </div>
-
-          <div class="metric-panel" style="align-items: flex-end;">
-            <span class="metric-label">Playoff Leverage Impact</span>
-            <div class="impact-badges-group">
-              <span class="pill pill-win" id="bills-if-win">Win: --%</span>
-              <span class="pill pill-loss" id="bills-if-loss">Loss: --%</span>
-              <span class="pill pill-swing" id="bills-leverage">±--%</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Top-line Postseason Probabilities -->
       <div class="stat-row">
         <div class="stat-box">
           <div class="stat-val" id="bills-playoff-pct">--%</div>
@@ -419,52 +277,17 @@
         </div>
       </div>
 
-      <!-- Doorway to Dedicated Hub -->
-      <a href="./bills.html" class="hub-link-btn">
-        Open Bills Hub →
+      <a href="./bills.html" class="hub-launch-btn">
+        <span>Open Bills Command Center</span>
+        <span>→</span>
       </a>
-    </article>
+    </section>
 
-    <!-- BUFFALO SABRES CARD (LEFT AS-IS, NO BUTTON) -->
-    <article class="card card-sabres">
+    <!-- BUFFALO SABRES CARD -->
+    <section class="card card-sabres">
       <div class="card-header">
-        <h2>Buffalo Sabres</h2>
-        <span class="badge badge-sabres">NHL</span>
-      </div>
-
-      <div class="stakes-banner">
-        <div class="stakes-top-row">
-          <div class="matchup-main">
-            <div class="matchup-prefix">Next Matchup:</div>
-            <div class="matchup-opp" id="sabres-next-opp">--</div>
-            <div class="matchup-records-line" id="sabres-records">--</div>
-            <div class="schedule-tag">
-              <span id="sabres-game-time">--</span>
-              <span class="tv-badge" id="sabres-broadcast">MSG-B</span>
-            </div>
-          </div>
-
-          <div class="countdown-box">
-            <div class="countdown-val" id="sabres-countdown">--:--:--</div>
-            <div class="countdown-label">Puck Drop In</div>
-          </div>
-        </div>
-
-        <div class="stakes-bottom-row">
-          <div class="metric-panel">
-            <span class="metric-label">Game Win Chance</span>
-            <span class="win-chance-value" id="sabres-win-chance">--%</span>
-          </div>
-
-          <div class="metric-panel" style="align-items: flex-end;">
-            <span class="metric-label">Playoff Leverage Impact</span>
-            <div class="impact-badges-group">
-              <span class="pill pill-win" id="sabres-if-win">Win: --%</span>
-              <span class="pill pill-loss" id="sabres-if-loss">Loss: --%</span>
-              <span class="pill pill-swing" id="sabres-leverage">±--%</span>
-            </div>
-          </div>
-        </div>
+        <span class="team-title" style="color: var(--sabres-gold);">Buffalo Sabres</span>
+        <span class="status-badge badge-hunt">Wildcard Hunt</span>
       </div>
 
       <div class="stat-row">
@@ -477,12 +300,12 @@
           <div class="stat-label">Atlantic</div>
         </div>
         <div class="stat-box">
-          <div class="stat-val" id="sabres-wildcard-pct">--%</div>
+          <div class="stat-val" id="sabres-wc-pct">--%</div>
           <div class="stat-label">Wildcard</div>
         </div>
         <div class="stat-box">
-          <div class="stat-val" id="sabres-tragic-num" style="font-size: 0.95rem; margin-top: 0.2rem; color: #fbbf24;">--</div>
-          <div class="stat-label">Target</div>
+          <div class="stat-val" id="sabres-tragic-num" style="font-size: 0.95rem; line-height: 1.8;">--</div>
+          <div class="stat-label">Pace Target</div>
         </div>
       </div>
 
@@ -492,58 +315,18 @@
       </div>
 
       <div>
-        <div class="section-subtitle">Playoff Seeding Distribution</div>
+        <div class="section-subtitle">Seeding Distribution</div>
         <div class="dist-bar-wrap" id="sabres-distribution"></div>
       </div>
 
       <div>
-        <div class="section-subtitle">Likely 1st Round Matchups</div>
+        <div class="section-subtitle">Projected 1st Round Opponents</div>
         <div class="opponent-chips" id="sabres-opponents"></div>
       </div>
-
-      <div>
-        <div class="section-subtitle">Out-of-Town Rooting Targets</div>
-        <div id="sabres-rooting-container"></div>
-      </div>
-    </article>
+    </section>
   </main>
 
-  <footer>
-    <p>Powered by PlayoffStatus.com calculations & ESPN live score feeds.</p>
-  </footer>
-
   <script>
-    function startCountdown(elementId, targetIso) {
-      const el = document.getElementById(elementId);
-      if (!el || !targetIso) return;
-
-      function update() {
-        const diff = new Date(targetIso).getTime() - Date.now();
-        if (diff <= 0) {
-          el.textContent = "LIVE NOW";
-          el.style.color = "#10b981";
-          return;
-        }
-
-        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-        const mins = Math.floor((diff / 1000 / 60) % 60);
-        const secs = Math.floor((diff / 1000) % 60);
-
-        if (days > 0) {
-          el.textContent = `${days}d ${hours}h ${mins}m`;
-        } else {
-          const hh = String(hours).padStart(2, '0');
-          const mm = String(mins).padStart(2, '0');
-          const ss = String(secs).padStart(2, '0');
-          el.textContent = `${hh}:${mm}:${ss}`;
-        }
-      }
-
-      update();
-      setInterval(update, 1000);
-    }
-
     async function loadData() {
       const statusEl = document.getElementById('update-status');
       let data = null;
@@ -562,49 +345,19 @@
       });
       statusEl.textContent = `Updated: ${dateStr}`;
 
-      // Populate Bills Core Card
+      // Bills Summary Card
       const b = data.bills;
       document.getElementById('bills-playoff-pct').textContent = `${b.makePlayoffs}%`;
       document.getElementById('bills-div-pct').textContent = `${b.winDivision}%`;
       document.getElementById('bills-bye-pct').textContent = `${b.seed1}%`;
       document.getElementById('bills-magic-num').textContent = b.magicNumber || '--';
 
-      document.getElementById('bills-next-opp').textContent = b.nextGame.opponent;
-      document.getElementById('bills-game-time').textContent = b.nextGame.gameTime || '';
-      document.getElementById('bills-broadcast').textContent = b.nextGame.broadcast || 'CBS';
-      document.getElementById('bills-win-chance').textContent = `${b.nextGame.winChance || 68}%`;
-      document.getElementById('bills-records').textContent = b.nextGame.matchupRecords || '';
-      document.getElementById('bills-if-win').textContent = `Win: ${b.nextGame.ifWin}%`;
-      document.getElementById('bills-if-loss').textContent = `Loss: ${b.nextGame.ifLoss}%`;
-
-      const bLeverage = b.nextGame.leverage || (b.nextGame.ifWin - b.nextGame.ifLoss);
-      document.getElementById('bills-leverage').textContent = `±${bLeverage}%`;
-
-      if (b.nextGame.isoTime) {
-        startCountdown('bills-countdown', b.nextGame.isoTime);
-      }
-
-      // Populate Sabres Card (As-is)
+      // Sabres Full Card
       const s = data.sabres;
       document.getElementById('sabres-playoff-pct').textContent = `${s.makePlayoffs}%`;
       document.getElementById('sabres-div-pct').textContent = `${s.winDivision}%`;
-      document.getElementById('sabres-wildcard-pct').textContent = `${s.wildcard}%`;
-      document.getElementById('sabres-tragic-num').textContent = s.tragicNumber || 'Cutoff: 92 Pts';
-
-      document.getElementById('sabres-next-opp').textContent = s.nextGame.opponent;
-      document.getElementById('sabres-game-time').textContent = s.nextGame.gameTime || '';
-      document.getElementById('sabres-broadcast').textContent = s.nextGame.broadcast || 'MSG-B';
-      document.getElementById('sabres-win-chance').textContent = `${s.nextGame.winChance || 50}%`;
-      document.getElementById('sabres-records').textContent = s.nextGame.matchupRecords || '';
-      document.getElementById('sabres-if-win').textContent = `Win: ${s.nextGame.ifWin}%`;
-      document.getElementById('sabres-if-loss').textContent = `Loss: ${s.nextGame.ifLoss}%`;
-
-      const sLeverage = s.nextGame.leverage || (s.nextGame.ifWin - s.nextGame.ifLoss);
-      document.getElementById('sabres-leverage').textContent = `±${sLeverage}%`;
-
-      if (s.nextGame.isoTime) {
-        startCountdown('sabres-countdown', s.nextGame.isoTime);
-      }
+      document.getElementById('sabres-wc-pct').textContent = `${s.wildcard}%`;
+      document.getElementById('sabres-tragic-num').textContent = s.tragicNumber || '92 Pts';
 
       document.getElementById('sabres-radar').innerHTML = s.divisionRadar.map(r => `
         <div class="radar-item">
@@ -625,13 +378,6 @@
 
       document.getElementById('sabres-opponents').innerHTML = s.opponents.map(o => `
         <div class="opp-chip">${o.team} <span class="opp-pct">${o.pct}%</span></div>
-      `).join('');
-
-      document.getElementById('sabres-rooting-container').innerHTML = s.rootingGuide.map(r => `
-        <div class="rooting-item">
-          <div class="rooting-target">${r.target}</div>
-          <div class="rooting-why">${r.why}</div>
-        </div>
       `).join('');
     }
 
