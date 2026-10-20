@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-20T02:45:19.510Z",
+  "updatedAt": "2026-10-20T03:45:20.897Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
   "bills": {
     "team": "Buffalo Bills",
@@ -399,10 +399,10 @@
         "isoTime": "2026-10-20T00:15Z",
         "slot": "Mon, Oct 19 • 8:15 PM ET",
         "broadcast": "ESPN",
-        "statusState": "in",
-        "statusDetail": "9:26 - 4th",
+        "statusState": "post",
+        "statusDetail": "Final",
         "awayName": "Washington Commanders",
-        "awayScore": "10",
+        "awayScore": "17",
         "homeName": "San Francisco 49ers",
         "homeScore": "23",
         "verdict": "NEUTRAL",
