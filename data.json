@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-20T08:45:19.654Z",
+  "updatedAt": "2026-10-20T20:45:21.463Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
   "bills": {
     "team": "Buffalo Bills",
@@ -74,17 +74,17 @@
           "team": "Bills"
         },
         {
-          "player": "Ed Oliver",
-          "pos": "DT",
-          "status": "Out",
-          "injury": "Knee",
+          "player": "DJ Moore",
+          "pos": "WR",
+          "status": "Questionable",
+          "injury": "Shoulder - AC Joint",
           "team": "Bills"
         },
         {
-          "player": "DJ Moore",
-          "pos": "WR",
-          "status": "Out",
-          "injury": "Shoulder - AC Joint",
+          "player": "Ed Oliver",
+          "pos": "DT",
+          "status": "Questionable",
+          "injury": "Knee",
           "team": "Bills"
         },
         {
@@ -102,38 +102,38 @@
           "team": "Bills"
         },
         {
-          "player": "Rashod Bateman",
-          "pos": "WR",
+          "player": "Andrew Vorhees",
+          "pos": "G",
           "status": "Questionable",
-          "injury": "Shoulder",
-          "team": "Ravens"
-        },
-        {
-          "player": "Lamar Jackson",
-          "pos": "QB",
-          "status": "Out",
-          "injury": "Ankle",
+          "injury": "Foot",
           "team": "Ravens"
         },
         {
           "player": "Broderick Washington Jr.",
           "pos": "DT",
-          "status": "Out",
+          "status": "Questionable",
           "injury": "Ankle",
           "team": "Ravens"
         },
         {
           "player": "Cam Jurgens",
           "pos": "C",
-          "status": "Out",
+          "status": "Questionable",
           "injury": "Concussion",
           "team": "Ravens"
         },
         {
           "player": "Matt Hibner",
           "pos": "TE",
-          "status": "Out",
+          "status": "Questionable",
           "injury": "Hand",
+          "team": "Ravens"
+        },
+        {
+          "player": "Lamar Jackson",
+          "pos": "QB",
+          "status": "Questionable",
+          "injury": "Ankle",
           "team": "Ravens"
         }
       ]
