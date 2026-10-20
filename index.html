@@ -380,6 +380,13 @@
         <div class="opp-chip">${o.team} <span class="opp-pct">${o.pct}%</span></div>
       `).join('');
     }
+// Re-fetch data whenever the standalone PWA is brought to the foreground
+window.addEventListener('pageshow', (event) => {
+  loadData();
+});
+
+// Periodic background refresh every 5 minutes while open
+setInterval(loadData, 5 * 60 * 1000);
 
     document.addEventListener('DOMContentLoaded', loadData);
   </script>
