@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+
+  <!-- PWA & Mobile App Meta Tags -->
+  <link rel="manifest" href="./manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="One Buffalo">
+  <meta name="theme-color" content="#070a10">
+
+  <!-- App Icons -->
+  <link rel="apple-touch-icon" href="./icon-192.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png">
+
+  <title>One Buffalo Portal</title>
+  <style>
+    :root {
+      --bg: #070a10;
+      --surface-glass: rgba(14, 20, 32, 0.78);
+      --surface-sub: rgba(21, 30, 48, 0.6);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+
+      --bills-blue: #00338D;
+      --bills-crimson: #C60C30;
+      --bills-neon: #38bdf8;
+
+      --sabres-gold: #FCB514;
+      --sabres-navy: #041E42;
+
+      --text-pri: #f8fafc;
+      --text-sec: #94a3b8;
+      --text-muted: #64748b;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(0, 51, 141, 0.22) 0px, transparent 45%),
+        radial-gradient(at 100% 100%, rgba(252, 181, 20, 0.12) 0px, transparent 40%);
+      background-attachment: fixed;
+      color: var(--text-pri);
+      padding: 1.5rem 1rem 3rem 1rem;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .wrapper {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    /* HEADER */
+    header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      text-align: center;
+      padding: 0.5rem 0;
+    }
+
+    .brand-eyebrow {
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--bills-neon);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .pulse-dot {
+      width: 6px;
+      height: 6px;
+      background-color: #10b981;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #10b981;
+      animation: beacon 2s infinite cubic-bezier(0.4, 0, 0.6, 1);
+    }
+
+    @keyframes beacon {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    h1 {
+      font-size: 2.3rem;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1.1;
+      background: linear-gradient(135deg, #ffffff 30%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .meta-time {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* ACADEMY PROMOTIONAL PILL */
+    .academy-banner {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+
+    .academy-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: linear-gradient(135deg, rgba(0, 51, 141, 0.5) 0%, rgba(198, 12, 48, 0.5) 100%);
+      border: 1px solid rgba(56, 189, 248, 0.28);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 0.65rem 1.25rem;
+      border-radius: 9999px;
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-decoration: none;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      text-align: center;
+      max-width: 90vw;
+    }
+
+    .academy-link:hover {
+      transform: translateY(-2px) scale(1.01);
+      border-color: var(--bills-neon);
+      background: linear-gradient(135deg, rgba(0, 51, 141, 0.75) 0%, rgba(198, 12, 48, 0.75) 100%);
+    }
+
+    .academy-badge {
+      background: rgba(255, 255, 255, 0.15);
+      font-size: 0.65rem;
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* BENTO CONSOLE GRID */
+    .portal-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .hub-panel {
+      background: var(--surface-glass);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      padding: 1.5rem;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4);
+    }
+
+    .panel-bills {
+      border-top: 3px solid var(--bills-crimson);
+      background: linear-gradient(180deg, rgba(0, 51, 141, 0.14) 0%, var(--surface-glass) 30%);
+    }
+
+    .panel-sabres {
+      border-top: 3px solid var(--sabres-gold);
+      background: linear-gradient(180deg, rgba(252, 181, 20, 0.1) 0%, var(--surface-glass) 30%);
+    }
+
+    .hub-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+    }
+
+    .team-identity {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .team-name {
+      font-size: 1.4rem;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+    }
+
+    .tier-badge {
+      font-size: 0.65rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+    }
+
+    .tier-bills {
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--bills-neon);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+    }
+
+    .tier-sabres {
+      background: rgba(252, 181, 20, 0.15);
+      color: var(--sabres-gold);
+      border: 1px solid rgba(252, 181, 20, 0.3);
+    }
+
+    .stat-matrix {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.65rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .stat-pod {
+      background: var(--surface-sub);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 12px;
+      padding: 0.85rem 0.5rem;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .stat-tag {
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-sec);
+      margin-top: 0.4rem;
+    }
+
+    .command-cta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(135deg, rgba(0, 51, 141, 0.7), rgba(198, 12, 48, 0.7));
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      color: #fff;
+      text-decoration: none;
+      padding: 0.95rem 1.25rem;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 0.85rem;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+    }
+
+    .command-cta:hover {
+      background: linear-gradient(135deg, rgba(0, 51, 141, 0.95), rgba(198, 12, 48, 0.95));
+      border-color: var(--bills-neon);
+      transform: translateY(-2px);
+    }
+
+    .module-heading {
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 0.65rem;
+    }
+
+    .radar-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .radar-card {
+      background: var(--surface-sub);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 8px;
+      padding: 0.5rem;
+      text-align: center;
+    }
+
+    .radar-team-lbl {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #e2e8f0;
+    }
+
+    .radar-rate {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--sabres-gold);
+      margin-top: 0.2rem;
+    }
+
+    .meter-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .meter-row {
+      display: flex;
+      align-items: center;
+      font-size: 0.78rem;
+    }
+
+    .meter-key {
+      width: 90px;
+      color: var(--text-sec);
+      font-weight: 500;
+    }
+
+    .meter-trough {
+      flex: 1;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 0 0.65rem;
+    }
+
+    .meter-fill {
+      height: 100%;
+      background: var(--sabres-gold);
+      border-radius: 999px;
+    }
+
+    .meter-val {
+      width: 35px;
+      text-align: right;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .chip-cluster {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .chip-item {
+      background: var(--surface-sub);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 0.4rem 0.75rem;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .chip-prob {
+      font-weight: 800;
+      color: var(--sabres-gold);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="wrapper">
+    <header>
+      <div class="brand-eyebrow">
+        <span class="pulse-dot"></span>
+        <span>Telemetry Live Engine</span>
+      </div>
+      <h1>ONE BUFFALO</h1>
+      <div class="meta-time">
+        <span id="update-status">Connecting to cluster...</span>
+      </div>
+    </header>
+
+    <div class="academy-banner">
+      <a href="https://youtu.be/s33Te8CpEPU?is=NhuZtRpQ5-AoV2Nh" target="_blank" rel="noopener noreferrer" class="academy-link">
+        <span>🥅</span>
+        <span>The Tre’Davious White Goalie Academy of Louisiana at Buffalo</span>
+        <span class="academy-badge">Watch</span>
+      </a>
+    </div>
+
+    <main class="portal-grid">
+      <!-- BUFFALO BILLS -->
+      <section class="hub-panel panel-bills">
+        <div class="hub-header">
+          <div class="team-identity">
+            <span class="team-name" style="color: #fff;">Buffalo Bills</span>
+          </div>
+          <span class="tier-badge tier-bills">AFC Contender</span>
+        </div>
+
+        <div class="stat-matrix">
+          <div class="stat-pod">
+            <div class="stat-value" id="bills-playoff-pct">--%</div>
+            <div class="stat-tag">Playoffs</div>
+          </div>
+          <div class="stat-pod">
+            <div class="stat-value" id="bills-div-pct">--%</div>
+            <div class="stat-tag">AFC East</div>
+          </div>
+          <div class="stat-pod">
+            <div class="stat-value" id="bills-bye-pct">--%</div>
+            <div class="stat-tag">#1 Bye</div>
+          </div>
+          <div class="stat-pod">
+            <div class="stat-value" id="bills-magic-num" style="color: var(--bills-neon);">--</div>
+            <div class="stat-tag">Magic #</div>
+          </div>
+        </div>
+
+        <a href="./bills.html" class="command-cta">
+          <span>Launch Bills Command Center</span>
+          <span>→</span>
+        </a>
+      </section>
+
+      <!-- BUFFALO SABRES -->
+      <section class="hub-panel panel-sabres">
+        <div class="hub-header">
+          <div class="team-identity">
+            <span class="team-name" style="color: #fff;">Buffalo Sabres</span>
+          </div>
+          <span class="tier-badge tier-sabres">Wildcard Race</span>
+        </div>
+
+        <div class="stat-matrix">
+          <div class="stat-pod">
+            <div class="stat-value" id="sabres-playoff-pct">--%</div>
+            <div class="stat-tag">Playoffs</div>
+          </div>
+          <div class="stat-pod">
+            <div class="stat-value" id="sabres-div-pct">--%</div>
+            <div class="stat-tag">Atlantic</div>
+          </div>
+          <div class="stat-pod">
+            <div class="stat-value" id="sabres-wc-pct">--%</div>
+            <div class="stat-tag">Wildcard</div>
+          </div>
+          <div class="stat-pod">
+            <div class="stat-value" id="sabres-tragic-num" style="font-size: 1.1rem; line-height: 1.35;">--</div>
+            <div class="stat-tag">Target</div>
+          </div>
+        </div>
+
+        <div>
+          <div class="module-heading">Atlantic Division Radar</div>
+          <div class="radar-grid" id="sabres-radar"></div>
+        </div>
+
+        <div>
+          <div class="module-heading">Seeding Probabilities</div>
+          <div class="meter-stack" id="sabres-distribution"></div>
+        </div>
+
+        <div>
+          <div class="module-heading">Projected 1st Round Opponents</div>
+          <div class="chip-cluster" id="sabres-opponents"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    async function loadData() {
+      const statusEl = document.getElementById('update-status');
+      let data = null;
+
+      try {
+        const res = await fetch('./data.json?v=' + Date.now(), { cache: 'no-store' });
+        if (!res.ok) throw new Error('data.json payload unreachable');
+        data = await res.json();
+      } catch (err) {
+        console.warn('Fallback activated:', err);
+        return;
+      }
+
+      const dateStr = new Date(data.updatedAt).toLocaleDateString(undefined, {
+        month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+      });
+      statusEl.textContent = `Updated: ${dateStr}`;
+
+      // Bills
+      const b = data.bills;
+      document.getElementById('bills-playoff-pct').textContent = `${b.makePlayoffs}%`;
+      document.getElementById('bills-div-pct').textContent = `${b.winDivision}%`;
+      document.getElementById('bills-bye-pct').textContent = `${b.seed1}%`;
+      document.getElementById('bills-magic-num').textContent = b.magicNumber || '--';
+
+      // Sabres
+      const s = data.sabres;
+      document.getElementById('sabres-playoff-pct').textContent = `${s.makePlayoffs}%`;
+      document.getElementById('sabres-div-pct').textContent = `${s.winDivision}%`;
+      document.getElementById('sabres-wc-pct').textContent = `${s.wildcard}%`;
+      document.getElementById('sabres-tragic-num').textContent = s.tragicNumber || '92 Pts';
+
+      document.getElementById('sabres-radar').innerHTML = s.divisionRadar.map(r => `
+        <div class="radar-card">
+          <div class="radar-team-lbl">${r.team}</div>
+          <div class="radar-rate">${r.pct}%</div>
+        </div>
+      `).join('');
+
+      document.getElementById('sabres-distribution').innerHTML = s.seedDistribution.map(item => `
+        <div class="meter-row">
+          <span class="meter-key">${item.seed}</span>
+          <div class="meter-trough">
+            <div class="meter-fill" style="width: ${item.pct}%"></div>
+          </div>
+          <span class="meter-val">${item.pct}%</span>
+        </div>
+      `).join('');
+
+      document.getElementById('sabres-opponents').innerHTML = s.opponents.map(o => `
+        <div class="chip-item">
+          <span>${o.team}</span>
+          <span class="chip-prob">${o.pct}%</span>
+        </div>
+      `).join('');
+    }
+
+    window.addEventListener('pageshow', () => { loadData(); });
+    setInterval(loadData, 5 * 60 * 1000);
+    document.addEventListener('DOMContentLoaded', loadData);
+  </script>
+</body>
+</html>
