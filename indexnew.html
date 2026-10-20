@@ -8,378 +8,419 @@
   <meta http-equiv="Expires" content="0">
 
   <link rel="manifest" href="./manifest.json">
-  <title>ONE BUFFALO // TELEMETRY TERMINAL</title>
+  <title>THE ONE BUFFALO BOARD</title>
 
   <style>
-    :root {
-      --bg: #05070a;
-      --term-green: #00ff66;
-      --term-amber: #ffb700;
-      --term-cyan: #00e5ff;
-      --term-red: #ff1744;
-      --term-dim: #2a3644;
-      --border-line: #16222f;
-      --text-muted: #52667a;
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
     }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
 
     body {
-      background-color: var(--bg);
-      color: #d1dbe5;
-      padding: 1rem;
+      background: #121316;
+      color: #e5e5e5;
+      font-family: "Impact", "Trebuchet MS", "Arial Black", sans-serif;
       min-height: 100vh;
-      line-height: 1.4;
+      padding: 1.5rem 1rem 3rem 1rem;
       background-image: 
-        linear-gradient(rgba(0, 229, 255, 0.02) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 229, 255, 0.02) 1px, transparent 1px);
-      background-size: 20px 20px;
+        radial-gradient(#202229 15%, transparent 16%),
+        radial-gradient(#202229 15%, transparent 16%);
+      background-size: 16px 16px;
+      background-position: 0 0, 8px 8px;
     }
 
-    .terminal-frame {
-      max-width: 1000px;
+    .stadium-frame {
+      max-width: 860px;
       margin: 0 auto;
-      border: 1px solid var(--border-line);
-      background: rgba(8, 12, 18, 0.95);
-      box-shadow: 0 0 30px rgba(0, 0, 0, 0.8), inset 0 0 40px rgba(0, 0, 0, 0.6);
+      background: #1c1e24;
+      border: 8px solid #0d0e11;
+      box-shadow: 
+        0 0 0 2px #33363f,
+        0 20px 50px rgba(0,0,0,0.9),
+        inset 0 0 20px rgba(0,0,0,0.8);
+      position: relative;
     }
 
-    /* TOP CRT HEADER */
-    .term-topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #0d1520;
-      padding: 0.6rem 1rem;
-      border-bottom: 1px solid var(--border-line);
-      font-size: 0.75rem;
-    }
-
-    .term-title {
-      font-weight: 900;
-      color: var(--term-cyan);
-      letter-spacing: 0.15em;
-    }
-
-    .term-status {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      color: var(--term-green);
-    }
-
-    .status-blink {
-      width: 8px;
-      height: 8px;
-      background: var(--term-green);
-      box-shadow: 0 0 8px var(--term-green);
-      animation: crtblink 1s steps(2, start) infinite;
-    }
-
-    @keyframes crtblink { to { visibility: hidden; } }
-
-    /* ACADEMY TICKER */
-    .term-marquee {
-      background: #111a26;
-      border-bottom: 1px solid var(--border-line);
-      padding: 0.5rem 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      font-size: 0.75rem;
-    }
-
-    .marquee-label {
-      background: var(--term-red);
-      color: #fff;
-      font-weight: 900;
-      padding: 0.15rem 0.4rem;
-      font-size: 0.65rem;
-    }
-
-    .marquee-link {
-      color: #fff;
-      text-decoration: none;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
+    /* RIVETS */
+    .stadium-frame::before,
+    .stadium-frame::after {
+      content: "• • • • • • • • • • • • • • • • • • • • • • • • • • • • • • • • • •";
+      display: block;
+      color: #424652;
+      font-size: 10px;
+      letter-spacing: 12px;
+      padding: 4px 10px;
+      background: #0d0e11;
       overflow: hidden;
-      text-overflow: ellipsis;
       white-space: nowrap;
     }
 
-    .marquee-link:hover {
-      color: var(--term-cyan);
+    /* VINTAGE BULB TOP BAR */
+    .concourse-header {
+      background: #111317;
+      padding: 1.25rem 1.5rem;
+      border-bottom: 4px solid #0d0e11;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
     }
 
-    /* SPLIT TERMINAL PANELS */
-    .term-body {
-      display: grid;
-      grid-template-columns: 1fr;
+    .concourse-title {
+      font-size: 2rem;
+      letter-spacing: 4px;
+      color: #f0f0f0;
+      text-transform: uppercase;
+      text-shadow: 2px 2px 0 #000;
+      line-height: 1;
     }
 
-    @media (min-width: 800px) {
-      .term-body {
-        grid-template-columns: 1fr 1fr;
-      }
+    .concourse-title span {
+      color: #d9383a;
     }
 
-    .term-column {
+    .clock-chassis {
+      background: #050607;
+      border: 2px solid #2b2e38;
+      padding: 6px 14px;
+      color: #e5941c;
+      font-family: monospace;
+      font-size: 0.85rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      box-shadow: inset 0 0 8px rgba(0,0,0,0.9);
+    }
+
+    /* ARENA PHYSICAL MARQUEE SIGN */
+    .physical-marquee {
+      background: #090a0d;
+      border-bottom: 4px solid #0d0e11;
+      padding: 0.85rem 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .lamp-indicator {
+      width: 14px;
+      height: 14px;
+      background: #ffcc00;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #ffcc00, 0 0 2px #fff;
+      animation: bulb-flicker 4s infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes bulb-flicker {
+      0%, 100% { opacity: 1; }
+      80% { opacity: 1; }
+      81% { opacity: 0.4; }
+      82% { opacity: 1; }
+      93% { opacity: 0.6; }
+      94% { opacity: 1; }
+    }
+
+    .marquee-text-link {
+      color: #f7f3e8;
+      text-decoration: none;
+      font-size: 0.95rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      font-weight: 900;
+      line-height: 1.2;
+    }
+
+    .marquee-text-link:hover {
+      color: #ffcc00;
+    }
+
+    .marquee-text-link span {
+      background: #d9383a;
+      color: #fff;
+      padding: 2px 6px;
+      font-size: 0.75rem;
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+
+    /* THE FLAP BOARD SECTIONS */
+    .board-body {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .team-panel-block {
+      background: #14161b;
+      border: 3px solid #282b36;
+      box-shadow: 4px 4px 0 #000;
       padding: 1.25rem;
     }
 
-    .col-bills {
-      border-bottom: 1px solid var(--border-line);
+    .panel-headline {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      border-bottom: 2px solid #282b36;
+      padding-bottom: 0.5rem;
     }
 
-    @media (min-width: 800px) {
-      .col-bills {
-        border-bottom: none;
-        border-right: 1px solid var(--border-line);
+    .team-name-stamped {
+      font-size: 1.6rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .bills-stamped { color: #3b82f6; text-shadow: 2px 2px 0 #000; }
+    .sabres-stamped { color: #f59e0b; text-shadow: 2px 2px 0 #000; }
+
+    .tag-stamp {
+      font-family: monospace;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      background: #000;
+      border: 1px solid #333;
+      color: #aaa;
+      letter-spacing: 1px;
+    }
+
+    /* MECHANICAL FLAP CELLS */
+    .flap-rack {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 650px) {
+      .flap-rack {
+        grid-template-columns: repeat(2, 1fr);
       }
     }
 
-    .col-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      margin-bottom: 1rem;
-      padding-bottom: 0.5rem;
-      border-bottom: 1px dashed var(--term-dim);
+    .flap-unit {
+      background: #08090b;
+      border: 2px solid #000;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.8), 2px 2px 0 rgba(255,255,255,0.05);
+      padding: 0.85rem 0.5rem;
+      text-align: center;
+      position: relative;
     }
 
-    .team-name-lg {
-      font-size: 1.3rem;
-      font-weight: 900;
-      letter-spacing: 0.05em;
+    /* Center mechanical split flap line */
+    .flap-unit::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: #000;
+      box-shadow: 0 1px 0 rgba(255,255,255,0.1);
     }
 
-    .team-bills-color { color: var(--term-cyan); text-shadow: 0 0 10px rgba(0, 229, 255, 0.4); }
-    .team-sabres-color { color: var(--term-amber); text-shadow: 0 0 10px rgba(255, 183, 0, 0.4); }
-
-    /* BIG TERMINAL STAT BLOCK */
-    .hero-stat-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.75rem;
-      margin-bottom: 1.25rem;
-    }
-
-    .stat-terminal-cell {
-      border: 1px solid var(--border-line);
-      background: #080d14;
-      padding: 0.75rem;
-    }
-
-    .cell-val {
+    .flap-number {
       font-size: 2.2rem;
       font-weight: 900;
       line-height: 1;
-      margin-bottom: 0.3rem;
-      font-variant-numeric: tabular-nums;
+      letter-spacing: 1px;
+      color: #fff;
     }
 
-    .cell-lbl {
-      font-size: 0.65rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--text-muted);
-    }
+    .flap-bills-accent { color: #38bdf8; text-shadow: 0 0 8px rgba(56, 189, 248, 0.4); }
+    .flap-sabres-accent { color: #ffbe00; text-shadow: 0 0 8px rgba(255, 190, 0, 0.4); }
 
-    /* DIGITAL BAR GRAPHS */
-    .section-div {
+    .flap-label {
+      margin-top: 0.65rem;
+      font-family: monospace;
       font-size: 0.7rem;
-      color: var(--text-muted);
-      margin: 1rem 0 0.5rem 0;
-      letter-spacing: 0.1em;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .section-div::after {
-      content: "";
-      flex: 1;
-      height: 1px;
-      background: var(--term-dim);
-    }
-
-    .bar-line {
-      display: flex;
-      align-items: center;
-      font-size: 0.75rem;
-      margin-bottom: 0.4rem;
-    }
-
-    .bar-label {
-      width: 75px;
-      color: #8da2b5;
-    }
-
-    .bar-chambers {
-      flex: 1;
-      height: 10px;
-      background: #0d1520;
-      border: 1px solid var(--border-line);
-      display: flex;
-      padding: 1px;
-      margin: 0 0.6rem;
-    }
-
-    .bar-fill-bills {
-      background: var(--term-cyan);
-      box-shadow: 0 0 6px var(--term-cyan);
-    }
-
-    .bar-fill-sabres {
-      background: var(--term-amber);
-      box-shadow: 0 0 6px var(--term-amber);
-    }
-
-    .bar-num {
-      width: 35px;
-      text-align: right;
+      letter-spacing: 1px;
+      color: #888e9b;
+      text-transform: uppercase;
       font-weight: 700;
     }
 
-    /* RADAR GRID */
-    .term-grid-4 {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 0.4rem;
-      margin-bottom: 1rem;
-    }
-
-    .term-mini-cell {
-      border: 1px solid var(--border-line);
-      background: #090e16;
-      padding: 0.4rem;
-      text-align: center;
-    }
-
-    .mini-team { font-size: 0.65rem; color: #8da2b5; }
-    .mini-num { font-size: 0.95rem; font-weight: 800; margin-top: 0.1rem; }
-
-    /* ACTION BUTTON */
-    .cmd-link {
+    /* STADIUM CONDUIT BUTTON */
+    .conduit-btn {
       display: block;
-      margin-top: 1.25rem;
-      border: 1px solid var(--term-cyan);
-      background: rgba(0, 229, 255, 0.08);
-      color: var(--term-cyan);
-      text-align: center;
+      width: 100%;
+      background: #1f232b;
+      border: 3px solid #3d4251;
+      color: #fff;
       text-decoration: none;
-      padding: 0.75rem;
-      font-weight: 900;
-      font-size: 0.8rem;
-      letter-spacing: 0.15em;
-      transition: all 0.15s ease;
+      text-align: center;
+      padding: 1rem;
+      font-size: 1.1rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      box-shadow: 4px 4px 0 #000;
+      transition: all 0.1s ease;
     }
 
-    .cmd-link:hover {
-      background: var(--term-cyan);
-      color: #000;
-      box-shadow: 0 0 15px rgba(0, 229, 255, 0.6);
+    .conduit-btn:active {
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0 #000;
+    }
+
+    /* TAPE MATRIX & LED BARS */
+    .bracket-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 1.25rem;
+      font-family: monospace;
+    }
+
+    .bracket-table td {
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #1c1e24;
+    }
+
+    .team-cell {
+      width: 100px;
+      font-weight: 900;
+      font-size: 0.95rem;
+      color: #e5e5e5;
+    }
+
+    .chassis-rail {
+      background: #0a0b0e;
+      height: 12px;
+      border: 1px solid #2c303c;
+      padding: 1px;
+    }
+
+    .rail-mercury {
+      height: 100%;
+      background: repeating-linear-gradient(
+        90deg,
+        #f59e0b,
+        #f59e0b 6px,
+        #0a0b0e 6px,
+        #0a0b0e 8px
+      );
+    }
+
+    .score-cell {
+      width: 50px;
+      text-align: right;
+      font-weight: 900;
+      font-size: 1rem;
+      color: #ffbe00;
+    }
+
+    .opp-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .opp-plate {
+      background: #090a0d;
+      border: 1px solid #2c303c;
+      padding: 0.4rem 0.75rem;
+      font-family: monospace;
+      font-size: 0.8rem;
+      letter-spacing: 1px;
+    }
+
+    .opp-plate b {
+      color: #ffbe00;
+      margin-left: 0.35rem;
     }
   </style>
 </head>
 <body>
 
-  <div class="terminal-frame">
-    <!-- TOP STATUS BAR -->
-    <div class="term-topbar">
-      <div class="term-title">// ONE BUFFALO TELEMETRY ENGINE v4.2</div>
-      <div class="term-status">
-        <span class="status-blink"></span>
-        <span id="update-status">FEED: LIVE</span>
-      </div>
+  <div class="stadium-frame">
+    <!-- VINTAGE CONCOURSE CLOCK -->
+    <header class="concourse-header">
+      <div class="concourse-title">ONE BUFFALO <span>BOARD</span></div>
+      <div class="clock-chassis" id="update-status">INITIALIZING FEED...</div>
+    </header>
+
+    <!-- PHYSICAL MARQUEE FOR ACADEMY -->
+    <div class="physical-marquee">
+      <div class="lamp-indicator"></div>
+      <a href="https://youtu.be/s33Te8CpEPU?is=NhuZtRpQ5-AoV2Nh" target="_blank" rel="noopener noreferrer" class="marquee-text-link">
+        <span>ARENA BROADCAST</span>
+        THE TRE’DAVIOUS WHITE GOALIE ACADEMY OF LOUISIANA AT BUFFALO ↗
+      </a>
     </div>
 
-    <!-- MARQUEE -->
-    <div class="term-marquee">
-      <div style="display: flex; align-items: center; gap: 0.5rem; overflow: hidden;">
-        <span class="marquee-label">ALERT</span>
-        <a href="https://youtu.be/s33Te8CpEPU?is=NhuZtRpQ5-AoV2Nh" target="_blank" class="marquee-link">
-          The Tre’Davious White Goalie Academy of Louisiana at Buffalo [EXTERNAL FEED ↗]
+    <div class="board-body">
+      <!-- BUFFALO BILLS FLAP PANEL -->
+      <section class="team-panel-block">
+        <div class="panel-headline">
+          <div class="team-name-stamped bills-stamped">BUFFALO BILLS</div>
+          <div class="tag-stamp">DIVISION LEAD</div>
+        </div>
+
+        <div class="flap-rack">
+          <div class="flap-unit">
+            <div class="flap-number flap-bills-accent" id="bills-playoff-pct">--%</div>
+            <div class="flap-label">PLAYOFFS</div>
+          </div>
+          <div class="flap-unit">
+            <div class="flap-number" id="bills-div-pct">--%</div>
+            <div class="flap-label">AFC EAST</div>
+          </div>
+          <div class="flap-unit">
+            <div class="flap-number" id="bills-bye-pct">--%</div>
+            <div class="flap-label">#1 BYE</div>
+          </div>
+          <div class="flap-unit">
+            <div class="flap-number flap-bills-accent" id="bills-magic-num">--</div>
+            <div class="flap-label">MAGIC #</div>
+          </div>
+        </div>
+
+        <a href="./bills.html" class="conduit-btn">
+          OPEN BILLS COMMAND CENTER →
         </a>
-      </div>
-      <div style="font-size: 0.65rem; color: var(--text-muted); white-space: nowrap;">SYS.OK</div>
-    </div>
+      </section>
 
-    <!-- MAIN METRIC CHASSIS -->
-    <div class="term-body">
-      <!-- BUFFALO BILLS CONSOLE -->
-      <div class="term-column col-bills">
-        <div class="col-header">
-          <span class="team-name-lg team-bills-color">BUFFALO BILLS</span>
-          <span style="font-size: 0.65rem; color: var(--term-cyan); border: 1px solid var(--term-cyan); padding: 0.1rem 0.3rem;">AFC-EAST</span>
+      <!-- BUFFALO SABRES FLAP PANEL -->
+      <section class="team-panel-block">
+        <div class="panel-headline">
+          <div class="team-name-stamped sabres-stamped">BUFFALO SABRES</div>
+          <div class="tag-stamp">ATLANTIC HUNT</div>
         </div>
 
-        <div class="hero-stat-row">
-          <div class="stat-terminal-cell">
-            <div class="cell-val team-bills-color" id="bills-playoff-pct">--%</div>
-            <div class="cell-lbl">PLAYOFF PROBABILITY</div>
+        <div class="flap-rack">
+          <div class="flap-unit">
+            <div class="flap-number flap-sabres-accent" id="sabres-playoff-pct">--%</div>
+            <div class="flap-label">PLAYOFFS</div>
           </div>
-          <div class="stat-terminal-cell">
-            <div class="cell-val" id="bills-div-pct" style="color: #fff;">--%</div>
-            <div class="cell-lbl">AFC EAST TITLE</div>
+          <div class="flap-unit">
+            <div class="flap-number" id="sabres-div-pct">--%</div>
+            <div class="flap-label">ATLANTIC</div>
           </div>
-        </div>
-
-        <div class="hero-stat-row">
-          <div class="stat-terminal-cell">
-            <div class="cell-val" id="bills-bye-pct" style="color: #fff;">--%</div>
-            <div class="cell-lbl">#1 OVERALL BYE</div>
+          <div class="flap-unit">
+            <div class="flap-number" id="sabres-wc-pct">--%</div>
+            <div class="flap-label">WILDCARD</div>
           </div>
-          <div class="stat-terminal-cell">
-            <div class="cell-val team-bills-color" id="bills-magic-num">--</div>
-            <div class="cell-lbl">MAGIC NUMBER</div>
+          <div class="flap-unit">
+            <div class="flap-number" id="sabres-tragic-num" style="font-size: 1.5rem; line-height: 1.4;">--</div>
+            <div class="flap-label">PACE TARGET</div>
           </div>
         </div>
 
-        <div class="section-div">AFC SEEDING PROJECTION</div>
-        <div id="bills-distribution"></div>
-
-        <a href="./bills.html" class="cmd-link">EXECUTE BILLS COMMAND CENTER →</a>
-      </div>
-
-      <!-- BUFFALO SABRES CONSOLE -->
-      <div class="term-column">
-        <div class="col-header">
-          <span class="team-name-lg team-sabres-color">BUFFALO SABRES</span>
-          <span style="font-size: 0.65rem; color: var(--term-amber); border: 1px solid var(--term-amber); padding: 0.1rem 0.3rem;">ATLANTIC</span>
+        <div style="font-family: monospace; font-size: 0.8rem; color: #888e9b; margin-bottom: 0.5rem; letter-spacing: 1px;">
+          // ATLANTIC DIVISION RADAR
         </div>
+        <table class="bracket-table" id="sabres-radar-table"></table>
 
-        <div class="hero-stat-row">
-          <div class="stat-terminal-cell">
-            <div class="cell-val team-sabres-color" id="sabres-playoff-pct">--%</div>
-            <div class="cell-lbl">PLAYOFF PROBABILITY</div>
-          </div>
-          <div class="stat-terminal-cell">
-            <div class="cell-val" id="sabres-div-pct" style="color: #fff;">--%</div>
-            <div class="cell-lbl">ATLANTIC TITLE</div>
-          </div>
+        <div style="font-family: monospace; font-size: 0.8rem; color: #888e9b; margin-bottom: 0.5rem; letter-spacing: 1px;">
+          // PROJECTED 1ST ROUND OPPONENTS
         </div>
-
-        <div class="hero-stat-row">
-          <div class="stat-terminal-cell">
-            <div class="cell-val" id="sabres-wc-pct" style="color: #fff;">--%</div>
-            <div class="cell-lbl">WILDCARD SPOT</div>
-          </div>
-          <div class="stat-terminal-cell">
-            <div class="cell-val team-sabres-color" id="sabres-tragic-num" style="font-size: 1.3rem; line-height: 1.7;">--</div>
-            <div class="cell-lbl">PACE THRESHOLD</div>
-          </div>
-        </div>
-
-        <div class="section-div">ATLANTIC DIVISION RADAR</div>
-        <div class="term-grid-4" id="sabres-radar"></div>
-
-        <div class="section-div">SELECTION BRACKET PROJECTION</div>
-        <div id="sabres-distribution"></div>
-      </div>
+        <div class="opp-pills" id="sabres-opponents"></div>
+      </section>
     </div>
   </div>
 
@@ -393,31 +434,20 @@
         if (!res.ok) throw new Error('data.json offline');
         data = await res.json();
       } catch (err) {
-        console.warn('Fallback activated:', err);
+        console.warn('Feed offline:', err);
         return;
       }
 
-      const dateStr = new Date(data.updatedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      statusEl.textContent = `FEED: SYNCED @ ${dateStr} ET`;
+      const dateObj = new Date(data.updatedAt);
+      const timeStr = dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      statusEl.textContent = `SYNC: ${timeStr} ET`;
 
       // Bills
       const b = data.bills;
       document.getElementById('bills-playoff-pct').textContent = `${b.makePlayoffs}%`;
       document.getElementById('bills-div-pct').textContent = `${b.winDivision}%`;
       document.getElementById('bills-bye-pct').textContent = `${b.seed1}%`;
-      document.getElementById('bills-magic-num').textContent = b.magicNumber || '--';
-
-      if (b.seedDistribution) {
-        document.getElementById('bills-distribution').innerHTML = b.seedDistribution.slice(0, 4).map(item => `
-          <div class="bar-line">
-            <span class="bar-label">${item.seed}</span>
-            <div class="bar-chambers">
-              <div class="bar-fill-bills" style="width: ${item.pct}%;"></div>
-            </div>
-            <span class="bar-num">${item.pct}%</span>
-          </div>
-        `).join('');
-      }
+      document.getElementById('bills-magic-num').textContent = b.magicNumber || '10';
 
       // Sabres
       const s = data.sabres;
@@ -426,24 +456,24 @@
       document.getElementById('sabres-wc-pct').textContent = `${s.wildcard}%`;
       document.getElementById('sabres-tragic-num').textContent = s.tragicNumber || '92 PTS';
 
-      document.getElementById('sabres-radar').innerHTML = s.divisionRadar.map(r => `
-        <div class="term-mini-cell">
-          <div class="mini-team">${r.team}</div>
-          <div class="mini-num team-sabres-color">${r.pct}%</div>
-        </div>
+      document.getElementById('sabres-radar-table').innerHTML = s.divisionRadar.map(r => `
+        <tr>
+          <td class="team-cell">${r.team.toUpperCase()}</td>
+          <td>
+            <div class="chassis-rail">
+              <div class="rail-mercury" style="width: ${r.pct}%;"></div>
+            </div>
+          </td>
+          <td class="score-cell">${r.pct}%</td>
+        </tr>
       `).join('');
 
-      document.getElementById('sabres-distribution').innerHTML = s.seedDistribution.map(item => `
-        <div class="bar-line">
-          <span class="bar-label">${item.seed}</span>
-          <div class="bar-chambers">
-            <div class="bar-fill-sabres" style="width: ${item.pct}%;"></div>
-          </div>
-          <span class="bar-num">${item.pct}%</span>
-        </div>
+      document.getElementById('sabres-opponents').innerHTML = s.opponents.map(o => `
+        <div class="opp-plate">${o.team.toUpperCase()} <b>${o.pct}%</b></div>
       `).join('');
     }
 
+    // Refresh immediately when iOS wakes up from background
     window.addEventListener('pageshow', () => { loadData(); });
     setInterval(loadData, 5 * 60 * 1000);
     document.addEventListener('DOMContentLoaded', loadData);
