@@ -594,11 +594,36 @@ async function fetchNextGameSchedule() {
 
   let sabresSchedule = {
     opponent: 'vs. Philadelphia',
+    oppShortName: 'Flyers',
     gameTime: 'Wed, Oct 21 • 7:30 PM ET',
-    isoTime: null,
+    isoTime: '2026-10-21T23:30:00Z',
     winChance: 52,
-    matchupRecords: 'Sabres vs. Philadelphia',
-    broadcast: 'MSG-B'
+    matchupRecords: 'Sabres (4-3-2, 10 pts, OT1) vs. Philadelphia (2-6-3, 7 pts, W2)',
+    broadcast: 'TNT',
+    venue: 'KeyBank Center, Buffalo',
+    restSabres: 2,
+    restOpp: 1,
+    restDiff: 'Sabres +1 (Opp on Back-to-Back)',
+    specialTeams: {
+      sabres: 'PP: 19.5% (17th) | PK: 81.2% (11th)',
+      opp: 'PP: 14.2% (29th) | PK: 76.4% (23rd)',
+      advantage: 'Sabres Special Teams Edge (+10.1% Net Margin)'
+    },
+    efficiency: [
+      { metric: 'Goals / Game', sabres: '3.12 (12th)', opp: '2.55 (24th)' },
+      { metric: 'Goals Against / Game', sabres: '3.20 (18th)', opp: '3.60 (28th)' },
+      { metric: 'Power Play %', sabres: '19.5% (17th)', opp: '14.2% (29th)' },
+      { metric: 'Penalty Kill %', sabres: '81.2% (11th)', opp: '76.4% (23rd)' },
+      { metric: 'Shots / Game', sabres: '29.8 (15th)', opp: '27.4 (25th)' },
+      { metric: 'Faceoff Win %', sabres: '48.2% (22nd)', opp: '49.5% (18th)' }
+    ],
+    injuries: [
+      { player: 'Ukko-Pekka Luukkonen', pos: 'G', status: 'Probable', injury: 'Expected Starter (2.78 GAA, .912 SV%)', team: 'Sabres' },
+      { player: 'Samuel Ersson', pos: 'G', status: 'Probable', injury: 'Expected Starter (3.05 GAA, .898 SV%)', team: 'Flyers' },
+      { player: 'Zach Benson', pos: 'LW', status: 'Questionable', injury: 'Lower Body', team: 'Sabres' },
+      { player: 'Mattias Samuelsson', pos: 'D', status: 'Injured Reserve', injury: 'Lower Body', team: 'Sabres' },
+      { player: 'Ryan Ellis', pos: 'D', status: 'Injured Reserve', injury: 'Back', team: 'Flyers' }
+    ]
   };
 
   // 1. Bills (ESPN Schedule + Live Standings API)
@@ -750,12 +775,15 @@ async function fetchNextGameSchedule() {
         const oppInfo = oppStreak ? `${oppName} (${oppRecord}, ${oppPoints} pts, ${oppStreak})` : `${oppName} (${oppRecord}, ${oppPoints} pts)`;
 
         sabresSchedule = {
+          ...sabresSchedule,
           opponent: `${isHome ? 'vs.' : '@'} ${oppName}`,
+          oppShortName: oppName,
           gameTime: `${dateStr} • ${timeStr} ET`,
           isoTime: nextGame.startTimeUTC,
           winChance: isHome ? 52 : 46,
           matchupRecords: `${bufInfo} vs. ${oppInfo}`,
-          broadcast: tvNetwork
+          broadcast: tvNetwork,
+          venue: isHome ? 'KeyBank Center, Buffalo' : `${oppName} Arena`
         };
       }
     }
@@ -865,8 +893,21 @@ async function scrapePlayoffStatus() {
         opp: 'PP: 14.2% (29th) | PK: 76.4% (23rd)',
         advantage: 'Sabres Special Teams Edge (+10.1% Net Margin)'
       },
-      efficiency: sabresSchedule.efficiency,
-      injuries: sabresSchedule.injuries
+      efficiency: sabresSchedule.efficiency || [
+        { metric: 'Goals / Game', sabres: '3.12 (12th)', opp: '2.55 (24th)' },
+        { metric: 'Goals Against / Game', sabres: '3.20 (18th)', opp: '3.60 (28th)' },
+        { metric: 'Power Play %', sabres: '19.5% (17th)', opp: '14.2% (29th)' },
+        { metric: 'Penalty Kill %', sabres: '81.2% (11th)', opp: '76.4% (23rd)' },
+        { metric: 'Shots / Game', sabres: '29.8 (15th)', opp: '27.4 (25th)' },
+        { metric: 'Faceoff Win %', sabres: '48.2% (22nd)', opp: '49.5% (18th)' }
+      ],
+      injuries: sabresSchedule.injuries || [
+        { player: 'Ukko-Pekka Luukkonen', pos: 'G', status: 'Probable', injury: 'Expected Starter (2.78 GAA, .912 SV%)', team: 'Sabres' },
+        { player: 'Samuel Ersson', pos: 'G', status: 'Probable', injury: 'Expected Starter (3.05 GAA, .898 SV%)', team: 'Flyers' },
+        { player: 'Zach Benson', pos: 'LW', status: 'Questionable', injury: 'Lower Body', team: 'Sabres' },
+        { player: 'Mattias Samuelsson', pos: 'D', status: 'Injured Reserve', injury: 'Lower Body', team: 'Sabres' },
+        { player: 'Ryan Ellis', pos: 'D', status: 'Injured Reserve', injury: 'Back', team: 'Flyers' }
+      ]
     },
     divisionRadar: [
       { team: 'Panthers', pct: 82 },

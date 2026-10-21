@@ -1082,8 +1082,12 @@
       }
 
       const tbody = document.getElementById('intel-efficiency-tbody');
-      if (tbody && Array.isArray(b.nextGame.efficiency)) {
-        tbody.innerHTML = b.nextGame.efficiency.map(row => `
+      const efficiencyData = (Array.isArray(b.nextGame?.efficiency) && b.nextGame.efficiency.length > 0)
+        ? b.nextGame.efficiency
+        : (FALLBACK_DATA.bills.nextGame.efficiency || []);
+
+      if (tbody && efficiencyData.length > 0) {
+        tbody.innerHTML = efficiencyData.map(row => `
           <tr>
             <td class="intel-col-metric">${row.metric}</td>
             <td class="intel-col-buf">${row.bills}</td>
@@ -1094,8 +1098,12 @@
 
       // Populate Full Dynamic Injury Wire
       const injuryContainer = document.getElementById('intel-injuries-container');
-      if (injuryContainer && Array.isArray(b.nextGame.injuries) && b.nextGame.injuries.length > 0) {
-        injuryContainer.innerHTML = b.nextGame.injuries.map(inj => {
+      const injuriesList = (Array.isArray(b.nextGame?.injuries) && b.nextGame.injuries.length > 0)
+        ? b.nextGame.injuries
+        : (FALLBACK_DATA.bills.nextGame.injuries || []);
+
+      if (injuryContainer && injuriesList.length > 0) {
+        injuryContainer.innerHTML = injuriesList.map(inj => {
           let tagClass = 'tag-questionable';
           const st = (inj.status || '').toLowerCase();
           if (st.includes('active') || st.includes('probable')) tagClass = 'tag-active';
