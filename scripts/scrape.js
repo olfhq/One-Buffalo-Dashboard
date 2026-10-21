@@ -405,6 +405,76 @@ async function fetchNflScoreboard() {
   return outOfTownGames;
 }
 
+// NHL Arena, Broadcast, and Window Metadata Helpers
+const NHL_ARENAS = {
+  'Sabres': { venue: 'KeyBank Center', city: 'Buffalo, NY', type: 'Indoor NHL Arena', sheet: "Standard NHL (200' × 85')", climate: 'Controlled 60°F / 22°F Sheet' },
+  'Panthers': { venue: 'Amerant Bank Arena', city: 'Sunrise, FL', type: 'Indoor NHL Arena', sheet: "Standard NHL (200' × 85')", climate: 'Controlled 61°F / 22°F Sheet' },
+  'Lightning': { venue: 'Amalie Arena', city: 'Tampa, FL', type: 'Indoor NHL Arena', sheet: "Standard NHL (200' × 85')", climate: 'Controlled 60°F / 22°F Sheet' },
+  'Bruins': { venue: 'TD Garden', city: 'Boston, MA', type: 'Indoor NHL Arena', sheet: "Standard NHL (200' × 85')", climate: 'Controlled 59°F / 21°F Sheet' },
+  'Maple Leafs': { venue: 'Scotiabank Arena', city: 'Toronto, ON', type: 'Indoor NHL Arena', sheet: "Standard NHL (200' × 85')", climate: 'Controlled 59°F / 21°F Sheet' },
+  'Canadiens': { venue: 'Bell Centre', city: 'Montreal, QC', type: 'Indoor NHL Arena', sheet: "Standard NHL (200' × 85')", climate: 'Controlled 58°F / 20°F Sheet' },
+  'Senators': { venue: 'Canadian Tire Centre', city: 'Ottawa, ON', type: 'Indoor NHL Arena', sheet: "Standard NHL (200' × 85')", climate: 'Controlled 59°F / 21°F Sheet' },
+  'Red Wings': { venue: 'Little Caesars Arena', city: 'Detroit, MI', type: 'Indoor NHL Arena', sheet: "Standard NHL (200' × 85')", climate: 'Controlled 60°F / 22°F Sheet' },
+  'Rangers': { venue: 'Madison Square Garden', city: 'New York, NY', type: 'Indoor NHL Arena', sheet: "Standard NHL (200' × 85')", climate: 'Controlled 60°F / 22°F Sheet' },
+  'Islanders': { venue: 'UBS Arena', city: 'Elmont, NY', type: 'Indoor NHL Arena', sheet: "Standard NHL (200' × 85')", climate: 'Controlled 60°F / 22°F Sheet' },
+  'Devils': { venue: 'Prudential Center', city: 'Newark, NJ', type: 'Indoor NHL Arena', sheet: "Standard NHL (200' × 85')", climate: 'Controlled 60°F / 22°F Sheet' },
+  'Flyers': { venue: 'Wells Fargo Center', city: 'Philadelphia, PA', type: 'Indoor NHL Arena', sheet: "Standard NHL (200' × 85')", climate: 'Controlled 60°F / 22°F Sheet' },
+  'Penguins': { venue: 'PPG Paints Arena', city: 'Pittsburgh, PA', type: 'Indoor NHL Arena', sheet: "Standard NHL (200' × 85')", climate: 'Controlled 60°F / 22°F Sheet' },
+  'Capitals': { venue: 'Capital One Arena', city: 'Washington, DC', type: 'Indoor NHL Arena', sheet: "Standard NHL (200' × 85')", climate: 'Controlled 60°F / 22°F Sheet' },
+  'Hurricanes': { venue: 'Lenovo Center', city: 'Raleigh, NC', type: 'Indoor NHL Arena', sheet: "Standard NHL (200' × 85')", climate: 'Controlled 60°F / 22°F Sheet' },
+  'Blue Jackets': { venue: 'Nationwide Arena', city: 'Columbus, OH', type: 'Indoor NHL Arena', sheet: "Standard NHL (200' × 85')", climate: 'Controlled 60°F / 22°F Sheet' },
+  'Blackhawks': { venue: 'United Center', city: 'Chicago, IL', type: 'Indoor NHL Arena', sheet: "Standard NHL (200' × 85')", climate: 'Controlled 60°F / 22°F Sheet' },
+  'Avalanche': { venue: 'Ball Arena', city: 'Denver, CO', type: 'Indoor NHL Arena', sheet: "Standard NHL (200' × 85')", climate: 'Controlled 59°F / 21°F Sheet' },
+  'Stars': { venue: 'American Airlines Center', city: 'Dallas, TX', type: 'Indoor NHL Arena', sheet: "Standard NHL (200' × 85')", climate: 'Controlled 61°F / 22°F Sheet' },
+  'Wild': { venue: 'Xcel Energy Center', city: 'St. Paul, MN', type: 'Indoor NHL Arena', sheet: "Standard NHL (200' × 85')", climate: 'Controlled 59°F / 21°F Sheet' },
+  'Predators': { venue: 'Bridgestone Arena', city: 'Nashville, TN', type: 'Indoor NHL Arena', sheet: "Standard NHL (200' × 85')", climate: 'Controlled 60°F / 22°F Sheet' },
+  'Blues': { venue: 'Enterprise Center', city: 'St. Louis, MO', type: 'Indoor NHL Arena', sheet: "Standard NHL (200' × 85')", climate: 'Controlled 60°F / 22°F Sheet' },
+  'Jets': { venue: 'Canada Life Centre', city: 'Winnipeg, MB', type: 'Indoor NHL Arena', sheet: "Standard NHL (200' × 85')", climate: 'Controlled 58°F / 20°F Sheet' },
+  'Utah': { venue: 'Delta Center', city: 'Salt Lake City, UT', type: 'Indoor NHL Arena', sheet: "Standard NHL (200' × 85')", climate: 'Controlled 60°F / 22°F Sheet' },
+  'Ducks': { venue: 'Honda Center', city: 'Anaheim, CA', type: 'Indoor NHL Arena', sheet: "Standard NHL (200' × 85')", climate: 'Controlled 62°F / 22°F Sheet' },
+  'Flames': { venue: 'Scotiabank Saddledome', city: 'Calgary, AB', type: 'Indoor NHL Arena', sheet: "Standard NHL (200' × 85')", climate: 'Controlled 59°F / 21°F Sheet' },
+  'Oilers': { venue: 'Rogers Place', city: 'Edmonton, AB', type: 'Indoor NHL Arena', sheet: "Standard NHL (200' × 85')", climate: 'Controlled 58°F / 20°F Sheet' },
+  'Kings': { venue: 'Crypto.com Arena', city: 'Los Angeles, CA', type: 'Indoor NHL Arena', sheet: "Standard NHL (200' × 85')", climate: 'Controlled 61°F / 22°F Sheet' },
+  'Sharks': { venue: 'SAP Center', city: 'San Jose, CA', type: 'Indoor NHL Arena', sheet: "Standard NHL (200' × 85')", climate: 'Controlled 61°F / 22°F Sheet' },
+  'Kraken': { venue: 'Climate Pledge Arena', city: 'Seattle, WA', type: 'Indoor NHL Arena', sheet: "Standard NHL (200' × 85')", climate: 'Controlled 59°F / 21°F Sheet' },
+  'Canucks': { venue: 'Rogers Arena', city: 'Vancouver, BC', type: 'Indoor NHL Arena', sheet: "Standard NHL (200' × 85')", climate: 'Controlled 59°F / 21°F Sheet' },
+  'Golden Knights': { venue: 'T-Mobile Arena', city: 'Las Vegas, NV', type: 'Indoor NHL Arena', sheet: "Standard NHL (200' × 85')", climate: 'Controlled 61°F / 22°F Sheet' }
+};
+
+function getNhlArena(homeName) {
+  const key = Object.keys(NHL_ARENAS).find(k => (homeName || '').includes(k));
+  return key ? NHL_ARENAS[key] : { venue: 'NHL Arena', city: '', type: 'Indoor NHL Arena', sheet: "Standard NHL (200' × 85')", climate: 'Controlled 60°F / 22°F Sheet' };
+}
+
+function getNhlBroadcast(rawNet, homeName, awayName, isSabresGame = false) {
+  const net = (rawNet || 'ESPN+').toUpperCase();
+  if (isSabresGame) {
+    if (net.includes('TNT')) return { network: 'TNT', crew: 'Kenny Albert, Eddie Olczyk, Brian Boucher', tag: 'tv-tnt' };
+    if (net.includes('ESPN')) return { network: 'ESPN', crew: 'Sean McDonough, Ray Ferraro', tag: 'tv-espn' };
+    return { network: 'MSG-B', crew: 'Dan Dunleavy, Rob Ray', tag: 'tv-msg' };
+  }
+  if (net.includes('TNT') || net.includes('MAX')) return { network: 'TNT', crew: 'Kenny Albert, Eddie Olczyk, Brian Boucher', tag: 'tv-tnt' };
+  if (net.includes('ABC')) return { network: 'ABC', crew: 'Sean McDonough, Ray Ferraro', tag: 'tv-espn' };
+  if (net.includes('ESPN+')) return { network: 'ESPN+', crew: 'Bob Wischusen, Kevin Weekes', tag: 'tv-espn' };
+  if (net.includes('ESPN')) return { network: 'ESPN', crew: 'Steve Levy, Ray Ferraro', tag: 'tv-espn' };
+  if (net.includes('SN') || net.includes('SPORTSNET')) return { network: 'Sportsnet', crew: 'Chris Cuthbert, Craig Simpson', tag: 'tv-sn' };
+  if (net.includes('TSN')) return { network: 'TSN4', crew: 'Gord Miller, Mike Johnson', tag: 'tv-tsn' };
+  if (net.includes('NESN')) return { network: 'NESN', crew: 'Judd Sirott, Andy Brickley', tag: 'tv-nesn' };
+  return { network: rawNet || 'TV', crew: 'Regional Broadcast Crew', tag: 'tv-rsn' };
+}
+
+function getNhlWindow(isoTime) {
+  const dt = new Date(isoTime);
+  const day = dt.toLocaleDateString('en-US', { timeZone: 'America/New_York', weekday: 'short' });
+  
+  if (day === 'Wed') return { key: 'WED', label: 'Wednesday Night Hockey Showcase', badge: 'TNT / Max / National Slate', order: 1 };
+  if (day === 'Thu') return { key: 'THU', label: 'Thursday Prime NHL Slate', badge: 'ESPN+ / RSN Lineups', order: 2 };
+  if (day === 'Sat') return { key: 'SAT', label: 'Hockey Night in Canada & Saturday National', badge: 'CBC / Sportsnet / NHL Network', order: 3 };
+  if (day === 'Sun') return { key: 'SUN', label: 'Sunday NHL Showcase Slate', badge: 'National & Matinee Window', order: 4 };
+  if (day === 'Fri') return { key: 'FRI', label: 'Friday Night NHL Matchups', badge: 'Regional & Streaming Lineup', order: 5 };
+  if (day === 'Tue') return { key: 'TUE', label: 'Tuesday Night NHL Slate', badge: 'Frozen Frenzy / Regional Lineups', order: 6 };
+  return { key: 'MON', label: 'Monday Night NHL Action', badge: 'Early Week Matchups', order: 7 };
+}
 
 // Fetch live out-of-town NHL scoreboard and rooting leverage tags
 async function fetchNhlScoreboard() {
@@ -550,10 +620,22 @@ async function fetchNhlScoreboard() {
         }
       }
 
+      const arena = getNhlArena(homeName);
+      const broadcastDetails = getNhlBroadcast(broadcast, homeName, awayName, false);
+      const windowInfo = getNhlWindow(ev.date);
+
       outOfTownGames.push({
         isoTime: ev.date,
         slot,
-        broadcast,
+        broadcast: broadcastDetails.network,
+        announcers: broadcastDetails.crew,
+        venue: `${arena.venue}, ${arena.city}`,
+        type: arena.type,
+        sheet: arena.sheet,
+        climate: arena.climate,
+        window: windowInfo.key,
+        windowLabel: windowInfo.label,
+        windowBadge: windowInfo.badge,
         statusState,
         statusDetail,
         awayName,
@@ -942,6 +1024,10 @@ async function fetchNextGameSchedule() {
         const bufInfo = sabresStreak ? `Sabres (${sabresRecord}, ${sabresPoints} pts, ${sabresStreak})` : `Sabres (${sabresRecord}, ${sabresPoints} pts)`;
         const oppInfo = oppStreak ? `${oppName} (${oppRecord}, ${oppPoints} pts, ${oppStreak})` : `${oppName} (${oppRecord}, ${oppPoints} pts)`;
 
+        const sArena = getNhlArena(isHome ? 'Buffalo Sabres' : oppName);
+        const sBroadcast = getNhlBroadcast(tvNetwork, isHome ? 'Buffalo Sabres' : oppName, isHome ? oppName : 'Buffalo Sabres', true);
+        const sWindow = getNhlWindow(nextGame.startTimeUTC);
+
         sabresSchedule = {
           ...sabresSchedule,
           opponent: `${isHome ? 'vs.' : '@'} ${oppName}`,
@@ -950,8 +1036,17 @@ async function fetchNextGameSchedule() {
           isoTime: nextGame.startTimeUTC,
           winChance: isHome ? 52 : 46,
           matchupRecords: `${bufInfo} vs. ${oppInfo}`,
-          broadcast: tvNetwork,
-          venue: isHome ? 'KeyBank Center, Buffalo' : `${oppName} Arena`
+          broadcast: sBroadcast.network,
+          announcers: sBroadcast.crew,
+          venue: `${sArena.venue}, ${sArena.city}`,
+          arena: sArena.venue,
+          city: sArena.city,
+          type: sArena.type,
+          sheet: sArena.sheet,
+          climate: sArena.climate,
+          window: sWindow.key,
+          windowLabel: sWindow.label,
+          windowBadge: sWindow.badge
         };
       }
     }
