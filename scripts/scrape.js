@@ -80,6 +80,122 @@ async function fetchBillsLeverage(oppShortName, billsCurrentPlayoffPct) {
   return leverageData;
 }
 
+// NFL Stadium, Broadcast, and Window Metadata Helpers
+const NFL_STADIUMS = {
+  'Bills': { venue: 'Highmark Stadium', city: 'Orchard Park, NY', roof: 'Open-Air Stadium', surface: 'Natural Grass', weather: '46°F, 18mph Wind, 20% PoP' },
+  'Dolphins': { venue: 'Hard Rock Stadium', city: 'Miami Gardens, FL', roof: 'Open-Air Stadium', surface: 'Natural Bermuda Grass', weather: '82°F, 9mph Wind, 15% PoP' },
+  'Patriots': { venue: 'Gillette Stadium', city: 'Foxborough, MA', roof: 'Open-Air Stadium', surface: 'FieldTurf CORE', weather: '51°F, 11mph Wind, 15% PoP' },
+  'Jets': { venue: 'MetLife Stadium', city: 'East Rutherford, NJ', roof: 'Open-Air Stadium', surface: 'FieldTurf CORE', weather: '54°F, 8mph Wind, 10% PoP' },
+  'Ravens': { venue: 'M&T Bank Stadium', city: 'Baltimore, MD', roof: 'Open-Air Stadium', surface: 'Natural Bermuda Grass', weather: '58°F, 8mph Wind, 10% PoP' },
+  'Bengals': { venue: 'Paycor Stadium', city: 'Cincinnati, OH', roof: 'Open-Air Stadium', surface: 'FieldTurf CORE', weather: '55°F, 10mph Wind, 15% PoP' },
+  'Browns': { venue: 'Huntington Bank Field', city: 'Cleveland, OH', roof: 'Open-Air Stadium', surface: 'Natural Kentucky Bluegrass', weather: '48°F, 14mph Wind, 25% PoP' },
+  'Steelers': { venue: 'Acrisure Stadium', city: 'Pittsburgh, PA', roof: 'Open-Air Stadium', surface: 'Natural Kentucky Bluegrass', weather: '52°F, 11mph Wind, 20% PoP' },
+  'Texans': { venue: 'NRG Stadium', city: 'Houston, TX', roof: 'Retractable Roof (Closed)', surface: 'Hellas Matrix Turf', weather: 'Controlled 72°F Climate' },
+  'Colts': { venue: 'Lucas Oil Stadium', city: 'Indianapolis, IN', roof: 'Retractable Roof (Closed)', surface: 'Shaw Momentum Turf', weather: 'Controlled 72°F Climate' },
+  'Jaguars': { venue: 'EverBank Stadium', city: 'Jacksonville, FL', roof: 'Open-Air Stadium', surface: 'Natural Bermuda Grass', weather: '74°F, 7mph Wind, 10% PoP' },
+  'Titans': { venue: 'Nissan Stadium', city: 'Nashville, TN', roof: 'Open-Air Stadium', surface: 'Matrix Helix Turf', weather: '62°F, 9mph Wind, 10% PoP' },
+  'Broncos': { venue: 'Empower Field at Mile High', city: 'Denver, CO', roof: 'Open-Air Stadium', surface: 'Natural Kentucky Bluegrass', weather: '52°F, 9mph Wind, 0% PoP' },
+  'Chiefs': { venue: 'GEHA Field at Arrowhead', city: 'Kansas City, MO', roof: 'Open-Air Stadium', surface: 'Natural Bermuda Grass', weather: '59°F, 12mph Wind, 5% PoP' },
+  'Raiders': { venue: 'Allegiant Stadium', city: 'Las Vegas, NV', roof: 'Domed Stadium', surface: 'Natural Bermuda Grass Tray', weather: 'Controlled 72°F Climate' },
+  'Chargers': { venue: 'SoFi Stadium', city: 'Inglewood, CA', roof: 'Indoor Canopy Stadium', surface: 'Matrix Turf', weather: 'Controlled 70°F Climate' },
+  'Cowboys': { venue: 'AT&T Stadium', city: 'Arlington, TX', roof: 'Retractable Roof (Closed)', surface: 'Matrix Turf', weather: 'Controlled 72°F Climate' },
+  'Giants': { venue: 'MetLife Stadium', city: 'East Rutherford, NJ', roof: 'Open-Air Stadium', surface: 'FieldTurf CORE', weather: '54°F, 8mph Wind, 10% PoP' },
+  'Eagles': { venue: 'Lincoln Financial Field', city: 'Philadelphia, PA', roof: 'Open-Air Stadium', surface: 'Natural Grass (Desso)', weather: '56°F, 10mph Wind, 10% PoP' },
+  'Commanders': { venue: 'Northwest Stadium', city: 'Landover, MD', roof: 'Open-Air Stadium', surface: 'Natural Bermuda Grass', weather: '57°F, 9mph Wind, 10% PoP' },
+  'Bears': { venue: 'Soldier Field', city: 'Chicago, IL', roof: 'Open-Air Stadium', surface: 'Natural Bermuda Grass', weather: '49°F, 15mph Wind, 20% PoP' },
+  'Lions': { venue: 'Ford Field', city: 'Detroit, MI', roof: 'Domed Stadium', surface: 'FieldTurf CORE', weather: 'Controlled 72°F Climate' },
+  'Packers': { venue: 'Lambeau Field', city: 'Green Bay, WI', roof: 'Open-Air Stadium', surface: 'Natural Grass (SISGrass)', weather: '41°F, 16mph Wind, 30% PoP' },
+  'Vikings': { venue: 'U.S. Bank Stadium', city: 'Minneapolis, MN', roof: 'Domed Stadium', surface: 'Act Global Turf', weather: 'Controlled 72°F Climate' },
+  'Falcons': { venue: 'Mercedes-Benz Stadium', city: 'Atlanta, GA', roof: 'Retractable Roof (Closed)', surface: 'FieldTurf CORE', weather: 'Controlled 72°F Climate' },
+  'Panthers': { venue: 'Bank of America Stadium', city: 'Charlotte, NC', roof: 'Open-Air Stadium', surface: 'FieldTurf', weather: '66°F, 6mph Wind, 10% PoP' },
+  'Saints': { venue: 'Caesars Superdome', city: 'New Orleans, LA', roof: 'Domed Stadium', surface: 'Turf Nation', weather: 'Controlled 72°F Climate' },
+  'Buccaneers': { venue: 'Raymond James Stadium', city: 'Tampa, FL', roof: 'Open-Air Stadium', surface: 'Natural Bermuda Grass', weather: '78°F, 6mph Wind, 15% PoP' },
+  'Cardinals': { venue: 'State Farm Stadium', city: 'Glendale, AZ', roof: 'Retractable Roof (Closed)', surface: 'Natural Bermuda Grass Tray', weather: 'Controlled 72°F Climate' },
+  'Rams': { venue: 'SoFi Stadium', city: 'Inglewood, CA', roof: 'Indoor Canopy Stadium', surface: 'Matrix Turf', weather: 'Controlled 70°F Climate' },
+  '49ers': { venue: "Levi's Stadium", city: 'Santa Clara, CA', roof: 'Open-Air Stadium', surface: 'Natural Bermuda Grass', weather: '68°F, 7mph Wind, 0% PoP' },
+  'Seahawks': { venue: 'Lumen Field', city: 'Seattle, WA', roof: 'Open-Air Stadium', surface: 'FieldTurf Revolution', weather: '53°F, 12mph Wind, 40% Rain' }
+};
+
+function getNflStadium(teamName, compVenue, compWeather) {
+  const key = Object.keys(NFL_STADIUMS).find(k => (teamName || '').includes(k));
+  const base = key ? NFL_STADIUMS[key] : { venue: compVenue?.fullName || 'NFL Stadium', city: compVenue?.address?.city || '', roof: compVenue?.indoor ? 'Indoor Dome' : 'Open-Air Stadium', surface: 'Natural Grass', weather: '55°F, 10mph Wind, 10% PoP' };
+  
+  let weather = base.weather;
+  if (compWeather && compWeather.temperature) {
+    const gust = compWeather.gust ? `${compWeather.gust} Wind` : '10mph Wind';
+    const pop = compWeather.precipitation ? `${compWeather.precipitation} PoP` : '10% PoP';
+    weather = `${compWeather.temperature}°F, ${gust}, ${pop}`;
+  }
+  const cityName = compVenue?.address?.city ? `${compVenue.address.city}, ${compVenue.address.state || ''}`.trim() : base.city;
+  return {
+    venue: compVenue?.fullName || base.venue,
+    city: cityName,
+    fullVenue: cityName ? `${compVenue?.fullName || base.venue}, ${cityName}` : (compVenue?.fullName || base.venue),
+    roof: base.roof,
+    surface: base.surface,
+    weather
+  };
+}
+
+function getNflBroadcast(rawNet, homeName, awayName, isoTime, isBillsGame = false) {
+  const net = (rawNet || 'CBS').toUpperCase();
+  const dt = new Date(isoTime);
+  const hour = parseInt(dt.toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour12: false, hour: '2-digit' }), 10);
+  
+  if (net.includes('PRIME')) return { network: 'Prime Video', crew: 'Al Michaels, Kirk Herbstreit', tag: 'tv-prime' };
+  if (net.includes('NBC') || net.includes('PEACOCK')) return { network: 'NBC', crew: 'Mike Tirico, Cris Collinsworth', tag: 'tv-nbc' };
+  if (net.includes('ESPN') || net.includes('ABC')) return { network: net.includes('ABC') ? 'ABC/ESPN' : 'ESPN', crew: 'Joe Buck, Troy Aikman', tag: 'tv-espn' };
+  if (net.includes('NFL')) return { network: 'NFL Net', crew: 'Rich Eisen, Kurt Warner', tag: 'tv-nfln' };
+
+  if (net.includes('FOX')) {
+    if (homeName.includes('Rams') || homeName.includes('Chiefs') || awayName.includes('Chiefs') || hour >= 16) {
+      return { network: 'FOX', crew: 'Kevin Burkhardt, Tom Brady', tag: 'tv-fox' };
+    }
+    if (homeName.includes('Falcons') || homeName.includes('Packers')) {
+      return { network: 'FOX', crew: 'Joe Davis, Greg Olsen', tag: 'tv-fox' };
+    }
+    if (homeName.includes('Colts')) {
+      return { network: 'FOX', crew: 'Kenny Albert, Jonathan Vilma', tag: 'tv-fox' };
+    }
+    return { network: 'FOX', crew: 'Adam Amin, Mark Sanchez', tag: 'tv-fox' };
+  }
+
+  if (net.includes('CBS')) {
+    if (isBillsGame || homeName.includes('Chiefs') || awayName.includes('Chiefs') || hour >= 16) {
+      return { network: 'CBS', crew: 'Jim Nantz, Tony Romo', tag: 'tv-cbs' };
+    }
+    if (homeName.includes('Patriots') || homeName.includes('Bills')) {
+      return { network: 'CBS', crew: 'Ian Eagle, Charles Davis', tag: 'tv-cbs' };
+    }
+    if (homeName.includes('Buccaneers')) {
+      return { network: 'CBS', crew: 'Kevin Harlan, Trent Green', tag: 'tv-cbs' };
+    }
+    return { network: 'CBS', crew: 'Andrew Catalon, Tiki Barber', tag: 'tv-cbs' };
+  }
+
+  return { network: rawNet || 'CBS', crew: 'Regional Broadcast Crew', tag: 'tv-cbs' };
+}
+
+function getNflWindow(isoTime) {
+  const dt = new Date(isoTime);
+  const day = dt.toLocaleDateString('en-US', { timeZone: 'America/New_York', weekday: 'short' });
+  const hour = parseInt(dt.toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour12: false, hour: '2-digit' }), 10);
+  
+  if (day === 'Thu') {
+    return { key: 'TNF', label: 'Thursday Night Football', badge: 'Prime Video Exclusive', order: 1 };
+  }
+  if (day === 'Sun') {
+    if (hour < 12) return { key: 'INTL', label: 'NFL International Series', badge: 'Morning London / Germany Slate', order: 2 };
+    if (hour >= 12 && hour < 16) return { key: 'EARLY', label: 'Sunday 1:00 PM ET Early Window', badge: 'Regional CBS / FOX Lineups', order: 3 };
+    if (hour >= 16 && hour < 20) return { key: 'LATE', label: 'Sunday 4:25 PM ET National Window', badge: "America's Game of the Week", order: 4 };
+    return { key: 'SNF', label: 'Sunday Night Football', badge: 'NBC / Peacock Marquee', order: 5 };
+  }
+  if (day === 'Mon') {
+    return { key: 'MNF', label: 'Monday Night Football', badge: 'ESPN / ABC Prime Time', order: 6 };
+  }
+  return { key: 'SPECIAL', label: `${day} Football Window`, badge: 'Marquee Broadcast', order: 7 };
+}
+
 // Fetch live out-of-town scoreboard and rooting leverage tags
 async function fetchNflScoreboard() {
   const outOfTownGames = [];
@@ -224,10 +340,22 @@ async function fetchNflScoreboard() {
         }
       }
 
+      const stadium = getNflStadium(homeName, comp.venue, comp.weather);
+      const broadcastDetails = getNflBroadcast(broadcast, homeName, awayName, ev.date);
+      const windowInfo = getNflWindow(ev.date);
+
       outOfTownGames.push({
         isoTime: ev.date,
         slot,
-        broadcast,
+        broadcast: broadcastDetails.network,
+        announcers: broadcastDetails.crew,
+        venue: stadium.fullVenue,
+        roof: stadium.roof,
+        surface: stadium.surface,
+        weather: stadium.weather,
+        window: windowInfo.key,
+        windowLabel: windowInfo.label,
+        windowBadge: windowInfo.badge,
         statusState,
         statusDetail,
         awayName,
@@ -708,8 +836,19 @@ async function fetchNextGameSchedule() {
         billsSchedule.isoTime = nextGame.date;
         billsSchedule.winChance = winChance;
         billsSchedule.matchupRecords = `${bufDisplay} vs. ${oppDisplay}`;
-        billsSchedule.broadcast = tvNetwork;
-        billsSchedule.venue = venueName;
+        const billsStadium = getNflStadium(isHome ? 'Buffalo Bills' : oppName, comp.venue, comp.weather);
+        const billsBroadcast = getNflBroadcast(tvNetwork, isHome ? 'Buffalo Bills' : oppName, isHome ? oppName : 'Buffalo Bills', nextGame.date, true);
+        const billsWindow = getNflWindow(nextGame.date);
+
+        billsSchedule.broadcast = billsBroadcast.network;
+        billsSchedule.announcers = billsBroadcast.crew;
+        billsSchedule.venue = billsStadium.fullVenue;
+        billsSchedule.roof = billsStadium.roof;
+        billsSchedule.surface = billsStadium.surface;
+        billsSchedule.weather = billsStadium.weather;
+        billsSchedule.window = billsWindow.key;
+        billsSchedule.windowLabel = billsWindow.label;
+        billsSchedule.windowBadge = billsWindow.badge;
 
         const matchupInjuries = await fetchGameInjuries(nextGame.id, oppName, oppId);
         if (matchupInjuries.length > 0) {
