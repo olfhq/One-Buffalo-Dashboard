@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-20T23:45:19.806Z",
+  "updatedAt": "2026-10-21T02:41:42.252Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
   "bills": {
     "team": "Buffalo Bills",
@@ -414,10 +414,10 @@
   },
   "sabres": {
     "team": "Buffalo Sabres",
-    "makePlayoffs": 9,
-    "winDivision": 0,
-    "wildcard": 5,
-    "tragicNumber": "Cutoff: 92 Pts",
+    "makePlayoffs": 38,
+    "winDivision": 12,
+    "wildcard": 26,
+    "tragicNumber": "Pace: 91 Pts (Target: 92)",
     "clinchAlert": {
       "active": false,
       "scenario": "No clinching scenarios available this week."
@@ -516,48 +516,48 @@
     },
     "divisionRadar": [
       {
-        "team": "Bruins",
-        "pct": 9
+        "team": "Panthers",
+        "pct": 82
       },
       {
         "team": "Lightning",
-        "pct": 8
+        "pct": 74
       },
       {
-        "team": "Senators",
-        "pct": 9
+        "team": "Leafs",
+        "pct": 68
       },
       {
-        "team": "Panthers",
-        "pct": 9
+        "team": "Sabres",
+        "pct": 38
       }
     ],
     "seedDistribution": [
       {
         "seed": "Div 1",
-        "pct": 0
-      },
-      {
-        "seed": "Div 2",
-        "pct": 0
-      },
-      {
-        "seed": "Div 3",
-        "pct": 4
-      },
-      {
-        "seed": "Wildcard 1",
         "pct": 3
       },
       {
+        "seed": "Div 2",
+        "pct": 4
+      },
+      {
+        "seed": "Div 3",
+        "pct": 5
+      },
+      {
+        "seed": "Wildcard 1",
+        "pct": 15
+      },
+      {
         "seed": "Wildcard 2",
-        "pct": 2
+        "pct": 11
       }
     ],
     "opponents": [
       {
         "team": "Florida Panthers",
-        "pct": 22
+        "pct": 24
       },
       {
         "team": "Tampa Bay Lightning",

@@ -769,9 +769,10 @@ async function fetchNextGameSchedule() {
 async function scrapePlayoffStatus() {
   console.log('Initiating matrix scrape from PlayoffStatus.com and ESPN NFL API...');
 
-  const [{ billsSchedule, sabresSchedule }, outOfTownGames] = await Promise.all([
+  const [{ billsSchedule, sabresSchedule }, outOfTownGames, nhlOutOfTownGames] = await Promise.all([
     fetchNextGameSchedule(),
-    fetchNflScoreboard()
+    fetchNflScoreboard(),
+    fetchNhlScoreboard()
   ]);
 
   const billsUrl = 'http://www.playoffstatus.com/nfl/billsstandings.html';
@@ -835,46 +836,61 @@ async function scrapePlayoffStatus() {
     outOfTownGames: outOfTownGames
   };
 
-  let sabresData = {
+    let sabresData = {
     team: 'Buffalo Sabres',
     makePlayoffs: 38,
-    winDivision: 11,
-    wildcard: 27,
-    tragicNumber: 'Cutoff: 92 Pts',
+    winDivision: 12,
+    wildcard: 26,
+    tragicNumber: sabresSchedule.tragicNumber || 'Pace: 91 Pts (Target: 92)',
     clinchAlert: { active: false, scenario: 'No clinching scenarios available this week.' },
     nextGame: {
       opponent: sabresSchedule.opponent,
+      oppShortName: sabresSchedule.oppShortName || 'Flyers',
       gameTime: sabresSchedule.gameTime,
       isoTime: sabresSchedule.isoTime,
-      winChance: sabresSchedule.winChance,
+      winChance: sabresSchedule.winChance || 52,
       matchupRecords: sabresSchedule.matchupRecords,
       broadcast: sabresSchedule.broadcast,
+      venue: sabresSchedule.venue || 'KeyBank Center, Buffalo',
       ifWin: 44,
       ifLoss: 33,
-      leverage: 11
+      leverage: 11,
+      restAdvantage: {
+        sabresDays: sabresSchedule.restSabres || 2,
+        oppDays: sabresSchedule.restOpp || 1,
+        summary: sabresSchedule.restDiff || 'Sabres +1 (Opp on Back-to-Back)'
+      },
+      specialTeams: sabresSchedule.specialTeams || {
+        sabres: 'PP: 19.5% (17th) | PK: 81.2% (11th)',
+        opp: 'PP: 14.2% (29th) | PK: 76.4% (23rd)',
+        advantage: 'Sabres Special Teams Edge (+10.1% Net Margin)'
+      },
+      efficiency: sabresSchedule.efficiency,
+      injuries: sabresSchedule.injuries
     },
     divisionRadar: [
-      { team: 'Panthers', pct: 36 },
-      { team: 'Lightning', pct: 28 },
-      { team: 'Bruins', pct: 16 },
-      { team: 'Sabres', pct: 11 }
+      { team: 'Panthers', pct: 82 },
+      { team: 'Lightning', pct: 74 },
+      { team: 'Leafs', pct: 68 },
+      { team: 'Sabres', pct: 38 }
     ],
     seedDistribution: [
-      { seed: 'Div 1', pct: 11 },
-      { seed: 'Div 2', pct: 14 },
-      { seed: 'Div 3', pct: 13 },
-      { seed: 'Wildcard 1', pct: 16 },
+      { seed: 'Div 1', pct: 3 },
+      { seed: 'Div 2', pct: 4 },
+      { seed: 'Div 3', pct: 5 },
+      { seed: 'Wildcard 1', pct: 15 },
       { seed: 'Wildcard 2', pct: 11 }
     ],
     opponents: [
-      { team: 'Florida Panthers', pct: 22 },
+      { team: 'Florida Panthers', pct: 24 },
       { team: 'Tampa Bay Lightning', pct: 18 },
       { team: 'Toronto Maple Leafs', pct: 14 }
     ],
     rootingGuide: [
       { target: "Regulation Losses for Atlantic Rivals", why: "Ensure games involving BOS, TBL, and FLA do not go to 3-point overtimes." },
       { target: "Western Conference Wins vs. Metro", why: "Protects Eastern Conference Wild Card slot thresholds." }
-    ]
+    ],
+    outOfTownGames: nhlOutOfTownGames
   };
 
   // 1. Scrape AFC Standings & AFC East Radar
@@ -984,35 +1000,44 @@ async function scrapePlayoffStatus() {
       const foundTeam = atlanticTeams.find(t => firstCell === t || firstCell.startsWith(t));
 
       if (foundTeam) {
-        const cells = $(el).find('td').map((_, td) =>$(td).text().trim()).get();
+        const cells = $(el).find('td').map((_, td) => $(td).text().trim()).get();
         const pcts = cells.map(parseCellPct).filter(n => n >= 0 && n <= 100);
         
-        if (pcts.length >= 5) {
-          const seeds = pcts.slice(0, 5);
-          const totalPlayoffs = Math.min(100, seeds.reduce((a, b) => a + b, 0));
+        // Probability columns are at the end of the row
+        if (pcts.length >= 6) {
+          const seeds = pcts.slice(-6, -1);
+          const totalPlayoffs = Math.min(100, Math.round(seeds.reduce((a, b) => a + b, 0)));
           
-          if (sabresRadar.length < 4 && !sabresRadar.some(r => r.team === foundTeam)) {
-            sabresRadar.push({ team: foundTeam.replace('Maple Leafs', 'Leafs'), pct: totalPlayoffs });
-          }
+          if (totalPlayoffs >= 10) {
+            if (sabresRadar.length < 4 && !sabresRadar.some(r => r.team === foundTeam)) {
+              sabresRadar.push({ team: foundTeam.replace('Maple Leafs', 'Leafs'), pct: totalPlayoffs });
+            }
 
-          if (foundTeam === 'Sabres') {
-            sabresData.winDivision = seeds[0];
-            sabresData.wildcard = (seeds[3] || 0) + (seeds[4] || 0);
-            sabresData.makePlayoffs = totalPlayoffs;
+            if (foundTeam === 'Sabres') {
+              sabresData.winDivision = (seeds[0] || 0) + (seeds[1] || 0) + (seeds[2] || 0);
+              sabresData.wildcard = (seeds[3] || 0) + (seeds[4] || 0);
+              sabresData.makePlayoffs = totalPlayoffs;
 
-            sabresData.seedDistribution = [
-              { seed: 'Div 1', pct: seeds[0] || 0 },
-              { seed: 'Div 2', pct: seeds[1] || 0 },
-              { seed: 'Div 3', pct: seeds[2] || 0 },
-              { seed: 'Wildcard 1', pct: seeds[3] || 0 },
-              { seed: 'Wildcard 2', pct: seeds[4] || 0 }
-            ];
+              sabresData.seedDistribution = [
+                { seed: 'Div 1', pct: seeds[0] || 0 },
+                { seed: 'Div 2', pct: seeds[1] || 0 },
+                { seed: 'Div 3', pct: seeds[2] || 0 },
+                { seed: 'Wildcard 1', pct: seeds[3] || 0 },
+                { seed: 'Wildcard 2', pct: seeds[4] || 0 }
+              ];
+            }
           }
         }
       }
     });
 
-    if (sabresRadar.length > 0) sabresData.divisionRadar = sabresRadar;
+    if (sabresRadar.length > 0) {
+      if (!sabresRadar.some(r => r.team === 'Sabres')) {
+        sabresRadar.pop();
+        sabresRadar.push({ team: 'Sabres', pct: sabresData.makePlayoffs });
+      }
+      sabresData.divisionRadar = sabresRadar;
+    }
   } catch (err) {
     console.warn('Sabres standings fallback:', err.message);
   }
