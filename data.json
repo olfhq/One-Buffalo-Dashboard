@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-21T02:41:42.252Z",
+  "updatedAt": "2026-10-21T03:04:09.730Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
   "bills": {
     "team": "Buffalo Bills",
@@ -424,16 +424,16 @@
     },
     "nextGame": {
       "opponent": "vs. Philadelphia",
+      "oppShortName": "Flyers",
       "gameTime": "Wed, Oct 21 • 7:30 PM ET",
       "isoTime": "2026-10-21T23:30:00Z",
       "winChance": 52,
       "matchupRecords": "Sabres (4-3-2, 10 pts, OT1) vs. Philadelphia (2-6-3, 7 pts, W2)",
       "broadcast": "TNT",
+      "venue": "KeyBank Center, Buffalo",
       "ifWin": 44,
       "ifLoss": 33,
       "leverage": 11,
-      "oppShortName": "Flyers",
-      "venue": "KeyBank Center, Buffalo",
       "restAdvantage": {
         "sabresDays": 2,
         "oppDays": 1,
