@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-20T23:45:19.806Z",
+  "updatedAt": "2026-10-21T02:32:19.623Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
   "bills": {
     "team": "Buffalo Bills",
@@ -431,88 +431,7 @@
       "broadcast": "TNT",
       "ifWin": 44,
       "ifLoss": 33,
-      "leverage": 11,
-      "oppShortName": "Flyers",
-      "venue": "KeyBank Center, Buffalo",
-      "restAdvantage": {
-        "sabresDays": 2,
-        "oppDays": 1,
-        "summary": "Sabres +1 (Opp on Back-to-Back)"
-      },
-      "specialTeams": {
-        "sabres": "PP: 19.5% (17th) | PK: 81.2% (11th)",
-        "opp": "PP: 14.2% (29th) | PK: 76.4% (23rd)",
-        "advantage": "Sabres Special Teams Edge (+10.1% Net Margin)"
-      },
-      "efficiency": [
-        {
-          "metric": "Goals / Game",
-          "sabres": "3.12 (12th)",
-          "opp": "2.55 (24th)"
-        },
-        {
-          "metric": "Goals Against / Game",
-          "sabres": "3.20 (18th)",
-          "opp": "3.60 (28th)"
-        },
-        {
-          "metric": "Power Play %",
-          "sabres": "19.5% (17th)",
-          "opp": "14.2% (29th)"
-        },
-        {
-          "metric": "Penalty Kill %",
-          "sabres": "81.2% (11th)",
-          "opp": "76.4% (23rd)"
-        },
-        {
-          "metric": "Shots / Game",
-          "sabres": "29.8 (15th)",
-          "opp": "27.4 (25th)"
-        },
-        {
-          "metric": "Faceoff Win %",
-          "sabres": "48.2% (22nd)",
-          "opp": "49.5% (18th)"
-        }
-      ],
-      "injuries": [
-        {
-          "player": "Ukko-Pekka Luukkonen",
-          "pos": "G",
-          "status": "Probable",
-          "injury": "Expected Starter (2.78 GAA, .912 SV%)",
-          "team": "Sabres"
-        },
-        {
-          "player": "Samuel Ersson",
-          "pos": "G",
-          "status": "Probable",
-          "injury": "Expected Starter (3.05 GAA, .898 SV%)",
-          "team": "Flyers"
-        },
-        {
-          "player": "Zach Benson",
-          "pos": "LW",
-          "status": "Questionable",
-          "injury": "Lower Body",
-          "team": "Sabres"
-        },
-        {
-          "player": "Mattias Samuelsson",
-          "pos": "D",
-          "status": "Injured Reserve",
-          "injury": "Lower Body",
-          "team": "Sabres"
-        },
-        {
-          "player": "Ryan Ellis",
-          "pos": "D",
-          "status": "Injured Reserve",
-          "injury": "Back",
-          "team": "Flyers"
-        }
-      ]
+      "leverage": 11
     },
     "divisionRadar": [
       {
@@ -576,83 +495,6 @@
       {
         "target": "Western Conference Wins vs. Metro",
         "why": "Protects Eastern Conference Wild Card slot thresholds."
-      }
-    ],
-    "outOfTownGames": [
-      {
-        "isoTime": "2026-10-20T23:00:00Z",
-        "slot": "Tue, Oct 20 • 7:00 PM ET",
-        "broadcast": "ESPN+",
-        "statusState": "post",
-        "statusDetail": "Final",
-        "awayName": "Minnesota Wild",
-        "awayScore": "4",
-        "homeName": "Florida Panthers",
-        "homeScore": "1",
-        "verdict": "GOOD FOR BUFFALO",
-        "impactClass": "good",
-        "target": "Root for Minnesota Wild",
-        "why": "Minnesota Wild handed Florida a regulation loss (0 standings points), slowing down the Atlantic leader."
-      },
-      {
-        "isoTime": "2026-10-20T23:00:00Z",
-        "slot": "Tue, Oct 20 • 7:00 PM ET",
-        "broadcast": "NESN",
-        "statusState": "post",
-        "statusDetail": "Final/OT",
-        "awayName": "Tampa Bay Lightning",
-        "awayScore": "3",
-        "homeName": "Boston Bruins",
-        "homeScore": "2",
-        "verdict": "3-POINT GAME DANGER",
-        "impactClass": "warning",
-        "target": "Root for Regulation Finish",
-        "why": "Overtime awarded 3 total points to Atlantic rivals. Boston earned a point despite the loss."
-      },
-      {
-        "isoTime": "2026-10-20T23:30:00Z",
-        "slot": "Tue, Oct 20 • 7:30 PM ET",
-        "broadcast": "TSN4",
-        "statusState": "post",
-        "statusDetail": "Final",
-        "awayName": "New York Rangers",
-        "awayScore": "4",
-        "homeName": "Toronto Maple Leafs",
-        "homeScore": "1",
-        "verdict": "REGULATION LOSS",
-        "impactClass": "good",
-        "target": "Root for New York Rangers",
-        "why": "Toronto suffered a regulation loss, keeping them from pulling ahead in the Atlantic standings."
-      },
-      {
-        "isoTime": "2026-10-21T23:00:00Z",
-        "slot": "Wed, Oct 21 • 7:00 PM ET",
-        "broadcast": "TNT",
-        "statusState": "pre",
-        "statusDetail": "Scheduled",
-        "awayName": "Detroit Red Wings",
-        "awayScore": "0",
-        "homeName": "New York Islanders",
-        "homeScore": "0",
-        "verdict": "ATLANTIC WATCH",
-        "impactClass": "warning",
-        "target": "Root for New York Islanders in Regulation",
-        "why": "Detroit regulation loss prevents an Atlantic division rival from collecting points."
-      },
-      {
-        "isoTime": "2026-10-22T23:00:00Z",
-        "slot": "Thu, Oct 22 • 7:00 PM ET",
-        "broadcast": "ESPN+",
-        "statusState": "pre",
-        "statusDetail": "Scheduled",
-        "awayName": "Dallas Stars",
-        "awayScore": "0",
-        "homeName": "Boston Bruins",
-        "homeScore": "0",
-        "verdict": "WEST OVER EAST",
-        "impactClass": "good",
-        "target": "Root for Dallas Stars in Regulation",
-        "why": "Western conference win keeps both standings points out of the Eastern playoff pool."
       }
     ]
   }
