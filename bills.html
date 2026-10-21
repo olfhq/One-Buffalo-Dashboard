@@ -781,6 +781,84 @@
       border-color: rgba(253, 224, 71, 0.25);
       background: rgba(234, 179, 8, 0.08);
     }
+
+    /* SLATE FILTER BAR & DIVIDERS */
+    .slate-filter-bar {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 0.85rem;
+      flex-wrap: wrap;
+    }
+
+    .slate-filter-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 0.45rem 0.9rem;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.2s ease;
+    }
+
+    .slate-filter-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      border-color: rgba(56, 189, 248, 0.35);
+    }
+
+    .slate-filter-btn.active {
+      background: rgba(56, 189, 248, 0.15);
+      border-color: var(--accent-blue);
+      color: var(--accent-blue);
+    }
+
+    .filter-count-badge {
+      background: rgba(255, 255, 255, 0.08);
+      padding: 0.1rem 0.45rem;
+      border-radius: 10px;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+    .slate-filter-btn.active .filter-count-badge {
+      background: rgba(56, 189, 248, 0.25);
+      color: #fff;
+    }
+
+    .slate-main-divider {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.65rem 0.9rem;
+      border-radius: 8px;
+      margin-top: 1rem;
+      margin-bottom: 0.5rem;
+      font-weight: 800;
+      font-size: 0.85rem;
+      letter-spacing: 0.4px;
+    }
+
+    .divider-upcoming {
+      background: linear-gradient(90deg, rgba(56, 189, 248, 0.15), rgba(16, 185, 129, 0.05));
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      color: var(--accent-blue);
+    }
+
+    .divider-results {
+      background: linear-gradient(90deg, rgba(100, 116, 139, 0.2), rgba(15, 23, 42, 0.3));
+      border: 1px solid rgba(100, 116, 139, 0.3);
+      color: #cbd5e1;
+    }
+
+    .team-winner { color: #fff; font-weight: 800; }
+    .team-loser { color: var(--text-muted); opacity: 0.75; }
+    .points-winner { color: #34d399 !important; font-weight: 800; }
+    .score-team-upcoming { color: var(--text-muted); font-size: 0.85rem; }
+    .game-status-upcoming { color: #38bdf8; font-weight: 800; }
   </style>
 </head>
 <body>
@@ -934,9 +1012,26 @@
           <span>Weekly NFL Schedule & Broadcast Guide</span>
           <span style="font-size: 0.7rem; color: var(--accent-blue);">All Windows & Stadium Context</span>
         </div>
+
+        <!-- SLATE FILTER BAR: ALL / UPCOMING / RESULTS -->
+        <div class="slate-filter-bar">
+          <button class="slate-filter-btn active" id="filter-btn-all" onclick="setSlateFilter('all')">
+            <span>All Matchups</span>
+            <span class="filter-count-badge" id="count-all">--</span>
+          </button>
+          <button class="slate-filter-btn" id="filter-btn-upcoming" onclick="setSlateFilter('upcoming')">
+            <span>🕒 Upcoming Slate</span>
+            <span class="filter-count-badge" id="count-upcoming">--</span>
+          </button>
+          <button class="slate-filter-btn" id="filter-btn-results" onclick="setSlateFilter('results')">
+            <span>✅ Week Results</span>
+            <span class="filter-count-badge" id="count-results">--</span>
+          </button>
+        </div>
+
         <div id="bills-scoreboard-grid" style="display: flex; flex-direction: column; gap: 0.85rem;">
           <div style="color: var(--text-muted); font-size: 0.85rem; text-align: center; padding: 1rem;">
-            Loading out-of-town scores...
+            Loading weekly slate & broadcast lineups...
           </div>
         </div>
       </div>
@@ -988,6 +1083,15 @@
     let liveBillsPollTimer = null;
     let currentBillsOutOfTownGames = [];
     let currentBillsNextGame = null;
+    let currentSlateFilter = 'all';
+
+    function setSlateFilter(filter) {
+      currentSlateFilter = filter;
+      document.querySelectorAll('.slate-filter-btn').forEach(btn => btn.classList.remove('active'));
+      const activeBtn = document.getElementById(`filter-btn-${filter}`);
+      if (activeBtn) activeBtn.classList.add('active');
+      renderBillsScoreboard(currentBillsOutOfTownGames, currentBillsNextGame);
+    }
 
     const CLIENT_NFL_STADIUMS = {
       'Bills': { venue: 'Highmark Stadium', city: 'Orchard Park, NY', roof: 'Open-Air Stadium', surface: 'Natural Grass', weather: '46°F, 18mph Wind, 20% PoP' },
@@ -1088,14 +1192,147 @@
       };
     }
 
+    function renderGameCardHtml(g) {
+      let cardBorderClass = 'score-card-neutral';
+      let verdictBadgeClass = 'verdict-neutral';
+
+      if (g.impactClass === 'good') {
+        cardBorderClass = 'score-card-good';
+        verdictBadgeClass = 'verdict-good';
+      } else if (g.impactClass === 'bad') {
+        cardBorderClass = 'score-card-bad';
+        verdictBadgeClass = 'verdict-bad';
+      } else if (g.impactClass === 'warning') {
+        cardBorderClass = 'score-card-warning';
+        verdictBadgeClass = 'verdict-warning';
+      }
+
+      const isLive = g.statusState === 'in';
+      const isPost = g.statusState === 'post';
+      
+      let statusHtml = '';
+      if (isLive) {
+        statusHtml = `<span class="game-status-badge game-status-live"><span class="live-dot"></span>${g.statusDetail || 'LIVE'}</span>`;
+      } else if (isPost) {
+        statusHtml = `<span class="game-status-badge">${g.statusDetail || 'Final'}</span>`;
+      } else {
+        const timePart = g.slot?.includes('•') ? g.slot.split('•')[1].trim() : 'Scheduled';
+        statusHtml = `<span class="game-status-badge game-status-upcoming">🕒 ${timePart}</span>`;
+      }
+
+      const bcClass = (g.broadcast || '').toLowerCase().includes('cbs') ? 'tv-cbs'
+        : (g.broadcast || '').toLowerCase().includes('fox') ? 'tv-fox'
+        : (g.broadcast || '').toLowerCase().includes('prime') ? 'tv-prime'
+        : (g.broadcast || '').toLowerCase().includes('nbc') ? 'tv-nbc'
+        : (g.broadcast || '').toLowerCase().includes('espn') ? 'tv-espn'
+        : (g.broadcast || '').toLowerCase().includes('nfl') ? 'tv-nfln' : 'tv-cbs';
+
+      const awaySc = parseInt(g.awayScore);
+      const homeSc = parseInt(g.homeScore);
+      const hasScores = !isNaN(awaySc) && !isNaN(homeSc);
+      const awayWon = hasScores && awaySc > homeSc;
+      const homeWon = hasScores && homeSc > awaySc;
+
+      const awayRowClass = isPost && hasScores ? (awayWon ? 'team-winner' : 'team-loser') : '';
+      const homeRowClass = isPost && hasScores ? (homeWon ? 'team-winner' : 'team-loser') : '';
+      const awayPtsClass = isPost && hasScores && awayWon ? 'points-winner' : '';
+      const homePtsClass = isPost && hasScores && homeWon ? 'points-winner' : '';
+
+      const awayDisplayScore = hasScores ? g.awayScore : '<span class="score-team-upcoming">--</span>';
+      const homeDisplayScore = hasScores ? g.homeScore : '<span class="score-team-upcoming">--</span>';
+
+      return `
+        <div class="score-card ${cardBorderClass}">
+          <div class="score-card-header">
+            <div class="score-card-meta">
+              ${statusHtml}
+              <span>•</span>
+              <span>${g.slot}</span>
+            </div>
+            <span class="verdict-badge ${verdictBadgeClass}">${g.verdict}</span>
+          </div>
+
+          <div class="score-teams-grid">
+            <div class="score-team-row ${awayRowClass}">
+              <span>${g.awayName}</span>
+              <span class="score-team-points ${awayPtsClass}">${awayDisplayScore}</span>
+            </div>
+            <div class="score-team-row ${homeRowClass}">
+              <span>${g.homeName}</span>
+              <span class="score-team-points ${homePtsClass}">${homeDisplayScore}</span>
+            </div>
+          </div>
+
+          <!-- EXACT VENUE / BROADCAST / WEATHER PILLS -->
+          <div class="game-venue-strip">
+            <span class="venue-pill ${bcClass}">📺 <strong>${g.broadcast}</strong> <span class="crew-txt">(${g.announcers})</span></span>
+            <span class="venue-pill pill-stadium">📍 ${g.venue}</span>
+            <span class="venue-pill pill-roof">🏟️ ${g.roof}</span>
+            <span class="venue-pill pill-surface">🌱 ${g.surface}</span>
+            <span class="venue-pill pill-weather">⛅ ${g.weather}</span>
+          </div>
+
+          <div class="score-analysis-box">
+            <div class="score-target-title">${g.target}</div>
+            <div class="score-why-detail">${g.why}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderWindowGroups(gamesList) {
+      if (!gamesList || gamesList.length === 0) return '';
+      const windowOrder = ['TNF', 'INTL', 'EARLY', 'LATE', 'SNF', 'MNF', 'SPECIAL'];
+      const grouped = {};
+      gamesList.forEach(g => {
+        const wKey = g.window || 'EARLY';
+        if (!grouped[wKey]) grouped[wKey] = [];
+        grouped[wKey].push(g);
+      });
+
+      let out = '';
+      windowOrder.forEach(wKey => {
+        const list = grouped[wKey];
+        if (!list || list.length === 0) return;
+        const firstGame = list[0];
+        const wTitle = firstGame.windowLabel || `${wKey} Window`;
+        const wBadge = firstGame.windowBadge || 'Broadcast Lineup';
+
+        out += `
+          <div class="window-header">
+            <span class="window-title">⚡ ${wTitle}</span>
+            <span class="window-badge">${wBadge}</span>
+          </div>
+        `;
+        list.forEach(g => {
+          out += renderGameCardHtml(g);
+        });
+      });
+      return out;
+    }
+
     function renderBillsScoreboard(games, billsGame) {
       const scoreContainer = document.getElementById('bills-scoreboard-grid');
       if (!scoreContainer) return;
 
       const bg = billsGame || currentBillsNextGame;
+      const allGames = (Array.isArray(games) ? games : []).map(enrichGameMetadata);
+
+      const upcomingGames = allGames.filter(g => g.statusState !== 'post');
+      const resultsGames = allGames.filter(g => g.statusState === 'post');
+
+      // Update counter badges
+      const countAllEl = document.getElementById('count-all');
+      const countUpEl = document.getElementById('count-upcoming');
+      const countResEl = document.getElementById('count-results');
+      if (countAllEl) countAllEl.textContent = allGames.length;
+      if (countUpEl) countUpEl.textContent = upcomingGames.length;
+      if (countResEl) countResEl.textContent = resultsGames.length;
+
       let html = '';
 
-      // 1. PINNED BUFFALO BILLS MARQUEE GAME (Idea C & User Spec)
+      // Pinned Buffalo Bills Card
+      let billsCardHtml = '';
       if (bg) {
         const enrichedBills = {
           opponent: bg.opponent || 'vs. Ravens',
@@ -1121,7 +1358,7 @@
           : (enrichedBills.broadcast || '').toLowerCase().includes('nbc') ? 'tv-nbc'
           : (enrichedBills.broadcast || '').toLowerCase().includes('espn') ? 'tv-espn' : 'tv-cbs';
 
-        html += `
+        billsCardHtml = `
           <div class="pinned-bills-card">
             <div class="pinned-header-bar">
               <div class="pinned-title-group">
@@ -1158,113 +1395,44 @@
         `;
       }
 
-      if (!Array.isArray(games) || games.length === 0) {
-        html += `
-          <div style="color: var(--text-muted); font-size: 0.85rem; text-align: center; padding: 1.5rem;">
-            No out-of-town games currently scheduled for this window.
-          </div>
-        `;
-        scoreContainer.innerHTML = html;
-        if (bg?.isoTime) startCountdown('pinned-bills-countdown', bg.isoTime);
-        return;
-      }
-
-      // Enrich and Group games by broadcast window
-      const enrichedGames = games.map(enrichGameMetadata);
-
-      // Distinct window ordering
-      const windowOrder = ['TNF', 'INTL', 'EARLY', 'LATE', 'SNF', 'MNF', 'SPECIAL'];
-      const grouped = {};
-      enrichedGames.forEach(g => {
-        const wKey = g.window || 'EARLY';
-        if (!grouped[wKey]) grouped[wKey] = [];
-        grouped[wKey].push(g);
-      });
-
-      windowOrder.forEach(wKey => {
-        const list = grouped[wKey];
-        if (!list || list.length === 0) return;
-
-        const firstGame = list[0];
-        const wTitle = firstGame.windowLabel || `${wKey} Window`;
-        const wBadge = firstGame.windowBadge || 'Broadcast Lineup';
-
-        html += `
-          <div class="window-header">
-            <span class="window-title">⚡ ${wTitle}</span>
-            <span class="window-badge">${wBadge}</span>
-          </div>
-        `;
-
-        list.forEach(g => {
-          let cardBorderClass = 'score-card-neutral';
-          let verdictBadgeClass = 'verdict-neutral';
-
-          if (g.impactClass === 'good') {
-            cardBorderClass = 'score-card-good';
-            verdictBadgeClass = 'verdict-good';
-          } else if (g.impactClass === 'bad') {
-            cardBorderClass = 'score-card-bad';
-            verdictBadgeClass = 'verdict-bad';
-          } else if (g.impactClass === 'warning') {
-            cardBorderClass = 'score-card-warning';
-            verdictBadgeClass = 'verdict-warning';
-          }
-
-          const isLive = g.statusState === 'in';
-          const statusHtml = isLive 
-            ? `<span class="game-status-badge game-status-live"><span class="live-dot"></span>${g.statusDetail || 'LIVE'}</span>`
-            : `<span class="game-status-badge">${g.statusDetail || 'Scheduled'}</span>`;
-
-          const bcClass = (g.broadcast || '').toLowerCase().includes('cbs') ? 'tv-cbs'
-            : (g.broadcast || '').toLowerCase().includes('fox') ? 'tv-fox'
-            : (g.broadcast || '').toLowerCase().includes('prime') ? 'tv-prime'
-            : (g.broadcast || '').toLowerCase().includes('nbc') ? 'tv-nbc'
-            : (g.broadcast || '').toLowerCase().includes('espn') ? 'tv-espn'
-            : (g.broadcast || '').toLowerCase().includes('nfl') ? 'tv-nfln' : 'tv-cbs';
-
+      if (currentSlateFilter === 'upcoming') {
+        html += billsCardHtml;
+        if (upcomingGames.length > 0) {
+          html += renderWindowGroups(upcomingGames);
+        } else {
+          html += `<div style="color: var(--text-muted); font-size: 0.85rem; text-align: center; padding: 1.5rem;">No upcoming games scheduled for this slate.</div>`;
+        }
+      } else if (currentSlateFilter === 'results') {
+        if (resultsGames.length > 0) {
+          html += renderWindowGroups(resultsGames);
+        } else {
+          html += `<div style="color: var(--text-muted); font-size: 0.85rem; text-align: center; padding: 1.5rem;">No completed results recorded for this slate yet.</div>`;
+        }
+      } else {
+        // 'all' mode: Show both sections clearly
+        html += billsCardHtml;
+        if (upcomingGames.length > 0) {
           html += `
-            <div class="score-card ${cardBorderClass}">
-              <div class="score-card-header">
-                <div class="score-card-meta">
-                  ${statusHtml}
-                  <span>•</span>
-                  <span>${g.slot}</span>
-                </div>
-                <span class="verdict-badge ${verdictBadgeClass}">${g.verdict}</span>
-              </div>
-
-              <div class="score-teams-grid">
-                <div class="score-team-row">
-                  <span>${g.awayName}</span>
-                  <span class="score-team-points">${g.awayScore}</span>
-                </div>
-                <div class="score-team-row">
-                  <span>${g.homeName}</span>
-                  <span class="score-team-points">${g.homeScore}</span>
-                </div>
-              </div>
-
-              <!-- EXACT VENUE / BROADCAST / WEATHER PILLS -->
-              <div class="game-venue-strip">
-                <span class="venue-pill ${bcClass}">📺 <strong>${g.broadcast}</strong> <span class="crew-txt">(${g.announcers})</span></span>
-                <span class="venue-pill pill-stadium">📍 ${g.venue}</span>
-                <span class="venue-pill pill-roof">🏟️ ${g.roof}</span>
-                <span class="venue-pill pill-surface">🌱 ${g.surface}</span>
-                <span class="venue-pill pill-weather">⛅ ${g.weather}</span>
-              </div>
-
-              <div class="score-analysis-box">
-                <div class="score-target-title">${g.target}</div>
-                <div class="score-why-detail">${g.why}</div>
-              </div>
+            <div class="slate-main-divider divider-upcoming">
+              <span>🕒 UPCOMING SLATE & BROADCAST LINEUPS</span>
+              <span style="font-size: 0.72rem; font-weight: 700;">${upcomingGames.length} Scheduled</span>
             </div>
           `;
-        });
-      });
+          html += renderWindowGroups(upcomingGames);
+        }
+        if (resultsGames.length > 0) {
+          html += `
+            <div class="slate-main-divider divider-results">
+              <span>✅ CURRENT WEEK RESULTS & FINAL SCORES</span>
+              <span style="font-size: 0.72rem; font-weight: 700;">${resultsGames.length} Final</span>
+            </div>
+          `;
+          html += renderWindowGroups(resultsGames);
+        }
+      }
 
       scoreContainer.innerHTML = html;
-      if (bg?.isoTime) {
+      if (bg?.isoTime && (currentSlateFilter === 'all' || currentSlateFilter === 'upcoming')) {
         startCountdown('pinned-bills-countdown', bg.isoTime);
       }
     }
@@ -1423,7 +1591,7 @@
       const statusEl = document.getElementById('update-status');
       let data = null;
 
-      const FALLBACK_DATA = {"updatedAt":"2026-10-21T04:01:15.166Z","source":"http://www.playoffstatus.com and ESPN NFL API","bills":{"team":"Buffalo Bills","makePlayoffs":79,"winDivision":53,"seed1":17,"magicNumber":"10","clinchAlert":{"active":false,"scenario":"No clinching scenarios available this week."},"nextGame":{"opponent":"vs. Ravens","oppShortName":"Ravens","gameTime":"Sun, Nov 1 • 1:00 PM ET","isoTime":"2026-11-01T18:00Z","winChance":60,"matchupRecords":"Bills (5-1, W2) vs. Ravens (4-2, L1)","broadcast":"CBS","venue":"Highmark Stadium, Orchard Park, NY","ifWin":85,"ifLoss":69,"leverage":16,"restAdvantage":{"billsDays":14,"oppDays":7,"summary":"Bills +7 (Post-Bye Week)"},"efficiency":[{"metric":"Points / Game","bills":"28.4 (4th)","opp":"24.5 (10th)"},{"metric":"Total Yards / Game","bills":"374.2 (5th)","opp":"360.2 (7th)"},{"metric":"Passing Yards / Game","bills":"248.5 (6th)","opp":"215.4 (15th)"},{"metric":"Rushing Yards / Game","bills":"125.7 (8th)","opp":"144.8 (3rd)"},{"metric":"3rd Down Conversion %","bills":"46.8% (3rd)","opp":"41.2% (9th)"},{"metric":"Red Zone TD %","bills":"68.2% (4th)","opp":"58.0% (11th)"}],"turnoverRatio":{"bills":"+4 (8 Takeaways / 4 Giveaways)","opp":"+1 (7 Takeaways / 6 Giveaways)","advantage":"Bills (+3 Differential Margin)"},"injuries":[{"player":"C.J. Gardner-Johnson","pos":"S","status":"Suspension","injury":"Suspension","team":"Bills"},{"player":"DJ Moore","pos":"WR","status":"Questionable","injury":"Shoulder - AC Joint","team":"Bills"},{"player":"Ed Oliver","pos":"DT","status":"Questionable","injury":"Knee","team":"Bills"},{"player":"Te'Cory Couch","pos":"CB","status":"Questionable","injury":"Hamstring","team":"Bills"},{"player":"Jordan Hancock","pos":"CB","status":"Injured Reserve","injury":"Hamstring","team":"Bills"},{"player":"Andrew Vorhees","pos":"G","status":"Questionable","injury":"Foot","team":"Ravens"},{"player":"Broderick Washington Jr.","pos":"DT","status":"Questionable","injury":"Ankle","team":"Ravens"},{"player":"Cam Jurgens","pos":"C","status":"Questionable","injury":"Concussion","team":"Ravens"},{"player":"Matt Hibner","pos":"TE","status":"Questionable","injury":"Hand","team":"Ravens"},{"player":"Lamar Jackson","pos":"QB","status":"Questionable","injury":"Ankle","team":"Ravens"}],"roof":"Open-Air Stadium","surface":"Natural Grass","weather":"46°F, 18mph Wind, 20% PoP","announcers":"Jim Nantz, Tony Romo","window":"EARLY","windowLabel":"Sunday 1:00 PM ET Early Window","windowBadge":"Regional CBS / FOX Lineups"},"divisionRadar":[{"team":"Bills","pct":53},{"team":"Patriots","pct":40},{"team":"Jets","pct":5.5},{"team":"Dolphins","pct":2.5}],"seedDistribution":[{"seed":"#1 Seed","pct":17},{"seed":"#2 Seed","pct":14},{"seed":"#3 Seed","pct":14},{"seed":"#4 Seed","pct":8},{"seed":"#5 Seed","pct":10},{"seed":"#6 Seed","pct":8},{"seed":"#7 Seed","pct":8}],"opponents":[{"team":"New England Patriots","pct":10},{"team":"Denver Broncos","pct":7},{"team":"Cleveland Browns","pct":7}],"rootingGuide":[{"target":"Root for Chargers Win","why":"Maximizes odds for Buffalo's AFC #1 overall seed & bye week."},{"target":"Root for Jets Win","why":"Suppresses division chasers in the AFC East standings."},{"target":"Root for Texans Win","why":"Creates favorable seeding tiebreaker positioning."}],"outOfTownGames":[{"isoTime":"2026-10-16T00:15Z","slot":"Thu, Oct 15 • 8:15 PM ET","broadcast":"Prime Video","statusState":"post","statusDetail":"Final/OT","awayName":"Seattle Seahawks","awayScore":"14","homeName":"Denver Broncos","homeScore":"17","verdict":"NEUTRAL","impactClass":"neutral","target":"Neutral Matchup","why":"Non-conference game with zero immediate AFC tiebreaker leverage.","announcers":"Al Michaels, Kirk Herbstreit","venue":"Empower Field at Mile High, Denver, CO","roof":"Open-Air Stadium","surface":"Natural Kentucky Bluegrass","weather":"52°F, 9mph Wind, 0% PoP","window":"TNF","windowLabel":"Thursday Night Football","windowBadge":"Prime Video Exclusive"},{"isoTime":"2026-10-18T13:30Z","slot":"Sun, Oct 18 • 9:30 AM ET","broadcast":"NFL Net","statusState":"post","statusDetail":"Final","awayName":"Houston Texans","awayScore":"34","homeName":"Jacksonville Jaguars","homeScore":"31","verdict":"RIVAL WIN","impactClass":"neutral","target":"Root for Jacksonville Jaguars","why":"Houston Texans loss clears tiebreaker paths for Buffalo's AFC conference seeding & bye week odds.","announcers":"Rich Eisen, Kurt Warner","venue":"EverBank Stadium, Jacksonville, FL","roof":"Open-Air Stadium","surface":"Natural Bermuda Grass","weather":"74°F, 7mph Wind, 10% PoP","window":"INTL","windowLabel":"NFL International Series","windowBadge":"London / Morning Slate"},{"isoTime":"2026-10-18T17:00Z","slot":"Sun, Oct 18 • 1:00 PM ET","broadcast":"FOX","statusState":"post","statusDetail":"Final","awayName":"Chicago Bears","awayScore":"31","homeName":"Atlanta Falcons","homeScore":"23","verdict":"NEUTRAL","impactClass":"neutral","target":"Neutral Matchup","why":"Non-conference game with zero immediate AFC tiebreaker leverage.","announcers":"Joe Davis, Greg Olsen","venue":"Mercedes-Benz Stadium, Atlanta, GA","roof":"Retractable Roof (Closed)","surface":"FieldTurf CORE","weather":"Controlled 72°F Climate","window":"EARLY","windowLabel":"Sunday 1:00 PM ET Early Window","windowBadge":"Regional CBS / FOX Lineups"},{"isoTime":"2026-10-18T17:00Z","slot":"Sun, Oct 18 • 1:00 PM ET","broadcast":"FOX","statusState":"post","statusDetail":"Final","awayName":"Baltimore Ravens","awayScore":"10","homeName":"Cleveland Browns","homeScore":"13","verdict":"GOOD FOR BUFFALO","impactClass":"good","target":"Root for Cleveland Browns","why":"Baltimore Ravens lost, boosting Buffalo's path to a higher AFC playoff seed.","announcers":"Adam Amin, Mark Sanchez","venue":"Huntington Bank Field, Cleveland, OH","roof":"Open-Air Stadium","surface":"Natural Kentucky Bluegrass","weather":"48°F, 14mph Wind, 25% PoP","window":"EARLY","windowLabel":"Sunday 1:00 PM ET Early Window","windowBadge":"Regional CBS / FOX Lineups"},{"isoTime":"2026-10-18T17:00Z","slot":"Sun, Oct 18 • 1:00 PM ET","broadcast":"FOX","statusState":"post","statusDetail":"Final","awayName":"Tennessee Titans","awayScore":"26","homeName":"Indianapolis Colts","homeScore":"20","verdict":"NEUTRAL","impactClass":"neutral","target":"Neutral Matchup","why":"Non-conference game with zero immediate AFC tiebreaker leverage.","announcers":"Kenny Albert, Jonathan Vilma","venue":"Lucas Oil Stadium, Indianapolis, IN","roof":"Retractable Roof (Closed)","surface":"Shaw Momentum Turf","weather":"Controlled 72°F Climate","window":"EARLY","windowLabel":"Sunday 1:00 PM ET Early Window","windowBadge":"Regional CBS / FOX Lineups"},{"isoTime":"2026-10-18T17:00Z","slot":"Sun, Oct 18 • 1:00 PM ET","broadcast":"CBS","statusState":"post","statusDetail":"Final","awayName":"New York Jets","awayScore":"19","homeName":"New England Patriots","homeScore":"26","verdict":"BAD FOR BUFFALO","impactClass":"bad","target":"Root for New York Jets","why":"New England Patriots win keeps division pressure on the Bills.","announcers":"Ian Eagle, Charles Davis","venue":"Gillette Stadium, Foxborough, MA","roof":"Open-Air Stadium","surface":"FieldTurf CORE","weather":"51°F, 11mph Wind, 15% PoP","window":"EARLY","windowLabel":"Sunday 1:00 PM ET Early Window","windowBadge":"Regional CBS / FOX Lineups"},{"isoTime":"2026-10-18T17:00Z","slot":"Sun, Oct 18 • 1:00 PM ET","broadcast":"FOX","statusState":"post","statusDetail":"Final","awayName":"New Orleans Saints","awayScore":"34","homeName":"New York Giants","homeScore":"27","verdict":"NEUTRAL","impactClass":"neutral","target":"Neutral Matchup","why":"Non-conference game with zero immediate AFC tiebreaker leverage.","announcers":"Adam Amin, Mark Sanchez","venue":"MetLife Stadium, East Rutherford, NJ","roof":"Open-Air Stadium","surface":"FieldTurf CORE","weather":"54°F, 8mph Wind, 10% PoP","window":"EARLY","windowLabel":"Sunday 1:00 PM ET Early Window","windowBadge":"Regional CBS / FOX Lineups"},{"isoTime":"2026-10-18T17:00Z","slot":"Sun, Oct 18 • 1:00 PM ET","broadcast":"CBS","statusState":"post","statusDetail":"Final","awayName":"Carolina Panthers","awayScore":"25","homeName":"Philadelphia Eagles","homeScore":"14","verdict":"NEUTRAL","impactClass":"neutral","target":"Neutral Matchup","why":"Non-conference game with zero immediate AFC tiebreaker leverage.","announcers":"Andrew Catalon, Tiki Barber","venue":"Lincoln Financial Field, Philadelphia, PA","roof":"Open-Air Stadium","surface":"Natural Grass (Desso)","weather":"56°F, 10mph Wind, 10% PoP","window":"EARLY","windowLabel":"Sunday 1:00 PM ET Early Window","windowBadge":"Regional CBS / FOX Lineups"},{"isoTime":"2026-10-18T17:00Z","slot":"Sun, Oct 18 • 1:00 PM ET","broadcast":"CBS","statusState":"post","statusDetail":"Final/OT","awayName":"Pittsburgh Steelers","awayScore":"26","homeName":"Tampa Bay Buccaneers","homeScore":"19","verdict":"RIVAL WIN","impactClass":"neutral","target":"Root for Tampa Bay Buccaneers","why":"Pittsburgh Steelers loss clears tiebreaker paths for Buffalo's AFC conference seeding & bye week odds.","announcers":"Kevin Harlan, Trent Green","venue":"Raymond James Stadium, Tampa, FL","roof":"Open-Air Stadium","surface":"Natural Bermuda Grass","weather":"78°F, 6mph Wind, 15% PoP","window":"EARLY","windowLabel":"Sunday 1:00 PM ET Early Window","windowBadge":"Regional CBS / FOX Lineups"},{"isoTime":"2026-10-18T20:05Z","slot":"Sun, Oct 18 • 4:05 PM ET","broadcast":"FOX","statusState":"post","statusDetail":"Final","awayName":"Arizona Cardinals","awayScore":"18","homeName":"Los Angeles Rams","homeScore":"16","verdict":"NEUTRAL","impactClass":"neutral","target":"Neutral Matchup","why":"Non-conference game with zero immediate AFC tiebreaker leverage.","announcers":"Kevin Burkhardt, Tom Brady","venue":"SoFi Stadium, Inglewood, CA","roof":"Indoor Canopy Stadium","surface":"Matrix Turf","weather":"Controlled 70°F Climate","window":"LATE","windowLabel":"Sunday 4:25 PM ET National Window","windowBadge":"America's Game of the Week"},{"isoTime":"2026-10-18T20:25Z","slot":"Sun, Oct 18 • 4:25 PM ET","broadcast":"CBS","statusState":"post","statusDetail":"Final","awayName":"Los Angeles Chargers","awayScore":"6","homeName":"Kansas City Chiefs","homeScore":"22","verdict":"RIVAL WIN","impactClass":"neutral","target":"Root for Los Angeles Chargers","why":"Kansas City Chiefs loss clears tiebreaker paths for Buffalo's AFC conference seeding & bye week odds.","announcers":"Jim Nantz, Tony Romo","venue":"GEHA Field at Arrowhead, Kansas City, MO","roof":"Open-Air Stadium","surface":"Natural Bermuda Grass","weather":"59°F, 12mph Wind, 5% PoP","window":"LATE","windowLabel":"Sunday 4:25 PM ET National Window","windowBadge":"America's Game of the Week"},{"isoTime":"2026-10-19T00:20Z","slot":"Sun, Oct 18 • 8:20 PM ET","broadcast":"NBC","statusState":"post","statusDetail":"Final","awayName":"Dallas Cowboys","awayScore":"13","homeName":"Green Bay Packers","homeScore":"23","verdict":"NEUTRAL","impactClass":"neutral","target":"Neutral Matchup","why":"Non-conference game with zero immediate AFC tiebreaker leverage.","announcers":"Mike Tirico, Cris Collinsworth","venue":"Lambeau Field, Green Bay, WI","roof":"Open-Air Stadium","surface":"Natural Grass (SISGrass)","weather":"41°F, 16mph Wind, 30% PoP","window":"SNF","windowLabel":"Sunday Night Football","windowBadge":"NBC / Peacock Marquee"},{"isoTime":"2026-10-20T00:15Z","slot":"Mon, Oct 19 • 8:15 PM ET","broadcast":"ESPN","statusState":"post","statusDetail":"Final","awayName":"Washington Commanders","awayScore":"17","homeName":"San Francisco 49ers","homeScore":"23","verdict":"NEUTRAL","impactClass":"neutral","target":"Neutral Matchup","why":"Non-conference game with zero immediate AFC tiebreaker leverage.","announcers":"Joe Buck, Troy Aikman","venue":"Levi's Stadium, Santa Clara, CA","roof":"Open-Air Stadium","surface":"Natural Bermuda Grass","weather":"68°F, 7mph Wind, 0% PoP","window":"MNF","windowLabel":"Monday Night Football","windowBadge":"ESPN / ABC Prime Time"}]},"sabres":{"team":"Buffalo Sabres","makePlayoffs":44,"winDivision":29,"wildcard":15,"tragicNumber":"Pace: 91 Pts (Target: 92)","clinchAlert":{"active":false,"scenario":"No clinching scenarios available this week."},"nextGame":{"opponent":"vs. Philadelphia","oppShortName":"Flyers","gameTime":"Wed, Oct 21 • 7:30 PM ET","isoTime":"2026-10-21T23:30:00Z","winChance":52,"matchupRecords":"Sabres (4-3-2, 10 pts, OT1) vs. Philadelphia (2-6-3, 7 pts, W2)","broadcast":"TNT","venue":"KeyBank Center, Buffalo","ifWin":44,"ifLoss":33,"leverage":11,"restAdvantage":{"sabresDays":2,"oppDays":1,"summary":"Sabres +1 (Opp on Back-to-Back)"},"specialTeams":{"sabres":"PP: 19.5% (17th) | PK: 81.2% (11th)","opp":"PP: 14.2% (29th) | PK: 76.4% (23rd)","advantage":"Sabres Special Teams Edge (+10.1% Net Margin)"},"efficiency":[{"metric":"Goals / Game","sabres":"3.12 (12th)","opp":"2.55 (24th)"},{"metric":"Goals Against / Game","sabres":"3.20 (18th)","opp":"3.60 (28th)"},{"metric":"Power Play %","sabres":"19.5% (17th)","opp":"14.2% (29th)"},{"metric":"Penalty Kill %","sabres":"81.2% (11th)","opp":"76.4% (23rd)"},{"metric":"Shots / Game","sabres":"29.8 (15th)","opp":"27.4 (25th)"},{"metric":"Faceoff Win %","sabres":"48.2% (22nd)","opp":"49.5% (18th)"}],"injuries":[{"player":"Ukko-Pekka Luukkonen","pos":"G","status":"Probable","injury":"Expected Starter (2.78 GAA, .912 SV%)","team":"Sabres"},{"player":"Samuel Ersson","pos":"G","status":"Probable","injury":"Expected Starter (3.05 GAA, .898 SV%)","team":"Flyers"},{"player":"Zach Benson","pos":"LW","status":"Questionable","injury":"Lower Body","team":"Sabres"},{"player":"Mattias Samuelsson","pos":"D","status":"Injured Reserve","injury":"Lower Body","team":"Sabres"},{"player":"Ryan Ellis","pos":"D","status":"Injured Reserve","injury":"Back","team":"Flyers"}]},"divisionRadar":[{"team":"Bruins","pct":70},{"team":"Lightning","pct":67},{"team":"Senators","pct":58},{"team":"Sabres","pct":44}],"seedDistribution":[{"seed":"Div 1","pct":6},{"seed":"Div 2","pct":11},{"seed":"Div 3","pct":12},{"seed":"Wildcard 1","pct":8},{"seed":"Wildcard 2","pct":7}],"opponents":[{"team":"Florida Panthers","pct":24},{"team":"Tampa Bay Lightning","pct":18},{"team":"Toronto Maple Leafs","pct":14}],"rootingGuide":[{"target":"Regulation Losses for Atlantic Rivals","why":"Ensure games involving BOS, TBL, and FLA do not go to 3-point overtimes."},{"target":"Western Conference Wins vs. Metro","why":"Protects Eastern Conference Wild Card slot thresholds."}],"outOfTownGames":[{"isoTime":"2026-10-20T23:00Z","slot":"Tue, Oct 20 • 7:00 PM ET","broadcast":"ESPN+","statusState":"post","statusDetail":"Final/OT","awayName":"San Jose Sharks","awayScore":"4","homeName":"Montreal Canadiens","homeScore":"3","verdict":"3-POINT GAME DANGER","impactClass":"warning","target":"Root for San Jose Sharks in Regulation","why":"Montreal Canadiens earned a loser point in overtime despite the loss."},{"isoTime":"2026-10-20T23:00Z","slot":"Tue, Oct 20 • 7:00 PM ET","broadcast":"ESPN+","statusState":"post","statusDetail":"Final","awayName":"Colorado Avalanche","awayScore":"3","homeName":"New Jersey Devils","homeScore":"4","verdict":"RIVAL WIN","impactClass":"neutral","target":"Root for Colorado Avalanche in Regulation","why":"New Jersey Devils picked up 2 points in the Eastern playoff race."},{"isoTime":"2026-10-20T23:00Z","slot":"Tue, Oct 20 • 7:00 PM ET","broadcast":"ESPN+","statusState":"post","statusDetail":"Final","awayName":"Anaheim Ducks","awayScore":"2","homeName":"New York Islanders","homeScore":"3","verdict":"RIVAL WIN","impactClass":"neutral","target":"Root for Anaheim Ducks in Regulation","why":"New York Islanders picked up 2 points in the Eastern playoff race."},{"isoTime":"2026-10-20T23:00Z","slot":"Tue, Oct 20 • 7:00 PM ET","broadcast":"ESPN+","statusState":"post","statusDetail":"Final","awayName":"Los Angeles Kings","awayScore":"5","homeName":"Washington Capitals","homeScore":"2","verdict":"GOOD FOR BUFFALO","impactClass":"good","target":"Root for Los Angeles Kings in Regulation","why":"Washington Capitals suffered a regulation loss, freezing their wildcard point total."},{"isoTime":"2026-10-20T23:00Z","slot":"Tue, Oct 20 • 7:00 PM ET","broadcast":"ESPN+","statusState":"post","statusDetail":"Final","awayName":"Toronto Maple Leafs","awayScore":"6","homeName":"Columbus Blue Jackets","homeScore":"2","verdict":"BAD FOR BUFFALO","impactClass":"bad","target":"Root for Columbus Blue Jackets in Regulation","why":"Toronto Maple Leafs collected 2 standings points in the Atlantic race."},{"isoTime":"2026-10-21T00:00Z","slot":"Tue, Oct 20 • 8:00 PM ET","broadcast":"ESPN+","statusState":"post","statusDetail":"Final","awayName":"Winnipeg Jets","awayScore":"1","homeName":"St. Louis Blues","homeScore":"2","verdict":"NEUTRAL","impactClass":"neutral","target":"Neutral Matchup","why":"Non-conference or cross-division matchup with minimal Sabres playoff leverage."},{"isoTime":"2026-10-21T00:00Z","slot":"Tue, Oct 20 • 8:00 PM ET","broadcast":"ESPN","statusState":"post","statusDetail":"Final/OT","awayName":"Boston Bruins","awayScore":"2","homeName":"Dallas Stars","homeScore":"3","verdict":"3-POINT GAME DANGER","impactClass":"warning","target":"Root for Dallas Stars in Regulation","why":"Boston Bruins earned a loser point in overtime despite the loss."},{"isoTime":"2026-10-21T01:00Z","slot":"Tue, Oct 20 • 9:00 PM ET","broadcast":"ESPN+","statusState":"post","statusDetail":"Final/OT","awayName":"Minnesota Wild","awayScore":"3","homeName":"Edmonton Oilers","homeScore":"4","verdict":"NEUTRAL","impactClass":"neutral","target":"Neutral Matchup","why":"Non-conference or cross-division matchup with minimal Sabres playoff leverage."},{"isoTime":"2026-10-21T01:40Z","slot":"Tue, Oct 20 • 9:40 PM ET","broadcast":"ESPN+","statusState":"in","statusDetail":"9:07 - 3rd","awayName":"Detroit Red Wings","awayScore":"2","homeName":"Seattle Kraken","homeScore":"3","verdict":"ATLANTIC WATCH","impactClass":"warning","target":"Root for Seattle Kraken in Regulation","why":"A regulation loss leaves Detroit Red Wings with 0 standings points in the Atlantic Division."},{"isoTime":"2026-10-21T02:00Z","slot":"Tue, Oct 20 • 10:00 PM ET","broadcast":"ESPN+","statusState":"in","statusDetail":"End of 2nd","awayName":"Carolina Hurricanes","awayScore":"3","homeName":"Vancouver Canucks","homeScore":"2","verdict":"WILD CARD WATCH","impactClass":"neutral","target":"Root for Vancouver Canucks in Regulation","why":"Suppresses Eastern Conference Wild Card contenders from stacking points."},{"isoTime":"2026-10-21T02:45Z","slot":"Tue, Oct 20 • 10:45 PM ET","broadcast":"ESPN","statusState":"in","statusDetail":"9:58 - 2nd","awayName":"Tampa Bay Lightning","awayScore":"3","homeName":"Vegas Golden Knights","homeScore":"2","verdict":"ATLANTIC WATCH","impactClass":"warning","target":"Root for Vegas Golden Knights in Regulation","why":"A regulation loss leaves Tampa Bay Lightning with 0 standings points in the Atlantic Division."}]}};
+      const FALLBACK_DATA = {"updatedAt":"2026-10-21T04:01:15.166Z","source":"http://www.playoffstatus.com and ESPN NFL API","bills":{"team":"Buffalo Bills","makePlayoffs":79,"winDivision":53,"seed1":17,"magicNumber":"10","clinchAlert":{"active":false,"scenario":"No clinching scenarios available this week."},"nextGame":{"opponent":"vs. Ravens","oppShortName":"Ravens","gameTime":"Sun, Nov 1 • 1:00 PM ET","isoTime":"2026-11-01T18:00Z","winChance":60,"matchupRecords":"Bills (5-1, W2) vs. Ravens (4-2, L1)","broadcast":"CBS","venue":"Highmark Stadium, Orchard Park, NY","ifWin":85,"ifLoss":69,"leverage":16,"restAdvantage":{"billsDays":14,"oppDays":7,"summary":"Bills +7 (Post-Bye Week)"},"efficiency":[{"metric":"Points / Game","bills":"28.4 (4th)","opp":"24.5 (10th)"},{"metric":"Total Yards / Game","bills":"374.2 (5th)","opp":"360.2 (7th)"},{"metric":"Passing Yards / Game","bills":"248.5 (6th)","opp":"215.4 (15th)"},{"metric":"Rushing Yards / Game","bills":"125.7 (8th)","opp":"144.8 (3rd)"},{"metric":"3rd Down Conversion %","bills":"46.8% (3rd)","opp":"41.2% (9th)"},{"metric":"Red Zone TD %","bills":"68.2% (4th)","opp":"58.0% (11th)"}],"turnoverRatio":{"bills":"+4 (8 Takeaways / 4 Giveaways)","opp":"+1 (7 Takeaways / 6 Giveaways)","advantage":"Bills (+3 Differential Margin)"},"injuries":[{"player":"C.J. Gardner-Johnson","pos":"S","status":"Suspension","injury":"Suspension","team":"Bills"},{"player":"DJ Moore","pos":"WR","status":"Questionable","injury":"Shoulder - AC Joint","team":"Bills"},{"player":"Ed Oliver","pos":"DT","status":"Questionable","injury":"Knee","team":"Bills"},{"player":"Te'Cory Couch","pos":"CB","status":"Questionable","injury":"Hamstring","team":"Bills"},{"player":"Jordan Hancock","pos":"CB","status":"Injured Reserve","injury":"Hamstring","team":"Bills"},{"player":"Andrew Vorhees","pos":"G","status":"Questionable","injury":"Foot","team":"Ravens"},{"player":"Broderick Washington Jr.","pos":"DT","status":"Questionable","injury":"Ankle","team":"Ravens"},{"player":"Cam Jurgens","pos":"C","status":"Questionable","injury":"Concussion","team":"Ravens"},{"player":"Matt Hibner","pos":"TE","status":"Questionable","injury":"Hand","team":"Ravens"},{"player":"Lamar Jackson","pos":"QB","status":"Questionable","injury":"Ankle","team":"Ravens"}],"roof":"Open-Air Stadium","surface":"Natural Grass","weather":"46°F, 18mph Wind, 20% PoP","announcers":"Jim Nantz, Tony Romo","window":"EARLY","windowLabel":"Sunday 1:00 PM ET Early Window","windowBadge":"Regional CBS / FOX Lineups"},"divisionRadar":[{"team":"Bills","pct":53},{"team":"Patriots","pct":40},{"team":"Jets","pct":5.5},{"team":"Dolphins","pct":2.5}],"seedDistribution":[{"seed":"#1 Seed","pct":17},{"seed":"#2 Seed","pct":14},{"seed":"#3 Seed","pct":14},{"seed":"#4 Seed","pct":8},{"seed":"#5 Seed","pct":10},{"seed":"#6 Seed","pct":8},{"seed":"#7 Seed","pct":8}],"opponents":[{"team":"New England Patriots","pct":10},{"team":"Denver Broncos","pct":7},{"team":"Cleveland Browns","pct":7}],"rootingGuide":[{"target":"Root for Chargers Win","why":"Maximizes odds for Buffalo's AFC #1 overall seed & bye week."},{"target":"Root for Jets Win","why":"Suppresses division chasers in the AFC East standings."},{"target":"Root for Texans Win","why":"Creates favorable seeding tiebreaker positioning."}],"outOfTownGames":[{"isoTime":"2026-10-23T00:15Z","slot":"Thu, Oct 22 • 8:15 PM ET","broadcast":"Prime Video","announcers":"Al Michaels, Kirk Herbstreit","venue":"SoFi Stadium, Inglewood, CA","roof":"Indoor Canopy Stadium","surface":"Matrix Turf","weather":"Controlled 70°F Climate","window":"TNF","windowLabel":"Thursday Night Football","windowBadge":"Prime Video Exclusive","statusState":"pre","statusDetail":"Scheduled","awayName":"Minnesota Vikings","awayScore":"","homeName":"Los Angeles Rams","homeScore":"","verdict":"NFC WATCH","impactClass":"neutral","target":"Root for Los Angeles Rams","why":"NFC interconference matchup with zero negative leverage on Buffalo’s AFC playoff path."},{"isoTime":"2026-10-25T17:00Z","slot":"Sun, Oct 25 • 1:00 PM ET","broadcast":"CBS","announcers":"Ian Eagle, Charles Davis","venue":"Huntington Bank Field, Cleveland, OH","roof":"Open-Air Stadium","surface":"Natural Kentucky Bluegrass","weather":"48°F, 14mph Wind, 25% PoP","window":"EARLY","windowLabel":"Sunday 1:00 PM ET Early Window","windowBadge":"Regional CBS / FOX Lineups","statusState":"pre","statusDetail":"Scheduled","awayName":"Baltimore Ravens","awayScore":"","homeName":"Cleveland Browns","homeScore":"","verdict":"SEEDING WATCH","impactClass":"good","target":"Root for Cleveland Browns","why":"A Baltimore division loss gives Buffalo major breathing room for a top AFC playoff seed."},{"isoTime":"2026-10-25T17:00Z","slot":"Sun, Oct 25 • 1:00 PM ET","broadcast":"FOX","announcers":"Kevin Kugler, Daryl Johnston","venue":"Ford Field, Detroit, MI","roof":"Domed Stadium","surface":"FieldTurf CORE","weather":"Controlled 72°F Climate","window":"EARLY","windowLabel":"Sunday 1:00 PM ET Early Window","windowBadge":"Regional CBS / FOX Lineups","statusState":"pre","statusDetail":"Scheduled","awayName":"Tennessee Titans","awayScore":"","homeName":"Detroit Lions","homeScore":"","verdict":"NEUTRAL","impactClass":"neutral","target":"Root for Detroit Lions","why":"Interconference game: An NFC victory pins down AFC wild card pool contenders."},{"isoTime":"2026-10-25T17:00Z","slot":"Sun, Oct 25 • 1:00 PM ET","broadcast":"FOX","announcers":"Joe Davis, Greg Olsen","venue":"Hard Rock Stadium, Miami Gardens, FL","roof":"Open-Air Stadium","surface":"Natural Bermuda Grass","weather":"82°F, 9mph Wind, 15% PoP","window":"EARLY","windowLabel":"Sunday 1:00 PM ET Early Window","windowBadge":"Regional CBS / FOX Lineups","statusState":"pre","statusDetail":"Scheduled","awayName":"Arizona Cardinals","awayScore":"","homeName":"Miami Dolphins","homeScore":"","verdict":"AFC EAST WATCH","impactClass":"good","target":"Root for Arizona Cardinals","why":"Division race: A Miami loss pushes the Dolphins further out of contention in the AFC East."},{"isoTime":"2026-10-25T17:00Z","slot":"Sun, Oct 25 • 1:00 PM ET","broadcast":"CBS","announcers":"Spero Dedes, Adam Archuleta","venue":"Gillette Stadium, Foxborough, MA","roof":"Open-Air Stadium","surface":"FieldTurf CORE","weather":"51°F, 11mph Wind, 15% PoP","window":"EARLY","windowLabel":"Sunday 1:00 PM ET Early Window","windowBadge":"Regional CBS / FOX Lineups","statusState":"pre","statusDetail":"Scheduled","awayName":"New York Jets","awayScore":"","homeName":"New England Patriots","homeScore":"","verdict":"AFC EAST WATCH","impactClass":"bad","target":"Root for New York Jets","why":"A Patriots loss immediately lowers Buffalo’s magic number to clinch the AFC East."},{"isoTime":"2026-10-25T17:00Z","slot":"Sun, Oct 25 • 1:00 PM ET","broadcast":"FOX","announcers":"Kenny Albert, Jonathan Vilma","venue":"Raymond James Stadium, Tampa, FL","roof":"Open-Air Stadium","surface":"Natural Bermuda Grass","weather":"78°F, 6mph Wind, 15% PoP","window":"EARLY","windowLabel":"Sunday 1:00 PM ET Early Window","windowBadge":"Regional CBS / FOX Lineups","statusState":"pre","statusDetail":"Scheduled","awayName":"Atlanta Falcons","awayScore":"","homeName":"Tampa Bay Buccaneers","homeScore":"","verdict":"NEUTRAL","impactClass":"neutral","target":"Neutral Matchup","why":"NFC South divisional battle with zero mathematical leverage on Buffalo’s postseason."},{"isoTime":"2026-10-25T17:00Z","slot":"Sun, Oct 25 • 1:00 PM ET","broadcast":"FOX","announcers":"Kevin Burkhardt, Tom Brady","venue":"EverBank Stadium, Jacksonville, FL","roof":"Open-Air Stadium","surface":"Natural Bermuda Grass","weather":"74°F, 7mph Wind, 10% PoP","window":"EARLY","windowLabel":"Sunday 1:00 PM ET Early Window","windowBadge":"Regional CBS / FOX Lineups","statusState":"pre","statusDetail":"Scheduled","awayName":"Green Bay Packers","awayScore":"","homeName":"Jacksonville Jaguars","homeScore":"","verdict":"WILD CARD WATCH","impactClass":"good","target":"Root for Green Bay Packers","why":"An NFC victory keeps Jacksonville from climbing into the AFC wild card tiebreaker mix."},{"isoTime":"2026-10-25T17:00Z","slot":"Sun, Oct 25 • 1:00 PM ET","broadcast":"CBS","announcers":"Andrew Catalon, Tiki Barber","venue":"NRG Stadium, Houston, TX","roof":"Retractable Roof (Closed)","surface":"Hellas Matrix Turf","weather":"Controlled 72°F Climate","window":"EARLY","windowLabel":"Sunday 1:00 PM ET Early Window","windowBadge":"Regional CBS / FOX Lineups","statusState":"pre","statusDetail":"Scheduled","awayName":"Indianapolis Colts","awayScore":"","homeName":"Houston Texans","homeScore":"","verdict":"SEEDING WATCH","impactClass":"good","target":"Root for Indianapolis Colts","why":"A Texans loss helps Buffalo preserve conference tiebreaker leverage for a top-2 seed."},{"isoTime":"2026-10-25T20:05Z","slot":"Sun, Oct 25 • 4:05 PM ET","broadcast":"FOX","announcers":"Chris Myers, Mark Schlereth","venue":"SoFi Stadium, Inglewood, CA","roof":"Indoor Canopy Stadium","surface":"Matrix Turf","weather":"Controlled 70°F Climate","window":"LATE","windowLabel":"Sunday Late Window • 4:05 PM ET","windowBadge":"Late Afternoon Window","statusState":"pre","statusDetail":"Scheduled","awayName":"New Orleans Saints","awayScore":"","homeName":"Los Angeles Chargers","homeScore":"","verdict":"WILD CARD WATCH","impactClass":"good","target":"Root for New Orleans Saints","why":"Chargers loss gives Buffalo added cushion in overall AFC win-loss percentage."},{"isoTime":"2026-10-25T20:25Z","slot":"Sun, Oct 25 • 4:25 PM ET","broadcast":"CBS","announcers":"Ian Eagle, Charles Davis","venue":"Paycor Stadium, Cincinnati, OH","roof":"Open-Air Stadium","surface":"FieldTurf CORE","weather":"55°F, 10mph Wind, 15% PoP","window":"LATE","windowLabel":"Sunday Late Window • 4:25 PM ET","windowBadge":"America's Game of the Week","statusState":"pre","statusDetail":"Scheduled","awayName":"Philadelphia Eagles","awayScore":"","homeName":"Cincinnati Bengals","homeScore":"","verdict":"SEEDING WATCH","impactClass":"good","target":"Root for Philadelphia Eagles","why":"NFC road win suppresses Cincinnati from re-entering the AFC wild card race."},{"isoTime":"2026-10-25T20:25Z","slot":"Sun, Oct 25 • 4:25 PM ET","broadcast":"CBS","announcers":"Jim Nantz, Tony Romo","venue":"Allegiant Stadium, Las Vegas, NV","roof":"Domed Stadium","surface":"Natural Bermuda Grass Tray","weather":"Controlled 72°F Climate","window":"LATE","windowLabel":"Sunday Late Window • 4:25 PM ET","windowBadge":"America's Game of the Week","statusState":"pre","statusDetail":"Scheduled","awayName":"Kansas City Chiefs","awayScore":"","homeName":"Las Vegas Raiders","homeScore":"","verdict":"AFC #1 SEED WATCH","impactClass":"good","target":"Root for Las Vegas Raiders","why":"A Chiefs loss directly opens up the path for Buffalo to claim the AFC #1 overall seed & bye."},{"isoTime":"2026-10-26T00:20Z","slot":"Sun, Oct 25 • 8:20 PM ET","broadcast":"NBC","announcers":"Mike Tirico, Cris Collinsworth","venue":"Levi's Stadium, Santa Clara, CA","roof":"Open-Air Stadium","surface":"Natural Bermuda Grass","weather":"68°F, 7mph Wind, 0% PoP","window":"SNF","windowLabel":"Sunday Night Football","windowBadge":"NBC / Peacock Marquee","statusState":"pre","statusDetail":"Scheduled","awayName":"Dallas Cowboys","awayScore":"","homeName":"San Francisco 49ers","homeScore":"","verdict":"NEUTRAL","impactClass":"neutral","target":"Neutral Matchup","why":"Marquee NFC showcase game with no direct AFC tiebreaker or seeding consequences."},{"isoTime":"2026-10-27T00:15Z","slot":"Mon, Oct 26 • 8:15 PM ET","broadcast":"ESPN","announcers":"Joe Buck, Troy Aikman","venue":"Acrisure Stadium, Pittsburgh, PA","roof":"Open-Air Stadium","surface":"Natural Kentucky Bluegrass","weather":"52°F, 11mph Wind, 20% PoP","window":"MNF","windowLabel":"Monday Night Football","windowBadge":"ESPN / ABC Prime Time","statusState":"pre","statusDetail":"Scheduled","awayName":"New York Giants","awayScore":"","homeName":"Pittsburgh Steelers","homeScore":"","verdict":"SEEDING WATCH","impactClass":"good","target":"Root for New York Giants","why":"An upset Giants win knocks down an AFC contender chasing top conference seeding."},{"isoTime":"2026-10-16T00:15Z","slot":"Thu, Oct 15 • 8:15 PM ET","broadcast":"Prime Video","statusState":"post","statusDetail":"Final/OT","awayName":"Seattle Seahawks","awayScore":"14","homeName":"Denver Broncos","homeScore":"17","verdict":"NEUTRAL","impactClass":"neutral","target":"Neutral Matchup","why":"Non-conference game with zero immediate AFC tiebreaker leverage.","announcers":"Al Michaels, Kirk Herbstreit","venue":"Empower Field at Mile High, Denver, CO","roof":"Open-Air Stadium","surface":"Natural Kentucky Bluegrass","weather":"52°F, 9mph Wind, 0% PoP","window":"TNF","windowLabel":"Thursday Night Football","windowBadge":"Prime Video Exclusive"},{"isoTime":"2026-10-18T13:30Z","slot":"Sun, Oct 18 • 9:30 AM ET","broadcast":"NFL Net","statusState":"post","statusDetail":"Final","awayName":"Houston Texans","awayScore":"34","homeName":"Jacksonville Jaguars","homeScore":"31","verdict":"RIVAL WIN","impactClass":"neutral","target":"Root for Jacksonville Jaguars","why":"Houston Texans loss clears tiebreaker paths for Buffalo's AFC conference seeding & bye week odds.","announcers":"Rich Eisen, Kurt Warner","venue":"EverBank Stadium, Jacksonville, FL","roof":"Open-Air Stadium","surface":"Natural Bermuda Grass","weather":"74°F, 7mph Wind, 10% PoP","window":"INTL","windowLabel":"NFL International Series","windowBadge":"London / Morning Slate"},{"isoTime":"2026-10-18T17:00Z","slot":"Sun, Oct 18 • 1:00 PM ET","broadcast":"FOX","statusState":"post","statusDetail":"Final","awayName":"Chicago Bears","awayScore":"31","homeName":"Atlanta Falcons","homeScore":"23","verdict":"NEUTRAL","impactClass":"neutral","target":"Neutral Matchup","why":"Non-conference game with zero immediate AFC tiebreaker leverage.","announcers":"Joe Davis, Greg Olsen","venue":"Mercedes-Benz Stadium, Atlanta, GA","roof":"Retractable Roof (Closed)","surface":"FieldTurf CORE","weather":"Controlled 72°F Climate","window":"EARLY","windowLabel":"Sunday 1:00 PM ET Early Window","windowBadge":"Regional CBS / FOX Lineups"},{"isoTime":"2026-10-18T17:00Z","slot":"Sun, Oct 18 • 1:00 PM ET","broadcast":"FOX","statusState":"post","statusDetail":"Final","awayName":"Baltimore Ravens","awayScore":"10","homeName":"Cleveland Browns","homeScore":"13","verdict":"GOOD FOR BUFFALO","impactClass":"good","target":"Root for Cleveland Browns","why":"Baltimore Ravens lost, boosting Buffalo's path to a higher AFC playoff seed.","announcers":"Adam Amin, Mark Sanchez","venue":"Huntington Bank Field, Cleveland, OH","roof":"Open-Air Stadium","surface":"Natural Kentucky Bluegrass","weather":"48°F, 14mph Wind, 25% PoP","window":"EARLY","windowLabel":"Sunday 1:00 PM ET Early Window","windowBadge":"Regional CBS / FOX Lineups"},{"isoTime":"2026-10-18T17:00Z","slot":"Sun, Oct 18 • 1:00 PM ET","broadcast":"FOX","statusState":"post","statusDetail":"Final","awayName":"Tennessee Titans","awayScore":"26","homeName":"Indianapolis Colts","homeScore":"20","verdict":"NEUTRAL","impactClass":"neutral","target":"Neutral Matchup","why":"Non-conference game with zero immediate AFC tiebreaker leverage.","announcers":"Kenny Albert, Jonathan Vilma","venue":"Lucas Oil Stadium, Indianapolis, IN","roof":"Retractable Roof (Closed)","surface":"Shaw Momentum Turf","weather":"Controlled 72°F Climate","window":"EARLY","windowLabel":"Sunday 1:00 PM ET Early Window","windowBadge":"Regional CBS / FOX Lineups"},{"isoTime":"2026-10-18T17:00Z","slot":"Sun, Oct 18 • 1:00 PM ET","broadcast":"CBS","statusState":"post","statusDetail":"Final","awayName":"New York Jets","awayScore":"19","homeName":"New England Patriots","homeScore":"26","verdict":"BAD FOR BUFFALO","impactClass":"bad","target":"Root for New York Jets","why":"New England Patriots win keeps division pressure on the Bills.","announcers":"Ian Eagle, Charles Davis","venue":"Gillette Stadium, Foxborough, MA","roof":"Open-Air Stadium","surface":"FieldTurf CORE","weather":"51°F, 11mph Wind, 15% PoP","window":"EARLY","windowLabel":"Sunday 1:00 PM ET Early Window","windowBadge":"Regional CBS / FOX Lineups"},{"isoTime":"2026-10-18T17:00Z","slot":"Sun, Oct 18 • 1:00 PM ET","broadcast":"FOX","statusState":"post","statusDetail":"Final","awayName":"New Orleans Saints","awayScore":"34","homeName":"New York Giants","homeScore":"27","verdict":"NEUTRAL","impactClass":"neutral","target":"Neutral Matchup","why":"Non-conference game with zero immediate AFC tiebreaker leverage.","announcers":"Adam Amin, Mark Sanchez","venue":"MetLife Stadium, East Rutherford, NJ","roof":"Open-Air Stadium","surface":"FieldTurf CORE","weather":"54°F, 8mph Wind, 10% PoP","window":"EARLY","windowLabel":"Sunday 1:00 PM ET Early Window","windowBadge":"Regional CBS / FOX Lineups"},{"isoTime":"2026-10-18T17:00Z","slot":"Sun, Oct 18 • 1:00 PM ET","broadcast":"CBS","statusState":"post","statusDetail":"Final","awayName":"Carolina Panthers","awayScore":"25","homeName":"Philadelphia Eagles","homeScore":"14","verdict":"NEUTRAL","impactClass":"neutral","target":"Neutral Matchup","why":"Non-conference game with zero immediate AFC tiebreaker leverage.","announcers":"Andrew Catalon, Tiki Barber","venue":"Lincoln Financial Field, Philadelphia, PA","roof":"Open-Air Stadium","surface":"Natural Grass (Desso)","weather":"56°F, 10mph Wind, 10% PoP","window":"EARLY","windowLabel":"Sunday 1:00 PM ET Early Window","windowBadge":"Regional CBS / FOX Lineups"},{"isoTime":"2026-10-18T17:00Z","slot":"Sun, Oct 18 • 1:00 PM ET","broadcast":"CBS","statusState":"post","statusDetail":"Final/OT","awayName":"Pittsburgh Steelers","awayScore":"26","homeName":"Tampa Bay Buccaneers","homeScore":"19","verdict":"RIVAL WIN","impactClass":"neutral","target":"Root for Tampa Bay Buccaneers","why":"Pittsburgh Steelers loss clears tiebreaker paths for Buffalo's AFC conference seeding & bye week odds.","announcers":"Kevin Harlan, Trent Green","venue":"Raymond James Stadium, Tampa, FL","roof":"Open-Air Stadium","surface":"Natural Bermuda Grass","weather":"78°F, 6mph Wind, 15% PoP","window":"EARLY","windowLabel":"Sunday 1:00 PM ET Early Window","windowBadge":"Regional CBS / FOX Lineups"},{"isoTime":"2026-10-18T20:05Z","slot":"Sun, Oct 18 • 4:05 PM ET","broadcast":"FOX","statusState":"post","statusDetail":"Final","awayName":"Arizona Cardinals","awayScore":"18","homeName":"Los Angeles Rams","homeScore":"16","verdict":"NEUTRAL","impactClass":"neutral","target":"Neutral Matchup","why":"Non-conference game with zero immediate AFC tiebreaker leverage.","announcers":"Kevin Burkhardt, Tom Brady","venue":"SoFi Stadium, Inglewood, CA","roof":"Indoor Canopy Stadium","surface":"Matrix Turf","weather":"Controlled 70°F Climate","window":"LATE","windowLabel":"Sunday 4:25 PM ET National Window","windowBadge":"America's Game of the Week"},{"isoTime":"2026-10-18T20:25Z","slot":"Sun, Oct 18 • 4:25 PM ET","broadcast":"CBS","statusState":"post","statusDetail":"Final","awayName":"Los Angeles Chargers","awayScore":"6","homeName":"Kansas City Chiefs","homeScore":"22","verdict":"RIVAL WIN","impactClass":"neutral","target":"Root for Los Angeles Chargers","why":"Kansas City Chiefs loss clears tiebreaker paths for Buffalo's AFC conference seeding & bye week odds.","announcers":"Jim Nantz, Tony Romo","venue":"GEHA Field at Arrowhead, Kansas City, MO","roof":"Open-Air Stadium","surface":"Natural Bermuda Grass","weather":"59°F, 12mph Wind, 5% PoP","window":"LATE","windowLabel":"Sunday 4:25 PM ET National Window","windowBadge":"America's Game of the Week"},{"isoTime":"2026-10-19T00:20Z","slot":"Sun, Oct 18 • 8:20 PM ET","broadcast":"NBC","statusState":"post","statusDetail":"Final","awayName":"Dallas Cowboys","awayScore":"13","homeName":"Green Bay Packers","homeScore":"23","verdict":"NEUTRAL","impactClass":"neutral","target":"Neutral Matchup","why":"Non-conference game with zero immediate AFC tiebreaker leverage.","announcers":"Mike Tirico, Cris Collinsworth","venue":"Lambeau Field, Green Bay, WI","roof":"Open-Air Stadium","surface":"Natural Grass (SISGrass)","weather":"41°F, 16mph Wind, 30% PoP","window":"SNF","windowLabel":"Sunday Night Football","windowBadge":"NBC / Peacock Marquee"},{"isoTime":"2026-10-20T00:15Z","slot":"Mon, Oct 19 • 8:15 PM ET","broadcast":"ESPN","statusState":"post","statusDetail":"Final","awayName":"Washington Commanders","awayScore":"17","homeName":"San Francisco 49ers","homeScore":"23","verdict":"NEUTRAL","impactClass":"neutral","target":"Neutral Matchup","why":"Non-conference game with zero immediate AFC tiebreaker leverage.","announcers":"Joe Buck, Troy Aikman","venue":"Levi's Stadium, Santa Clara, CA","roof":"Open-Air Stadium","surface":"Natural Bermuda Grass","weather":"68°F, 7mph Wind, 0% PoP","window":"MNF","windowLabel":"Monday Night Football","windowBadge":"ESPN / ABC Prime Time"}]},"sabres":{"team":"Buffalo Sabres","makePlayoffs":44,"winDivision":29,"wildcard":15,"tragicNumber":"Pace: 91 Pts (Target: 92)","clinchAlert":{"active":false,"scenario":"No clinching scenarios available this week."},"nextGame":{"opponent":"vs. Philadelphia","oppShortName":"Flyers","gameTime":"Wed, Oct 21 • 7:30 PM ET","isoTime":"2026-10-21T23:30:00Z","winChance":52,"matchupRecords":"Sabres (4-3-2, 10 pts, OT1) vs. Philadelphia (2-6-3, 7 pts, W2)","broadcast":"TNT","venue":"KeyBank Center, Buffalo","ifWin":44,"ifLoss":33,"leverage":11,"restAdvantage":{"sabresDays":2,"oppDays":1,"summary":"Sabres +1 (Opp on Back-to-Back)"},"specialTeams":{"sabres":"PP: 19.5% (17th) | PK: 81.2% (11th)","opp":"PP: 14.2% (29th) | PK: 76.4% (23rd)","advantage":"Sabres Special Teams Edge (+10.1% Net Margin)"},"efficiency":[{"metric":"Goals / Game","sabres":"3.12 (12th)","opp":"2.55 (24th)"},{"metric":"Goals Against / Game","sabres":"3.20 (18th)","opp":"3.60 (28th)"},{"metric":"Power Play %","sabres":"19.5% (17th)","opp":"14.2% (29th)"},{"metric":"Penalty Kill %","sabres":"81.2% (11th)","opp":"76.4% (23rd)"},{"metric":"Shots / Game","sabres":"29.8 (15th)","opp":"27.4 (25th)"},{"metric":"Faceoff Win %","sabres":"48.2% (22nd)","opp":"49.5% (18th)"}],"injuries":[{"player":"Ukko-Pekka Luukkonen","pos":"G","status":"Probable","injury":"Expected Starter (2.78 GAA, .912 SV%)","team":"Sabres"},{"player":"Samuel Ersson","pos":"G","status":"Probable","injury":"Expected Starter (3.05 GAA, .898 SV%)","team":"Flyers"},{"player":"Zach Benson","pos":"LW","status":"Questionable","injury":"Lower Body","team":"Sabres"},{"player":"Mattias Samuelsson","pos":"D","status":"Injured Reserve","injury":"Lower Body","team":"Sabres"},{"player":"Ryan Ellis","pos":"D","status":"Injured Reserve","injury":"Back","team":"Flyers"}]},"divisionRadar":[{"team":"Bruins","pct":70},{"team":"Lightning","pct":67},{"team":"Senators","pct":58},{"team":"Sabres","pct":44}],"seedDistribution":[{"seed":"Div 1","pct":6},{"seed":"Div 2","pct":11},{"seed":"Div 3","pct":12},{"seed":"Wildcard 1","pct":8},{"seed":"Wildcard 2","pct":7}],"opponents":[{"team":"Florida Panthers","pct":24},{"team":"Tampa Bay Lightning","pct":18},{"team":"Toronto Maple Leafs","pct":14}],"rootingGuide":[{"target":"Regulation Losses for Atlantic Rivals","why":"Ensure games involving BOS, TBL, and FLA do not go to 3-point overtimes."},{"target":"Western Conference Wins vs. Metro","why":"Protects Eastern Conference Wild Card slot thresholds."}],"outOfTownGames":[{"isoTime":"2026-10-20T23:00Z","slot":"Tue, Oct 20 • 7:00 PM ET","broadcast":"ESPN+","statusState":"post","statusDetail":"Final/OT","awayName":"San Jose Sharks","awayScore":"4","homeName":"Montreal Canadiens","homeScore":"3","verdict":"3-POINT GAME DANGER","impactClass":"warning","target":"Root for San Jose Sharks in Regulation","why":"Montreal Canadiens earned a loser point in overtime despite the loss."},{"isoTime":"2026-10-20T23:00Z","slot":"Tue, Oct 20 • 7:00 PM ET","broadcast":"ESPN+","statusState":"post","statusDetail":"Final","awayName":"Colorado Avalanche","awayScore":"3","homeName":"New Jersey Devils","homeScore":"4","verdict":"RIVAL WIN","impactClass":"neutral","target":"Root for Colorado Avalanche in Regulation","why":"New Jersey Devils picked up 2 points in the Eastern playoff race."},{"isoTime":"2026-10-20T23:00Z","slot":"Tue, Oct 20 • 7:00 PM ET","broadcast":"ESPN+","statusState":"post","statusDetail":"Final","awayName":"Anaheim Ducks","awayScore":"2","homeName":"New York Islanders","homeScore":"3","verdict":"RIVAL WIN","impactClass":"neutral","target":"Root for Anaheim Ducks in Regulation","why":"New York Islanders picked up 2 points in the Eastern playoff race."},{"isoTime":"2026-10-20T23:00Z","slot":"Tue, Oct 20 • 7:00 PM ET","broadcast":"ESPN+","statusState":"post","statusDetail":"Final","awayName":"Los Angeles Kings","awayScore":"5","homeName":"Washington Capitals","homeScore":"2","verdict":"GOOD FOR BUFFALO","impactClass":"good","target":"Root for Los Angeles Kings in Regulation","why":"Washington Capitals suffered a regulation loss, freezing their wildcard point total."},{"isoTime":"2026-10-20T23:00Z","slot":"Tue, Oct 20 • 7:00 PM ET","broadcast":"ESPN+","statusState":"post","statusDetail":"Final","awayName":"Toronto Maple Leafs","awayScore":"6","homeName":"Columbus Blue Jackets","homeScore":"2","verdict":"BAD FOR BUFFALO","impactClass":"bad","target":"Root for Columbus Blue Jackets in Regulation","why":"Toronto Maple Leafs collected 2 standings points in the Atlantic race."},{"isoTime":"2026-10-21T00:00Z","slot":"Tue, Oct 20 • 8:00 PM ET","broadcast":"ESPN+","statusState":"post","statusDetail":"Final","awayName":"Winnipeg Jets","awayScore":"1","homeName":"St. Louis Blues","homeScore":"2","verdict":"NEUTRAL","impactClass":"neutral","target":"Neutral Matchup","why":"Non-conference or cross-division matchup with minimal Sabres playoff leverage."},{"isoTime":"2026-10-21T00:00Z","slot":"Tue, Oct 20 • 8:00 PM ET","broadcast":"ESPN","statusState":"post","statusDetail":"Final/OT","awayName":"Boston Bruins","awayScore":"2","homeName":"Dallas Stars","homeScore":"3","verdict":"3-POINT GAME DANGER","impactClass":"warning","target":"Root for Dallas Stars in Regulation","why":"Boston Bruins earned a loser point in overtime despite the loss."},{"isoTime":"2026-10-21T01:00Z","slot":"Tue, Oct 20 • 9:00 PM ET","broadcast":"ESPN+","statusState":"post","statusDetail":"Final/OT","awayName":"Minnesota Wild","awayScore":"3","homeName":"Edmonton Oilers","homeScore":"4","verdict":"NEUTRAL","impactClass":"neutral","target":"Neutral Matchup","why":"Non-conference or cross-division matchup with minimal Sabres playoff leverage."},{"isoTime":"2026-10-21T01:40Z","slot":"Tue, Oct 20 • 9:40 PM ET","broadcast":"ESPN+","statusState":"in","statusDetail":"9:07 - 3rd","awayName":"Detroit Red Wings","awayScore":"2","homeName":"Seattle Kraken","homeScore":"3","verdict":"ATLANTIC WATCH","impactClass":"warning","target":"Root for Seattle Kraken in Regulation","why":"A regulation loss leaves Detroit Red Wings with 0 standings points in the Atlantic Division."},{"isoTime":"2026-10-21T02:00Z","slot":"Tue, Oct 20 • 10:00 PM ET","broadcast":"ESPN+","statusState":"in","statusDetail":"End of 2nd","awayName":"Carolina Hurricanes","awayScore":"3","homeName":"Vancouver Canucks","homeScore":"2","verdict":"WILD CARD WATCH","impactClass":"neutral","target":"Root for Vancouver Canucks in Regulation","why":"Suppresses Eastern Conference Wild Card contenders from stacking points."},{"isoTime":"2026-10-21T02:45Z","slot":"Tue, Oct 20 • 10:45 PM ET","broadcast":"ESPN","statusState":"in","statusDetail":"9:58 - 2nd","awayName":"Tampa Bay Lightning","awayScore":"3","homeName":"Vegas Golden Knights","homeScore":"2","verdict":"ATLANTIC WATCH","impactClass":"warning","target":"Root for Vegas Golden Knights in Regulation","why":"A regulation loss leaves Tampa Bay Lightning with 0 standings points in the Atlantic Division."}]}};
 
       try {
         const res = await fetch('./data.json?v=' + Date.now(), { cache: 'no-store' });

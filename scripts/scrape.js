@@ -205,10 +205,39 @@ async function fetchNflScoreboard() {
     const data = await res.json();
     const events = data.events || [];
 
+    // Ensure we capture both current results and upcoming games
+    const currentWeekNum = data.week?.number;
+    const allFinished = events.every(e => e.competitions?.[0]?.status?.type?.state === 'post');
+    const allUpcoming = events.every(e => e.competitions?.[0]?.status?.type?.state === 'pre');
+
+    let extraEvents = [];
+    if (allFinished && currentWeekNum) {
+      try {
+        const nextWeekRes = await fetch(`https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?week=${currentWeekNum + 1}&seasontype=2`);
+        if (nextWeekRes.ok) {
+          const nextWeekData = await nextWeekRes.json();
+          extraEvents = nextWeekData.events || [];
+        }
+      } catch (e) {
+        console.warn('Next week fetch fallback:', e.message);
+      }
+    } else if (allUpcoming && currentWeekNum && currentWeekNum > 1) {
+      try {
+        const prevWeekRes = await fetch(`https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?week=${currentWeekNum - 1}&seasontype=2`);
+        if (prevWeekRes.ok) {
+          const prevWeekData = await prevWeekRes.json();
+          extraEvents = prevWeekData.events || [];
+        }
+      } catch (e) {
+        console.warn('Prev week fetch fallback:', e.message);
+      }
+    }
+
+    const combinedEvents = [...events, ...extraEvents];
     const afcEastPriority = ['New England Patriots', 'Miami Dolphins', 'New York Jets'];
     const afcContenders = ['Kansas City Chiefs', 'Baltimore Ravens', 'Houston Texans', 'Pittsburgh Steelers', 'Los Angeles Chargers'];
 
-    for (const ev of events) {
+    for (const ev of combinedEvents) {
       const comp = ev.competitions?.[0];
       if (!comp) continue;
 
