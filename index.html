@@ -196,6 +196,50 @@
       margin-top: 0.1rem;
     }
 
+    .live-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background-color: #10b981;
+      display: inline-block;
+      margin-right: 4px;
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+      animation: liveDotPulse 1.8s infinite;
+      vertical-align: middle;
+    }
+    @keyframes liveDotPulse {
+      0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+      }
+      70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
+      }
+      100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+      }
+    }
+    .live-score-highlight {
+      color: #10b981;
+      font-weight: 800;
+    }
+    .live-pulse-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.65rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      padding: 0.1rem 0.45rem;
+      border-radius: 4px;
+      background: rgba(16, 185, 129, 0.2);
+      border: 1px solid rgba(16, 185, 129, 0.5);
+      color: #34d399;
+      text-transform: uppercase;
+    }
+
     .stakes-bottom-row {
       display: grid;
       grid-template-columns: 1fr 1.6fr;
@@ -387,7 +431,7 @@
 
           <div class="countdown-box">
             <div class="countdown-val" id="bills-countdown">--:--:--</div>
-            <div class="countdown-label">Kickoff In</div>
+            <div class="countdown-label" id="bills-countdown-label">Kickoff In</div>
           </div>
         </div>
 
@@ -455,7 +499,7 @@
 
           <div class="countdown-box">
             <div class="countdown-val" id="sabres-countdown">--:--:--</div>
-            <div class="countdown-label">Puck Drop In</div>
+            <div class="countdown-label" id="sabres-countdown-label">Puck Drop In</div>
           </div>
         </div>
 
@@ -507,14 +551,16 @@
   </footer>
 
   <script>
+    const countdownTimers = {};
     function startCountdown(elementId, targetIso) {
       const el = document.getElementById(elementId);
       if (!el || !targetIso) return;
+      if (countdownTimers[elementId]) clearInterval(countdownTimers[elementId]);
 
       function update() {
         const diff = new Date(targetIso).getTime() - Date.now();
         if (diff <= 0) {
-          el.textContent = "LIVE NOW";
+          el.innerHTML = '<span class="live-dot"></span> LIVE NOW';
           el.style.color = "#10b981";
           return;
         }
@@ -535,7 +581,144 @@
       }
 
       update();
-      setInterval(update, 1000);
+      countdownTimers[elementId] = setInterval(update, 1000);
+    }
+
+    let livePollTimeout = null;
+    async function checkLiveScores() {
+      let anyLive = false;
+
+      // 1. Live NFL Check (Bills)
+      try {
+        const nflRes = await fetch('https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard', { cache: 'no-store' });
+        if (nflRes.ok) {
+          const nflData = await nflRes.json();
+          const billsEv = (nflData.events || []).find(ev => {
+            const comp = ev.competitions?.[0];
+            return comp?.competitors?.some(c => c.team?.abbreviation === 'BUF' || c.team?.id === '2' || c.team?.displayName === 'Buffalo Bills');
+          });
+
+          if (billsEv) {
+            const comp = billsEv.competitions[0];
+            const state = comp.status?.type?.state;
+            const detail = comp.status?.type?.shortDetail || 'LIVE';
+            const buf = comp.competitors.find(c => c.team?.abbreviation === 'BUF' || c.team?.id === '2');
+            const opp = comp.competitors.find(c => c !== buf);
+
+            const countdownEl = document.getElementById('bills-countdown');
+            const countdownLabelEl = document.getElementById('bills-countdown-label');
+            const recordsEl = document.getElementById('bills-records');
+            const winChanceEl = document.getElementById('bills-win-chance');
+
+            if (state === 'in') {
+              anyLive = true;
+              if (countdownTimers['bills-countdown']) clearInterval(countdownTimers['bills-countdown']);
+              if (countdownEl) {
+                countdownEl.innerHTML = `<span class="live-dot"></span> ${detail}`;
+                countdownEl.style.color = '#10b981';
+              }
+              if (countdownLabelEl) {
+                countdownLabelEl.textContent = 'LIVE GAME CLOCK';
+                countdownLabelEl.style.color = '#10b981';
+              }
+              if (recordsEl && buf && opp) {
+                const oppName = opp.team?.shortDisplayName || opp.team?.displayName || 'Opponent';
+                const isHome = buf.homeAway === 'home';
+                recordsEl.innerHTML = `<span class="live-pulse-badge">LIVE</span> <span class="live-score-highlight">${isHome ? `BUF ${buf.score || 0} - ${opp.score || 0} ${oppName}` : `${oppName} ${opp.score || 0} - ${buf.score || 0} BUF`}</span>`;
+              }
+              if (comp.predictor?.homeTeam && winChanceEl && buf) {
+                const isHome = buf.homeAway === 'home';
+                const homeProb = parseFloat(comp.predictor.homeTeam.gameProjection);
+                if (!isNaN(homeProb)) {
+                  const prob = Math.round(isHome ? homeProb : (100 - homeProb));
+                  winChanceEl.textContent = `${prob}%`;
+                }
+              }
+            } else if (state === 'post') {
+              if (countdownTimers['bills-countdown']) clearInterval(countdownTimers['bills-countdown']);
+              if (countdownEl) {
+                countdownEl.textContent = detail.includes('OT') ? 'FINAL/OT' : 'FINAL';
+                countdownEl.style.color = '#fff';
+              }
+              if (countdownLabelEl) {
+                countdownLabelEl.textContent = 'FINAL SCORE';
+              }
+              if (recordsEl && buf && opp) {
+                const oppName = opp.team?.shortDisplayName || opp.team?.displayName || 'Opponent';
+                const isHome = buf.homeAway === 'home';
+                recordsEl.textContent = isHome ? `Final: BUF ${buf.score || 0}, ${oppName} ${opp.score || 0}` : `Final: ${oppName} ${opp.score || 0}, BUF ${buf.score || 0}`;
+              }
+            }
+          }
+        }
+      } catch (err) {
+        console.warn('Live NFL scoreboard poll:', err);
+      }
+
+      // 2. Live NHL Check (Sabres)
+      try {
+        const nhlRes = await fetch('https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard', { cache: 'no-store' });
+        if (nhlRes.ok) {
+          const nhlData = await nhlRes.json();
+          const sabresEv = (nhlData.events || []).find(ev => {
+            const comp = ev.competitions?.[0];
+            return comp?.competitors?.some(c => c.team?.abbreviation === 'BUF' || c.team?.id === '2' || c.team?.displayName === 'Buffalo Sabres');
+          });
+
+          if (sabresEv) {
+            const comp = sabresEv.competitions[0];
+            const state = comp.status?.type?.state;
+            const detail = comp.status?.type?.shortDetail || 'LIVE';
+            const buf = comp.competitors.find(c => c.team?.abbreviation === 'BUF' || c.team?.id === '2');
+            const opp = comp.competitors.find(c => c !== buf);
+
+            const countdownEl = document.getElementById('sabres-countdown');
+            const countdownLabelEl = document.getElementById('sabres-countdown-label');
+            const recordsEl = document.getElementById('sabres-records');
+
+            if (state === 'in') {
+              anyLive = true;
+              if (countdownTimers['sabres-countdown']) clearInterval(countdownTimers['sabres-countdown']);
+              if (countdownEl) {
+                countdownEl.innerHTML = `<span class="live-dot"></span> ${detail}`;
+                countdownEl.style.color = '#10b981';
+              }
+              if (countdownLabelEl) {
+                countdownLabelEl.textContent = 'LIVE PERIOD';
+                countdownLabelEl.style.color = '#10b981';
+              }
+              if (recordsEl && buf && opp) {
+                const oppName = opp.team?.shortDisplayName || opp.team?.displayName || 'Flyers';
+                const isHome = buf.homeAway === 'home';
+                recordsEl.innerHTML = `<span class="live-pulse-badge">LIVE</span> <span class="live-score-highlight">${isHome ? `Sabres ${buf.score || 0} - ${opp.score || 0} ${oppName}` : `${oppName} ${opp.score || 0} - ${buf.score || 0} Sabres`}</span>`;
+              }
+            } else if (state === 'post') {
+              if (countdownTimers['sabres-countdown']) clearInterval(countdownTimers['sabres-countdown']);
+              if (countdownEl) {
+                countdownEl.textContent = detail.includes('OT') ? 'FINAL/OT' : 'FINAL';
+                countdownEl.style.color = '#fff';
+              }
+              if (countdownLabelEl) {
+                countdownLabelEl.textContent = 'FINAL SCORE';
+              }
+              if (recordsEl && buf && opp) {
+                const oppName = opp.team?.shortDisplayName || opp.team?.displayName || 'Flyers';
+                const isHome = buf.homeAway === 'home';
+                recordsEl.textContent = isHome ? `Final: Sabres ${buf.score || 0}, ${oppName} ${opp.score || 0}` : `Final: ${oppName} ${opp.score || 0}, Sabres ${buf.score || 0}`;
+              }
+            }
+          }
+        }
+      } catch (err) {
+        console.warn('Live NHL scoreboard poll:', err);
+      }
+
+      // Schedule next poll
+      const pollDelay = anyLive ? 25000 : 60000;
+      if (!document.hidden) {
+        if (livePollTimeout) clearTimeout(livePollTimeout);
+        livePollTimeout = setTimeout(checkLiveScores, pollDelay);
+      }
     }
 
     async function loadData() {
@@ -602,10 +785,17 @@
         startCountdown('sabres-countdown', s.nextGame.isoTime);
       }
 
-      }
+      // Check real-time live game feeds immediately
+      checkLiveScores();
+    }
 
     // Auto-refresh data when waking from mobile background or every 60s
-    window.addEventListener('pageshow', () => { loadData(); });
+    window.addEventListener('pageshow', () => { loadData(); checkLiveScores(); });
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) {
+        checkLiveScores();
+      }
+    });
     setInterval(loadData, 60 * 1000);
     document.addEventListener('DOMContentLoaded', loadData);
   </script>

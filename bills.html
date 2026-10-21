@@ -450,6 +450,7 @@
 
     .score-card-good { border-left: 5px solid var(--accent-green); }
     .score-card-bad { border-left: 5px solid #f87171; }
+    .score-card-warning { border-left: 5px solid #f59e0b; }
     .score-card-neutral { border-left: 5px solid #64748b; }
 
     .score-card-header {
@@ -477,6 +478,50 @@
     }
     .game-status-live { color: #10b981; }
 
+    .live-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background-color: #10b981;
+      display: inline-block;
+      margin-right: 4px;
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+      animation: liveDotPulse 1.8s infinite;
+      vertical-align: middle;
+    }
+    @keyframes liveDotPulse {
+      0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+      }
+      70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
+      }
+      100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+      }
+    }
+    .live-score-highlight {
+      color: #10b981;
+      font-weight: 800;
+    }
+    .live-pulse-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.65rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      padding: 0.1rem 0.45rem;
+      border-radius: 4px;
+      background: rgba(16, 185, 129, 0.2);
+      border: 1px solid rgba(16, 185, 129, 0.5);
+      color: #34d399;
+      text-transform: uppercase;
+    }
+
     .verdict-badge {
       font-size: 0.65rem;
       font-weight: 800;
@@ -488,6 +533,7 @@
     }
     .verdict-good { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
     .verdict-bad { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); }
+    .verdict-warning { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
     .verdict-neutral { background: rgba(100, 116, 139, 0.2); color: #94a3b8; border: 1px solid rgba(100, 116, 139, 0.4); }
 
     .score-teams-grid {
@@ -607,7 +653,7 @@
 
             <div class="countdown-box">
               <div class="countdown-val" id="bills-countdown">--:--:--</div>
-              <div class="countdown-label">Kickoff In</div>
+              <div class="countdown-label" id="bills-countdown-label">Kickoff In</div>
             </div>
           </div>
 
@@ -697,14 +743,16 @@
       document.getElementById(`tab-btn-${tabId}`).classList.add('active');
     }
 
+    const countdownTimers = {};
     function startCountdown(elementId, targetIso) {
       const el = document.getElementById(elementId);
       if (!el || !targetIso) return;
+      if (countdownTimers[elementId]) clearInterval(countdownTimers[elementId]);
 
       function update() {
         const diff = new Date(targetIso).getTime() - Date.now();
         if (diff <= 0) {
-          el.textContent = "LIVE NOW";
+          el.innerHTML = '<span class="live-dot"></span> LIVE NOW';
           el.style.color = "#10b981";
           return;
         }
@@ -725,7 +773,225 @@
       }
 
       update();
-      setInterval(update, 1000);
+      countdownTimers[elementId] = setInterval(update, 1000);
+    }
+
+    let liveBillsPollTimer = null;
+    let currentBillsOutOfTownGames = [];
+
+    function renderBillsScoreboard(games) {
+      const scoreContainer = document.getElementById('bills-scoreboard-grid');
+      if (!scoreContainer) return;
+
+      if (!Array.isArray(games) || games.length === 0) {
+        scoreContainer.innerHTML = `
+          <div style="color: var(--text-muted); font-size: 0.85rem; text-align: center; padding: 1rem;">
+            No out-of-town games currently scheduled for this window.
+          </div>
+        `;
+        return;
+      }
+
+      scoreContainer.innerHTML = games.map(g => {
+        let cardBorderClass = 'score-card-neutral';
+        let verdictBadgeClass = 'verdict-neutral';
+
+        if (g.impactClass === 'good') {
+          cardBorderClass = 'score-card-good';
+          verdictBadgeClass = 'verdict-good';
+        } else if (g.impactClass === 'bad') {
+          cardBorderClass = 'score-card-bad';
+          verdictBadgeClass = 'verdict-bad';
+        } else if (g.impactClass === 'warning') {
+          cardBorderClass = 'score-card-warning';
+          verdictBadgeClass = 'verdict-warning';
+        }
+
+        const isLive = g.statusState === 'in';
+        const statusHtml = isLive 
+          ? `<span class="game-status-badge game-status-live"><span class="live-dot"></span>${g.statusDetail || 'LIVE'}</span>`
+          : `<span class="game-status-badge">${g.statusDetail || 'Scheduled'}</span>`;
+
+        return `
+          <div class="score-card ${cardBorderClass}">
+            <div class="score-card-header">
+              <div class="score-card-meta">
+                ${statusHtml}
+                <span>•</span>
+                <span>${g.slot}</span>
+                <span class="tv-badge">${g.broadcast}</span>
+              </div>
+              <span class="verdict-badge ${verdictBadgeClass}">${g.verdict}</span>
+            </div>
+
+            <div class="score-teams-grid">
+              <div class="score-team-row">
+                <span>${g.awayName}</span>
+                <span class="score-team-points">${g.awayScore}</span>
+              </div>
+              <div class="score-team-row">
+                <span>${g.homeName}</span>
+                <span class="score-team-points">${g.homeScore}</span>
+              </div>
+            </div>
+
+            <div class="score-analysis-box">
+              <div class="score-target-title">${g.target}</div>
+              <div class="score-why-detail">${g.why}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function pollLiveBillsScoreboard() {
+      let isAnyLive = false;
+
+      try {
+        const res = await fetch('https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard', { cache: 'no-store' });
+        if (!res.ok) throw new Error('ESPN NFL Scoreboard unavailable');
+        const data = await res.json();
+        const events = data.events || [];
+
+        // 1. Check Buffalo Bills Hero Game (Tab 2)
+        const billsEv = events.find(ev => {
+          const comp = ev.competitions?.[0];
+          return comp?.competitors?.some(c => c.team?.abbreviation === 'BUF' || c.team?.id === '2' || c.team?.displayName === 'Buffalo Bills');
+        });
+
+        if (billsEv) {
+          const comp = billsEv.competitions[0];
+          const state = comp.status?.type?.state;
+          const detail = comp.status?.type?.shortDetail || 'LIVE';
+          const buf = comp.competitors.find(c => c.team?.abbreviation === 'BUF' || c.team?.id === '2');
+          const opp = comp.competitors.find(c => c !== buf);
+
+          const countdownEl = document.getElementById('bills-countdown');
+          const countdownLabelEl = document.getElementById('bills-countdown-label');
+          const recordsEl = document.getElementById('bills-records');
+          const winChanceEl = document.getElementById('bills-win-chance');
+
+          if (state === 'in') {
+            isAnyLive = true;
+            if (countdownTimers['bills-countdown']) clearInterval(countdownTimers['bills-countdown']);
+            if (countdownEl) {
+              countdownEl.innerHTML = `<span class="live-dot"></span> ${detail}`;
+              countdownEl.style.color = '#10b981';
+            }
+            if (countdownLabelEl) {
+              countdownLabelEl.textContent = 'LIVE GAME CLOCK';
+              countdownLabelEl.style.color = '#10b981';
+            }
+            if (recordsEl && buf && opp) {
+              const oppName = opp.team?.shortDisplayName || opp.team?.displayName || 'Opponent';
+              const isHome = buf.homeAway === 'home';
+              recordsEl.innerHTML = `<span class="live-pulse-badge">LIVE</span> <span class="live-score-highlight">${isHome ? `BUF ${buf.score || 0} - ${opp.score || 0} ${oppName}` : `${oppName} ${opp.score || 0} - ${buf.score || 0} BUF`}</span>`;
+            }
+            if (comp.predictor?.homeTeam && winChanceEl && buf) {
+              const isHome = buf.homeAway === 'home';
+              const homeProb = parseFloat(comp.predictor.homeTeam.gameProjection);
+              if (!isNaN(homeProb)) {
+                winChanceEl.textContent = `${Math.round(isHome ? homeProb : (100 - homeProb))}%`;
+              }
+            }
+          } else if (state === 'post') {
+            if (countdownTimers['bills-countdown']) clearInterval(countdownTimers['bills-countdown']);
+            if (countdownEl) {
+              countdownEl.textContent = detail.includes('OT') ? 'FINAL/OT' : 'FINAL';
+              countdownEl.style.color = '#fff';
+            }
+            if (countdownLabelEl) {
+              countdownLabelEl.textContent = 'FINAL SCORE';
+            }
+            if (recordsEl && buf && opp) {
+              const oppName = opp.team?.shortDisplayName || opp.team?.displayName || 'Opponent';
+              const isHome = buf.homeAway === 'home';
+              recordsEl.textContent = isHome ? `Final: BUF ${buf.score || 0}, ${oppName} ${opp.score || 0}` : `Final: ${oppName} ${opp.score || 0}, BUF ${buf.score || 0}`;
+            }
+          }
+        }
+
+        // 2. Overlay Out-of-Town Games (Tab 3)
+        let updatedCount = 0;
+        currentBillsOutOfTownGames.forEach(g => {
+          const matchedEv = events.find(ev => {
+            const comp = ev.competitions?.[0];
+            if (!comp) return false;
+            const h = comp.competitors?.find(c => c.homeAway === 'home');
+            const a = comp.competitors?.find(c => c.homeAway === 'away');
+            if (!h || !a) return false;
+            const hName = (h.team?.displayName || '').toLowerCase();
+            const aName = (a.team?.displayName || '').toLowerCase();
+            const hShort = (h.team?.shortDisplayName || '').toLowerCase();
+            const aShort = (a.team?.shortDisplayName || '').toLowerCase();
+            const gHome = (g.homeName || '').toLowerCase();
+            const gAway = (g.awayName || '').toLowerCase();
+
+            const homeMatch = hName.includes(gHome) || gHome.includes(hName) || (hShort && gHome.includes(hShort));
+            const awayMatch = aName.includes(gAway) || gAway.includes(aName) || (aShort && gAway.includes(aShort));
+            return homeMatch && awayMatch;
+          });
+
+          if (matchedEv) {
+            const comp = matchedEv.competitions[0];
+            const h = comp.competitors?.find(c => c.homeAway === 'home');
+            const a = comp.competitors?.find(c => c.homeAway === 'away');
+            const state = comp.status?.type?.state;
+            const detail = comp.status?.type?.shortDetail || 'LIVE';
+
+            g.statusState = state;
+            g.statusDetail = detail;
+            g.homeScore = h?.score || g.homeScore;
+            g.awayScore = a?.score || g.awayScore;
+
+            if (state === 'in') {
+              isAnyLive = true;
+              const hSc = parseInt(g.homeScore) || 0;
+              const aSc = parseInt(g.awayScore) || 0;
+              const targetLower = (g.target || '').toLowerCase();
+              const targetIsHome = targetLower.includes((g.homeName || '').toLowerCase());
+              const targetIsAway = targetLower.includes((g.awayName || '').toLowerCase());
+
+              if (targetIsHome) {
+                if (hSc > aSc) { g.verdict = 'GOOD FOR BUFFALO (LEAD)'; g.impactClass = 'good'; }
+                else if (aSc > hSc) { g.verdict = 'BAD FOR BUFFALO (TRAILING)'; g.impactClass = 'bad'; }
+                else { g.verdict = 'TIED • LEVERAGE WATCH'; g.impactClass = 'warning'; }
+              } else if (targetIsAway) {
+                if (aSc > hSc) { g.verdict = 'GOOD FOR BUFFALO (LEAD)'; g.impactClass = 'good'; }
+                else if (hSc > aSc) { g.verdict = 'BAD FOR BUFFALO (TRAILING)'; g.impactClass = 'bad'; }
+                else { g.verdict = 'TIED • LEVERAGE WATCH'; g.impactClass = 'warning'; }
+              }
+            } else if (state === 'post') {
+              const hSc = parseInt(g.homeScore) || 0;
+              const aSc = parseInt(g.awayScore) || 0;
+              const targetLower = (g.target || '').toLowerCase();
+              const targetIsHome = targetLower.includes((g.homeName || '').toLowerCase());
+              const targetIsAway = targetLower.includes((g.awayName || '').toLowerCase());
+
+              if (targetIsHome) {
+                if (hSc > aSc) { g.verdict = 'GOOD FOR BUFFALO'; g.impactClass = 'good'; }
+                else { g.verdict = 'BAD FOR BUFFALO'; g.impactClass = 'bad'; }
+              } else if (targetIsAway) {
+                if (aSc > hSc) { g.verdict = 'GOOD FOR BUFFALO'; g.impactClass = 'good'; }
+                else { g.verdict = 'BAD FOR BUFFALO'; g.impactClass = 'bad'; }
+              }
+            }
+            updatedCount++;
+          }
+        });
+
+        if (updatedCount > 0) {
+          renderBillsScoreboard(currentBillsOutOfTownGames);
+        }
+      } catch (err) {
+        console.warn('Live Bills poller catch:', err);
+      }
+
+      const delay = isAnyLive ? 25000 : 60000;
+      if (!document.hidden) {
+        if (liveBillsPollTimer) clearTimeout(liveBillsPollTimer);
+        liveBillsPollTimer = setTimeout(pollLiveBillsScoreboard, delay);
+      }
     }
 
     async function loadData() {
@@ -851,64 +1117,20 @@
       }
 
       // Populate Chronological Out-of-Town Scoreboard
-      const scoreContainer = document.getElementById('bills-scoreboard-grid');
-      if (scoreContainer && Array.isArray(b.outOfTownGames) && b.outOfTownGames.length > 0) {
-        scoreContainer.innerHTML = b.outOfTownGames.map(g => {
-          let cardBorderClass = 'score-card-neutral';
-          let verdictBadgeClass = 'verdict-neutral';
+      currentBillsOutOfTownGames = Array.isArray(b.outOfTownGames) ? b.outOfTownGames : [];
+      renderBillsScoreboard(currentBillsOutOfTownGames);
 
-          if (g.impactClass === 'good') {
-            cardBorderClass = 'score-card-good';
-            verdictBadgeClass = 'verdict-good';
-          } else if (g.impactClass === 'bad') {
-            cardBorderClass = 'score-card-bad';
-            verdictBadgeClass = 'verdict-bad';
-          }
-
-          const isLive = g.statusState === 'in';
-          const statusClass = isLive ? 'game-status-badge game-status-live' : 'game-status-badge';
-
-          return `
-            <div class="score-card ${cardBorderClass}">
-              <div class="score-card-header">
-                <div class="score-card-meta">
-                  <span class="${statusClass}">${g.statusDetail}</span>
-                  <span>•</span>
-                  <span>${g.slot}</span>
-                  <span class="tv-badge">${g.broadcast}</span>
-                </div>
-                <span class="verdict-badge ${verdictBadgeClass}">${g.verdict}</span>
-              </div>
-
-              <div class="score-teams-grid">
-                <div class="score-team-row">
-                  <span>${g.awayName}</span>
-                  <span class="score-team-points">${g.awayScore}</span>
-                </div>
-                <div class="score-team-row">
-                  <span>${g.homeName}</span>
-                  <span class="score-team-points">${g.homeScore}</span>
-                </div>
-              </div>
-
-              <div class="score-analysis-box">
-                <div class="score-target-title">${g.target}</div>
-                <div class="score-why-detail">${g.why}</div>
-              </div>
-            </div>
-          `;
-        }).join('');
-      } else if (scoreContainer) {
-        scoreContainer.innerHTML = `
-          <div style="color: var(--text-muted); font-size: 0.85rem; text-align: center; padding: 1rem;">
-            No out-of-town games currently scheduled for this window.
-          </div>
-        `;
-      }
+      // Check real-time live scores immediately
+      pollLiveBillsScoreboard();
     }
 
     // Auto-refresh data when waking from mobile background or every 60s
-    window.addEventListener('pageshow', () => { loadData(); });
+    window.addEventListener('pageshow', () => { loadData(); pollLiveBillsScoreboard(); });
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) {
+        pollLiveBillsScoreboard();
+      }
+    });
     setInterval(loadData, 60 * 1000);
     document.addEventListener('DOMContentLoaded', loadData);
   </script>
