@@ -905,6 +905,9 @@
       }
     }
 
+    // Auto-refresh data when waking from mobile background or every 60s
+    window.addEventListener('pageshow', () => { loadData(); });
+    setInterval(loadData, 60 * 1000);
     document.addEventListener('DOMContentLoaded', loadData);
   </script>
 </body>

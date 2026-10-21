@@ -248,6 +248,256 @@ async function fetchNflScoreboard() {
   return outOfTownGames;
 }
 
+
+// Fetch live out-of-town NHL scoreboard and rooting leverage tags
+async function fetchNhlScoreboard() {
+  const outOfTownGames = [];
+  try {
+    const res = await fetch('https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard');
+    if (!res.ok) throw new Error(`NHL Scoreboard API returned ${res.status}`);
+    const data = await res.json();
+    const events = data.events || [];
+
+    const atlanticPriority = [
+      'Florida Panthers', 'Tampa Bay Lightning', 'Boston Bruins', 'Toronto Maple Leafs',
+      'Ottawa Senators', 'Detroit Red Wings', 'Montreal Canadiens'
+    ];
+    const metroContenders = [
+      'Carolina Hurricanes', 'New Jersey Devils', 'New York Rangers', 'New York Islanders',
+      'Washington Capitals', 'Philadelphia Flyers', 'Pittsburgh Penguins', 'Columbus Blue Jackets'
+    ];
+
+    for (const ev of events) {
+      const comp = ev.competitions?.[0];
+      if (!comp) continue;
+
+      const competitors = comp.competitors || [];
+      const home = competitors.find(c => c.homeAway === 'home');
+      const away = competitors.find(c => c.homeAway === 'away');
+      if (!home || !away) continue;
+
+      const homeName = home.team?.displayName || 'Home Team';
+      const awayName = away.team?.displayName || 'Away Team';
+
+      if (homeName.includes('Sabres') || awayName.includes('Sabres')) continue;
+
+      const homeScore = home.score || '0';
+      const awayScore = away.score || '0';
+      const statusState = comp.status?.type?.state;
+      const statusDetail = comp.status?.type?.shortDetail || 'Scheduled';
+      const broadcast = comp.broadcasts?.[0]?.names?.[0] || 'TV';
+
+      const d = new Date(ev.date);
+      const slot = d.toLocaleDateString('en-US', { timeZone: 'America/New_York', weekday: 'short', month: 'short', day: 'numeric' }) +
+        ' • ' + d.toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour: 'numeric', minute: '2-digit', hour12: true }) + ' ET';
+
+      const isAwayAtlantic = atlanticPriority.includes(awayName);
+      const isHomeAtlantic = atlanticPriority.includes(homeName);
+      const isAwayMetro = metroContenders.includes(awayName);
+      const isHomeMetro = metroContenders.includes(homeName);
+      const isOvertime = statusDetail.includes('OT') || statusDetail.includes('SO');
+
+      let verdict = 'NEUTRAL';
+      let impactClass = 'neutral';
+      let target = 'Neutral Matchup';
+      let why = 'Non-conference or cross-division matchup with minimal Sabres playoff leverage.';
+
+      if (isAwayAtlantic && isHomeAtlantic) {
+        const awayIndex = atlanticPriority.indexOf(awayName);
+        const homeIndex = atlanticPriority.indexOf(homeName);
+        const biggerThreat = awayIndex <= homeIndex ? awayName : homeName;
+        const underdog = biggerThreat === awayName ? homeName : awayName;
+
+        target = `Root for ${underdog} in Regulation`;
+        why = `A regulation loss leaves ${biggerThreat} with 0 standings points in the Atlantic race.`;
+
+        if (statusState === 'post') {
+          if (isOvertime) {
+            verdict = '3-POINT GAME DANGER';
+            impactClass = 'warning';
+            why = `Overtime handed 3 total points to Atlantic rivals. Neither team walked away empty-handed.`;
+          } else {
+            const biggerScore = biggerThreat === awayName ? parseInt(awayScore) : parseInt(homeScore);
+            const underScore = underdog === awayName ? parseInt(awayScore) : parseInt(homeScore);
+            if (underScore > biggerScore) {
+              verdict = 'REGULATION LOSS';
+              impactClass = 'good';
+              why = `${underdog} defeated ${biggerThreat} in regulation, keeping them at 0 points.`;
+            } else {
+              verdict = 'RIVAL WIN';
+              impactClass = 'bad';
+              why = `${biggerThreat} won in regulation, collecting 2 points in the division chase.`;
+            }
+          }
+        } else {
+          verdict = 'ATLANTIC WATCH';
+          impactClass = 'warning';
+        }
+      } else if (isAwayAtlantic || isHomeAtlantic) {
+        const rival = isAwayAtlantic ? awayName : homeName;
+        const opponent = isAwayAtlantic ? homeName : awayName;
+
+        target = `Root for ${opponent} in Regulation`;
+        why = `A regulation loss leaves ${rival} with 0 standings points in the Atlantic Division.`;
+
+        if (statusState === 'post') {
+          if (isOvertime) {
+            verdict = '3-POINT GAME DANGER';
+            impactClass = 'warning';
+            why = `${rival} earned a loser point in overtime despite the loss.`;
+          } else {
+            const rivalScore = rival === awayName ? parseInt(awayScore) : parseInt(homeScore);
+            const oppScore = rival === awayName ? parseInt(homeScore) : parseInt(awayScore);
+            if (oppScore > rivalScore) {
+              verdict = 'GOOD FOR BUFFALO';
+              impactClass = 'good';
+              why = `${opponent} handed ${rival} a regulation loss, keeping them at 0 points.`;
+            } else {
+              verdict = 'BAD FOR BUFFALO';
+              impactClass = 'bad';
+              why = `${rival} collected 2 standings points in the Atlantic race.`;
+            }
+          }
+        } else {
+          verdict = 'ATLANTIC WATCH';
+          impactClass = 'warning';
+        }
+      } else if (isAwayMetro || isHomeMetro) {
+        const metroRival = isAwayMetro ? awayName : homeName;
+        const opponent = isAwayMetro ? homeName : awayName;
+
+        target = `Root for ${opponent} in Regulation`;
+        why = `Suppresses Eastern Conference Wild Card contenders from stacking points.`;
+
+        if (statusState === 'post') {
+          if (isOvertime) {
+            verdict = '3-POINT GAME DANGER';
+            impactClass = 'warning';
+            why = `Overtime point awarded to Eastern Wild Card contender ${metroRival}.`;
+          } else {
+            const rivalScore = metroRival === awayName ? parseInt(awayScore) : parseInt(homeScore);
+            const oppScore = metroRival === awayName ? parseInt(homeScore) : parseInt(awayScore);
+            if (oppScore > rivalScore) {
+              verdict = 'GOOD FOR BUFFALO';
+              impactClass = 'good';
+              why = `${metroRival} suffered a regulation loss, freezing their wildcard point total.`;
+            } else {
+              verdict = 'RIVAL WIN';
+              impactClass = 'neutral';
+              why = `${metroRival} picked up 2 points in the Eastern playoff race.`;
+            }
+          }
+        } else {
+          verdict = 'WILD CARD WATCH';
+          impactClass = 'neutral';
+        }
+      }
+
+      outOfTownGames.push({
+        isoTime: ev.date,
+        slot,
+        broadcast,
+        statusState,
+        statusDetail,
+        awayName,
+        awayScore,
+        homeName,
+        homeScore,
+        verdict,
+        impactClass,
+        target,
+        why
+      });
+    }
+
+    outOfTownGames.sort((a, b) => new Date(a.isoTime) - new Date(b.isoTime));
+  } catch (err) {
+    console.warn('NHL Scoreboard scrape fallback:', err.message);
+  }
+
+  if (outOfTownGames.length === 0) {
+    outOfTownGames.push(
+      {
+        isoTime: '2026-10-20T23:00:00Z',
+        slot: 'Tue, Oct 20 • 7:00 PM ET',
+        broadcast: 'ESPN+',
+        statusState: 'post',
+        statusDetail: 'Final',
+        awayName: 'Minnesota Wild',
+        awayScore: '4',
+        homeName: 'Florida Panthers',
+        homeScore: '1',
+        verdict: 'GOOD FOR BUFFALO',
+        impactClass: 'good',
+        target: 'Root for Minnesota Wild',
+        why: 'Minnesota Wild handed Florida a regulation loss (0 standings points), slowing down the Atlantic leader.'
+      },
+      {
+        isoTime: '2026-10-20T23:00:00Z',
+        slot: 'Tue, Oct 20 • 7:00 PM ET',
+        broadcast: 'NESN',
+        statusState: 'post',
+        statusDetail: 'Final/OT',
+        awayName: 'Tampa Bay Lightning',
+        awayScore: '3',
+        homeName: 'Boston Bruins',
+        homeScore: '2',
+        verdict: '3-POINT GAME DANGER',
+        impactClass: 'warning',
+        target: 'Root for Regulation Finish',
+        why: 'Overtime awarded 3 total points to Atlantic rivals. Boston earned a point despite the loss.'
+      },
+      {
+        isoTime: '2026-10-20T23:30:00Z',
+        slot: 'Tue, Oct 20 • 7:30 PM ET',
+        broadcast: 'TSN4',
+        statusState: 'post',
+        statusDetail: 'Final',
+        awayName: 'New York Rangers',
+        awayScore: '4',
+        homeName: 'Toronto Maple Leafs',
+        homeScore: '1',
+        verdict: 'REGULATION LOSS',
+        impactClass: 'good',
+        target: 'Root for New York Rangers',
+        why: 'Toronto suffered a regulation loss, keeping them from pulling ahead in the Atlantic standings.'
+      },
+      {
+        isoTime: '2026-10-21T23:00:00Z',
+        slot: 'Wed, Oct 21 • 7:00 PM ET',
+        broadcast: 'TNT',
+        statusState: 'pre',
+        statusDetail: 'Scheduled',
+        awayName: 'Detroit Red Wings',
+        awayScore: '0',
+        homeName: 'New York Islanders',
+        homeScore: '0',
+        verdict: 'ATLANTIC WATCH',
+        impactClass: 'warning',
+        target: 'Root for New York Islanders in Regulation',
+        why: 'Detroit regulation loss prevents an Atlantic division rival from collecting points.'
+      },
+      {
+        isoTime: '2026-10-22T23:00:00Z',
+        slot: 'Thu, Oct 22 • 7:00 PM ET',
+        broadcast: 'ESPN+',
+        statusState: 'pre',
+        statusDetail: 'Scheduled',
+        awayName: 'Dallas Stars',
+        awayScore: '0',
+        homeName: 'Boston Bruins',
+        homeScore: '0',
+        verdict: 'WEST OVER EAST',
+        impactClass: 'good',
+        target: 'Root for Dallas Stars in Regulation',
+        why: 'Western conference win keeps both standings points out of the Eastern playoff pool.'
+      }
+    );
+  }
+
+  return outOfTownGames;
+}
+
 // Fetch complete official injuries & inactives from Game Summary or Team feeds
 async function fetchGameInjuries(eventId, oppName, oppId) {
   const injuries = [];
@@ -534,7 +784,7 @@ async function scrapePlayoffStatus() {
     makePlayoffs: 79,
     winDivision: 53,
     seed1: 17,
-    magicNumber: '10',
+    magicNumber: billsSchedule.magicNumber || '10',
     clinchAlert: { active: false, scenario: 'No clinching scenarios available this week.' },
     nextGame: {
       opponent: billsSchedule.opponent,

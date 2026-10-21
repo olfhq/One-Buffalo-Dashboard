@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+
+  <!-- PWA & Mobile App Meta Tags -->
+  <link rel="manifest" href="./manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="One Buffalo">
+  <meta name="theme-color" content="#090d16">
+
+  <!-- Vector & App Icons -->
+  <link rel="apple-touch-icon" href="./icon-192.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png">
+
+  <title>Buffalo Sabres Hub | One Buffalo Tracker</title>
+  <style>
+    :root {
+      --sabres-blue: #002654;
+      --sabres-gold: #FCB514;
+      --bg-dark: #090d16;
+      --card-bg: #141c2c;
+      --card-inner: #0d1422;
+      --card-border: #1f2c44;
+      --text-main: #f3f4f6;
+      --text-muted: #94a3b8;
+      --accent-green: #10b981;
+      --accent-blue: #38bdf8;
+      --accent-gold: #FCB514;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      padding: 1.5rem;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 1.25rem;
+    }
+
+    /* GRADIENT BACK BUTTON */
+    .back-nav-btn {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.45rem;
+      background: linear-gradient(135deg, rgba(0, 38, 84, 0.75), rgba(252, 181, 20, 0.65));
+      border: 1px solid rgba(252, 181, 20, 0.4);
+      color: #fff;
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 800;
+      padding: 0.55rem 1.1rem;
+      border-radius: 8px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+      margin-bottom: 0.9rem;
+    }
+    .back-nav-btn:hover {
+      background: linear-gradient(135deg, rgba(0, 38, 84, 0.95), rgba(252, 181, 20, 0.85));
+      border-color: var(--sabres-gold);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
+    }
+
+    h1 {
+      font-size: 2.1rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 0.25rem;
+      background: linear-gradient(90deg, #38bdf8, #FCB514);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .meta-bar {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* SEGMENTED TAB NAVIGATION */
+    .tab-bar {
+      display: flex;
+      justify-content: center;
+      gap: 0.4rem;
+      margin: 1.25rem auto 1.5rem auto;
+      max-width: 580px;
+      background: var(--card-inner);
+      padding: 0.3rem;
+      border-radius: 10px;
+      border: 1px solid var(--card-border);
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 0.55rem 0.65rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      background: transparent;
+      border: none;
+      border-radius: 7px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .tab-btn.active {
+      background: var(--card-bg);
+      color: #fff;
+      border: 1px solid var(--card-border);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    }
+
+    .container {
+      max-width: 840px;
+      margin: 0 auto;
+    }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    .card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-top: 4px solid var(--sabres-gold);
+      border-radius: 14px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
+      margin-bottom: 1.5rem;
+    }
+
+    /* CLINCHING ALERT WIDGET */
+    .clinch-alert-box {
+      border-radius: 8px;
+      padding: 0.6rem 0.85rem;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+    }
+    .clinch-alert-active {
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      color: #fbbf24;
+      font-weight: 600;
+    }
+
+    /* MATCHUP INTEL HERO BANNER */
+    .stakes-banner {
+      background: var(--card-inner);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 1rem 1.1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .stakes-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+
+    .matchup-main { display: flex; flex-direction: column; gap: 0.2rem; }
+    .matchup-prefix {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+    }
+    .matchup-opp { font-size: 1.25rem; font-weight: 800; color: #fff; }
+    .matchup-records-line { font-size: 0.82rem; color: #cbd5e1; font-weight: 500; }
+
+    .schedule-tag {
+      font-size: 0.75rem;
+      color: var(--accent-blue);
+      font-weight: 600;
+      margin-top: 0.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      flex-wrap: wrap;
+    }
+
+    .tv-badge {
+      font-size: 0.65rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+      background: rgba(252, 181, 20, 0.15);
+      border: 1px solid rgba(252, 181, 20, 0.35);
+      color: #fbbf24;
+      text-transform: uppercase;
+    }
+
+    .countdown-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 8px;
+      padding: 0.4rem 0.8rem;
+      min-width: 105px;
+      flex-shrink: 0;
+    }
+    .countdown-val {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-weight: 800;
+      font-size: 0.95rem;
+      letter-spacing: 0.5px;
+      color: #fbbf24;
+    }
+    .countdown-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+      margin-top: 0.1rem;
+    }
+
+    .stakes-bottom-row {
+      display: grid;
+      grid-template-columns: 1fr 1.6fr;
+      gap: 0.75rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.07);
+      padding-top: 0.75rem;
+      align-items: center;
+    }
+
+    .metric-panel { display: flex; flex-direction: column; gap: 0.25rem; }
+    .metric-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+    .win-chance-value { font-size: 1.15rem; font-weight: 800; color: #34d399; line-height: 1.1; }
+
+    .impact-badges-group { display: flex; gap: 0.35rem; align-items: center; flex-wrap: nowrap; }
+    .pill {
+      font-size: 0.75rem;
+      padding: 0.22rem 0.5rem;
+      border-radius: 5px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .pill-win { background: rgba(16, 185, 129, 0.18); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .pill-loss { background: rgba(239, 68, 68, 0.18); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+    .pill-swing {
+      background: rgba(252, 181, 20, 0.15);
+      color: #fbbf24;
+      border: 1px solid rgba(252, 181, 20, 0.3);
+    }
+
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.5rem;
+      text-align: center;
+    }
+    .stat-box {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 0.6rem 0.3rem;
+      border-radius: 8px;
+    }
+    .stat-val { font-size: 1.35rem; font-weight: 800; color: #fff; }
+    .stat-label {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+      text-transform: uppercase;
+    }
+
+    .section-subtitle {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* TALE OF THE TAPE MATRIX TABLE */
+    .intel-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      margin-top: 0.3rem;
+    }
+    .intel-table th {
+      text-align: left;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+      padding: 0.45rem 0.6rem;
+      border-bottom: 1px solid var(--card-border);
+    }
+    .intel-table td {
+      padding: 0.55rem 0.6rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+    .intel-table tr:last-child td { border-bottom: none; }
+    .intel-col-metric { font-weight: 600; color: #cbd5e1; }
+    .intel-col-buf { font-weight: 800; color: #fbbf24; }
+    .intel-col-opp { font-weight: 700; color: #fff; text-align: right; }
+
+    /* CONTEXT CARDS (REST & SPECIAL TEAMS) */
+    .context-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+    .context-card {
+      background: var(--card-inner);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 0.75rem 0.9rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .context-card-title {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .context-card-val {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #fff;
+    }
+    .context-card-note {
+      font-size: 0.75rem;
+      color: #34d399;
+      font-weight: 600;
+    }
+
+    /* INJURY & GOALTENDING WIRE CHIPS */
+    .injury-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 0.5rem;
+    }
+    .injury-chip {
+      background: var(--card-inner);
+      border: 1px solid var(--card-border);
+      border-radius: 6px;
+      padding: 0.45rem 0.65rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+    }
+    .injury-name { font-weight: 700; color: #fff; }
+    .injury-tag {
+      font-size: 0.65rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+    }
+    .tag-probable { background: rgba(56, 189, 248, 0.2); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4); }
+    .tag-questionable { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
+    .tag-active { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
+    .tag-out { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); }
+
+    /* DISTRIBUTION BARS */
+    .dist-bar-wrap { display: flex; flex-direction: column; gap: 0.4rem; }
+    .dist-row { display: flex; align-items: center; font-size: 0.8rem; }
+    .dist-name { width: 85px; color: var(--text-muted); }
+    .dist-track {
+      flex: 1;
+      height: 7px;
+      background: rgba(255, 255, 255, 0.07);
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 0 0.5rem;
+    }
+    .dist-fill-sabres { height: 100%; background: var(--sabres-gold); border-radius: 4px; }
+    .dist-pct { width: 35px; text-align: right; font-weight: 600; }
+
+    .radar-wrap { display: flex; gap: 0.5rem; }
+    .radar-item {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--card-border);
+      border-radius: 6px;
+      padding: 0.45rem;
+      text-align: center;
+      font-size: 0.75rem;
+    }
+    .radar-team { font-weight: 700; color: #e2e8f0; }
+    .radar-val { font-size: 0.95rem; font-weight: 800; color: #fbbf24; margin-top: 0.1rem; }
+
+    .opponent-chips { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .opp-chip {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      padding: 0.35rem 0.65rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+    }
+    .opp-pct { font-weight: 700; color: #f59e0b; margin-left: 0.3rem; }
+
+    /* OUT-OF-TOWN SCOREBOARD ROOTING CARDS */
+    .score-card {
+      background: var(--card-inner);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+
+    .score-card-good { border-left: 5px solid var(--accent-green); }
+    .score-card-bad { border-left: 5px solid #f87171; }
+    .score-card-warning { border-left: 5px solid #f59e0b; }
+    .score-card-neutral { border-left: 5px solid #64748b; }
+
+    .score-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding-bottom: 0.45rem;
+    }
+
+    .score-card-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .game-status-badge {
+      font-size: 0.7rem;
+      font-weight: 800;
+      color: #38bdf8;
+      text-transform: uppercase;
+    }
+    .game-status-live { color: #10b981; }
+
+    .verdict-badge {
+      font-size: 0.65rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .verdict-good { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
+    .verdict-bad { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); }
+    .verdict-warning { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
+    .verdict-neutral { background: rgba(100, 116, 139, 0.2); color: #94a3b8; border: 1px solid rgba(100, 116, 139, 0.4); }
+
+    .score-teams-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.35rem;
+    }
+
+    .score-team-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .score-team-points {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #fbbf24;
+      min-width: 28px;
+      text-align: right;
+    }
+
+    .score-analysis-box {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 6px;
+      padding: 0.55rem 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .score-target-title { font-size: 0.85rem; font-weight: 800; color: #fff; }
+    .score-why-detail { font-size: 0.75rem; color: var(--text-muted); line-height: 1.35; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="./index.html" class="back-nav-btn">‹ Back to One Buffalo Portal</a>
+    <h1>BUFFALO SABRES HUB</h1>
+    <div class="meta-bar">
+      <span id="update-status">Loading data...</span>
+    </div>
+  </header>
+
+  <!-- SEGMENTED TABS -->
+  <nav class="tab-bar">
+    <button class="tab-btn active" id="tab-btn-radar" onclick="switchTab('radar')">Postseason Radar</button>
+    <button class="tab-btn" id="tab-btn-intel" onclick="switchTab('intel')">Matchup Intel</button>
+    <button class="tab-btn" id="tab-btn-rooting" onclick="switchTab('rooting')">Rooting Companion</button>
+  </nav>
+
+  <main class="container">
+    <!-- TAB 1: POSTSEASON RADAR -->
+    <section id="tab-radar" class="tab-content active">
+      <div class="card">
+        <div class="clinch-alert-box" id="sabres-clinch-box">
+          <span>🔒</span>
+          <span id="sabres-clinch-text">Checking clinching status...</span>
+        </div>
+
+        <div class="stat-row">
+          <div class="stat-box">
+            <div class="stat-val" id="sabres-playoff-pct">--%</div>
+            <div class="stat-label">Playoffs</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val" id="sabres-div-pct">--%</div>
+            <div class="stat-label">Atlantic</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val" id="sabres-wildcard-pct">--%</div>
+            <div class="stat-label">Wildcard</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val" id="sabres-tragic-num" style="font-size: 0.95rem; margin-top: 0.2rem; color: #fbbf24;">--</div>
+            <div class="stat-label">Cutoff Pace</div>
+          </div>
+        </div>
+
+        <div>
+          <div class="section-subtitle">Atlantic Division Radar</div>
+          <div class="radar-wrap" id="sabres-radar"></div>
+        </div>
+
+        <div>
+          <div class="section-subtitle">Playoff Seeding Distribution</div>
+          <div class="dist-bar-wrap" id="sabres-distribution"></div>
+        </div>
+
+        <div>
+          <div class="section-subtitle">Likely 1st Round Matchups</div>
+          <div class="opponent-chips" id="sabres-opponents"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: MATCHUP INTEL -->
+    <section id="tab-intel" class="tab-content">
+      <div class="card">
+        <div class="stakes-banner">
+          <div class="stakes-top-row">
+            <div class="matchup-main">
+              <div class="matchup-prefix">Next Matchup:</div>
+              <div class="matchup-opp" id="sabres-next-opp">--</div>
+              <div class="matchup-records-line" id="sabres-records">--</div>
+              <div class="schedule-tag">
+                <span id="sabres-game-time">--</span>
+                <span class="tv-badge" id="sabres-broadcast">MSG-B</span>
+              </div>
+            </div>
+
+            <div class="countdown-box">
+              <div class="countdown-val" id="sabres-countdown">--:--:--</div>
+              <div class="countdown-label">Puck Drop In</div>
+            </div>
+          </div>
+
+          <div class="stakes-bottom-row">
+            <div class="metric-panel">
+              <span class="metric-label">Game Win Chance</span>
+              <span class="win-chance-value" id="sabres-win-chance">--%</span>
+            </div>
+
+            <div class="metric-panel" style="align-items: flex-end;">
+              <span class="metric-label">Playoff Leverage Impact</span>
+              <div class="impact-badges-group">
+                <span class="pill pill-win" id="sabres-if-win">Win: --%</span>
+                <span class="pill pill-loss" id="sabres-if-loss">Loss: --%</span>
+                <span class="pill pill-swing" id="sabres-leverage">±--%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="section-subtitle">Game Context & Edge Indicators</div>
+          <div class="context-grid">
+            <div class="context-card">
+              <span class="context-card-title">Rest Differential</span>
+              <span class="context-card-val" id="intel-rest-diff">--</span>
+              <span class="context-card-note" id="intel-rest-sub">Tracking rest schedule</span>
+            </div>
+            <div class="context-card">
+              <span class="context-card-title">Special Teams Margin</span>
+              <span class="context-card-val" id="intel-st-margin">--</span>
+              <span class="context-card-note" id="intel-st-sub">PP% vs PK% Differential</span>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="section-subtitle">
+            <span>Tale of the Tape: Team Efficiency</span>
+            <span style="font-size: 0.7rem; color: #fbbf24;" id="intel-opp-header">vs. Opponent</span>
+          </div>
+          <table class="intel-table">
+            <thead>
+              <tr>
+                <th style="width: 44%;">Metric Category</th>
+                <th style="width: 28%; color: #fbbf24;">Buffalo Sabres</th>
+                <th style="width: 28%; text-align: right;" id="th-opp-name">Opponent</th>
+              </tr>
+            </thead>
+            <tbody id="intel-efficiency-tbody">
+              <!-- Populated dynamically via JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <div>
+          <div class="section-subtitle">Key Starter & Goaltender Availability Wire</div>
+          <div class="injury-list" id="intel-injuries-container">
+            <!-- Populated dynamically via JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: ROOTING COMPANION -->
+    <section id="tab-rooting" class="tab-content">
+      <div class="card">
+        <div class="section-subtitle">
+          <span>Weekly Out-Of-Town Scoreboard & Rooting Pulse</span>
+          <span style="font-size: 0.7rem; color: #fbbf24;">Atlantic & Wild Card Chase</span>
+        </div>
+        <div id="sabres-scoreboard-grid" style="display: flex; flex-direction: column; gap: 0.85rem;">
+          <div style="color: var(--text-muted); font-size: 0.85rem; text-align: center; padding: 1rem;">
+            Loading out-of-town scores...
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+
+      document.getElementById(`tab-${tabId}`).classList.add('active');
+      document.getElementById(`tab-btn-${tabId}`).classList.add('active');
+    }
+
+    const countdownTimers = {};
+    function startCountdown(elementId, targetIso) {
+      const el = document.getElementById(elementId);
+      if (!el || !targetIso) return;
+      if (countdownTimers[elementId]) clearInterval(countdownTimers[elementId]);
+
+      function update() {
+        const diff = new Date(targetIso).getTime() - Date.now();
+        if (diff <= 0) {
+          el.textContent = "LIVE NOW";
+          el.style.color = "#10b981";
+          return;
+        }
+
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const mins = Math.floor((diff / 1000 / 60) % 60);
+        const secs = Math.floor((diff / 1000) % 60);
+
+        if (days > 0) {
+          el.textContent = `${days}d ${hours}h ${mins}m`;
+        } else {
+          const hh = String(hours).padStart(2, '0');
+          const mm = String(mins).padStart(2, '0');
+          const ss = String(secs).padStart(2, '0');
+          el.textContent = `${hh}:${mm}:${ss}`;
+        }
+      }
+
+      update();
+      countdownTimers[elementId] = setInterval(update, 1000);
+    }
+
+    async function loadData() {
+      const statusEl = document.getElementById('update-status');
+      let data = null;
+
+      try {
+        const res = await fetch('./data.json?v=' + Date.now(), { cache: 'no-store' });
+        if (!res.ok) throw new Error('data.json not loaded');
+        data = await res.json();
+      } catch (err) {
+        console.warn('Fallback activated:', err);
+        return;
+      }
+
+      const dateStr = new Date(data.updatedAt).toLocaleDateString(undefined, {
+        month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+      });
+      statusEl.textContent = `Updated: ${dateStr}`;
+
+      const s = data.sabres;
+      document.getElementById('sabres-playoff-pct').textContent = `${s.makePlayoffs}%`;
+      document.getElementById('sabres-div-pct').textContent = `${s.winDivision}%`;
+      document.getElementById('sabres-wildcard-pct').textContent = `${s.wildcard}%`;
+      document.getElementById('sabres-tragic-num').textContent = s.tragicNumber || 'Cutoff: 92 Pts';
+
+      const sClinchBox = document.getElementById('sabres-clinch-box');
+      const sClinchText = document.getElementById('sabres-clinch-text');
+      if (s.clinchAlert && s.clinchAlert.active) {
+        sClinchBox.classList.add('clinch-alert-active');
+        sClinchText.textContent = `⚡ CLINCHING ACTIVE: ${s.clinchAlert.scenario}`;
+      } else {
+        sClinchBox.classList.remove('clinch-alert-active');
+        sClinchText.textContent = `No clinching scenarios available this week (${s.tragicNumber || 'Target: 92 Pts'})`;
+      }
+
+      document.getElementById('sabres-next-opp').textContent = s.nextGame.opponent;
+      document.getElementById('sabres-game-time').textContent = s.nextGame.gameTime || '';
+      document.getElementById('sabres-broadcast').textContent = s.nextGame.broadcast || 'MSG-B';
+      document.getElementById('sabres-win-chance').textContent = `${s.nextGame.winChance || 50}%`;
+      document.getElementById('sabres-records').textContent = s.nextGame.matchupRecords || '';
+      document.getElementById('sabres-if-win').textContent = `Win: ${s.nextGame.ifWin}%`;
+      document.getElementById('sabres-if-loss').textContent = `Loss: ${s.nextGame.ifLoss}%`;
+
+      const sLeverage = s.nextGame.leverage || (s.nextGame.ifWin - s.nextGame.ifLoss);
+      document.getElementById('sabres-leverage').textContent = `±${sLeverage}%`;
+
+      if (s.nextGame.isoTime) {
+        startCountdown('sabres-countdown', s.nextGame.isoTime);
+      }
+
+      // Populate Postseason Radar
+      if (Array.isArray(s.divisionRadar)) {
+        document.getElementById('sabres-radar').innerHTML = s.divisionRadar.map(r => `
+          <div class="radar-item">
+            <div class="radar-team">${r.team}</div>
+            <div class="radar-val">${r.pct}%</div>
+          </div>
+        `).join('');
+      }
+
+      if (Array.isArray(s.seedDistribution)) {
+        document.getElementById('sabres-distribution').innerHTML = s.seedDistribution.map(item => `
+          <div class="dist-row">
+            <span class="dist-name">${item.seed}</span>
+            <div class="dist-track">
+              <div class="dist-fill-sabres" style="width: ${item.pct}%"></div>
+            </div>
+            <span class="dist-pct">${item.pct}%</span>
+          </div>
+        `).join('');
+      }
+
+      if (Array.isArray(s.opponents)) {
+        document.getElementById('sabres-opponents').innerHTML = s.opponents.map(o => `
+          <div class="opp-chip">${o.team} <span class="opp-pct">${o.pct}%</span></div>
+        `).join('');
+      }
+
+      // Populate Matchup Intel Tab
+      const oppShort = s.nextGame.oppShortName || 'Opponent';
+      document.getElementById('intel-opp-header').textContent = `vs. ${oppShort}`;
+      document.getElementById('th-opp-name').textContent = oppShort;
+
+      if (s.nextGame.restAdvantage) {
+        document.getElementById('intel-rest-diff').textContent = s.nextGame.restAdvantage.summary || 'Even';
+        document.getElementById('intel-rest-sub').textContent = `Sabres: ${s.nextGame.restAdvantage.sabresDays}d | ${oppShort}: ${s.nextGame.restAdvantage.oppDays}d`;
+      }
+      if (s.nextGame.specialTeams) {
+        document.getElementById('intel-st-margin').textContent = s.nextGame.specialTeams.advantage || 'Even Differential';
+        document.getElementById('intel-st-sub').textContent = `BUF: ${s.nextGame.specialTeams.sabres.split('|')[0].trim()} | ${oppShort}: ${s.nextGame.specialTeams.opp.split('|')[0].trim()}`;
+      }
+
+      const tbody = document.getElementById('intel-efficiency-tbody');
+      if (tbody && Array.isArray(s.nextGame.efficiency)) {
+        tbody.innerHTML = s.nextGame.efficiency.map(row => `
+          <tr>
+            <td class="intel-col-metric">${row.metric}</td>
+            <td class="intel-col-buf">${row.sabres}</td>
+            <td class="intel-col-opp">${row.opp}</td>
+          </tr>
+        `).join('');
+      }
+
+      // Populate Full Dynamic Injury / Goaltender Wire
+      const injuryContainer = document.getElementById('intel-injuries-container');
+      if (injuryContainer && Array.isArray(s.nextGame.injuries) && s.nextGame.injuries.length > 0) {
+        injuryContainer.innerHTML = s.nextGame.injuries.map(inj => {
+          let tagClass = 'tag-questionable';
+          const st = (inj.status || '').toLowerCase();
+          if (st.includes('prob') || st.includes('start')) tagClass = 'tag-probable';
+          else if (st.includes('active')) tagClass = 'tag-active';
+          else if (st.includes('out') || st.includes('ir') || st.includes('reserve')) tagClass = 'tag-out';
+
+          return `
+            <div class="injury-chip">
+              <span class="injury-name">${inj.player} (${inj.team} ${inj.pos})</span>
+              <span class="injury-tag ${tagClass}">${inj.status} • ${inj.injury}</span>
+            </div>
+          `;
+        }).join('');
+      } else if (injuryContainer) {
+        injuryContainer.innerHTML = `
+          <div style="color: var(--text-muted); font-size: 0.8rem; padding: 0.5rem;">
+            No official injury designations submitted for this game window yet.
+          </div>
+        `;
+      }
+
+      // Populate Chronological Out-of-Town Scoreboard
+      const scoreContainer = document.getElementById('sabres-scoreboard-grid');
+      const games = s.outOfTownGames || [];
+      if (scoreContainer && Array.isArray(games) && games.length > 0) {
+        scoreContainer.innerHTML = games.map(g => {
+          let cardBorderClass = 'score-card-neutral';
+          let verdictBadgeClass = 'verdict-neutral';
+
+          if (g.impactClass === 'good') {
+            cardBorderClass = 'score-card-good';
+            verdictBadgeClass = 'verdict-good';
+          } else if (g.impactClass === 'bad') {
+            cardBorderClass = 'score-card-bad';
+            verdictBadgeClass = 'verdict-bad';
+          } else if (g.impactClass === 'warning') {
+            cardBorderClass = 'score-card-warning';
+            verdictBadgeClass = 'verdict-warning';
+          }
+
+          const isLive = g.statusState === 'in';
+          const statusClass = isLive ? 'game-status-badge game-status-live' : 'game-status-badge';
+
+          return `
+            <div class="score-card ${cardBorderClass}">
+              <div class="score-card-header">
+                <div class="score-card-meta">
+                  <span class="${statusClass}">${g.statusDetail}</span>
+                  <span>•</span>
+                  <span>${g.slot}</span>
+                  <span class="tv-badge">${g.broadcast}</span>
+                </div>
+                <span class="verdict-badge ${verdictBadgeClass}">${g.verdict}</span>
+              </div>
+
+              <div class="score-teams-grid">
+                <div class="score-team-row">
+                  <span>${g.awayName}</span>
+                  <span class="score-team-points">${g.awayScore}</span>
+                </div>
+                <div class="score-team-row">
+                  <span>${g.homeName}</span>
+                  <span class="score-team-points">${g.homeScore}</span>
+                </div>
+              </div>
+
+              <div class="score-analysis-box">
+                <div class="score-target-title">${g.target}</div>
+                <div class="score-why-detail">${g.why}</div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } else if (scoreContainer) {
+        scoreContainer.innerHTML = `
+          <div style="color: var(--text-muted); font-size: 0.85rem; text-align: center; padding: 1rem;">
+            No out-of-town games currently scheduled for this window.
+          </div>
+        `;
+      }
+    }
+
+    // Auto-refresh data when waking from mobile background or every 60s
+    window.addEventListener('pageshow', () => { loadData(); });
+    setInterval(loadData, 60 * 1000);
+    document.addEventListener('DOMContentLoaded', loadData);
+  </script>
+</body>
+</html>

@@ -288,6 +288,16 @@
       transform: translateY(-1px);
     }
 
+    .hub-link-btn-sabres {
+      background: linear-gradient(135deg, rgba(0, 38, 84, 0.75), rgba(252, 181, 20, 0.65));
+      border-color: rgba(252, 181, 20, 0.4);
+    }
+    .hub-link-btn-sabres:hover {
+      background: linear-gradient(135deg, rgba(0, 38, 84, 0.95), rgba(252, 181, 20, 0.85));
+      border-color: var(--sabres-gold);
+      transform: translateY(-1px);
+    }
+
     /* SABRES CLASSIC SECTIONS (LEFT AS-IS) */
     .radar-wrap { display: flex; gap: 0.5rem; }
     .radar-item {
@@ -424,7 +434,7 @@
       </a>
     </article>
 
-    <!-- BUFFALO SABRES CARD (LEFT AS-IS, NO BUTTON) -->
+    <!-- BUFFALO SABRES CARD -->
     <article class="card card-sabres">
       <div class="card-header">
         <h2>Buffalo Sabres</h2>
@@ -485,25 +495,10 @@
         </div>
       </div>
 
-      <div>
-        <div class="section-subtitle">Atlantic Division Radar</div>
-        <div class="radar-wrap" id="sabres-radar"></div>
-      </div>
-
-      <div>
-        <div class="section-subtitle">Playoff Seeding Distribution</div>
-        <div class="dist-bar-wrap" id="sabres-distribution"></div>
-      </div>
-
-      <div>
-        <div class="section-subtitle">Likely 1st Round Matchups</div>
-        <div class="opponent-chips" id="sabres-opponents"></div>
-      </div>
-
-      <div>
-        <div class="section-subtitle">Out-of-Town Rooting Targets</div>
-        <div id="sabres-rooting-container"></div>
-      </div>
+      <!-- Doorway to Dedicated Hub -->
+      <a href="./sabres.html" class="hub-link-btn hub-link-btn-sabres">
+        Open Sabres Command Center →
+      </a>
     </article>
   </main>
 
@@ -583,7 +578,7 @@
         startCountdown('bills-countdown', b.nextGame.isoTime);
       }
 
-      // Populate Sabres Card (As-is)
+      // Populate Sabres Core Card
       const s = data.sabres;
       document.getElementById('sabres-playoff-pct').textContent = `${s.makePlayoffs}%`;
       document.getElementById('sabres-div-pct').textContent = `${s.winDivision}%`;
@@ -605,35 +600,11 @@
         startCountdown('sabres-countdown', s.nextGame.isoTime);
       }
 
-      document.getElementById('sabres-radar').innerHTML = s.divisionRadar.map(r => `
-        <div class="radar-item">
-          <div class="radar-team">${r.team}</div>
-          <div class="radar-val">${r.pct}%</div>
-        </div>
-      `).join('');
+      }
 
-      document.getElementById('sabres-distribution').innerHTML = s.seedDistribution.map(item => `
-        <div class="dist-row">
-          <span class="dist-name">${item.seed}</span>
-          <div class="dist-track">
-            <div class="dist-fill-sabres" style="width: ${item.pct}%"></div>
-          </div>
-          <span class="dist-pct">${item.pct}%</span>
-        </div>
-      `).join('');
-
-      document.getElementById('sabres-opponents').innerHTML = s.opponents.map(o => `
-        <div class="opp-chip">${o.team} <span class="opp-pct">${o.pct}%</span></div>
-      `).join('');
-
-      document.getElementById('sabres-rooting-container').innerHTML = s.rootingGuide.map(r => `
-        <div class="rooting-item">
-          <div class="rooting-target">${r.target}</div>
-          <div class="rooting-why">${r.why}</div>
-        </div>
-      `).join('');
-    }
-
+    // Auto-refresh data when waking from mobile background or every 60s
+    window.addEventListener('pageshow', () => { loadData(); });
+    setInterval(loadData, 60 * 1000);
     document.addEventListener('DOMContentLoaded', loadData);
   </script>
 </body>
