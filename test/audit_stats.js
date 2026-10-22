@@ -20,6 +20,7 @@ const b = data.bills;
 const bSeedSum = b.seedDistribution.reduce((acc, s) => acc + (s.pct || 0), 0);
 check('Bills playoff odds vs seed sum', Math.abs(b.makePlayoffs - bSeedSum) <= 1, `makePlayoffs=${b.makePlayoffs}, seedSum=${bSeedSum}`);
 check('Bills leverage calculation', b.nextGame.leverage === Math.abs(b.nextGame.ifWin - b.nextGame.ifLoss), `leverage=${b.nextGame.leverage}, diff=${Math.abs(b.nextGame.ifWin - b.nextGame.ifLoss)}`);
+check('Bills nextGame.isoTime is valid date', !!b.nextGame.isoTime && !isNaN(new Date(b.nextGame.isoTime).getTime()), `isoTime=${b.nextGame.isoTime}`);
 
 // Bills division radar vs winDivision
 const billsRadarTeam = b.divisionRadar.find(t => t.team === 'Bills');
@@ -40,6 +41,7 @@ const sSeedSum = s.seedDistribution.reduce((acc, s) => acc + (s.pct || 0), 0);
 check('Sabres playoff odds vs seed sum', Math.abs(s.makePlayoffs - sSeedSum) <= 1, `makePlayoffs=${s.makePlayoffs}, seedSum=${sSeedSum}`);
 check('Sabres playoff odds = winDivision + wildcard', Math.abs(s.makePlayoffs - (s.winDivision + s.wildcard)) <= 1, `makePlayoffs=${s.makePlayoffs}, div+wc=${s.winDivision + s.wildcard}`);
 check('Sabres leverage calculation', s.nextGame.leverage === Math.abs(s.nextGame.ifWin - s.nextGame.ifLoss), `leverage=${s.nextGame.leverage}, diff=${Math.abs(s.nextGame.ifWin - s.nextGame.ifLoss)}`);
+check('Sabres nextGame.isoTime is valid date', !!s.nextGame.isoTime && !isNaN(new Date(s.nextGame.isoTime).getTime()), `isoTime=${s.nextGame.isoTime}`);
 
 // Sabres division radar
 const sabresRadarTeam = s.divisionRadar.find(t => t.team === 'Sabres');

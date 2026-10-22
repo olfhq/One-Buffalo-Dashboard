@@ -24,6 +24,21 @@ if (!data.sabres.nextGame.efficiency || data.sabres.nextGame.efficiency.length <
   });
 }
 
+console.log('\n=== CHECKING COUNTDOWN ISO TIMESTAMPS ===');
+if (!data.bills.nextGame.isoTime || isNaN(new Date(data.bills.nextGame.isoTime).getTime())) {
+  console.error('FAIL: Bills nextGame.isoTime is invalid or missing:', data.bills.nextGame.isoTime);
+  errors++;
+} else {
+  console.log('Bills nextGame.isoTime is valid:', data.bills.nextGame.isoTime);
+}
+
+if (!data.sabres.nextGame.isoTime || isNaN(new Date(data.sabres.nextGame.isoTime).getTime())) {
+  console.error('FAIL: Sabres nextGame.isoTime is invalid or missing:', data.sabres.nextGame.isoTime);
+  errors++;
+} else {
+  console.log('Sabres nextGame.isoTime is valid:', data.sabres.nextGame.isoTime);
+}
+
 console.log('\n=== CHECKING INJURIES ===');
 console.log('Bills injuries count:', data.bills.nextGame.injuries?.length || 0);
 console.log('Sabres injuries count:', data.sabres.nextGame.injuries?.length || 0);
