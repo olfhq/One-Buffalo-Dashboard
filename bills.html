@@ -349,6 +349,11 @@
       color: var(--accent-blue);
       border: 1px solid rgba(56, 189, 248, 0.3);
     }
+    .pill-chance {
+      background: rgba(56, 189, 248, 0.18);
+      color: #38bdf8;
+      border: 1px solid rgba(56, 189, 248, 0.35);
+    }
 
     .stat-row {
       display: grid;
@@ -982,11 +987,15 @@
           <div class="live-radar-left">
             <span class="live-pulse-badge"><span class="live-dot"></span> LIVE NOW</span>
             <span class="live-radar-clock" id="bills-radar-live-clock">--</span>
+            <span class="live-radar-date" id="bills-radar-live-date" style="font-size: 0.78rem; color: #94a3b8; font-weight: 600;"></span>
           </div>
           <div class="live-radar-score" id="bills-radar-live-score">
             Bills -- - -- Opponent
           </div>
-          <button class="live-radar-link" onclick="switchTab('intel')">Matchup Intel →</button>
+          <div class="live-radar-right" style="display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;">
+            <span class="pill pill-chance" id="bills-radar-live-chance" style="font-size: 0.78rem; padding: 0.25rem 0.6rem;">Win Chance: <strong>--%</strong></span>
+            <button class="live-radar-link" onclick="switchTab('intel')">Matchup Intel →</button>
+          </div>
         </div>
 
         <div class="clinch-alert-box" id="bills-clinch-box">
@@ -1280,11 +1289,33 @@
       const radarBanner = document.getElementById('bills-radar-live-banner');
       const radarClock = document.getElementById('bills-radar-live-clock');
       const radarScore = document.getElementById('bills-radar-live-score');
+      const radarChance = document.getElementById('bills-radar-live-chance');
+      const radarDate = document.getElementById('bills-radar-live-date');
       if (radarBanner) {
         if (isLive) {
           radarBanner.style.display = 'flex';
           if (radarClock) radarClock.textContent = detail || 'LIVE';
+          if (radarDate) {
+            const rawDate = currentBillsNextGame?.gameTime || 'Sun, Nov 1';
+            radarDate.textContent = `• ${rawDate.split('•')[0].trim()}`;
+          }
           if (radarScore) radarScore.textContent = `Bills ${bufScore ?? 0} - ${oppScore ?? 0} ${oppName || 'Opponent'}`;
+          if (radarChance) {
+            radarChance.innerHTML = `Win Chance: <strong>${liveWinChance}%</strong>`;
+            if (liveWinChance >= 60) {
+              radarChance.style.background = 'rgba(16, 185, 129, 0.22)';
+              radarChance.style.color = '#34d399';
+              radarChance.style.borderColor = 'rgba(16, 185, 129, 0.45)';
+            } else if (liveWinChance >= 40) {
+              radarChance.style.background = 'rgba(245, 158, 11, 0.22)';
+              radarChance.style.color = '#fbbf24';
+              radarChance.style.borderColor = 'rgba(245, 158, 11, 0.45)';
+            } else {
+              radarChance.style.background = 'rgba(239, 68, 68, 0.22)';
+              radarChance.style.color = '#f87171';
+              radarChance.style.borderColor = 'rgba(239, 68, 68, 0.45)';
+            }
+          }
         } else {
           radarBanner.style.display = 'none';
         }
@@ -1297,11 +1328,13 @@
       const countdownEl = document.getElementById('bills-countdown');
       const countdownLabelEl = document.getElementById('bills-countdown-label');
 
+      const billsGameTime = currentBillsNextGame?.gameTime ? `📅 ${currentBillsNextGame.gameTime} • ` : '';
+
       if (isLive) {
         stopCountdown('bills-countdown');
         if (prefixEl) prefixEl.innerHTML = `<span class="live-pulse-badge"><span class="live-dot"></span> LIVE IN PROGRESS</span>`;
         if (nextOppEl) nextOppEl.innerHTML = `<span class="live-score-highlight">Bills ${bufScore ?? 0} - ${oppScore ?? 0} ${oppName || 'Opponent'}</span>`;
-        if (recordsEl) recordsEl.innerHTML = `⏱️ Period / Time: <strong style="color: #10b981;">${detail || 'LIVE'}</strong> • ${records || ''}`;
+        if (recordsEl) recordsEl.innerHTML = `⏱️ Period / Time: <strong style="color: #10b981;">${detail || 'LIVE'}</strong> • ${billsGameTime}${records || ''}`;
         if (countdownEl) {
           countdownEl.innerHTML = `<span class="live-dot"></span> ${detail || 'LIVE'}`;
           countdownEl.style.color = '#10b981';
@@ -1314,7 +1347,7 @@
         stopCountdown('bills-countdown');
         if (prefixEl) prefixEl.textContent = 'FINAL SCORE:';
         if (nextOppEl) nextOppEl.textContent = `Bills ${bufScore ?? 0} - ${oppScore ?? 0} ${oppName || 'Opponent'}`;
-        if (recordsEl) recordsEl.textContent = `Final: Bills ${bufScore ?? 0}, ${oppName || 'Opponent'} ${oppScore ?? 0} • ${records || ''}`;
+        if (recordsEl) recordsEl.textContent = `Final: Bills ${bufScore ?? 0}, ${oppName || 'Opponent'} ${oppScore ?? 0} • ${billsGameTime}${records || ''}`;
         if (countdownEl) {
           countdownEl.textContent = (detail || '').includes('OT') ? 'FINAL/OT' : 'FINAL';
           countdownEl.style.color = '#fff';
@@ -1331,6 +1364,24 @@
       const pinnedTitleEl = document.getElementById('pinned-bills-title');
       const pinnedTagEl = document.getElementById('pinned-bills-tag');
       const pinnedCardEl = document.getElementById('pinned-bills-card-wrap');
+      const pinnedWinChanceEl = document.getElementById('pinned-bills-win-chance');
+
+      if (pinnedWinChanceEl) {
+        pinnedWinChanceEl.innerHTML = `Win Chance: <strong>${liveWinChance}%</strong>`;
+        if (liveWinChance >= 60) {
+          pinnedWinChanceEl.style.background = 'rgba(16, 185, 129, 0.22)';
+          pinnedWinChanceEl.style.color = '#34d399';
+          pinnedWinChanceEl.style.borderColor = 'rgba(16, 185, 129, 0.45)';
+        } else if (liveWinChance >= 40) {
+          pinnedWinChanceEl.style.background = 'rgba(245, 158, 11, 0.22)';
+          pinnedWinChanceEl.style.color = '#fbbf24';
+          pinnedWinChanceEl.style.borderColor = 'rgba(245, 158, 11, 0.45)';
+        } else {
+          pinnedWinChanceEl.style.background = 'rgba(239, 68, 68, 0.22)';
+          pinnedWinChanceEl.style.color = '#f87171';
+          pinnedWinChanceEl.style.borderColor = 'rgba(239, 68, 68, 0.45)';
+        }
+      }
 
       if (isLive) {
         stopCountdown('pinned-bills-countdown');
@@ -1341,7 +1392,7 @@
           pinnedCountdownEl.style.color = '#10b981';
         }
         if (pinnedTitleEl) pinnedTitleEl.innerHTML = `Buffalo Bills ${bufScore ?? 0} - ${oppScore ?? 0} ${oppName || 'Opponent'}`;
-        if (pinnedRecordsEl) pinnedRecordsEl.innerHTML = `⏱️ Period / Time: <strong style="color: #10b981;">${detail || 'LIVE'}</strong> • ${records || ''}`;
+        if (pinnedRecordsEl) pinnedRecordsEl.innerHTML = `⏱️ Period / Time: <strong style="color: #10b981;">${detail || 'LIVE'}</strong> • ${billsGameTime}${records || ''}`;
       } else if (isPost) {
         stopCountdown('pinned-bills-countdown');
         if (pinnedCardEl) pinnedCardEl.classList.remove('card-live-border');
@@ -1351,7 +1402,7 @@
           pinnedCountdownEl.style.color = '#fff';
         }
         if (pinnedTitleEl) pinnedTitleEl.textContent = `Buffalo Bills ${bufScore ?? 0} - ${oppScore ?? 0} ${oppName || 'Opponent'}`;
-        if (pinnedRecordsEl) pinnedRecordsEl.textContent = `Final: Bills ${bufScore ?? 0}, ${oppName || 'Opponent'} ${oppScore ?? 0} • ${records || ''}`;
+        if (pinnedRecordsEl) pinnedRecordsEl.textContent = `Final: Bills ${bufScore ?? 0}, ${oppName || 'Opponent'} ${oppScore ?? 0} • ${billsGameTime}${records || ''}`;
       }
     }
 
@@ -1656,11 +1707,23 @@
         const matchupTitleHtml = (isLive || isPost)
           ? `Buffalo Bills ${liveInfo.bufScore ?? 0} - ${liveInfo.oppScore ?? 0} ${liveInfo.oppName || enrichedBills.oppShortName}`
           : `Buffalo Bills ${enrichedBills.opponent}`;
+        const billsDatePrefix = enrichedBills.gameTime ? `📅 ${enrichedBills.gameTime} • ` : '';
         const recordsSubHtml = isLive
-          ? `⏱️ Period / Time: <strong style="color: #10b981;">${liveInfo.detail}</strong> • ${enrichedBills.records}`
+          ? `⏱️ Period / Time: <strong style="color: #10b981;">${liveInfo.detail}</strong> • ${billsDatePrefix}${enrichedBills.records}`
           : (isPost
-            ? `Final: Bills ${liveInfo.bufScore ?? 0}, ${liveInfo.oppName || enrichedBills.oppShortName} ${liveInfo.oppScore ?? 0} • ${enrichedBills.records}`
+            ? `Final: Bills ${liveInfo.bufScore ?? 0}, ${liveInfo.oppName || enrichedBills.oppShortName} ${liveInfo.oppScore ?? 0} • ${billsDatePrefix}${enrichedBills.records}`
             : `${enrichedBills.records} • Kickoff: ${enrichedBills.gameTime}`);
+
+        const curPinnedWinProb = (isLive || isPost)
+          ? calculateLiveNflWinChance(liveInfo.bufScore, liveInfo.oppScore, liveInfo.detail, enrichedBills.winChance)
+          : enrichedBills.winChance;
+
+        let pinnedWinChanceStyle = 'background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.35);';
+        if (isLive || isPost) {
+          if (curPinnedWinProb >= 60) pinnedWinChanceStyle = 'background: rgba(16, 185, 129, 0.22); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.45);';
+          else if (curPinnedWinProb >= 40) pinnedWinChanceStyle = 'background: rgba(245, 158, 11, 0.22); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.45);';
+          else pinnedWinChanceStyle = 'background: rgba(239, 68, 68, 0.22); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.45);';
+        }
 
         billsCardHtml = `
           <div class="pinned-bills-card ${cardLiveClass}" id="pinned-bills-card-wrap">
@@ -1682,8 +1745,9 @@
                 <div class="pinned-records-sub" id="pinned-bills-records">${recordsSubHtml}</div>
               </div>
               <div class="pinned-leverage-pills">
-                <span class="pill pill-win">Win: ${enrichedBills.ifWin}%</span>
-                <span class="pill pill-loss">Loss: ${enrichedBills.ifLoss}%</span>
+                <span class="pill pill-chance" id="pinned-bills-win-chance" style="${pinnedWinChanceStyle}">Win Chance: <strong>${curPinnedWinProb}%</strong></span>
+                <span class="pill pill-win">PO Win: ${enrichedBills.ifWin}%</span>
+                <span class="pill pill-loss">PO Loss: ${enrichedBills.ifLoss}%</span>
                 <span class="pill pill-swing">±${enrichedBills.leverage}% Leverage</span>
               </div>
             </div>
@@ -1903,7 +1967,7 @@
       let data = null;
 
       const FALLBACK_DATA = {
-  "updatedAt": "2026-10-22T00:26:32.125Z",
+  "updatedAt": "2026-10-22T00:50:20.724Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
   "bills": {
     "team": "Buffalo Bills",
@@ -1924,6 +1988,11 @@
       "matchupRecords": "Bills (5-1, W2) vs. Ravens (4-2, L1)",
       "broadcast": "CBS",
       "venue": "Highmark Stadium, Orchard Park, NY",
+      "statusState": "pre",
+      "statusDetail": "11/1 - 1:00 PM EST",
+      "bufScore": "",
+      "oppScore": "",
+      "liveScore": null,
       "ifWin": 85,
       "ifLoss": 69,
       "leverage": 16,
@@ -2757,10 +2826,15 @@
       "oppShortName": "Philadelphia",
       "gameTime": "Wed, Oct 21 • 7:30 PM ET",
       "isoTime": "2026-10-21T23:30:00Z",
-      "winChance": 52,
+      "winChance": 6,
       "matchupRecords": "Sabres (4-3-2, 10 pts, OT1) vs. Philadelphia (2-6-3, 7 pts, W2)",
       "broadcast": "TNT",
       "venue": "KeyBank Center, Buffalo, NY",
+      "statusState": "in",
+      "statusDetail": "11:59 - 3rd",
+      "bufScore": "1",
+      "oppScore": "3",
+      "liveScore": "Sabres 1 - 3 Philadelphia",
       "ifWin": 44,
       "ifLoss": 33,
       "leverage": 11,
@@ -3139,7 +3213,7 @@
         "windowLabel": "Wednesday Night Hockey Showcase",
         "windowBadge": "TNT / Max / National Slate",
         "statusState": "in",
-        "statusDetail": "2:05 - 1st",
+        "statusDetail": "18:37 - 2nd",
         "awayName": "Florida Panthers",
         "awayScore": "1",
         "homeName": "Ottawa Senators",
@@ -4060,7 +4134,8 @@
           bufScore: b.nextGame.bufScore ?? 0,
           oppScore: b.nextGame.oppScore ?? 0,
           oppName: b.nextGame.oppShortName || 'Opponent',
-          records: b.nextGame.matchupRecords || ''
+          records: b.nextGame.matchupRecords || '',
+          winChance: b.nextGame.winChance
         };
         updateBillsLiveUI(liveBillsGameData);
       } else {

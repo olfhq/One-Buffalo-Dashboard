@@ -1342,9 +1342,9 @@ async function scrapePlayoffStatus() {
 
     let sabresData = {
     team: 'Buffalo Sabres',
-    makePlayoffs: 38,
-    winDivision: 12,
-    wildcard: 26,
+    makePlayoffs: 42,
+    winDivision: 28,
+    wildcard: 14,
     tragicNumber: sabresSchedule.tragicNumber || 'Pace: 91 Pts (Target: 92)',
     clinchAlert: { active: false, scenario: 'No clinching scenarios available this week.' },
     nextGame: {
@@ -1391,17 +1391,17 @@ async function scrapePlayoffStatus() {
       ]
     },
     divisionRadar: [
-      { team: 'Panthers', pct: 82 },
-      { team: 'Lightning', pct: 74 },
-      { team: 'Leafs', pct: 68 },
-      { team: 'Sabres', pct: 38 }
+      { team: 'Bruins', pct: 65 },
+      { team: 'Lightning', pct: 71 },
+      { team: 'Senators', pct: 59 },
+      { team: 'Sabres', pct: 42 }
     ],
     seedDistribution: [
-      { seed: 'Div 1', pct: 3 },
-      { seed: 'Div 2', pct: 4 },
-      { seed: 'Div 3', pct: 5 },
-      { seed: 'Wildcard 1', pct: 15 },
-      { seed: 'Wildcard 2', pct: 11 }
+      { seed: 'Div 1', pct: 6 },
+      { seed: 'Div 2', pct: 10 },
+      { seed: 'Div 3', pct: 12 },
+      { seed: 'Wildcard 1', pct: 7 },
+      { seed: 'Wildcard 2', pct: 7 }
     ],
     opponents: [
       { team: 'Florida Panthers', pct: 24 },
