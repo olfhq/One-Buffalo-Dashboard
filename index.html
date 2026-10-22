@@ -850,12 +850,13 @@
                 countdownLabelEl.style.color = '#10b981';
               }
               if (nextOppEl && buf && opp) {
-                const oppName = opp.team?.shortDisplayName || opp.team?.displayName || 'Flyers';
+                const oppName = opp.team?.shortDisplayName || opp.team?.displayName || (data?.sabres?.nextGame?.oppShortName || 'Opponent');
                 const isHome = buf.homeAway === 'home';
                 nextOppEl.innerHTML = `<span class="live-score-highlight">${isHome ? `Sabres ${buf.score || 0} - ${opp.score || 0} ${oppName}` : `${oppName} ${opp.score || 0} - ${buf.score || 0} Sabres`}</span>`;
               }
               if (recordsEl) {
-                recordsEl.innerHTML = `⏱️ Period / Time: <strong style="color: #10b981;">${detail}</strong> • 📅 Wed, Oct 21 • Live Game Action`;
+                const sGameDate = data?.sabres?.nextGame?.gameTime ? `📅 ${data.sabres.nextGame.gameTime} • ` : '';
+                recordsEl.innerHTML = `⏱️ Period / Time: <strong style="color: #10b981;">${detail}</strong> • ${sGameDate}Live Game Action`;
               }
               const sProb = calculateLiveNhlWinChance(buf?.score || 0, opp?.score || 0, detail, 52);
               if (winChanceEl) {
@@ -875,12 +876,12 @@
                 countdownLabelEl.textContent = 'FINAL SCORE';
               }
               if (nextOppEl && buf && opp) {
-                const oppName = opp.team?.shortDisplayName || opp.team?.displayName || 'Flyers';
+                const oppName = opp.team?.shortDisplayName || opp.team?.displayName || (data?.sabres?.nextGame?.oppShortName || 'Opponent');
                 const isHome = buf.homeAway === 'home';
                 nextOppEl.textContent = isHome ? `Sabres ${buf.score || 0} - ${opp.score || 0} ${oppName}` : `${oppName} ${opp.score || 0} - ${buf.score || 0} Sabres`;
               }
               if (recordsEl && buf && opp) {
-                const oppName = opp.team?.shortDisplayName || opp.team?.displayName || 'Flyers';
+                const oppName = opp.team?.shortDisplayName || opp.team?.displayName || (data?.sabres?.nextGame?.oppShortName || 'Opponent');
                 const isHome = buf.homeAway === 'home';
                 recordsEl.textContent = isHome ? `Final: Sabres ${buf.score || 0}, ${oppName} ${opp.score || 0}` : `Final: ${oppName} ${opp.score || 0}, Sabres ${buf.score || 0}`;
               }
@@ -912,7 +913,7 @@
       let data = null;
 
       const FALLBACK_DATA = {
-  "updatedAt": "2026-10-22T08:25:29.620Z",
+  "updatedAt": "2026-10-22T08:32:36.280Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
   "bills": {
     "team": "Buffalo Bills",
@@ -1687,7 +1688,7 @@
       if (s.nextGame.statusState === 'in') {
         stopCountdown('sabres-countdown');
         if (sPrefixEl) sPrefixEl.innerHTML = `<span class="live-pulse-badge"><span class="live-dot"></span> LIVE IN PROGRESS</span>`;
-        if (sNextOppEl) sNextOppEl.innerHTML = `<span class="live-score-highlight">${s.nextGame.liveScore || `Sabres ${s.nextGame.bufScore || 0} - ${s.nextGame.oppScore || 0} ${s.nextGame.oppShortName || 'Flyers'}`}</span>`;
+        if (sNextOppEl) sNextOppEl.innerHTML = `<span class="live-score-highlight">${s.nextGame.liveScore || `Sabres ${s.nextGame.bufScore || 0} - ${s.nextGame.oppScore || 0} ${s.nextGame.oppShortName || 'Opponent'}`}</span>`;
         const sGameDate = s.nextGame.gameTime ? `📅 ${s.nextGame.gameTime} • ` : '';
         if (sRecordsEl) sRecordsEl.innerHTML = `⏱️ Period / Time: <strong style="color: #10b981;">${s.nextGame.statusDetail || 'LIVE'}</strong> • ${sGameDate}${s.nextGame.matchupRecords || ''}`;
         if (sCountdownEl) {
@@ -1701,8 +1702,8 @@
       } else if (s.nextGame.statusState === 'post') {
         stopCountdown('sabres-countdown');
         if (sPrefixEl) sPrefixEl.textContent = 'FINAL SCORE:';
-        if (sNextOppEl) sNextOppEl.textContent = s.nextGame.liveScore || `Sabres ${s.nextGame.bufScore || 0} - ${s.nextGame.oppScore || 0} ${s.nextGame.oppShortName || 'Flyers'}`;
-        if (sRecordsEl) sRecordsEl.textContent = `Final: Sabres ${s.nextGame.bufScore || 0}, ${s.nextGame.oppShortName || 'Flyers'} ${s.nextGame.oppScore || 0}`;
+        if (sNextOppEl) sNextOppEl.textContent = s.nextGame.liveScore || `Sabres ${s.nextGame.bufScore || 0} - ${s.nextGame.oppScore || 0} ${s.nextGame.oppShortName || 'Opponent'}`;
+        if (sRecordsEl) sRecordsEl.textContent = `Final: Sabres ${s.nextGame.bufScore || 0}, ${s.nextGame.oppShortName || 'Opponent'} ${s.nextGame.oppScore || 0}`;
         if (sCountdownEl) {
           sCountdownEl.textContent = (s.nextGame.statusDetail || '').includes('OT') ? 'FINAL/OT' : 'FINAL';
           sCountdownEl.style.color = '#fff';

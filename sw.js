@@ -1,5 +1,5 @@
 // Service Worker for One Buffalo Tracker
-const CACHE_NAME = 'one-buffalo-v2';
+const CACHE_NAME = 'one-buffalo-v3';
 
 const PRECACHE_ASSETS = [
   './',
@@ -45,25 +45,31 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // 3. data.json: Network-first strategy with cache fallback
+  // 3. data.json: Network-first strategy with robust cache fallback
   if (url.pathname.endsWith('/data.json') || url.pathname.endsWith('data.json')) {
     event.respondWith(
       fetch(event.request)
         .then((networkResponse) => {
           if (networkResponse && networkResponse.status === 200) {
             const clone = networkResponse.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(event.request, clone);
+              cache.put('./data.json', networkResponse.clone());
+            });
           }
           return networkResponse;
         })
-        .catch(() => caches.match(event.request))
+        .catch(() => {
+          return caches.match(event.request, { ignoreSearch: true })
+            .then((cached) => cached || caches.match('./data.json'));
+        })
     );
     return;
   }
 
   // 4. App shell & static assets: Stale-While-Revalidate
   event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
+    caches.match(event.request, { ignoreSearch: true }).then((cachedResponse) => {
       const fetchPromise = fetch(event.request)
         .then((networkResponse) => {
           if (networkResponse && networkResponse.status === 200) {

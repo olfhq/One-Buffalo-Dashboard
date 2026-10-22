@@ -80,6 +80,46 @@
       margin-bottom: 1.25rem;
     }
 
+    /* NAV SWITCH ROW & HUB SWITCHER */
+    .nav-switch-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.85rem;
+    }
+    .hub-switcher {
+      display: inline-flex;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 3px;
+      gap: 4px;
+    }
+    .hub-pill {
+      font-size: 0.76rem;
+      font-weight: 700;
+      padding: 0.32rem 0.7rem;
+      border-radius: 16px;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .hub-pill:hover:not(.active) {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.08);
+    }
+    .hub-pill.active {
+      background: linear-gradient(135deg, #002654, #FCB514);
+      color: #090d16;
+      font-weight: 800;
+      box-shadow: 0 2px 8px rgba(252, 181, 20, 0.4);
+    }
+
     /* GRADIENT BACK BUTTON */
     .back-nav-btn {
       display: inline-flex;
@@ -92,13 +132,13 @@
       text-decoration: none;
       font-size: 0.8rem;
       font-weight: 800;
-      padding: 0.55rem 1.1rem;
-      border-radius: 8px;
+      padding: 0.42rem 0.95rem;
+      border-radius: 9999px;
       letter-spacing: 0.5px;
       text-transform: uppercase;
       transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
-      margin-bottom: 0.9rem;
+      margin-bottom: 0;
       -webkit-tap-highlight-color: transparent;
     }
     .back-nav-btn:hover {
@@ -1033,7 +1073,13 @@
 <body>
 
   <header>
-    <a href="./index.html" class="back-nav-btn">‹ Back to One Buffalo Portal</a>
+    <div class="nav-switch-row">
+      <a href="./index.html" class="back-nav-btn">‹ Portal</a>
+      <div class="hub-switcher">
+        <a href="./bills.html" class="hub-pill">🦬 Bills Hub</a>
+        <span class="hub-pill active">⚔️ Sabres Hub</span>
+      </div>
+    </div>
     <h1>BUFFALO SABRES HUB</h1>
     <div class="meta-bar">
       <span id="update-status">Loading data...</span>
@@ -1921,7 +1967,7 @@
           detail: sg.statusDetail || (sg.statusState === 'in' ? 'LIVE' : 'FINAL'),
           bufScore: sg.bufScore,
           oppScore: sg.oppScore,
-          oppName: sg.oppShortName || 'Flyers',
+          oppName: sg.oppShortName || 'Opponent',
           records: sg.matchupRecords || ''
         } : null);
 
@@ -1929,13 +1975,13 @@
         const isPost = liveInfo?.state === 'post';
 
         const enrichedSabres = {
-          opponent: sg.opponent || 'vs. Philadelphia',
-          oppShortName: sg.oppShortName || 'Flyers',
-          records: sg.matchupRecords || 'Sabres (4-3-2, 10 pts) vs. Opponent',
-          gameTime: sg.gameTime || 'Wed • 7:30 PM ET',
+          opponent: sg.opponent || 'Next Matchup',
+          oppShortName: sg.oppShortName || 'Opponent',
+          records: sg.matchupRecords || 'Sabres vs. Opponent',
+          gameTime: sg.gameTime || '',
           isoTime: sg.isoTime,
-          broadcast: sg.broadcast || 'TNT',
-          announcers: sg.announcers || 'Kenny Albert, Eddie Olczyk, Brian Boucher',
+          broadcast: sg.broadcast || 'MSG-B',
+          announcers: sg.announcers || 'Dan Dunleavy, Rob Ray',
           venue: sg.venue || 'KeyBank Center, Buffalo, NY',
           winChance: sg.winChance || 52,
           ifWin: sg.ifWin || 44,
@@ -2077,7 +2123,7 @@
           const detail = comp.status?.type?.shortDetail || 'LIVE';
           const buf = comp.competitors.find(c => c.team?.abbreviation === 'BUF' || c.team?.id === '2');
           const opp = comp.competitors.find(c => c !== buf);
-          const oppName = opp?.team?.shortDisplayName || opp?.team?.displayName || currentSabresNextGame?.oppShortName || 'Flyers';
+          const oppName = opp?.team?.shortDisplayName || opp?.team?.displayName || currentSabresNextGame?.oppShortName || 'Opponent';
 
           if (state === 'in') {
             isAnyLive = true;
@@ -2237,7 +2283,7 @@
       let data = null;
 
       const FALLBACK_DATA = {
-  "updatedAt": "2026-10-22T08:25:29.620Z",
+  "updatedAt": "2026-10-22T08:32:36.280Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
   "bills": {
     "team": "Buffalo Bills",
@@ -2930,7 +2976,7 @@
           detail: s.nextGame.statusDetail || (s.nextGame.statusState === 'in' ? 'LIVE' : 'FINAL'),
           bufScore: s.nextGame.bufScore ?? 0,
           oppScore: s.nextGame.oppScore ?? 0,
-          oppName: s.nextGame.oppShortName || 'Flyers',
+          oppName: s.nextGame.oppShortName || 'Opponent',
           records: s.nextGame.matchupRecords || '',
           winChance: s.nextGame.winChance
         };
