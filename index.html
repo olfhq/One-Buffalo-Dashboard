@@ -333,13 +333,18 @@
       border-radius: 8px;
       letter-spacing: 0.5px;
       text-transform: uppercase;
-      transition: all 0.2s ease;
+      transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      -webkit-tap-highlight-color: transparent;
     }
     .hub-link-btn:hover {
       background: linear-gradient(135deg, rgba(0, 51, 141, 0.85), rgba(198, 12, 48, 0.85));
       border-color: var(--accent-blue);
       transform: translateY(-1px);
+    }
+    .hub-link-btn:active {
+      transform: scale(0.98);
+      opacity: 0.95;
     }
 
     .hub-link-btn-sabres {
@@ -350,6 +355,10 @@
       background: linear-gradient(135deg, rgba(0, 38, 84, 0.95), rgba(252, 181, 20, 0.85));
       border-color: var(--sabres-gold);
       transform: translateY(-1px);
+    }
+    .hub-link-btn-sabres:active {
+      transform: scale(0.98);
+      opacity: 0.95;
     }
 
     /* SABRES CLASSIC SECTIONS (LEFT AS-IS) */
@@ -551,18 +560,26 @@
   </main>
 
   <script>
-    const countdownTimers = {};
-    function startCountdown(elementId, targetIso) {
-      const el = document.getElementById(elementId);
-      if (!el || !targetIso) return;
-      if (countdownTimers[elementId]) clearInterval(countdownTimers[elementId]);
+    const activeCountdowns = new Map();
+    let globalCountdownInterval = null;
 
-      function update() {
-        const diff = new Date(targetIso).getTime() - Date.now();
+    function updateAllCountdowns() {
+      if (document.hidden) return;
+      const now = Date.now();
+      for (const [id, targetIso] of activeCountdowns.entries()) {
+        const el = document.getElementById(id);
+        if (!el) {
+          activeCountdowns.delete(id);
+          continue;
+        }
+        const diff = new Date(targetIso).getTime() - now;
         if (diff <= 0) {
-          el.innerHTML = '<span class="live-dot"></span> LIVE NOW';
-          el.style.color = "#10b981";
-          return;
+          if (el.innerHTML !== '<span class="live-dot"></span> LIVE NOW') {
+            el.innerHTML = '<span class="live-dot"></span> LIVE NOW';
+            el.style.color = "#10b981";
+          }
+          activeCountdowns.delete(id);
+          continue;
         }
 
         const days = Math.floor(diff / (1000 * 60 * 60 * 24));
@@ -570,22 +587,32 @@
         const mins = Math.floor((diff / 1000 / 60) % 60);
         const secs = Math.floor((diff / 1000) % 60);
 
-        if (days > 0) {
-          el.textContent = `${days}d ${hours}h ${mins}m`;
-        } else {
-          const hh = String(hours).padStart(2, '0');
-          const mm = String(mins).padStart(2, '0');
-          const ss = String(secs).padStart(2, '0');
-          el.textContent = `${hh}:${mm}:${ss}`;
+        const txt = days > 0
+          ? `${days}d ${hours}h ${mins}m`
+          : `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        
+        if (el.textContent !== txt) {
+          el.textContent = txt;
         }
       }
+    }
 
-      update();
-      countdownTimers[elementId] = setInterval(update, 1000);
+    function startCountdown(elementId, targetIso) {
+      if (!elementId || !targetIso) return;
+      activeCountdowns.set(elementId, targetIso);
+      updateAllCountdowns();
+      if (!globalCountdownInterval) {
+        globalCountdownInterval = setInterval(updateAllCountdowns, 1000);
+      }
+    }
+
+    function stopCountdown(elementId) {
+      activeCountdowns.delete(elementId);
     }
 
     let livePollTimeout = null;
     async function checkLiveScores() {
+      if (document.hidden) return;
       let anyLive = false;
 
       // 1. Live NFL Check (Bills)
@@ -612,7 +639,7 @@
 
             if (state === 'in') {
               anyLive = true;
-              if (countdownTimers['bills-countdown']) clearInterval(countdownTimers['bills-countdown']);
+              stopCountdown('bills-countdown');
               if (countdownEl) {
                 countdownEl.innerHTML = `<span class="live-dot"></span> ${detail}`;
                 countdownEl.style.color = '#10b981';
@@ -635,7 +662,7 @@
                 }
               }
             } else if (state === 'post') {
-              if (countdownTimers['bills-countdown']) clearInterval(countdownTimers['bills-countdown']);
+              stopCountdown('bills-countdown');
               if (countdownEl) {
                 countdownEl.textContent = detail.includes('OT') ? 'FINAL/OT' : 'FINAL';
                 countdownEl.style.color = '#fff';
@@ -678,7 +705,7 @@
 
             if (state === 'in') {
               anyLive = true;
-              if (countdownTimers['sabres-countdown']) clearInterval(countdownTimers['sabres-countdown']);
+              stopCountdown('sabres-countdown');
               if (countdownEl) {
                 countdownEl.innerHTML = `<span class="live-dot"></span> ${detail}`;
                 countdownEl.style.color = '#10b981';
@@ -693,7 +720,7 @@
                 recordsEl.innerHTML = `<span class="live-pulse-badge">LIVE</span> <span class="live-score-highlight">${isHome ? `Sabres ${buf.score || 0} - ${opp.score || 0} ${oppName}` : `${oppName} ${opp.score || 0} - ${buf.score || 0} Sabres`}</span>`;
               }
             } else if (state === 'post') {
-              if (countdownTimers['sabres-countdown']) clearInterval(countdownTimers['sabres-countdown']);
+              stopCountdown('sabres-countdown');
               if (countdownEl) {
                 countdownEl.textContent = detail.includes('OT') ? 'FINAL/OT' : 'FINAL';
                 countdownEl.style.color = '#fff';
@@ -721,7 +748,10 @@
       }
     }
 
+    let isDataLoading = false;
     async function loadData() {
+      if (isDataLoading) return;
+      isDataLoading = true;
       const statusEl = document.getElementById('update-status');
       let data = null;
 
@@ -787,16 +817,26 @@
 
       // Check real-time live game feeds immediately
       checkLiveScores();
+      isDataLoading = false;
     }
 
-    // Auto-refresh data when waking from mobile background or every 60s
-    window.addEventListener('pageshow', () => { loadData(); checkLiveScores(); });
+    // Auto-refresh data: only handle bfcache navigation on pageshow
+    window.addEventListener('pageshow', (e) => {
+      if (e.persisted) {
+        loadData();
+        checkLiveScores();
+      }
+    });
     document.addEventListener('visibilitychange', () => {
       if (!document.hidden) {
         checkLiveScores();
       }
     });
-    setInterval(loadData, 60 * 1000);
+    setInterval(() => {
+      if (!document.hidden) {
+        loadData();
+      }
+    }, 60 * 1000);
     document.addEventListener('DOMContentLoaded', loadData);
   </script>
 </body>

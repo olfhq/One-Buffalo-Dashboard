@@ -76,15 +76,19 @@
       border-radius: 8px;
       letter-spacing: 0.5px;
       text-transform: uppercase;
-      transition: all 0.2s ease;
+      transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
       margin-bottom: 0.9rem;
+      -webkit-tap-highlight-color: transparent;
     }
     .back-nav-btn:hover {
       background: linear-gradient(135deg, rgba(0, 38, 84, 0.95), rgba(252, 181, 20, 0.85));
       border-color: var(--sabres-gold);
       transform: translateY(-1px);
       box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
+    }
+    .back-nav-btn:active {
+      transform: scale(0.98);
     }
 
     h1 {
@@ -122,12 +126,16 @@
       font-weight: 700;
       color: var(--text-muted);
       background: transparent;
-      border: none;
+      border: 1px solid transparent;
       border-radius: 7px;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
       text-align: center;
       white-space: nowrap;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .tab-btn:active {
+      transform: scale(0.98);
     }
 
     .tab-btn.active {
@@ -450,6 +458,8 @@
 
     /* OUT-OF-TOWN SCOREBOARD ROOTING CARDS */
     .score-card {
+      content-visibility: auto;
+      contain-intrinsic-size: auto 150px;
       background: var(--card-inner);
       border: 1px solid var(--card-border);
       border-radius: 10px;
@@ -800,7 +810,11 @@
       display: inline-flex;
       align-items: center;
       gap: 0.4rem;
-      transition: all 0.2s ease;
+      transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .slate-filter-btn:active {
+      transform: scale(0.97);
     }
 
     .slate-filter-btn:hover {
@@ -825,6 +839,26 @@
     .slate-filter-btn.active .filter-count-badge {
       background: rgba(252, 181, 20, 0.25);
       color: #fff;
+    }
+
+    /* FAST CSS FILTERING FOR SLATE (ZERO JS RE-RENDERING ON CLICK) */
+    #sabres-scoreboard-grid[data-filter="upcoming"] .divider-upcoming,
+    #sabres-scoreboard-grid[data-filter="upcoming"] .divider-results,
+    #sabres-scoreboard-grid[data-filter="upcoming"] .slate-section-results {
+      display: none !important;
+    }
+    #sabres-scoreboard-grid[data-filter="results"] .pinned-sabres-card,
+    #sabres-scoreboard-grid[data-filter="results"] .divider-upcoming,
+    #sabres-scoreboard-grid[data-filter="results"] .slate-section-upcoming,
+    #sabres-scoreboard-grid[data-filter="results"] .divider-results {
+      display: none !important;
+    }
+    #sabres-scoreboard-grid[data-filter="all"] .divider-upcoming,
+    #sabres-scoreboard-grid[data-filter="all"] .divider-results {
+      display: flex !important;
+    }
+    #sabres-scoreboard-grid[data-filter="all"] .slate-empty-msg {
+      display: none !important;
     }
 
     .slate-main-divider {
@@ -1038,25 +1072,41 @@
 
   <script>
     function switchTab(tabId) {
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      const targetBtn = document.getElementById(`tab-btn-${tabId}`);
+      if (!targetBtn || targetBtn.classList.contains('active')) return;
 
-      document.getElementById(`tab-${tabId}`).classList.add('active');
-      document.getElementById(`tab-btn-${tabId}`).classList.add('active');
+      // 1. Instant visual response for tab button (< 16ms)
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      targetBtn.classList.add('active');
+
+      // 2. Yield before activating heavy tab content
+      requestAnimationFrame(() => {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        const targetTab = document.getElementById(`tab-${tabId}`);
+        if (targetTab) targetTab.classList.add('active');
+      });
     }
 
-    const countdownTimers = {};
-    function startCountdown(elementId, targetIso) {
-      const el = document.getElementById(elementId);
-      if (!el || !targetIso) return;
-      if (countdownTimers[elementId]) clearInterval(countdownTimers[elementId]);
+    const activeCountdowns = new Map();
+    let globalCountdownInterval = null;
 
-      function update() {
-        const diff = new Date(targetIso).getTime() - Date.now();
+    function updateAllCountdowns() {
+      if (document.hidden) return;
+      const now = Date.now();
+      for (const [id, targetIso] of activeCountdowns.entries()) {
+        const el = document.getElementById(id);
+        if (!el) {
+          activeCountdowns.delete(id);
+          continue;
+        }
+        const diff = new Date(targetIso).getTime() - now;
         if (diff <= 0) {
-          el.innerHTML = '<span class="live-dot"></span> LIVE NOW';
-          el.style.color = "#10b981";
-          return;
+          if (el.innerHTML !== '<span class="live-dot"></span> LIVE NOW') {
+            el.innerHTML = '<span class="live-dot"></span> LIVE NOW';
+            el.style.color = "#10b981";
+          }
+          activeCountdowns.delete(id);
+          continue;
         }
 
         const days = Math.floor(diff / (1000 * 60 * 60 * 24));
@@ -1064,18 +1114,27 @@
         const mins = Math.floor((diff / 1000 / 60) % 60);
         const secs = Math.floor((diff / 1000) % 60);
 
-        if (days > 0) {
-          el.textContent = `${days}d ${hours}h ${mins}m`;
-        } else {
-          const hh = String(hours).padStart(2, '0');
-          const mm = String(mins).padStart(2, '0');
-          const ss = String(secs).padStart(2, '0');
-          el.textContent = `${hh}:${mm}:${ss}`;
+        const txt = days > 0
+          ? `${days}d ${hours}h ${mins}m`
+          : `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        
+        if (el.textContent !== txt) {
+          el.textContent = txt;
         }
       }
+    }
 
-      update();
-      countdownTimers[elementId] = setInterval(update, 1000);
+    function startCountdown(elementId, targetIso) {
+      if (!elementId || !targetIso) return;
+      activeCountdowns.set(elementId, targetIso);
+      updateAllCountdowns();
+      if (!globalCountdownInterval) {
+        globalCountdownInterval = setInterval(updateAllCountdowns, 1000);
+      }
+    }
+
+    function stopCountdown(elementId) {
+      activeCountdowns.delete(elementId);
     }
 
     let liveSabresPollTimer = null;
@@ -1084,11 +1143,16 @@
     let currentSlateFilter = 'all';
 
     function setSlateFilter(filter) {
+      if (currentSlateFilter === filter) return;
       currentSlateFilter = filter;
       document.querySelectorAll('.slate-filter-btn').forEach(btn => btn.classList.remove('active'));
       const activeBtn = document.getElementById(`filter-btn-${filter}`);
       if (activeBtn) activeBtn.classList.add('active');
-      renderSabresScoreboard(currentSabresOutOfTownGames, currentSabresNextGame);
+
+      const grid = document.getElementById('sabres-scoreboard-grid');
+      if (grid) {
+        grid.setAttribute('data-filter', filter);
+      }
     }
 
     const CLIENT_NHL_ARENAS = {
@@ -1381,47 +1445,56 @@
 
       if (currentSlateFilter === 'upcoming') {
         html += sabresCardHtml;
-        if (upcomingGames.length > 0) {
-          html += renderWindowGroups(upcomingGames);
-        } else {
-          html += `<div style="color: var(--text-muted); font-size: 0.85rem; text-align: center; padding: 1.5rem;">No upcoming games scheduled for this slate.</div>`;
-        }
-      } else if (currentSlateFilter === 'results') {
-        if (resultsGames.length > 0) {
-          html += renderWindowGroups(resultsGames);
-        } else {
-          html += `<div style="color: var(--text-muted); font-size: 0.85rem; text-align: center; padding: 1.5rem;">No completed results recorded for this slate yet.</div>`;
-        }
+      }
+
+      // Upcoming Section Container
+      if (upcomingGames.length > 0) {
+        html += `
+          <div class="slate-main-divider divider-upcoming">
+            <span>🕒 UPCOMING SLATE & BROADCAST LINEUPS</span>
+            <span style="font-size: 0.72rem; font-weight: 700;">${upcomingGames.length} Scheduled</span>
+          </div>
+          <div class="slate-section-upcoming" style="display: flex; flex-direction: column; gap: 0.85rem;">
+            ${renderWindowGroups(upcomingGames)}
+          </div>
+        `;
       } else {
-        // 'all' mode: Show both sections clearly
-        html += sabresCardHtml;
-        if (upcomingGames.length > 0) {
-          html += `
-            <div class="slate-main-divider divider-upcoming">
-              <span>🕒 UPCOMING SLATE & BROADCAST LINEUPS</span>
-              <span style="font-size: 0.72rem; font-weight: 700;">${upcomingGames.length} Scheduled</span>
-            </div>
-          `;
-          html += renderWindowGroups(upcomingGames);
-        }
-        if (resultsGames.length > 0) {
-          html += `
-            <div class="slate-main-divider divider-results">
-              <span>✅ CURRENT WEEK RESULTS & FINAL SCORES</span>
-              <span style="font-size: 0.72rem; font-weight: 700;">${resultsGames.length} Final</span>
-            </div>
-          `;
-          html += renderWindowGroups(resultsGames);
-        }
+        html += `
+          <div class="slate-section-upcoming" style="display: flex; flex-direction: column; gap: 0.85rem;">
+            <div class="slate-empty-msg" style="color: var(--text-muted); font-size: 0.85rem; text-align: center; padding: 1.5rem;">No upcoming games scheduled for this slate.</div>
+          </div>
+        `;
+      }
+
+      // Results Section Container
+      if (resultsGames.length > 0) {
+        html += `
+          <div class="slate-main-divider divider-results">
+            <span>✅ CURRENT WEEK RESULTS & FINAL SCORES</span>
+            <span style="font-size: 0.72rem; font-weight: 700;">${resultsGames.length} Final</span>
+          </div>
+          <div class="slate-section-results" style="display: flex; flex-direction: column; gap: 0.85rem;">
+            ${renderWindowGroups(resultsGames)}
+          </div>
+        `;
+      } else {
+        html += `
+          <div class="slate-section-results" style="display: flex; flex-direction: column; gap: 0.85rem;">
+            <div class="slate-empty-msg" style="color: var(--text-muted); font-size: 0.85rem; text-align: center; padding: 1.5rem;">No completed results recorded for this slate yet.</div>
+          </div>
+        `;
       }
 
       scoreContainer.innerHTML = html;
-      if (sg?.isoTime && (currentSlateFilter === 'all' || currentSlateFilter === 'upcoming')) {
+      scoreContainer.setAttribute('data-filter', currentSlateFilter);
+
+      if (sg?.isoTime) {
         startCountdown('pinned-sabres-countdown', sg.isoTime);
       }
     }
 
     async function pollLiveSabresScoreboard() {
+      if (document.hidden) return;
       let isAnyLive = false;
 
       try {
@@ -1450,8 +1523,8 @@
 
           if (state === 'in') {
             isAnyLive = true;
-            if (countdownTimers['sabres-countdown']) clearInterval(countdownTimers['sabres-countdown']);
-            if (countdownTimers['pinned-sabres-countdown']) clearInterval(countdownTimers['pinned-sabres-countdown']);
+            stopCountdown('sabres-countdown');
+            stopCountdown('pinned-sabres-countdown');
             if (countdownEl) {
               countdownEl.innerHTML = `<span class="live-dot"></span> ${detail}`;
               countdownEl.style.color = '#10b981';
@@ -1470,8 +1543,8 @@
               recordsEl.innerHTML = `<span class="live-pulse-badge">LIVE</span> <span class="live-score-highlight">${isHome ? `Sabres ${buf.score || 0} - ${opp.score || 0} ${oppName}` : `${oppName} ${opp.score || 0} - ${buf.score || 0} Sabres`}</span>`;
             }
           } else if (state === 'post') {
-            if (countdownTimers['sabres-countdown']) clearInterval(countdownTimers['sabres-countdown']);
-            if (countdownTimers['pinned-sabres-countdown']) clearInterval(countdownTimers['pinned-sabres-countdown']);
+            stopCountdown('sabres-countdown');
+            stopCountdown('pinned-sabres-countdown');
             if (countdownEl) {
               countdownEl.textContent = detail.includes('OT') ? 'FINAL/OT' : 'FINAL';
               countdownEl.style.color = '#fff';
@@ -1586,7 +1659,10 @@
       }
     }
 
+    let isDataLoading = false;
     async function loadData() {
+      if (isDataLoading) return;
+      isDataLoading = true;
       const statusEl = document.getElementById('update-status');
       let data = null;
 
@@ -1732,16 +1808,26 @@
 
       // Check real-time live scores immediately
       pollLiveSabresScoreboard();
+      isDataLoading = false;
     }
 
-    // Auto-refresh data when waking from mobile background or every 60s
-    window.addEventListener('pageshow', () => { loadData(); pollLiveSabresScoreboard(); });
+    // Auto-refresh data: only handle bfcache navigation on pageshow
+    window.addEventListener('pageshow', (e) => {
+      if (e.persisted) {
+        loadData();
+        pollLiveSabresScoreboard();
+      }
+    });
     document.addEventListener('visibilitychange', () => {
       if (!document.hidden) {
         pollLiveSabresScoreboard();
       }
     });
-    setInterval(loadData, 60 * 1000);
+    setInterval(() => {
+      if (!document.hidden) {
+        loadData();
+      }
+    }, 60 * 1000);
     document.addEventListener('DOMContentLoaded', loadData);
   </script>
 </body>

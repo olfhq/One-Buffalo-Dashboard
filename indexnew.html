@@ -484,8 +484,10 @@
     }
 
     // Refresh immediately when iOS wakes up from background
-    window.addEventListener('pageshow', () => { loadData(); });
-    setInterval(loadData, 5 * 60 * 1000);
+     window.addEventListener('pageshow', (e) => { if (e.persisted) loadData(); });
+    setInterval(() => {
+      if (!document.hidden) loadData();
+    }, 5 * 60 * 1000);
     document.addEventListener('DOMContentLoaded', loadData);
   </script>
 </body>
