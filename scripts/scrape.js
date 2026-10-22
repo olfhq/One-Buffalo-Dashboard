@@ -43,15 +43,19 @@ function calculateLiveNhlWinChance(bufScore, oppScore, statusDetail, preGameProb
   let minsRemaining = 60;
   if (detail.includes('ot') || detail.includes('overtime') || detail.includes('so') || detail.includes('shootout')) {
     minsRemaining = 2.0;
+  } else if (detail.includes('end of 2') || detail.includes('end of the 2')) {
+    minsRemaining = 20.0;
+  } else if (detail.includes('end of 1') || detail.includes('end of the 1')) {
+    minsRemaining = 40.0;
   } else if (detail.includes('3') || detail.includes('3rd')) {
     const match = detail.match(/(\d+):(\d+)/);
-    minsRemaining = match ? Math.max(0.2, 20 - (parseInt(match[1]) + parseInt(match[2]) / 60)) : 10;
+    minsRemaining = match ? Math.max(0.1, parseInt(match[1]) + parseInt(match[2]) / 60) : 10;
   } else if (detail.includes('2') || detail.includes('2nd')) {
     const match = detail.match(/(\d+):(\d+)/);
-    minsRemaining = match ? Math.max(20.2, 40 - (parseInt(match[1]) + parseInt(match[2]) / 60)) : 30;
+    minsRemaining = match ? Math.max(20.1, 20 + parseInt(match[1]) + parseInt(match[2]) / 60) : 30;
   } else if (detail.includes('1') || detail.includes('1st')) {
     const match = detail.match(/(\d+):(\d+)/);
-    minsRemaining = match ? Math.max(40.2, 60 - (parseInt(match[1]) + parseInt(match[2]) / 60)) : 50;
+    minsRemaining = match ? Math.max(40.1, 40 + parseInt(match[1]) + parseInt(match[2]) / 60) : 50;
   }
 
   if (diff === 0 && minsRemaining <= 1.0) return 50;

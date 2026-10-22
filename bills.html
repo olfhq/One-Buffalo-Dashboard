@@ -544,6 +544,7 @@
       gap: 0.5rem;
       color: var(--text-muted);
       font-weight: 600;
+      flex-wrap: wrap;
     }
 
     .game-status-badge {
@@ -625,6 +626,65 @@
       font-size: 0.95rem;
       font-weight: 700;
       color: #fff;
+    }
+
+    .score-team-val-group {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .win-prob-chip {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 0.12rem 0.45rem;
+      border-radius: 4px;
+      letter-spacing: 0.2px;
+      white-space: nowrap;
+    }
+
+    .win-chance-meter-wrap {
+      height: 4px;
+      border-radius: 2px;
+      background: rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+      display: flex;
+      margin-top: 0.35rem;
+      margin-bottom: 0.15rem;
+    }
+
+    .win-meter-fill-away, .win-meter-fill-home {
+      height: 100%;
+      transition: width 0.4s ease;
+    }
+
+    .card-win-pill {
+      font-size: 0.65rem;
+      font-weight: 800;
+      padding: 0.12rem 0.45rem;
+      border-radius: 4px;
+      letter-spacing: 0.3px;
+      white-space: nowrap;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .card-win-live {
+      background: rgba(16, 185, 129, 0.18);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.35);
+    }
+    .card-win-post {
+      background: rgba(255, 255, 255, 0.05);
+      color: #cbd5e1;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .card-win-pre {
+      background: rgba(56, 189, 248, 0.12);
+      color: #7dd3fc;
+      border: 1px solid rgba(56, 189, 248, 0.25);
     }
 
     .score-team-points {
@@ -1518,6 +1578,33 @@
       };
     }
 
+    function getNflGameWinChance(g) {
+      const isPost = g.statusState === 'post';
+      const isLive = g.statusState === 'in';
+      const awaySc = parseInt(g.awayScore);
+      const homeSc = parseInt(g.homeScore);
+      const hasScores = !isNaN(awaySc) && !isNaN(homeSc);
+
+      if (isPost && hasScores) {
+        if (homeSc > awaySc) return { homeProb: 100, awayProb: 0, leader: g.homeName, isLive: false, isPost: true };
+        if (awaySc > homeSc) return { homeProb: 0, awayProb: 100, leader: g.awayName, isLive: false, isPost: true };
+        return { homeProb: 50, awayProb: 50, leader: 'Tied', isLive: false, isPost: true };
+      }
+
+      if (isLive && hasScores) {
+        if (g.homeWinChance !== undefined && g.awayWinChance !== undefined) {
+          const leader = g.homeWinChance >= g.awayWinChance ? g.homeName : g.awayName;
+          return { homeProb: g.homeWinChance, awayProb: g.awayWinChance, leader, isLive: true, isPost: false };
+        }
+        const homeProb = calculateLiveNflWinChance(homeSc, awaySc, g.statusDetail || 'LIVE', 54);
+        const awayProb = 100 - homeProb;
+        const leader = homeProb > awayProb ? g.homeName : (awayProb > homeProb ? g.awayName : 'Tied');
+        return { homeProb, awayProb, leader, isLive: true, isPost: false };
+      }
+
+      return { homeProb: 54, awayProb: 46, leader: g.homeName, isLive: false, isPost: false };
+    }
+
     function renderGameCardHtml(g) {
       let cardBorderClass = 'score-card-neutral';
       let verdictBadgeClass = 'verdict-neutral';
@@ -1567,6 +1654,73 @@
       const awayDisplayScore = hasScores ? g.awayScore : '<span class="score-team-upcoming">--</span>';
       const homeDisplayScore = hasScores ? g.homeScore : '<span class="score-team-upcoming">--</span>';
 
+      const probInfo = getNflGameWinChance(g);
+
+      let awayChipStyle = '';
+      let homeChipStyle = '';
+      let awayBarColor = 'rgba(56, 189, 248, 0.45)';
+      let homeBarColor = 'rgba(129, 140, 248, 0.45)';
+
+      if (probInfo.isPost) {
+        if (probInfo.awayProb === 100) {
+          awayChipStyle = 'background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4);';
+          homeChipStyle = 'background: rgba(255, 255, 255, 0.04); color: #64748b; border: 1px solid rgba(255, 255, 255, 0.08);';
+          awayBarColor = '#10b981';
+          homeBarColor = 'rgba(255, 255, 255, 0.05)';
+        } else {
+          homeChipStyle = 'background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4);';
+          awayChipStyle = 'background: rgba(255, 255, 255, 0.04); color: #64748b; border: 1px solid rgba(255, 255, 255, 0.08);';
+          homeBarColor = '#10b981';
+          awayBarColor = 'rgba(255, 255, 255, 0.05)';
+        }
+      } else if (probInfo.isLive) {
+        if (probInfo.awayProb >= 60) {
+          awayChipStyle = 'background: rgba(16, 185, 129, 0.22); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.45); font-weight: 800;';
+          awayBarColor = '#10b981';
+        } else if (probInfo.awayProb >= 40) {
+          awayChipStyle = 'background: rgba(245, 158, 11, 0.22); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.45); font-weight: 800;';
+          awayBarColor = '#fbbf24';
+        } else {
+          awayChipStyle = 'background: rgba(239, 68, 68, 0.18); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.35); font-weight: 800;';
+          awayBarColor = '#ef4444';
+        }
+
+        if (probInfo.homeProb >= 60) {
+          homeChipStyle = 'background: rgba(16, 185, 129, 0.22); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.45); font-weight: 800;';
+          homeBarColor = '#10b981';
+        } else if (probInfo.homeProb >= 40) {
+          homeChipStyle = 'background: rgba(245, 158, 11, 0.22); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.45); font-weight: 800;';
+          homeBarColor = '#fbbf24';
+        } else {
+          homeChipStyle = 'background: rgba(239, 68, 68, 0.18); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.35); font-weight: 800;';
+          homeBarColor = '#ef4444';
+        }
+      } else {
+        awayChipStyle = 'background: rgba(255, 255, 255, 0.05); color: #94a3b8; border: 1px solid rgba(255, 255, 255, 0.1);';
+        homeChipStyle = 'background: rgba(255, 255, 255, 0.05); color: #94a3b8; border: 1px solid rgba(255, 255, 255, 0.1);';
+        awayBarColor = 'rgba(56, 189, 248, 0.45)';
+        homeBarColor = 'rgba(129, 140, 248, 0.45)';
+      }
+
+      const getShortTeamName = (name) => {
+        const parts = (name || '').trim().split(' ');
+        return parts[parts.length - 1];
+      };
+
+      let headerChancePill = '';
+      if (probInfo.isLive) {
+        const leaderProb = Math.max(probInfo.awayProb, probInfo.homeProb);
+        const leaderShort = getShortTeamName(probInfo.leader);
+        headerChancePill = `<span class="card-win-pill card-win-live"><span class="live-dot" style="width:5px;height:5px;"></span>${leaderShort}: <strong>${leaderProb}%</strong></span>`;
+      } else if (probInfo.isPost) {
+        const leaderShort = getShortTeamName(probInfo.leader);
+        headerChancePill = `<span class="card-win-pill card-win-post">Win: <strong>${leaderShort}</strong></span>`;
+      } else {
+        const leaderProb = Math.max(probInfo.awayProb, probInfo.homeProb);
+        const leaderShort = getShortTeamName(probInfo.leader);
+        headerChancePill = `<span class="card-win-pill card-win-pre">${leaderShort}: <strong>${leaderProb}%</strong></span>`;
+      }
+
       return `
         <div class="score-card ${cardBorderClass}">
           <div class="score-card-header">
@@ -1574,6 +1728,8 @@
               ${statusHtml}
               <span>•</span>
               <span>${g.slot}</span>
+              <span>•</span>
+              ${headerChancePill}
             </div>
             <span class="verdict-badge ${verdictBadgeClass}">${g.verdict}</span>
           </div>
@@ -1581,11 +1737,21 @@
           <div class="score-teams-grid">
             <div class="score-team-row ${awayRowClass}">
               <span>${g.awayName}</span>
-              <span class="score-team-points ${awayPtsClass}">${awayDisplayScore}</span>
+              <div class="score-team-val-group">
+                <span class="win-prob-chip" style="${awayChipStyle}">${probInfo.awayProb}%</span>
+                <span class="score-team-points ${awayPtsClass}">${awayDisplayScore}</span>
+              </div>
             </div>
             <div class="score-team-row ${homeRowClass}">
               <span>${g.homeName}</span>
-              <span class="score-team-points ${homePtsClass}">${homeDisplayScore}</span>
+              <div class="score-team-val-group">
+                <span class="win-prob-chip" style="${homeChipStyle}">${probInfo.homeProb}%</span>
+                <span class="score-team-points ${homePtsClass}">${homeDisplayScore}</span>
+              </div>
+            </div>
+            <div class="win-chance-meter-wrap" title="Live Win Prob: ${g.awayName} ${probInfo.awayProb}% • ${g.homeName} ${probInfo.homeProb}%">
+              <div class="win-meter-fill-away" style="width: ${probInfo.awayProb}%; background: ${awayBarColor};"></div>
+              <div class="win-meter-fill-home" style="width: ${probInfo.homeProb}%; background: ${homeBarColor};"></div>
             </div>
           </div>
 
@@ -1908,6 +2074,14 @@
             g.statusDetail = detail;
             g.homeScore = h?.score || g.homeScore;
             g.awayScore = a?.score || g.awayScore;
+
+            if (comp.predictor?.homeTeam?.gameProjection) {
+              const homeProj = parseFloat(comp.predictor.homeTeam.gameProjection);
+              if (!isNaN(homeProj)) {
+                g.homeWinChance = Math.min(99, Math.max(1, Math.round(homeProj)));
+                g.awayWinChance = 100 - g.homeWinChance;
+              }
+            }
 
             if (state === 'in') {
               isAnyLive = true;
@@ -2826,7 +3000,7 @@
       "oppShortName": "Philadelphia",
       "gameTime": "Wed, Oct 21 • 7:30 PM ET",
       "isoTime": "2026-10-21T23:30:00Z",
-      "winChance": 6,
+      "winChance": 8,
       "matchupRecords": "Sabres (4-3-2, 10 pts, OT1) vs. Philadelphia (2-6-3, 7 pts, W2)",
       "broadcast": "TNT",
       "venue": "KeyBank Center, Buffalo, NY",
