@@ -615,6 +615,83 @@
       activeCountdowns.delete(elementId);
     }
 
+    function calculateLiveNhlWinChance(bufScore, oppScore, statusDetail, preGameProb = 52) {
+      const buf = parseInt(bufScore) || 0;
+      const opp = parseInt(oppScore) || 0;
+      const diff = buf - opp;
+      const detail = (statusDetail || '').toLowerCase();
+
+      if (detail.includes('final')) {
+        if (diff > 0) return 100;
+        if (diff < 0) return 0;
+        return 50;
+      }
+
+      let minsRemaining = 60;
+      if (detail.includes('ot') || detail.includes('overtime') || detail.includes('so') || detail.includes('shootout')) {
+        minsRemaining = 2.0;
+      } else if (detail.includes('3') || detail.includes('3rd')) {
+        const match = detail.match(/(\d+):(\d+)/);
+        minsRemaining = match ? Math.max(0.2, 20 - (parseInt(match[1]) + parseInt(match[2]) / 60)) : 10;
+      } else if (detail.includes('2') || detail.includes('2nd')) {
+        const match = detail.match(/(\d+):(\d+)/);
+        minsRemaining = match ? Math.max(20.2, 40 - (parseInt(match[1]) + parseInt(match[2]) / 60)) : 30;
+      } else if (detail.includes('1') || detail.includes('1st')) {
+        const match = detail.match(/(\d+):(\d+)/);
+        minsRemaining = match ? Math.max(40.2, 60 - (parseInt(match[1]) + parseInt(match[2]) / 60)) : 50;
+      }
+
+      if (diff === 0 && minsRemaining <= 1.0) return 50;
+
+      const frac = Math.max(0.005, minsRemaining / 60);
+      const p0 = Math.min(0.95, Math.max(0.05, (preGameProb || 52) / 100));
+      const baselineLogit = Math.log(p0 / (1 - p0));
+      const sigma = Math.sqrt(0.12 * minsRemaining + 0.25);
+      const z = (baselineLogit * frac * 0.5) + (diff * 1.55 / sigma);
+      const prob = 1 / (1 + Math.exp(-z));
+
+      return Math.min(99, Math.max(1, Math.round(prob * 100)));
+    }
+
+    function calculateLiveNflWinChance(bufScore, oppScore, statusDetail, preGameProb = 60) {
+      const buf = parseInt(bufScore) || 0;
+      const opp = parseInt(oppScore) || 0;
+      const diff = buf - opp;
+      const detail = (statusDetail || '').toLowerCase();
+
+      if (detail.includes('final')) {
+        if (diff > 0) return 100;
+        if (diff < 0) return 0;
+        return 50;
+      }
+
+      let minsRemaining = 60;
+      if (detail.includes('ot') || detail.includes('overtime')) {
+        minsRemaining = 5.0;
+      } else if (detail.includes('4') || detail.includes('4th')) {
+        const match = detail.match(/(\d+):(\d+)/);
+        minsRemaining = match ? Math.max(0.2, parseInt(match[1]) + parseInt(match[2]) / 60) : 7.5;
+      } else if (detail.includes('3') || detail.includes('3rd')) {
+        const match = detail.match(/(\d+):(\d+)/);
+        minsRemaining = match ? Math.max(15.2, 15 + parseInt(match[1]) + parseInt(match[2]) / 60) : 22.5;
+      } else if (detail.includes('2') || detail.includes('2nd') || detail.includes('half')) {
+        minsRemaining = 30;
+      } else if (detail.includes('1') || detail.includes('1st')) {
+        minsRemaining = 45;
+      }
+
+      if (diff === 0 && minsRemaining <= 1.0) return 50;
+
+      const frac = Math.max(0.005, minsRemaining / 60);
+      const p0 = Math.min(0.95, Math.max(0.05, (preGameProb || 60) / 100));
+      const baselineLogit = Math.log(p0 / (1 - p0));
+      const sigma = Math.max(1.5, 13.5 * Math.sqrt(frac));
+      const z = (baselineLogit * frac * 0.4) + (diff * 1.6 / sigma);
+      const prob = 1 / (1 + Math.exp(-z));
+
+      return Math.min(99, Math.max(1, Math.round(prob * 100)));
+    }
+
     let livePollTimeout = null;
     async function checkLiveScores() {
       if (document.hidden) return;
@@ -664,13 +741,22 @@
               if (recordsEl) {
                 recordsEl.innerHTML = `⏱️ Period / Time: <strong style="color: #10b981;">${detail}</strong> • Live Game Action`;
               }
-              if (comp.predictor?.homeTeam && winChanceEl && buf) {
+              let bProb = undefined;
+              if (comp.predictor?.homeTeam && buf) {
                 const isHome = buf.homeAway === 'home';
                 const homeProb = parseFloat(comp.predictor.homeTeam.gameProjection);
                 if (!isNaN(homeProb)) {
-                  const prob = Math.round(isHome ? homeProb : (100 - homeProb));
-                  winChanceEl.textContent = `${prob}%`;
+                  bProb = Math.round(isHome ? homeProb : (100 - homeProb));
                 }
+              }
+              if (bProb === undefined) {
+                bProb = calculateLiveNflWinChance(buf?.score || 0, opp?.score || 0, detail, 60);
+              }
+              if (winChanceEl) {
+                winChanceEl.textContent = `${bProb}%`;
+                if (bProb >= 60) winChanceEl.style.color = '#34d399';
+                else if (bProb >= 40) winChanceEl.style.color = '#fbbf24';
+                else winChanceEl.style.color = '#f87171';
               }
             } else if (state === 'post') {
               stopCountdown('bills-countdown');
@@ -691,6 +777,11 @@
                 const oppName = opp.team?.shortDisplayName || opp.team?.displayName || 'Opponent';
                 const isHome = buf.homeAway === 'home';
                 recordsEl.textContent = isHome ? `Final: BUF ${buf.score || 0}, ${oppName} ${opp.score || 0}` : `Final: ${oppName} ${opp.score || 0}, BUF ${buf.score || 0}`;
+              }
+              const finalProb = (parseInt(buf?.score) || 0) > (parseInt(opp?.score) || 0) ? 100 : 0;
+              if (winChanceEl) {
+                winChanceEl.textContent = `${finalProb}%`;
+                winChanceEl.style.color = finalProb === 100 ? '#34d399' : '#f87171';
               }
             }
           }
@@ -721,6 +812,7 @@
             const countdownEl = document.getElementById('sabres-countdown');
             const countdownLabelEl = document.getElementById('sabres-countdown-label');
             const recordsEl = document.getElementById('sabres-records');
+            const winChanceEl = document.getElementById('sabres-win-chance');
 
             if (state === 'in') {
               anyLive = true;
@@ -742,6 +834,13 @@
               if (recordsEl) {
                 recordsEl.innerHTML = `⏱️ Period / Time: <strong style="color: #10b981;">${detail}</strong> • Live Game Action`;
               }
+              const sProb = calculateLiveNhlWinChance(buf?.score || 0, opp?.score || 0, detail, 52);
+              if (winChanceEl) {
+                winChanceEl.textContent = `${sProb}%`;
+                if (sProb >= 60) winChanceEl.style.color = '#34d399';
+                else if (sProb >= 40) winChanceEl.style.color = '#fbbf24';
+                else winChanceEl.style.color = '#f87171';
+              }
             } else if (state === 'post') {
               stopCountdown('sabres-countdown');
               if (prefixEl) prefixEl.textContent = 'FINAL SCORE:';
@@ -761,6 +860,11 @@
                 const oppName = opp.team?.shortDisplayName || opp.team?.displayName || 'Flyers';
                 const isHome = buf.homeAway === 'home';
                 recordsEl.textContent = isHome ? `Final: Sabres ${buf.score || 0}, ${oppName} ${opp.score || 0}` : `Final: ${oppName} ${opp.score || 0}, Sabres ${buf.score || 0}`;
+              }
+              const finalProb = (parseInt(buf?.score) || 0) > (parseInt(opp?.score) || 0) ? 100 : 0;
+              if (winChanceEl) {
+                winChanceEl.textContent = `${finalProb}%`;
+                winChanceEl.style.color = finalProb === 100 ? '#34d399' : '#f87171';
               }
             }
           }
@@ -809,9 +913,26 @@
 
       document.getElementById('bills-game-time').textContent = b.nextGame.gameTime || '';
       document.getElementById('bills-broadcast').textContent = b.nextGame.broadcast || 'CBS';
-      document.getElementById('bills-win-chance').textContent = `${b.nextGame.winChance || 68}%`;
       document.getElementById('bills-if-win').textContent = `Win: ${b.nextGame.ifWin}%`;
       document.getElementById('bills-if-loss').textContent = `Loss: ${b.nextGame.ifLoss}%`;
+
+      const bWinChanceEl = document.getElementById('bills-win-chance');
+      if (b.nextGame.statusState === 'in' || b.nextGame.statusState === 'post') {
+        const bProb = (b.nextGame.winChance !== undefined && b.nextGame.winChance !== null)
+          ? b.nextGame.winChance
+          : calculateLiveNflWinChance(b.nextGame.bufScore, b.nextGame.oppScore, b.nextGame.statusDetail, 60);
+        if (bWinChanceEl) {
+          bWinChanceEl.textContent = `${bProb}%`;
+          if (bProb >= 60) bWinChanceEl.style.color = '#34d399';
+          else if (bProb >= 40) bWinChanceEl.style.color = '#fbbf24';
+          else bWinChanceEl.style.color = '#f87171';
+        }
+      } else {
+        if (bWinChanceEl) {
+          bWinChanceEl.textContent = `${b.nextGame.winChance || 68}%`;
+          bWinChanceEl.style.color = '#34d399';
+        }
+      }
 
       const bLeverage = b.nextGame.leverage || (b.nextGame.ifWin - b.nextGame.ifLoss);
       document.getElementById('bills-leverage').textContent = `±${bLeverage}%`;
@@ -865,9 +986,24 @@
 
       document.getElementById('sabres-game-time').textContent = s.nextGame.gameTime || '';
       document.getElementById('sabres-broadcast').textContent = s.nextGame.broadcast || 'MSG-B';
-      document.getElementById('sabres-win-chance').textContent = `${s.nextGame.winChance || 50}%`;
       document.getElementById('sabres-if-win').textContent = `Win: ${s.nextGame.ifWin}%`;
       document.getElementById('sabres-if-loss').textContent = `Loss: ${s.nextGame.ifLoss}%`;
+
+      const sWinChanceEl = document.getElementById('sabres-win-chance');
+      if (s.nextGame.statusState === 'in' || s.nextGame.statusState === 'post') {
+        const sProb = calculateLiveNhlWinChance(s.nextGame.bufScore, s.nextGame.oppScore, s.nextGame.statusDetail, s.nextGame.winChance || 52);
+        if (sWinChanceEl) {
+          sWinChanceEl.textContent = `${sProb}%`;
+          if (sProb >= 60) sWinChanceEl.style.color = '#34d399';
+          else if (sProb >= 40) sWinChanceEl.style.color = '#fbbf24';
+          else sWinChanceEl.style.color = '#f87171';
+        }
+      } else {
+        if (sWinChanceEl) {
+          sWinChanceEl.textContent = `${s.nextGame.winChance || 50}%`;
+          sWinChanceEl.style.color = '#34d399';
+        }
+      }
 
       const sLeverage = s.nextGame.leverage || (s.nextGame.ifWin - s.nextGame.ifLoss);
       document.getElementById('sabres-leverage').textContent = `±${sLeverage}%`;

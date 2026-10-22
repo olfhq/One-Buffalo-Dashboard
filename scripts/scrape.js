@@ -28,6 +28,83 @@ function parseCellPct(rawText) {
   return isNaN(val) ? 0 : Math.min(100, Math.round(val));
 }
 
+function calculateLiveNhlWinChance(bufScore, oppScore, statusDetail, preGameProb = 52) {
+  const buf = parseInt(bufScore) || 0;
+  const opp = parseInt(oppScore) || 0;
+  const diff = buf - opp;
+  const detail = (statusDetail || '').toLowerCase();
+
+  if (detail.includes('final')) {
+    if (diff > 0) return 100;
+    if (diff < 0) return 0;
+    return 50;
+  }
+
+  let minsRemaining = 60;
+  if (detail.includes('ot') || detail.includes('overtime') || detail.includes('so') || detail.includes('shootout')) {
+    minsRemaining = 2.0;
+  } else if (detail.includes('3') || detail.includes('3rd')) {
+    const match = detail.match(/(\d+):(\d+)/);
+    minsRemaining = match ? Math.max(0.2, 20 - (parseInt(match[1]) + parseInt(match[2]) / 60)) : 10;
+  } else if (detail.includes('2') || detail.includes('2nd')) {
+    const match = detail.match(/(\d+):(\d+)/);
+    minsRemaining = match ? Math.max(20.2, 40 - (parseInt(match[1]) + parseInt(match[2]) / 60)) : 30;
+  } else if (detail.includes('1') || detail.includes('1st')) {
+    const match = detail.match(/(\d+):(\d+)/);
+    minsRemaining = match ? Math.max(40.2, 60 - (parseInt(match[1]) + parseInt(match[2]) / 60)) : 50;
+  }
+
+  if (diff === 0 && minsRemaining <= 1.0) return 50;
+
+  const frac = Math.max(0.005, minsRemaining / 60);
+  const p0 = Math.min(0.95, Math.max(0.05, (preGameProb || 52) / 100));
+  const baselineLogit = Math.log(p0 / (1 - p0));
+  const sigma = Math.sqrt(0.12 * minsRemaining + 0.25);
+  const z = (baselineLogit * frac * 0.5) + (diff * 1.55 / sigma);
+  const prob = 1 / (1 + Math.exp(-z));
+
+  return Math.min(99, Math.max(1, Math.round(prob * 100)));
+}
+
+function calculateLiveNflWinChance(bufScore, oppScore, statusDetail, preGameProb = 60) {
+  const buf = parseInt(bufScore) || 0;
+  const opp = parseInt(oppScore) || 0;
+  const diff = buf - opp;
+  const detail = (statusDetail || '').toLowerCase();
+
+  if (detail.includes('final')) {
+    if (diff > 0) return 100;
+    if (diff < 0) return 0;
+    return 50;
+  }
+
+  let minsRemaining = 60;
+  if (detail.includes('ot') || detail.includes('overtime')) {
+    minsRemaining = 5.0;
+  } else if (detail.includes('4') || detail.includes('4th')) {
+    const match = detail.match(/(\d+):(\d+)/);
+    minsRemaining = match ? Math.max(0.2, parseInt(match[1]) + parseInt(match[2]) / 60) : 7.5;
+  } else if (detail.includes('3') || detail.includes('3rd')) {
+    const match = detail.match(/(\d+):(\d+)/);
+    minsRemaining = match ? Math.max(15.2, 15 + parseInt(match[1]) + parseInt(match[2]) / 60) : 22.5;
+  } else if (detail.includes('2') || detail.includes('2nd') || detail.includes('half')) {
+    minsRemaining = 30;
+  } else if (detail.includes('1') || detail.includes('1st')) {
+    minsRemaining = 45;
+  }
+
+  if (diff === 0 && minsRemaining <= 1.0) return 50;
+
+  const frac = Math.max(0.005, minsRemaining / 60);
+  const p0 = Math.min(0.95, Math.max(0.05, (preGameProb || 60) / 100));
+  const baselineLogit = Math.log(p0 / (1 - p0));
+  const sigma = Math.max(1.5, 13.5 * Math.sqrt(frac));
+  const z = (baselineLogit * frac * 0.4) + (diff * 1.6 / sigma);
+  const prob = 1 / (1 + Math.exp(-z));
+
+  return Math.min(99, Math.max(1, Math.round(prob * 100)));
+}
+
 // Scrape dynamic Bills Playoff Leverage (If Win / If Lose / Swing) from PlayoffStatus.com
 async function fetchBillsLeverage(oppShortName, billsCurrentPlayoffPct) {
   const base = billsCurrentPlayoffPct || 79;
@@ -1030,23 +1107,22 @@ async function fetchNextGameSchedule() {
           if (oppStats.w + oppStats.l > 0) { oppWins = oppStats.w; oppLosses = oppStats.l; }
         }
 
+        const billsCompStatus = comp.status?.type?.state || 'pre';
+        const billsStatusDetail = comp.status?.type?.shortDetail || `${dateStr} • ${timeStr} ET`;
+        const billsBufScore = bufComp?.score !== undefined ? String(bufComp.score) : '';
+        const billsOppScore = oppComp?.score !== undefined ? String(oppComp.score) : '';
+
         let winChance = 60;
         if (comp.predictor?.homeTeam) {
           winChance = Math.round(isHome ? comp.predictor.homeTeam.gameProjection : (100 - comp.predictor.homeTeam.gameProjection));
+        } else if (billsCompStatus === 'in' || billsCompStatus === 'post') {
+          winChance = calculateLiveNflWinChance(billsBufScore, billsOppScore, billsStatusDetail, isHome ? 64 : 56);
         } else {
           const bufPct = bufWins / (bufWins + bufLosses || 1);
           const oppPct = oppWins / (oppWins + oppLosses || 1);
           const homeBonus = isHome ? 0.04 : -0.04;
           winChance = Math.min(88, Math.max(30, Math.round(((bufPct / (bufPct + oppPct || 1)) + homeBonus) * 100)));
         }
-
-        const bufDisplay = bufRecord ? `Bills (${bufRecord})` : 'Bills';
-        const oppDisplay = oppRecord ? `${oppName} (${oppRecord})` : oppName;
-
-        const billsCompStatus = comp.status?.type?.state || 'pre';
-        const billsStatusDetail = comp.status?.type?.shortDetail || `${dateStr} • ${timeStr} ET`;
-        const billsBufScore = bufComp?.score !== undefined ? String(bufComp.score) : '';
-        const billsOppScore = oppComp?.score !== undefined ? String(oppComp.score) : '';
 
         billsSchedule.opponent = `${isHome ? 'vs.' : '@'} ${oppName}`;
         billsSchedule.oppShortName = oppName;
@@ -1153,13 +1229,18 @@ async function fetchNextGameSchedule() {
         const periodType = nextGame.periodDescriptor?.periodType || 'REG';
         const statusDetail = isLive ? (periodType === 'OT' ? 'Overtime' : `Period ${periodNum}`) : (isPost ? (periodType === 'OT' ? 'Final/OT' : 'Final') : `${dateStr} • ${timeStr} ET`);
 
+        let sabresWinProb = isHome ? 52 : 46;
+        if (isLive || isPost) {
+          sabresWinProb = calculateLiveNhlWinChance(bufScore, oppScore, statusDetail, isHome ? 52 : 46);
+        }
+
         sabresSchedule = {
           ...sabresSchedule,
           opponent: `${isHome ? 'vs.' : '@'} ${oppName}`,
           oppShortName: oppName,
           gameTime: `${dateStr} • ${timeStr} ET`,
           isoTime: nextGame.startTimeUTC,
-          winChance: isHome ? 52 : 46,
+          winChance: sabresWinProb,
           matchupRecords: `${bufInfo} vs. ${oppInfo}`,
           statusState,
           statusDetail,

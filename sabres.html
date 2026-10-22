@@ -1206,11 +1206,62 @@
     let currentSabresNextGame = null;
     let currentSlateFilter = 'all';
 
+    function calculateLiveNhlWinChance(bufScore, oppScore, statusDetail, preGameProb = 52) {
+      const buf = parseInt(bufScore) || 0;
+      const opp = parseInt(oppScore) || 0;
+      const diff = buf - opp;
+      const detail = (statusDetail || '').toLowerCase();
+
+      if (detail.includes('final')) {
+        if (diff > 0) return 100;
+        if (diff < 0) return 0;
+        return 50;
+      }
+
+      let minsRemaining = 60;
+      if (detail.includes('ot') || detail.includes('overtime') || detail.includes('so') || detail.includes('shootout')) {
+        minsRemaining = 2.0;
+      } else if (detail.includes('3') || detail.includes('3rd')) {
+        const match = detail.match(/(\d+):(\d+)/);
+        minsRemaining = match ? Math.max(0.2, 20 - (parseInt(match[1]) + parseInt(match[2]) / 60)) : 10;
+      } else if (detail.includes('2') || detail.includes('2nd')) {
+        const match = detail.match(/(\d+):(\d+)/);
+        minsRemaining = match ? Math.max(20.2, 40 - (parseInt(match[1]) + parseInt(match[2]) / 60)) : 30;
+      } else if (detail.includes('1') || detail.includes('1st')) {
+        const match = detail.match(/(\d+):(\d+)/);
+        minsRemaining = match ? Math.max(40.2, 60 - (parseInt(match[1]) + parseInt(match[2]) / 60)) : 50;
+      }
+
+      if (diff === 0 && minsRemaining <= 1.0) return 50;
+
+      const frac = Math.max(0.005, minsRemaining / 60);
+      const p0 = Math.min(0.95, Math.max(0.05, (preGameProb || 52) / 100));
+      const baselineLogit = Math.log(p0 / (1 - p0));
+      const sigma = Math.sqrt(0.12 * minsRemaining + 0.25);
+      const z = (baselineLogit * frac * 0.5) + (diff * 1.55 / sigma);
+      const prob = 1 / (1 + Math.exp(-z));
+
+      return Math.min(99, Math.max(1, Math.round(prob * 100)));
+    }
+
     function updateSabresLiveUI(liveData) {
       if (!liveData) return;
       const { state, detail, bufScore, oppScore, oppName, records } = liveData;
       const isLive = state === 'in';
       const isPost = state === 'post';
+
+      // Update Game Win Chance live
+      const winChanceEl = document.getElementById('sabres-win-chance');
+      const baseProb = currentSabresNextGame?.winChance || 52;
+      const liveWinChance = (isLive || isPost)
+        ? calculateLiveNhlWinChance(bufScore, oppScore, detail, baseProb)
+        : baseProb;
+      if (winChanceEl) {
+        winChanceEl.textContent = `${liveWinChance}%`;
+        if (liveWinChance >= 60) winChanceEl.style.color = '#34d399';
+        else if (liveWinChance >= 40) winChanceEl.style.color = '#fbbf24';
+        else winChanceEl.style.color = '#f87171';
+      }
 
       // 1. Radar Live Banner (Tab 1)
       const radarBanner = document.getElementById('sabres-radar-live-banner');
@@ -3954,6 +4005,7 @@
       statusEl.textContent = `Updated: ${dateStr}`;
 
       const s = data.sabres;
+      currentSabresNextGame = s.nextGame;
       document.getElementById('sabres-playoff-pct').textContent = `${s.makePlayoffs}%`;
       document.getElementById('sabres-div-pct').textContent = `${s.winDivision}%`;
       document.getElementById('sabres-wildcard-pct').textContent = `${s.wildcard}%`;
