@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-22T09:12:09.832Z",
+  "updatedAt": "2026-10-22T10:00:25.059Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
   "bills": {
     "team": "Buffalo Bills",
@@ -899,8 +899,8 @@
   },
   "sabres": {
     "team": "Buffalo Sabres",
-    "makePlayoffs": 42,
-    "winDivision": 28,
+    "makePlayoffs": 38,
+    "winDivision": 24,
     "wildcard": 14,
     "tragicNumber": "91 PTS",
     "clinchAlert": {
@@ -1014,7 +1014,7 @@
     "divisionRadar": [
       {
         "team": "Bruins",
-        "pct": 65
+        "pct": 67
       },
       {
         "team": "Lightning",
@@ -1022,25 +1022,25 @@
       },
       {
         "team": "Senators",
-        "pct": 59
+        "pct": 63
       },
       {
         "team": "Sabres",
-        "pct": 42
+        "pct": 38
       }
     ],
     "seedDistribution": [
       {
         "seed": "Div 1",
-        "pct": 6
+        "pct": 4
       },
       {
         "seed": "Div 2",
-        "pct": 10
+        "pct": 9
       },
       {
         "seed": "Div 3",
-        "pct": 12
+        "pct": 11
       },
       {
         "seed": "Wildcard 1",
