@@ -53,9 +53,14 @@ One-Buffalo-Dashboard/
 ├── CNAME                      # Custom domain configuration (onebuffalotracker.fyi)
 ├── scripts/
 │   └── scrape.js              # Node.js scraper pipeline & fallback synchronizer
+├── test/
+│   ├── audit_deep.js          # Efficiency, injury, and matchup data assertions
+│   ├── test_out_of_town_cards.js # NFL & NHL rooting card rendering suite
+│   ├── audit_stats.js         # Monte Carlo probability & inlined fallback validator
+│   └── audit_full_codebase.js # Structural link, CSS brace, and static text audit
 └── .github/
     └── workflows/
-        └── update.yml         # GitHub Actions workflow for automated scraping
+        └── update.yml         # GitHub Actions workflow for automated scraping & tests
 ```
 
 ---
@@ -66,7 +71,8 @@ The data pipeline runs via `scripts/scrape.js`:
 1. **PlayoffStatus.com**: Scrapes Monte Carlo simulation odds, division races, and seed distributions.
 2. **ESPN Public APIs**: Fetches schedules, team efficiency stats, venues, weather, networks, announcer crews, and injury reports.
 3. **Automated Fallback Synchronization**: Whenever `data.json` is updated, `scripts/scrape.js` automatically syncs the embedded `FALLBACK_DATA` blocks inside `index.html`, `bills.html`, and `sabres.html`.
-4. **Triggering**: Automated via `cron-job.org` calling GitHub Actions' `workflow_dispatch` endpoint around critical post-game windows.
+4. **Triggering**: Automated via GitHub Actions scheduled cron (every 6 hours) plus `cron-job.org` calling GitHub Actions' `workflow_dispatch` endpoint around critical post-game windows.
+5. **Quality Gate**: Every pipeline execution runs `npm test` to validate data schema and card rendering before committing changes.
 
 ---
 

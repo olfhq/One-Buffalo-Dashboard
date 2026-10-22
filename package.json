@@ -5,7 +5,7 @@
   "main": "scripts/scrape.js",
   "scripts": {
     "scrape": "node scripts/scrape.js",
-    "test": "node scratch/audit_deep.js && node scratch/test_out_of_town_cards.js"
+    "test": "node test/audit_deep.js && node test/test_out_of_town_cards.js && node test/audit_stats.js && node test/audit_full_codebase.js"
   },
   "keywords": [
     "buffalo-bills",
