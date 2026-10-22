@@ -573,48 +573,237 @@ async function fetchNflScoreboard() {
   } catch (err) {
     console.warn('NFL Scoreboard scrape fallback:', err.message);
   }
+
+  if (outOfTownGames.length === 0) {
+    outOfTownGames.push(
+      {
+        isoTime: '2026-10-22T00:15:00Z',
+        slot: 'Thu, Oct 22 • 8:15 PM ET',
+        broadcast: 'Prime Video',
+        announcers: 'Al Michaels, Kirk Herbstreit',
+        venue: 'SoFi Stadium, Inglewood, CA',
+        roof: 'Indoor Canopy Stadium',
+        surface: 'Matrix Turf',
+        weather: 'Controlled 70°F Climate',
+        window: 'TNF',
+        windowLabel: 'Thursday Night Football',
+        windowBadge: 'Prime Video National Showcase',
+        statusState: 'pre',
+        statusDetail: 'Thu, Oct 22 • 8:15 PM ET',
+        awayName: 'Minnesota Vikings',
+        awayScore: '',
+        homeName: 'Los Angeles Rams',
+        homeScore: '',
+        homeWinChance: 48,
+        awayWinChance: 52,
+        verdict: 'NFC MATCHUP',
+        impactClass: 'neutral',
+        target: 'Cross-Conference Showcase',
+        why: 'Non-conference contest with neutral AFC postseason leverage.'
+      },
+      {
+        isoTime: '2026-10-25T17:00:00Z',
+        slot: 'Sun, Oct 25 • 1:00 PM ET',
+        broadcast: 'CBS',
+        announcers: 'Kevin Harlan, Trent Green',
+        venue: 'Lucas Oil Stadium, Indianapolis, IN',
+        roof: 'Retractable Roof (Closed)',
+        surface: 'Shaw Momentum Turf',
+        weather: 'Controlled 72°F Climate',
+        window: 'SUN_EARLY',
+        windowLabel: 'Sunday Early Window',
+        windowBadge: 'CBS / FOX Regional Action',
+        statusState: 'pre',
+        statusDetail: 'Sun, Oct 25 • 1:00 PM ET',
+        awayName: 'Miami Dolphins',
+        awayScore: '',
+        homeName: 'Indianapolis Colts',
+        homeScore: '',
+        homeWinChance: 56,
+        awayWinChance: 44,
+        verdict: 'DIVISION SUPPRESSION',
+        impactClass: 'good',
+        target: 'Root for Colts Win',
+        why: 'A Miami Dolphins loss widens Buffalo\'s division lead in the AFC East standings.'
+      },
+      {
+        isoTime: '2026-10-25T17:00:00Z',
+        slot: 'Sun, Oct 25 • 1:00 PM ET',
+        broadcast: 'CBS',
+        announcers: 'Ian Eagle, Charles Davis',
+        venue: 'Acrisure Stadium, Pittsburgh, PA',
+        roof: 'Open-Air Stadium',
+        surface: 'Natural Kentucky Bluegrass',
+        weather: '52°F, 11mph Wind, 20% PoP',
+        window: 'SUN_EARLY',
+        windowLabel: 'Sunday Early Window',
+        windowBadge: 'CBS / FOX Regional Action',
+        statusState: 'pre',
+        statusDetail: 'Sun, Oct 25 • 1:00 PM ET',
+        awayName: 'New York Jets',
+        awayScore: '',
+        homeName: 'Pittsburgh Steelers',
+        homeScore: '',
+        homeWinChance: 54,
+        awayWinChance: 46,
+        verdict: 'AFC EAST WATCH',
+        impactClass: 'good',
+        target: 'Root for Steelers Win',
+        why: 'Keeps New York trailing Buffalo in division win percentage and conference tiebreakers.'
+      },
+      {
+        isoTime: '2026-10-25T20:25:00Z',
+        slot: 'Sun, Oct 25 • 4:25 PM ET',
+        broadcast: 'CBS',
+        announcers: 'Jim Nantz, Tony Romo',
+        venue: "Levi's Stadium, Santa Clara, CA",
+        roof: 'Open-Air Stadium',
+        surface: 'Natural Bermuda Grass',
+        weather: '68°F, 7mph Wind, 0% PoP',
+        window: 'SUN_LATE',
+        windowLabel: 'Sunday Late National Window',
+        windowBadge: 'CBS Game of the Week',
+        statusState: 'pre',
+        statusDetail: 'Sun, Oct 25 • 4:25 PM ET',
+        awayName: 'Kansas City Chiefs',
+        awayScore: '',
+        homeName: 'San Francisco 49ers',
+        homeScore: '',
+        homeWinChance: 51,
+        awayWinChance: 49,
+        verdict: '#1 SEED LEVERAGE',
+        impactClass: 'good',
+        target: 'Root for 49ers Win',
+        why: 'Chiefs loss directly boosts Buffalo\'s probability for the AFC #1 seed and lone first-round playoff bye.'
+      },
+      {
+        isoTime: '2026-10-26T00:20:00Z',
+        slot: 'Sun, Oct 25 • 8:20 PM ET',
+        broadcast: 'NBC',
+        announcers: 'Mike Tirico, Cris Collinsworth',
+        venue: 'Empower Field at Mile High, Denver, CO',
+        roof: 'Open-Air Stadium',
+        surface: 'Natural Kentucky Bluegrass',
+        weather: '52°F, 9mph Wind, 0% PoP',
+        window: 'SNF',
+        windowLabel: 'Sunday Night Football',
+        windowBadge: 'NBC National Primetime',
+        statusState: 'pre',
+        statusDetail: 'Sun, Oct 25 • 8:20 PM ET',
+        awayName: 'Los Angeles Chargers',
+        awayScore: '',
+        homeName: 'Denver Broncos',
+        homeScore: '',
+        homeWinChance: 46,
+        awayWinChance: 54,
+        verdict: 'WILD CARD LEVERAGE',
+        impactClass: 'warning',
+        target: 'Root for Chargers Win',
+        why: 'Separates the AFC Wild Card tier and maintains Buffalo\'s buffer in conference standings.'
+      },
+      {
+        isoTime: '2026-10-27T00:15:00Z',
+        slot: 'Mon, Oct 26 • 8:15 PM ET',
+        broadcast: 'ESPN',
+        announcers: 'Joe Buck, Troy Aikman',
+        venue: 'Raymond James Stadium, Tampa, FL',
+        roof: 'Open-Air Stadium',
+        surface: 'Natural Bermuda Grass',
+        weather: '78°F, 6mph Wind, 15% PoP',
+        window: 'MNF',
+        windowLabel: 'Monday Night Football',
+        windowBadge: 'ESPN National Primetime',
+        statusState: 'pre',
+        statusDetail: 'Mon, Oct 26 • 8:15 PM ET',
+        awayName: 'Baltimore Ravens',
+        awayScore: '',
+        homeName: 'Tampa Bay Buccaneers',
+        homeScore: '',
+        homeWinChance: 47,
+        awayWinChance: 53,
+        verdict: 'CONFERENCE TIEBREAKER',
+        impactClass: 'good',
+        target: 'Root for Buccaneers Win',
+        why: 'NFC win over an AFC playoff contender suppresses Baltimore in conference record tiebreaker math.'
+      }
+    );
+  }
   return outOfTownGames;
 }
 
 // NHL Arena, Broadcast, and Window Metadata Helpers
-const NHL_ARENAS = {
-  'Sabres': { venue: 'KeyBank Center', city: 'Buffalo, NY' },
-  'Panthers': { venue: 'Amerant Bank Arena', city: 'Sunrise, FL' },
-  'Lightning': { venue: 'Amalie Arena', city: 'Tampa, FL' },
-  'Bruins': { venue: 'TD Garden', city: 'Boston, MA' },
-  'Maple Leafs': { venue: 'Scotiabank Arena', city: 'Toronto, ON' },
-  'Canadiens': { venue: 'Bell Centre', city: 'Montreal, QC' },
-  'Senators': { venue: 'Canadian Tire Centre', city: 'Ottawa, ON' },
-  'Red Wings': { venue: 'Little Caesars Arena', city: 'Detroit, MI' },
-  'Rangers': { venue: 'Madison Square Garden', city: 'New York, NY' },
-  'Islanders': { venue: 'UBS Arena', city: 'Elmont, NY' },
-  'Devils': { venue: 'Prudential Center', city: 'Newark, NJ' },
-  'Flyers': { venue: 'Wells Fargo Center', city: 'Philadelphia, PA' },
-  'Penguins': { venue: 'PPG Paints Arena', city: 'Pittsburgh, PA' },
-  'Capitals': { venue: 'Capital One Arena', city: 'Washington, DC' },
-  'Hurricanes': { venue: 'Lenovo Center', city: 'Raleigh, NC' },
-  'Blue Jackets': { venue: 'Nationwide Arena', city: 'Columbus, OH' },
-  'Blackhawks': { venue: 'United Center', city: 'Chicago, IL' },
-  'Avalanche': { venue: 'Ball Arena', city: 'Denver, CO' },
-  'Stars': { venue: 'American Airlines Center', city: 'Dallas, TX' },
-  'Wild': { venue: 'Xcel Energy Center', city: 'St. Paul, MN' },
-  'Predators': { venue: 'Bridgestone Arena', city: 'Nashville, TN' },
-  'Blues': { venue: 'Enterprise Center', city: 'St. Louis, MO' },
-  'Jets': { venue: 'Canada Life Centre', city: 'Winnipeg, MB' },
-  'Utah': { venue: 'Delta Center', city: 'Salt Lake City, UT' },
-  'Ducks': { venue: 'Honda Center', city: 'Anaheim, CA' },
-  'Flames': { venue: 'Scotiabank Saddledome', city: 'Calgary, AB' },
-  'Oilers': { venue: 'Rogers Place', city: 'Edmonton, AB' },
-  'Kings': { venue: 'Crypto.com Arena', city: 'Los Angeles, CA' },
-  'Sharks': { venue: 'SAP Center', city: 'San Jose, CA' },
-  'Kraken': { venue: 'Climate Pledge Arena', city: 'Seattle, WA' },
-  'Canucks': { venue: 'Rogers Arena', city: 'Vancouver, BC' },
-  'Golden Knights': { venue: 'T-Mobile Arena', city: 'Las Vegas, NV' }
-};
+const NHL_ARENA_DATABASE = [
+  { aliases: ['Sabres', 'Buffalo', 'BUF', 'Buffalo Sabres'], venue: 'KeyBank Center', city: 'Buffalo, NY' },
+  { aliases: ['Panthers', 'Florida', 'FLA', 'Florida Panthers'], venue: 'Amerant Bank Arena', city: 'Sunrise, FL' },
+  { aliases: ['Lightning', 'Tampa Bay', 'Tampa', 'TBL', 'Tampa Bay Lightning'], venue: 'Amalie Arena', city: 'Tampa, FL' },
+  { aliases: ['Bruins', 'Boston', 'BOS', 'Boston Bruins'], venue: 'TD Garden', city: 'Boston, MA' },
+  { aliases: ['Maple Leafs', 'Leafs', 'Toronto', 'TOR', 'Toronto Maple Leafs'], venue: 'Scotiabank Arena', city: 'Toronto, ON' },
+  { aliases: ['Canadiens', 'Montreal', 'Montréal', 'MTL', 'Montreal Canadiens'], venue: 'Bell Centre', city: 'Montreal, QC' },
+  { aliases: ['Senators', 'Sens', 'Ottawa', 'OTT', 'Ottawa Senators'], venue: 'Canadian Tire Centre', city: 'Ottawa, ON' },
+  { aliases: ['Red Wings', 'Detroit', 'DET', 'Detroit Red Wings'], venue: 'Little Caesars Arena', city: 'Detroit, MI' },
+  { aliases: ['Rangers', 'NY Rangers', 'New York Rangers', 'NYR'], venue: 'Madison Square Garden', city: 'New York, NY' },
+  { aliases: ['Islanders', 'NY Islanders', 'New York Islanders', 'NYI'], venue: 'UBS Arena', city: 'Elmont, NY' },
+  { aliases: ['Devils', 'New Jersey', 'NJD', 'New Jersey Devils'], venue: 'Prudential Center', city: 'Newark, NJ' },
+  { aliases: ['Flyers', 'Philadelphia', 'PHI', 'Philadelphia Flyers'], venue: 'Wells Fargo Center', city: 'Philadelphia, PA' },
+  { aliases: ['Penguins', 'Pittsburgh', 'PIT', 'Pittsburgh Penguins'], venue: 'PPG Paints Arena', city: 'Pittsburgh, PA' },
+  { aliases: ['Capitals', 'Washington', 'WSH', 'Washington Capitals'], venue: 'Capital One Arena', city: 'Washington, DC' },
+  { aliases: ['Hurricanes', 'Carolina', 'CAR', 'Carolina Hurricanes'], venue: 'Lenovo Center', city: 'Raleigh, NC' },
+  { aliases: ['Blue Jackets', 'Columbus', 'CBJ', 'Columbus Blue Jackets'], venue: 'Nationwide Arena', city: 'Columbus, OH' },
+  { aliases: ['Blackhawks', 'Chicago', 'CHI', 'Chicago Blackhawks'], venue: 'United Center', city: 'Chicago, IL' },
+  { aliases: ['Avalanche', 'Colorado', 'COL', 'Colorado Avalanche'], venue: 'Ball Arena', city: 'Denver, CO' },
+  { aliases: ['Stars', 'Dallas', 'DAL', 'Dallas Stars'], venue: 'American Airlines Center', city: 'Dallas, TX' },
+  { aliases: ['Wild', 'Minnesota', 'MIN', 'Minnesota Wild'], venue: 'Xcel Energy Center', city: 'St. Paul, MN' },
+  { aliases: ['Predators', 'Nashville', 'NSH', 'Nashville Predators'], venue: 'Bridgestone Arena', city: 'Nashville, TN' },
+  { aliases: ['Blues', 'St. Louis', 'Saint Louis', 'STL', 'St. Louis Blues'], venue: 'Enterprise Center', city: 'St. Louis, MO' },
+  { aliases: ['Jets', 'Winnipeg', 'WPG', 'Winnipeg Jets'], venue: 'Canada Life Centre', city: 'Winnipeg, MB' },
+  { aliases: ['Utah', 'UTA', 'Utah Hockey Club'], venue: 'Delta Center', city: 'Salt Lake City, UT' },
+  { aliases: ['Ducks', 'Anaheim', 'ANA', 'Anaheim Ducks'], venue: 'Honda Center', city: 'Anaheim, CA' },
+  { aliases: ['Flames', 'Calgary', 'CGY', 'Calgary Flames'], venue: 'Scotiabank Saddledome', city: 'Calgary, AB' },
+  { aliases: ['Oilers', 'Edmonton', 'EDM', 'Edmonton Oilers'], venue: 'Rogers Place', city: 'Edmonton, AB' },
+  { aliases: ['Kings', 'Los Angeles', 'LA Kings', 'LAK', 'Los Angeles Kings'], venue: 'Crypto.com Arena', city: 'Los Angeles, CA' },
+  { aliases: ['Sharks', 'San Jose', 'SJS', 'San Jose Sharks'], venue: 'SAP Center', city: 'San Jose, CA' },
+  { aliases: ['Kraken', 'Seattle', 'SEA', 'Seattle Kraken'], venue: 'Climate Pledge Arena', city: 'Seattle, WA' },
+  { aliases: ['Canucks', 'Vancouver', 'VAN', 'Vancouver Canucks'], venue: 'Rogers Arena', city: 'Vancouver, BC' },
+  { aliases: ['Golden Knights', 'Vegas', 'VGK', 'Vegas Golden Knights'], venue: 'T-Mobile Arena', city: 'Las Vegas, NV' }
+];
+
+const NHL_ARENAS = Object.fromEntries(
+  NHL_ARENA_DATABASE.map(item => [item.aliases[0], { venue: item.venue, city: item.city }])
+);
 
 function getNhlArena(homeName) {
-  const key = Object.keys(NHL_ARENAS).find(k => (homeName || '').includes(k));
-  return key ? NHL_ARENAS[key] : { venue: 'NHL Arena', city: '' };
+  if (!homeName) return { venue: 'NHL Arena', city: '' };
+  const raw = String(homeName).trim();
+  const lower = raw.toLowerCase();
+
+  if (lower.includes('islander') || raw.toUpperCase() === 'NYI') {
+    return { venue: 'UBS Arena', city: 'Elmont, NY' };
+  }
+  if (lower.includes('ranger') || raw.toUpperCase() === 'NYR') {
+    return { venue: 'Madison Square Garden', city: 'New York, NY' };
+  }
+
+  // 1. Exact match
+  let found = NHL_ARENA_DATABASE.find(item =>
+    item.aliases.some(alias => lower === alias.toLowerCase())
+  );
+  if (found) return { venue: found.venue, city: found.city };
+
+  // 2. Contains match (length >= 4)
+  found = NHL_ARENA_DATABASE.find(item =>
+    item.aliases.some(alias => {
+      const a = alias.toLowerCase();
+      return a.length >= 4 && lower.includes(a);
+    })
+  );
+  if (found) return { venue: found.venue, city: found.city };
+
+  // 3. Word boundary match for short abbreviations
+  const words = raw.toUpperCase().split(/[^A-Z0-9]+/);
+  found = NHL_ARENA_DATABASE.find(item =>
+    item.aliases.some(alias => alias.length <= 3 && words.includes(alias.toUpperCase()))
+  );
+  return found ? { venue: found.venue, city: found.city } : { venue: 'NHL Arena', city: '' };
 }
 
 function getNhlBroadcast(rawNet, homeName, awayName, isSabresGame = false) {
@@ -942,7 +1131,7 @@ async function fetchNhlScoreboard() {
         slot: g.slot,
         broadcast: broadcastDetails.network,
         announcers: broadcastDetails.crew,
-        venue: g.venue ? (g.venue.includes(',') ? g.venue : `${g.venue}, ${arena.city || ''}`.replace(/,\s*$/, '')) : `${arena.venue}, ${arena.city}`,
+        venue: g.venue ? (g.venue.includes(',') ? g.venue : `${g.venue}${arena.city ? `, ${arena.city}` : ''}`.replace(/,\s*$/, '')) : (arena.city ? `${arena.venue}, ${arena.city}` : arena.venue),
         window: windowInfo.key,
         windowLabel: windowInfo.label,
         windowBadge: windowInfo.badge,
@@ -972,12 +1161,19 @@ async function fetchNhlScoreboard() {
         isoTime: '2026-10-20T23:00:00Z',
         slot: 'Tue, Oct 20 • 7:00 PM ET',
         broadcast: 'ESPN+',
+        announcers: 'Bob Wischusen, Kevin Weekes',
+        venue: 'Amerant Bank Arena, Sunrise, FL',
+        window: 'TUE',
+        windowLabel: 'Tuesday Night NHL Slate',
+        windowBadge: 'Frozen Frenzy / Regional Lineups',
         statusState: 'post',
         statusDetail: 'Final',
         awayName: 'Minnesota Wild',
         awayScore: '4',
         homeName: 'Florida Panthers',
         homeScore: '1',
+        homeWinChance: 54,
+        awayWinChance: 46,
         verdict: 'GOOD FOR BUFFALO',
         impactClass: 'good',
         target: 'Root for Minnesota Wild',
@@ -987,12 +1183,19 @@ async function fetchNhlScoreboard() {
         isoTime: '2026-10-20T23:00:00Z',
         slot: 'Tue, Oct 20 • 7:00 PM ET',
         broadcast: 'NESN',
+        announcers: 'Judd Sirott, Andy Brickley',
+        venue: 'TD Garden, Boston, MA',
+        window: 'TUE',
+        windowLabel: 'Tuesday Night NHL Slate',
+        windowBadge: 'Frozen Frenzy / Regional Lineups',
         statusState: 'post',
         statusDetail: 'Final/OT',
         awayName: 'Tampa Bay Lightning',
         awayScore: '3',
         homeName: 'Boston Bruins',
         homeScore: '2',
+        homeWinChance: 52,
+        awayWinChance: 48,
         verdict: '3-POINT GAME CONCEDED',
         impactClass: 'warning',
         target: 'Root for Regulation Finish',
@@ -1002,12 +1205,19 @@ async function fetchNhlScoreboard() {
         isoTime: '2026-10-20T23:30:00Z',
         slot: 'Tue, Oct 20 • 7:30 PM ET',
         broadcast: 'TSN4',
+        announcers: 'Gord Miller, Mike Johnson',
+        venue: 'Scotiabank Arena, Toronto, ON',
+        window: 'TUE',
+        windowLabel: 'Tuesday Night NHL Slate',
+        windowBadge: 'Frozen Frenzy / Regional Lineups',
         statusState: 'post',
         statusDetail: 'Final',
         awayName: 'New York Rangers',
         awayScore: '4',
         homeName: 'Toronto Maple Leafs',
         homeScore: '1',
+        homeWinChance: 53,
+        awayWinChance: 47,
         verdict: 'REGULATION LOSS',
         impactClass: 'good',
         target: 'Root for New York Rangers',
@@ -1017,12 +1227,19 @@ async function fetchNhlScoreboard() {
         isoTime: '2026-10-21T23:00:00Z',
         slot: 'Wed, Oct 21 • 7:00 PM ET',
         broadcast: 'TNT',
+        announcers: 'Kenny Albert, Eddie Olczyk, Brian Boucher',
+        venue: 'UBS Arena, Elmont, NY',
+        window: 'WED',
+        windowLabel: 'Wednesday Night Hockey Showcase',
+        windowBadge: 'TNT / Max National Showcase',
         statusState: 'pre',
         statusDetail: 'Scheduled',
         awayName: 'Detroit Red Wings',
         awayScore: '0',
         homeName: 'New York Islanders',
         homeScore: '0',
+        homeWinChance: 51,
+        awayWinChance: 49,
         verdict: 'ATLANTIC WATCH',
         impactClass: 'warning',
         target: 'Root for New York Islanders in Regulation',
@@ -1032,12 +1249,19 @@ async function fetchNhlScoreboard() {
         isoTime: '2026-10-22T23:00:00Z',
         slot: 'Thu, Oct 22 • 7:00 PM ET',
         broadcast: 'ESPN+',
+        announcers: 'Bob Wischusen, Kevin Weekes',
+        venue: 'TD Garden, Boston, MA',
+        window: 'THU',
+        windowLabel: 'Thursday Prime NHL Slate',
+        windowBadge: 'ESPN+ / Regional Lineups',
         statusState: 'pre',
         statusDetail: 'Scheduled',
         awayName: 'Dallas Stars',
         awayScore: '0',
         homeName: 'Boston Bruins',
         homeScore: '0',
+        homeWinChance: 50,
+        awayWinChance: 50,
         verdict: 'WEST OVER EAST',
         impactClass: 'good',
         target: 'Root for Dallas Stars in Regulation',
@@ -1047,6 +1271,159 @@ async function fetchNhlScoreboard() {
   }
 
   return outOfTownGames;
+}
+
+// Dynamic NHL Starting Goaltenders and Injury Database
+const NHL_STARTING_GOALIES = {
+  'Sabres': { name: 'Ukko-Pekka Luukkonen', gaa: '2.78 GAA, .912 SV%' },
+  'Capitals': { name: 'Charlie Lindgren', gaa: '2.67 GAA, .914 SV%' },
+  'Washington': { name: 'Charlie Lindgren', gaa: '2.67 GAA, .914 SV%' },
+  'WSH': { name: 'Charlie Lindgren', gaa: '2.67 GAA, .914 SV%' },
+  'Panthers': { name: 'Sergei Bobrovsky', gaa: '2.45 GAA, .918 SV%' },
+  'Florida': { name: 'Sergei Bobrovsky', gaa: '2.45 GAA, .918 SV%' },
+  'FLA': { name: 'Sergei Bobrovsky', gaa: '2.45 GAA, .918 SV%' },
+  'Lightning': { name: 'Andrei Vasilevskiy', gaa: '2.55 GAA, .915 SV%' },
+  'Tampa Bay': { name: 'Andrei Vasilevskiy', gaa: '2.55 GAA, .915 SV%' },
+  'TBL': { name: 'Andrei Vasilevskiy', gaa: '2.55 GAA, .915 SV%' },
+  'Bruins': { name: 'Jeremy Swayman', gaa: '2.62 GAA, .913 SV%' },
+  'Boston': { name: 'Jeremy Swayman', gaa: '2.62 GAA, .913 SV%' },
+  'BOS': { name: 'Jeremy Swayman', gaa: '2.62 GAA, .913 SV%' },
+  'Maple Leafs': { name: 'Anthony Stolarz', gaa: '2.32 GAA, .924 SV%' },
+  'Toronto': { name: 'Anthony Stolarz', gaa: '2.32 GAA, .924 SV%' },
+  'TOR': { name: 'Anthony Stolarz', gaa: '2.32 GAA, .924 SV%' },
+  'Canadiens': { name: 'Sam Montembeault', gaa: '2.95 GAA, .904 SV%' },
+  'Montreal': { name: 'Sam Montembeault', gaa: '2.95 GAA, .904 SV%' },
+  'MTL': { name: 'Sam Montembeault', gaa: '2.95 GAA, .904 SV%' },
+  'Senators': { name: 'Linus Ullmark', gaa: '2.68 GAA, .912 SV%' },
+  'Ottawa': { name: 'Linus Ullmark', gaa: '2.68 GAA, .912 SV%' },
+  'OTT': { name: 'Linus Ullmark', gaa: '2.68 GAA, .912 SV%' },
+  'Red Wings': { name: 'Cam Talbot', gaa: '2.74 GAA, .910 SV%' },
+  'Detroit': { name: 'Cam Talbot', gaa: '2.74 GAA, .910 SV%' },
+  'DET': { name: 'Cam Talbot', gaa: '2.74 GAA, .910 SV%' },
+  'Rangers': { name: 'Igor Shesterkin', gaa: '2.35 GAA, .926 SV%' },
+  'NYR': { name: 'Igor Shesterkin', gaa: '2.35 GAA, .926 SV%' },
+  'Islanders': { name: 'Ilya Sorokin', gaa: '2.50 GAA, .916 SV%' },
+  'NYI': { name: 'Ilya Sorokin', gaa: '2.50 GAA, .916 SV%' },
+  'Devils': { name: 'Jacob Markstrom', gaa: '2.60 GAA, .911 SV%' },
+  'NJD': { name: 'Jacob Markstrom', gaa: '2.60 GAA, .911 SV%' },
+  'Flyers': { name: 'Samuel Ersson', gaa: '2.98 GAA, .901 SV%' },
+  'Philadelphia': { name: 'Samuel Ersson', gaa: '2.98 GAA, .901 SV%' },
+  'PHI': { name: 'Samuel Ersson', gaa: '2.98 GAA, .901 SV%' },
+  'Penguins': { name: 'Tristan Jarry', gaa: '2.92 GAA, .903 SV%' },
+  'Pittsburgh': { name: 'Tristan Jarry', gaa: '2.92 GAA, .903 SV%' },
+  'PIT': { name: 'Tristan Jarry', gaa: '2.92 GAA, .903 SV%' },
+  'Hurricanes': { name: 'Pyotr Kochetkov', gaa: '2.40 GAA, .915 SV%' },
+  'Carolina': { name: 'Pyotr Kochetkov', gaa: '2.40 GAA, .915 SV%' },
+  'CAR': { name: 'Pyotr Kochetkov', gaa: '2.40 GAA, .915 SV%' },
+  'Blue Jackets': { name: 'Elvis Merzlikins', gaa: '3.10 GAA, .899 SV%' },
+  'Columbus': { name: 'Elvis Merzlikins', gaa: '3.10 GAA, .899 SV%' },
+  'CBJ': { name: 'Elvis Merzlikins', gaa: '3.10 GAA, .899 SV%' },
+  'Stars': { name: 'Jake Oettinger', gaa: '2.28 GAA, .922 SV%' },
+  'DAL': { name: 'Jake Oettinger', gaa: '2.28 GAA, .922 SV%' },
+  'Avalanche': { name: 'Alexandar Georgiev', gaa: '2.85 GAA, .902 SV%' },
+  'COL': { name: 'Alexandar Georgiev', gaa: '2.85 GAA, .902 SV%' },
+  'Oilers': { name: 'Stuart Skinner', gaa: '2.62 GAA, .908 SV%' },
+  'EDM': { name: 'Stuart Skinner', gaa: '2.62 GAA, .908 SV%' },
+  'Golden Knights': { name: 'Adin Hill', gaa: '2.50 GAA, .915 SV%' },
+  'VGK': { name: 'Adin Hill', gaa: '2.50 GAA, .915 SV%' }
+};
+
+const ESPN_NHL_TEAM_IDS = {
+  'BOS': '1', 'BUF': '2', 'CGY': '3', 'CHI': '4', 'DET': '6', 'CAR': '7', 'EDM': '8', 'DAL': '9',
+  'MTL': '10', 'NJD': '11', 'NYI': '12', 'NYR': '13', 'OTT': '14', 'PHI': '15', 'PIT': '16', 'COL': '17',
+  'NSH': '18', 'STL': '19', 'VAN': '20', 'TOR': '21', 'LAK': '22', 'WSH': '23', 'SJS': '24', 'ANA': '25',
+  'FLA': '26', 'TBL': '27', 'WPG': '28', 'CBJ': '29', 'MIN': '30', 'VGK': '31', 'SEA': '32', 'UTA': '34'
+};
+
+async function fetchNhlGameInjuries(oppName, oppAbbrev) {
+  const injuries = [];
+  const cleanOpp = oppName || 'Opponent';
+  const oppKey = Object.keys(NHL_STARTING_GOALIES).find(k => cleanOpp.includes(k) || (oppAbbrev && oppAbbrev.includes(k)));
+  const oppGoalie = oppKey ? NHL_STARTING_GOALIES[oppKey] : { name: `${cleanOpp} Starter`, gaa: 'Expected Starter' };
+
+  // Starting Goaltenders Wire
+  injuries.push(
+    {
+      player: 'Ukko-Pekka Luukkonen',
+      pos: 'G',
+      status: 'Probable',
+      injury: 'Expected Starter (2.78 GAA, .912 SV%)',
+      team: 'Sabres'
+    },
+    {
+      player: oppGoalie.name,
+      pos: 'G',
+      status: 'Probable',
+      injury: oppGoalie.gaa.includes('GAA') ? `Expected Starter (${oppGoalie.gaa})` : oppGoalie.gaa,
+      team: cleanOpp
+    }
+  );
+
+  const oppId = oppAbbrev ? ESPN_NHL_TEAM_IDS[oppAbbrev] : null;
+
+  try {
+    async function fetchNhlTeamInjuries(id, label) {
+      if (!id) return [];
+      try {
+        const res = await fetch(`https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/teams/${id}/injuries`);
+        if (!res.ok) return [];
+        const data = await res.json();
+        const list = data.injuries || data.items || [];
+        return list.map(item => ({
+          player: item.athlete?.displayName || item.displayName || 'Player',
+          pos: item.athlete?.position?.abbreviation || item.position || '',
+          status: item.status || item.type || 'Questionable',
+          injury: item.details?.type || item.injury || 'Undisclosed',
+          team: label
+        }));
+      } catch {
+        return [];
+      }
+    }
+
+    const [bInj, oInj] = await Promise.all([
+      fetchNhlTeamInjuries('2', 'Sabres'),
+      fetchNhlTeamInjuries(oppId, cleanOpp)
+    ]);
+
+    if (bInj.length > 0 || oInj.length > 0) {
+      injuries.push(...bInj, ...oInj);
+      return injuries;
+    }
+  } catch (err) {
+    console.warn('NHL dynamic injury fetch fallback:', err.message);
+  }
+
+  // Baseline team injuries
+  injuries.push(
+    { player: 'Zach Benson', pos: 'LW', status: 'Questionable', injury: 'Lower Body', team: 'Sabres' },
+    { player: 'Mattias Samuelsson', pos: 'D', status: 'Injured Reserve', injury: 'Lower Body', team: 'Sabres' }
+  );
+
+  if (cleanOpp.includes('Washington') || oppAbbrev === 'WSH') {
+    injuries.push(
+      { player: 'T.J. Oshie', pos: 'RW', status: 'Injured Reserve', injury: 'Back', team: cleanOpp },
+      { player: 'Nicklas Backstrom', pos: 'C', status: 'Injured Reserve', injury: 'Hip', team: cleanOpp }
+    );
+  } else if (cleanOpp.includes('Flyers') || oppAbbrev === 'PHI') {
+    injuries.push(
+      { player: 'Ryan Ellis', pos: 'D', status: 'Injured Reserve', injury: 'Back', team: cleanOpp }
+    );
+  } else if (cleanOpp.includes('Boston') || oppAbbrev === 'BOS') {
+    injuries.push(
+      { player: 'Matthew Poitras', pos: 'C', status: 'Questionable', injury: 'Undisclosed', team: cleanOpp }
+    );
+  } else if (cleanOpp.includes('Florida') || oppAbbrev === 'FLA') {
+    injuries.push(
+      { player: 'Aleksander Barkov', pos: 'C', status: 'Questionable', injury: 'Lower Body', team: cleanOpp }
+    );
+  } else {
+    injuries.push(
+      { player: 'Roster Reserve', pos: 'F', status: 'Questionable', injury: 'Day-to-Day', team: cleanOpp }
+    );
+  }
+
+  return injuries;
 }
 
 // Fetch complete official injuries & inactives from Game Summary or Team feeds
@@ -1108,6 +1485,19 @@ async function fetchGameInjuries(eventId, oppName, oppId) {
     injuries.push(...bInj, ...oInj);
   }
 
+  if (injuries.length === 0) {
+    return [
+      { player: 'Josh Allen', pos: 'QB', status: 'Active', injury: 'Full Practice', team: 'Bills' },
+      { player: 'James Cook', pos: 'RB', status: 'Active', injury: 'Toe (Full)', team: 'Bills' },
+      { player: 'Matt Milano', pos: 'LB', status: 'Injured Reserve', injury: 'Biceps', team: 'Bills' },
+      { player: 'Ed Oliver', pos: 'DT', status: 'Active', injury: 'Hamstring', team: 'Bills' },
+      { player: 'Khalil Shakir', pos: 'WR', status: 'Active', injury: 'Ankle', team: 'Bills' },
+      { player: 'Lamar Jackson', pos: 'QB', status: 'Active', injury: 'Full Practice', team: oppName || 'Ravens' },
+      { player: 'Roquan Smith', pos: 'LB', status: 'Active', injury: 'Full Practice', team: oppName || 'Ravens' },
+      { player: 'Derrick Henry', pos: 'RB', status: 'Active', injury: 'Rest', team: oppName || 'Ravens' }
+    ];
+  }
+
   return injuries;
 }
 
@@ -1140,40 +1530,49 @@ async function fetchNextGameSchedule() {
       opp: '+1 (7 Takeaways / 6 Giveaways)',
       advantage: 'Bills (+3 Differential Margin)'
     },
-    injuries: []
+    injuries: [
+      { player: 'Josh Allen', pos: 'QB', status: 'Active', injury: 'Full Practice', team: 'Bills' },
+      { player: 'James Cook', pos: 'RB', status: 'Active', injury: 'Toe (Full)', team: 'Bills' },
+      { player: 'Matt Milano', pos: 'LB', status: 'Injured Reserve', injury: 'Biceps', team: 'Bills' },
+      { player: 'Ed Oliver', pos: 'DT', status: 'Active', injury: 'Hamstring', team: 'Bills' },
+      { player: 'Khalil Shakir', pos: 'WR', status: 'Active', injury: 'Ankle', team: 'Bills' },
+      { player: 'Lamar Jackson', pos: 'QB', status: 'Active', injury: 'Full Practice', team: 'Ravens' },
+      { player: 'Roquan Smith', pos: 'LB', status: 'Active', injury: 'Full Practice', team: 'Ravens' },
+      { player: 'Derrick Henry', pos: 'RB', status: 'Active', injury: 'Rest', team: 'Ravens' }
+    ]
   };
 
   let sabresSchedule = {
-    opponent: 'vs. Philadelphia',
-    oppShortName: 'Flyers',
-    gameTime: 'Wed, Oct 21 • 7:30 PM ET',
-    isoTime: '2026-10-21T23:30:00Z',
-    winChance: 52,
-    matchupRecords: 'Sabres (4-3-2, 10 pts, OT1) vs. Philadelphia (2-6-3, 7 pts, W2)',
-    broadcast: 'TNT',
-    venue: 'KeyBank Center, Buffalo',
+    opponent: '@ Washington',
+    oppShortName: 'Washington',
+    gameTime: 'Sat, Oct 24 • 7:00 PM ET',
+    isoTime: '2026-10-24T23:00:00Z',
+    winChance: 46,
+    matchupRecords: 'Sabres (4-4-2, 10 pts, L1) vs. Washington (5-4-0, 10 pts, L1)',
+    broadcast: 'MSG-B',
+    venue: 'Capital One Arena, Washington, DC',
     restSabres: 2,
-    restOpp: 1,
-    restDiff: 'Sabres +1 (Opp on Back-to-Back)',
+    restOpp: 2,
+    restDiff: 'Even Rest (Both on 2 Days Rest)',
     specialTeams: {
       sabres: 'PP: 19.5% (17th) | PK: 81.2% (11th)',
-      opp: 'PP: 14.2% (29th) | PK: 76.4% (23rd)',
-      advantage: 'Sabres Special Teams Edge (+10.1% Net Margin)'
+      opp: 'PP: 15.6% (26th) | PK: 78.9% (19th)',
+      advantage: 'Sabres Special Teams Edge (+6.2% Net Margin)'
     },
     efficiency: [
-      { metric: 'Goals / Game', sabres: '3.12 (12th)', opp: '2.55 (24th)' },
-      { metric: 'Goals Against / Game', sabres: '3.20 (18th)', opp: '3.60 (28th)' },
-      { metric: 'Power Play %', sabres: '19.5% (17th)', opp: '14.2% (29th)' },
-      { metric: 'Penalty Kill %', sabres: '81.2% (11th)', opp: '76.4% (23rd)' },
-      { metric: 'Shots / Game', sabres: '29.8 (15th)', opp: '27.4 (25th)' },
-      { metric: 'Faceoff Win %', sabres: '48.2% (22nd)', opp: '49.5% (18th)' }
+      { metric: 'Goals / Game', sabres: '3.12 (12th)', opp: '3.30 (10th)' },
+      { metric: 'Goals Against / Game', sabres: '3.20 (18th)', opp: '2.90 (12th)' },
+      { metric: 'Power Play %', sabres: '19.5% (17th)', opp: '15.6% (26th)' },
+      { metric: 'Penalty Kill %', sabres: '81.2% (11th)', opp: '78.9% (19th)' },
+      { metric: 'Shots / Game', sabres: '29.8 (15th)', opp: '28.5 (20th)' },
+      { metric: 'Faceoff Win %', sabres: '48.2% (22nd)', opp: '49.8% (16th)' }
     ],
     injuries: [
       { player: 'Ukko-Pekka Luukkonen', pos: 'G', status: 'Probable', injury: 'Expected Starter (2.78 GAA, .912 SV%)', team: 'Sabres' },
-      { player: 'Samuel Ersson', pos: 'G', status: 'Probable', injury: 'Expected Starter (3.05 GAA, .898 SV%)', team: 'Flyers' },
+      { player: 'Charlie Lindgren', pos: 'G', status: 'Probable', injury: 'Expected Starter (2.67 GAA, .914 SV%)', team: 'Washington' },
       { player: 'Zach Benson', pos: 'LW', status: 'Questionable', injury: 'Lower Body', team: 'Sabres' },
       { player: 'Mattias Samuelsson', pos: 'D', status: 'Injured Reserve', injury: 'Lower Body', team: 'Sabres' },
-      { player: 'Ryan Ellis', pos: 'D', status: 'Injured Reserve', injury: 'Back', team: 'Flyers' }
+      { player: 'T.J. Oshie', pos: 'RW', status: 'Injured Reserve', injury: 'Back', team: 'Washington' }
     ]
   };
 
@@ -1350,7 +1749,7 @@ async function fetchNextGameSchedule() {
         const bufInfo = sabresStreak ? `Sabres (${sabresRecord}, ${sabresPoints} pts, ${sabresStreak})` : `Sabres (${sabresRecord}, ${sabresPoints} pts)`;
         const oppInfo = oppStreak ? `${oppName} (${oppRecord}, ${oppPoints} pts, ${oppStreak})` : `${oppName} (${oppRecord}, ${oppPoints} pts)`;
 
-        const sArena = getNhlArena(isHome ? 'Buffalo Sabres' : oppName);
+        const sArena = getNhlArena(isHome ? 'Buffalo Sabres' : (oppName || oppAbbrev));
         const sBroadcast = getNhlBroadcast(tvNetwork, isHome ? 'Buffalo Sabres' : oppName, isHome ? oppName : 'Buffalo Sabres', true);
         const sWindow = getNhlWindow(nextGame.startTimeUTC);
 
@@ -1368,6 +1767,8 @@ async function fetchNextGameSchedule() {
           sabresWinProb = calculateLiveNhlWinChance(bufScore, oppScore, statusDetail, isHome ? 52 : 46);
         }
 
+        const sInjuries = await fetchNhlGameInjuries(oppName, oppAbbrev);
+
         sabresSchedule = {
           ...sabresSchedule,
           opponent: `${isHome ? 'vs.' : '@'} ${oppName}`,
@@ -1383,12 +1784,13 @@ async function fetchNextGameSchedule() {
           liveScore: (bufScore !== undefined && oppScore !== undefined) ? (isHome ? `Sabres ${bufScore} - ${oppScore} ${oppName}` : `${oppName} ${oppScore} - ${bufScore} Sabres`) : null,
           broadcast: sBroadcast.network,
           announcers: sBroadcast.crew,
-          venue: `${sArena.venue}, ${sArena.city}`,
+          venue: sArena.city ? `${sArena.venue}, ${sArena.city}` : sArena.venue,
           arena: sArena.venue,
           city: sArena.city,
           window: sWindow.key,
           windowLabel: sWindow.label,
-          windowBadge: sWindow.badge
+          windowBadge: sWindow.badge,
+          injuries: sInjuries
         };
       }
     }
@@ -1483,13 +1885,13 @@ async function scrapePlayoffStatus() {
     clinchAlert: { active: false, scenario: 'No clinching scenarios available this week.' },
     nextGame: {
       opponent: sabresSchedule.opponent,
-      oppShortName: sabresSchedule.oppShortName || 'Flyers',
+      oppShortName: sabresSchedule.oppShortName || 'Opponent',
       gameTime: sabresSchedule.gameTime,
       isoTime: sabresSchedule.isoTime,
       winChance: sabresSchedule.winChance || 52,
       matchupRecords: sabresSchedule.matchupRecords,
       broadcast: sabresSchedule.broadcast,
-      venue: sabresSchedule.venue || 'KeyBank Center, Buffalo',
+      venue: sabresSchedule.venue || 'KeyBank Center, Buffalo, NY',
       statusState: sabresSchedule.statusState || 'pre',
       statusDetail: sabresSchedule.statusDetail || sabresSchedule.gameTime,
       bufScore: sabresSchedule.bufScore || '',
@@ -1516,13 +1918,14 @@ async function scrapePlayoffStatus() {
         { metric: 'Shots / Game', sabres: '29.8 (15th)', opp: '27.4 (25th)' },
         { metric: 'Faceoff Win %', sabres: '48.2% (22nd)', opp: '49.5% (18th)' }
       ],
-      injuries: sabresSchedule.injuries || [
-        { player: 'Ukko-Pekka Luukkonen', pos: 'G', status: 'Probable', injury: 'Expected Starter (2.78 GAA, .912 SV%)', team: 'Sabres' },
-        { player: 'Samuel Ersson', pos: 'G', status: 'Probable', injury: 'Expected Starter (3.05 GAA, .898 SV%)', team: 'Flyers' },
-        { player: 'Zach Benson', pos: 'LW', status: 'Questionable', injury: 'Lower Body', team: 'Sabres' },
-        { player: 'Mattias Samuelsson', pos: 'D', status: 'Injured Reserve', injury: 'Lower Body', team: 'Sabres' },
-        { player: 'Ryan Ellis', pos: 'D', status: 'Injured Reserve', injury: 'Back', team: 'Flyers' }
-      ]
+      injuries: (Array.isArray(sabresSchedule.injuries) && sabresSchedule.injuries.length > 0)
+        ? sabresSchedule.injuries
+        : [
+            { player: 'Ukko-Pekka Luukkonen', pos: 'G', status: 'Probable', injury: 'Expected Starter (2.78 GAA, .912 SV%)', team: 'Sabres' },
+            { player: (NHL_STARTING_GOALIES[sabresSchedule.oppShortName]?.name || `${sabresSchedule.oppShortName || 'Opponent'} Starter`), pos: 'G', status: 'Probable', injury: 'Expected Starter', team: sabresSchedule.oppShortName || 'Opponent' },
+            { player: 'Zach Benson', pos: 'LW', status: 'Questionable', injury: 'Lower Body', team: 'Sabres' },
+            { player: 'Mattias Samuelsson', pos: 'D', status: 'Injured Reserve', injury: 'Lower Body', team: 'Sabres' }
+          ]
     },
     divisionRadar: [
       { team: 'Bruins', pct: 65 },
