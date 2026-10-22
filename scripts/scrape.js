@@ -1,5 +1,6 @@
 // scripts/scrape.js
 const fs = require('fs');
+const path = require('path');
 const cheerio = require('cheerio');
 
 async function fetchHtml(url) {
@@ -1575,8 +1576,39 @@ async function scrapePlayoffStatus() {
     sabres: sabresData
   };
 
-  fs.writeFileSync('./data.json', JSON.stringify(finalPayload, null, 2), 'utf-8');
+  const payloadStr = JSON.stringify(finalPayload, null, 2);
+  const rootDir = path.resolve(__dirname, '..');
+  fs.writeFileSync(path.join(rootDir, 'data.json'), payloadStr, 'utf-8');
   console.log('data.json successfully written with live 1st Round Matchup table.');
+
+  syncHtmlFallbacks(payloadStr);
+}
+
+function syncHtmlFallbacks(dataStr) {
+  const rootDir = path.resolve(__dirname, '..');
+  const files = ['index.html', 'bills.html', 'sabres.html'].map(f => path.join(rootDir, f));
+  const startMarker = 'const FALLBACK_DATA =';
+  const endMarker = 'try {';
+
+  files.forEach(filePath => {
+    if (!fs.existsSync(filePath)) return;
+    try {
+      const content = fs.readFileSync(filePath, 'utf8');
+      const startIdx = content.indexOf(startMarker);
+      const endIdx = content.indexOf(endMarker, startIdx);
+
+      if (startIdx !== -1 && endIdx !== -1) {
+        const newFallback = `const FALLBACK_DATA = ${dataStr};\n\n      `;
+        const updatedContent = content.slice(0, startIdx) + newFallback + content.slice(endIdx);
+        fs.writeFileSync(filePath, updatedContent, 'utf8');
+        console.log(`Synced FALLBACK_DATA in ${path.basename(filePath)}`);
+      } else {
+        console.warn(`Could not find FALLBACK_DATA markers in ${path.basename(filePath)}`);
+      }
+    } catch (err) {
+      console.warn(`Failed to sync fallback in ${path.basename(filePath)}:`, err.message);
+    }
+  });
 }
 
 scrapePlayoffStatus();

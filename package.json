@@ -1,4 +1,22 @@
 {
+  "name": "one-buffalo-tracker",
+  "version": "1.0.0",
+  "description": "Live postseason probabilities, matchup intelligence, and rooting guides for the Buffalo Bills and Buffalo Sabres.",
+  "main": "scripts/scrape.js",
+  "scripts": {
+    "scrape": "node scripts/scrape.js",
+    "test": "node scratch/audit_deep.js && node scratch/test_out_of_town_cards.js"
+  },
+  "keywords": [
+    "buffalo-bills",
+    "buffalo-sabres",
+    "playoff-odds",
+    "nfl",
+    "nhl",
+    "tracker"
+  ],
+  "author": "olfhq",
+  "license": "MIT",
   "dependencies": {
     "cheerio": "^1.2.0"
   }

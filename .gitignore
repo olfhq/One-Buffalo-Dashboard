@@ -1,1 +1,13 @@
+# Dependencies
 node_modules/
+package-lock.json
+
+# Scratch & Temporary Testing Scripts
+scratch/
+
+# Operating System & IDE
+.DS_Store
+Thumbs.db
+*.log
+.vscode/
+.idea/

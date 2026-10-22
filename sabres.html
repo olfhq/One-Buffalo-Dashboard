@@ -29,6 +29,15 @@
     })(window, document, "clarity", "script", "z1eofksq8i");
   </script>
 
+  <!-- Service Worker Registration for Offline PWA -->
+  <script id="pwa-sw-register">
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(err => console.warn('SW registration failed:', err));
+      });
+    }
+  </script>
+
   <title>Buffalo Sabres Hub | One Buffalo Tracker</title>
   <style>
     :root {
@@ -1202,6 +1211,10 @@
       </div>
     </section>
   </main>
+
+  <footer style="text-align: center; padding: 2.5rem 1.5rem 2rem 1.5rem; max-width: 820px; margin: 0 auto; font-size: 0.72rem; color: var(--text-muted); line-height: 1.6; opacity: 0.75;">
+    <p>One Buffalo Tracker is an independent fan dashboard and is not affiliated with, endorsed by, or sponsored by Pegula Sports & Entertainment, the Buffalo Bills, the Buffalo Sabres, the NFL, or the NHL.</p>
+  </footer>
 
   <script>
     function switchTab(tabId) {
