@@ -567,8 +567,8 @@
           <div class="stat-label">Wildcard</div>
         </div>
         <div class="stat-box">
-          <div class="stat-val" id="sabres-tragic-num" style="font-size: 0.95rem; margin-top: 0.2rem; color: #fbbf24;">--</div>
-          <div class="stat-label">Target</div>
+          <div class="stat-val" id="sabres-tragic-num" style="color: #FCB514;">--</div>
+          <div class="stat-label">82-Gm Pace</div>
         </div>
       </div>
 
@@ -1761,7 +1761,7 @@
     "makePlayoffs": 42,
     "winDivision": 28,
     "wildcard": 14,
-    "tragicNumber": "Pace: 91 Pts (Target: 92)",
+    "tragicNumber": "91 PTS",
     "clinchAlert": {
       "active": false,
       "scenario": "No clinching scenarios available this week."
@@ -1943,10 +1943,10 @@
         "awayScore": "4",
         "homeName": "Montreal Canadiens",
         "homeScore": "3",
-        "verdict": "3-POINT GAME DANGER",
+        "verdict": "RIVAL STOLE OT POINT",
         "impactClass": "warning",
         "target": "Root for San Jose Sharks in Regulation",
-        "why": "Montreal Canadiens earned a loser point in overtime despite the loss."
+        "why": "San Jose Sharks won in overtime, but Montreal Canadiens salvaged an overtime point."
       },
       {
         "isoTime": "2026-10-20T23:00:00Z",
@@ -2063,10 +2063,10 @@
         "awayScore": "2",
         "homeName": "Dallas Stars",
         "homeScore": "3",
-        "verdict": "3-POINT GAME DANGER",
+        "verdict": "RIVAL STOLE OT POINT",
         "impactClass": "warning",
         "target": "Root for Dallas Stars in Regulation",
-        "why": "Boston Bruins earned a loser point in overtime despite the loss."
+        "why": "Dallas Stars won in overtime, but Boston Bruins salvaged an overtime point."
       },
       {
         "isoTime": "2026-10-21T01:00:00Z",
@@ -2103,10 +2103,10 @@
         "awayScore": "3",
         "homeName": "Seattle Kraken",
         "homeScore": "4",
-        "verdict": "3-POINT GAME DANGER",
+        "verdict": "RIVAL STOLE OT POINT",
         "impactClass": "warning",
         "target": "Root for Seattle Kraken in Regulation",
-        "why": "Detroit Red Wings earned a loser point in overtime despite the loss."
+        "why": "Seattle Kraken won in a shootout, but Detroit Red Wings salvaged an overtime point."
       },
       {
         "isoTime": "2026-10-21T02:00:00Z",
@@ -3125,7 +3125,9 @@
       document.getElementById('sabres-playoff-pct').textContent = `${s.makePlayoffs}%`;
       document.getElementById('sabres-div-pct').textContent = `${s.winDivision}%`;
       document.getElementById('sabres-wildcard-pct').textContent = `${s.wildcard}%`;
-      document.getElementById('sabres-tragic-num').textContent = s.tragicNumber || 'Cutoff: 92 Pts';
+      const rawTragic = s.tragicNumber || '91 PTS';
+      const cleanTragic = rawTragic.includes('Pace:') ? (rawTragic.match(/\d+/) ? `${rawTragic.match(/\d+/)[0]} PTS` : rawTragic) : rawTragic;
+      document.getElementById('sabres-tragic-num').textContent = cleanTragic;
 
       document.getElementById('sabres-game-time').textContent = s.nextGame.gameTime || '';
       document.getElementById('sabres-broadcast').textContent = s.nextGame.broadcast || 'MSG-B';

@@ -729,7 +729,7 @@ async function fetchNhlScoreboard() {
 
         if (statusState === 'post') {
           if (isOvertime) {
-            verdict = '3-POINT GAME DANGER';
+            verdict = '3-POINT GAME CONCEDED';
             impactClass = 'warning';
             why = `Overtime handed 3 total points to Atlantic rivals. Neither team walked away empty-handed.`;
           } else {
@@ -757,14 +757,22 @@ async function fetchNhlScoreboard() {
         why = `A regulation loss leaves ${rival} with 0 standings points in the Atlantic Division.`;
 
         if (statusState === 'post') {
+          const rivalScore = rival === awayName ? parseInt(awayScore) : parseInt(homeScore);
+          const oppScore = rival === awayName ? parseInt(homeScore) : parseInt(awayScore);
+          const rivalWon = rivalScore > oppScore;
+
           if (isOvertime) {
-            verdict = '3-POINT GAME DANGER';
-            impactClass = 'warning';
-            why = `${rival} earned a loser point in overtime despite the loss.`;
+            if (rivalWon) {
+              verdict = 'BAD: RIVAL OT WIN';
+              impactClass = 'bad';
+              why = `${rival} collected 2 standings points in overtime.`;
+            } else {
+              verdict = 'RIVAL STOLE OT POINT';
+              impactClass = 'warning';
+              why = `${opponent} won in overtime, but ${rival} salvaged a loser point.`;
+            }
           } else {
-            const rivalScore = rival === awayName ? parseInt(awayScore) : parseInt(homeScore);
-            const oppScore = rival === awayName ? parseInt(homeScore) : parseInt(awayScore);
-            if (oppScore > rivalScore) {
+            if (!rivalWon) {
               verdict = 'GOOD FOR BUFFALO';
               impactClass = 'good';
               why = `${opponent} handed ${rival} a regulation loss, keeping them at 0 points.`;
@@ -786,14 +794,22 @@ async function fetchNhlScoreboard() {
         why = `Suppresses Eastern Conference Wild Card contenders from stacking points.`;
 
         if (statusState === 'post') {
+          const rivalScore = metroRival === awayName ? parseInt(awayScore) : parseInt(homeScore);
+          const oppScore = metroRival === awayName ? parseInt(homeScore) : parseInt(awayScore);
+          const rivalWon = rivalScore > oppScore;
+
           if (isOvertime) {
-            verdict = '3-POINT GAME DANGER';
-            impactClass = 'warning';
-            why = `Overtime point awarded to Eastern Wild Card contender ${metroRival}.`;
+            if (rivalWon) {
+              verdict = 'RIVAL OT WIN';
+              impactClass = 'bad';
+              why = `${metroRival} picked up 2 points in overtime.`;
+            } else {
+              verdict = 'WILDCARD OT POINT';
+              impactClass = 'warning';
+              why = `${opponent} won in overtime, but Wild Card contender ${metroRival} salvaged a point.`;
+            }
           } else {
-            const rivalScore = metroRival === awayName ? parseInt(awayScore) : parseInt(homeScore);
-            const oppScore = metroRival === awayName ? parseInt(homeScore) : parseInt(awayScore);
-            if (oppScore > rivalScore) {
+            if (!rivalWon) {
               verdict = 'GOOD FOR BUFFALO';
               impactClass = 'good';
               why = `${metroRival} suffered a regulation loss, freezing their wildcard point total.`;
@@ -867,7 +883,7 @@ async function fetchNhlScoreboard() {
         awayScore: '3',
         homeName: 'Boston Bruins',
         homeScore: '2',
-        verdict: '3-POINT GAME DANGER',
+        verdict: '3-POINT GAME CONCEDED',
         impactClass: 'warning',
         target: 'Root for Regulation Finish',
         why: 'Overtime awarded 3 total points to Atlantic rivals. Boston earned a point despite the loss.'
@@ -1350,7 +1366,7 @@ async function scrapePlayoffStatus() {
     makePlayoffs: 42,
     winDivision: 28,
     wildcard: 14,
-    tragicNumber: sabresSchedule.tragicNumber || 'Pace: 91 Pts (Target: 92)',
+    tragicNumber: sabresSchedule.tragicNumber || '91 PTS',
     clinchAlert: { active: false, scenario: 'No clinching scenarios available this week.' },
     nextGame: {
       opponent: sabresSchedule.opponent,
