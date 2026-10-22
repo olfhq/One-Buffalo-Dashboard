@@ -469,55 +469,162 @@ function getNhlWindow(isoTime) {
   
   if (day === 'Wed') return { key: 'WED', label: 'Wednesday Night Hockey Showcase', badge: 'TNT / Max / National Slate', order: 1 };
   if (day === 'Thu') return { key: 'THU', label: 'Thursday Prime NHL Slate', badge: 'ESPN+ / RSN Lineups', order: 2 };
-  if (day === 'Sat') return { key: 'SAT', label: 'Hockey Night in Canada & Saturday National', badge: 'CBC / Sportsnet / NHL Network', order: 3 };
-  if (day === 'Sun') return { key: 'SUN', label: 'Sunday NHL Showcase Slate', badge: 'National & Matinee Window', order: 4 };
-  if (day === 'Fri') return { key: 'FRI', label: 'Friday Night NHL Matchups', badge: 'Regional & Streaming Lineup', order: 5 };
-  if (day === 'Tue') return { key: 'TUE', label: 'Tuesday Night NHL Slate', badge: 'Frozen Frenzy / Regional Lineups', order: 6 };
-  return { key: 'MON', label: 'Monday Night NHL Action', badge: 'Early Week Matchups', order: 7 };
+  if (day === 'Fri') return { key: 'FRI', label: 'Friday Night NHL Matchups', badge: 'Regional & Streaming Lineup', order: 3 };
+  if (day === 'Sat') return { key: 'SAT', label: 'Hockey Night in Canada & Saturday National', badge: 'CBC / Sportsnet / NHL Network', order: 4 };
+  if (day === 'Sun') return { key: 'SUN', label: 'Sunday NHL Showcase Slate', badge: 'National & Matinee Window', order: 5 };
+  if (day === 'Mon') return { key: 'MON', label: 'Monday Night NHL Action', badge: 'Early Week Matchups', order: 6 };
+  return { key: 'TUE', label: 'Tuesday Night NHL Slate', badge: 'Frozen Frenzy / Regional Lineups', order: 7 };
 }
 
-// Fetch live out-of-town NHL scoreboard and rooting leverage tags
+// Fetch full weekly out-of-town NHL scoreboard and rooting leverage tags
 async function fetchNhlScoreboard() {
   const outOfTownGames = [];
+  const rawGamesMap = new Map();
+
+  const atlanticPriority = [
+    'Florida Panthers', 'Tampa Bay Lightning', 'Boston Bruins', 'Toronto Maple Leafs',
+    'Ottawa Senators', 'Detroit Red Wings', 'Montreal Canadiens'
+  ];
+  const metroContenders = [
+    'Carolina Hurricanes', 'New Jersey Devils', 'New York Rangers', 'New York Islanders',
+    'Washington Capitals', 'Philadelphia Flyers', 'Pittsburgh Penguins', 'Columbus Blue Jackets'
+  ];
+
+  function normalizeName(name) {
+    if (!name) return '';
+    return name.normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+  }
+
   try {
-    const res = await fetch('https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard');
-    if (!res.ok) throw new Error(`NHL Scoreboard API returned ${res.status}`);
-    const data = await res.json();
-    const events = data.events || [];
+    const now = new Date();
+    // Look back 2 days to capture recently completed results for the current weekly cycle
+    const past = new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000);
+    const pastStr = past.toISOString().slice(0, 10);
 
-    const atlanticPriority = [
-      'Florida Panthers', 'Tampa Bay Lightning', 'Boston Bruins', 'Toronto Maple Leafs',
-      'Ottawa Senators', 'Detroit Red Wings', 'Montreal Canadiens'
-    ];
-    const metroContenders = [
-      'Carolina Hurricanes', 'New Jersey Devils', 'New York Rangers', 'New York Islanders',
-      'Washington Capitals', 'Philadelphia Flyers', 'Pittsburgh Penguins', 'Columbus Blue Jackets'
-    ];
+    const [nowRes, pastRes, espnRes] = await Promise.allSettled([
+      fetch('https://api-web.nhle.com/v1/schedule/now'),
+      fetch(`https://api-web.nhle.com/v1/schedule/${pastStr}`),
+      fetch('https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard')
+    ]);
 
-    for (const ev of events) {
-      const comp = ev.competitions?.[0];
-      if (!comp) continue;
+    function processNhlScheduleData(data) {
+      if (!data?.gameWeek) return;
+      for (const week of data.gameWeek) {
+        for (const g of (week.games || [])) {
+          const awayRaw = `${g.awayTeam?.placeName?.default || ''} ${g.awayTeam?.commonName?.default || ''}`.trim() || g.awayTeam?.abbrev;
+          const homeRaw = `${g.homeTeam?.placeName?.default || ''} ${g.homeTeam?.commonName?.default || ''}`.trim() || g.homeTeam?.abbrev;
+          const awayName = normalizeName(awayRaw);
+          const homeName = normalizeName(homeRaw);
 
-      const competitors = comp.competitors || [];
-      const home = competitors.find(c => c.homeAway === 'home');
-      const away = competitors.find(c => c.homeAway === 'away');
-      if (!home || !away) continue;
+          if (awayName.includes('Sabres') || homeName.includes('Sabres')) continue;
 
-      const homeName = home.team?.displayName || 'Home Team';
-      const awayName = away.team?.displayName || 'Away Team';
+          const gameDate = g.startTimeUTC ? g.startTimeUTC.slice(0, 10) : week.date;
+          const key = `${gameDate}_${g.awayTeam?.abbrev}_${g.homeTeam?.abbrev}`;
 
-      if (homeName.includes('Sabres') || awayName.includes('Sabres')) continue;
+          let statusState = 'pre';
+          let statusDetail = 'Scheduled';
+          const st = g.gameState;
+          if (st === 'FINAL' || st === 'OFF') {
+            statusState = 'post';
+            const isOT = g.periodDescriptor?.periodType === 'OT';
+            const isSO = g.periodDescriptor?.periodType === 'SO';
+            statusDetail = isSO ? 'Final/SO' : isOT ? 'Final/OT' : 'Final';
+          } else if (st === 'LIVE' || st === 'CRIT') {
+            statusState = 'in';
+            statusDetail = `Period ${g.periodDescriptor?.number || 1}`;
+          }
 
-      const homeScore = home.score || '0';
-      const awayScore = away.score || '0';
-      const statusState = comp.status?.type?.state;
-      const statusDetail = comp.status?.type?.shortDetail || 'Scheduled';
-      const broadcast = comp.broadcasts?.[0]?.names?.[0] || 'TV';
+          const tvNet = g.tvBroadcasts?.find(b => b.market === 'N' || b.countryCode === 'US')?.network ||
+                        g.tvBroadcasts?.[0]?.network || 'ESPN+';
 
-      const d = new Date(ev.date);
-      const slot = d.toLocaleDateString('en-US', { timeZone: 'America/New_York', weekday: 'short', month: 'short', day: 'numeric' }) +
-        ' • ' + d.toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour: 'numeric', minute: '2-digit', hour12: true }) + ' ET';
+          const d = new Date(g.startTimeUTC);
+          const slot = d.toLocaleDateString('en-US', { timeZone: 'America/New_York', weekday: 'short', month: 'short', day: 'numeric' }) +
+            ' • ' + d.toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour: 'numeric', minute: '2-digit', hour12: true }) + ' ET';
 
+          rawGamesMap.set(key, {
+            id: g.id,
+            isoTime: g.startTimeUTC,
+            slot,
+            awayName,
+            homeName,
+            awayScore: g.awayTeam?.score !== undefined ? String(g.awayTeam.score) : '',
+            homeScore: g.homeTeam?.score !== undefined ? String(g.homeTeam.score) : '',
+            statusState,
+            statusDetail,
+            broadcast: tvNet,
+            venue: g.venue?.default || ''
+          });
+        }
+      }
+    }
+
+    if (pastRes.status === 'fulfilled' && pastRes.value.ok) {
+      processNhlScheduleData(await pastRes.value.json());
+    }
+    if (nowRes.status === 'fulfilled' && nowRes.value.ok) {
+      processNhlScheduleData(await nowRes.value.json());
+    }
+
+    // Overlay real-time live ESPN status/scores for today's games
+    if (espnRes.status === 'fulfilled' && espnRes.value.ok) {
+      try {
+        const espnData = await espnRes.value.json();
+        for (const ev of (espnData.events || [])) {
+          const comp = ev.competitions?.[0];
+          if (!comp) continue;
+          const h = comp.competitors?.find(c => c.homeAway === 'home');
+          const a = comp.competitors?.find(c => c.homeAway === 'away');
+          if (!h || !a) continue;
+          const hName = normalizeName(h.team?.displayName);
+          const aName = normalizeName(a.team?.displayName);
+          if (hName.includes('Sabres') || aName.includes('Sabres')) continue;
+
+          let found = null;
+          for (const [k, g] of rawGamesMap.entries()) {
+            if ((g.homeName.includes(hName) || hName.includes(g.homeName)) &&
+                (g.awayName.includes(aName) || aName.includes(g.awayName))) {
+              found = g;
+              break;
+            }
+          }
+
+          const espnState = comp.status?.type?.state;
+          const espnDetail = comp.status?.type?.shortDetail || 'LIVE';
+          const espnBroadcast = comp.broadcasts?.[0]?.names?.[0];
+
+          if (found) {
+            found.statusState = espnState;
+            found.statusDetail = espnDetail;
+            if (h.score !== undefined) found.homeScore = String(h.score);
+            if (a.score !== undefined) found.awayScore = String(a.score);
+            if (espnBroadcast) found.broadcast = espnBroadcast;
+          } else {
+            const d = new Date(ev.date);
+            const slot = d.toLocaleDateString('en-US', { timeZone: 'America/New_York', weekday: 'short', month: 'short', day: 'numeric' }) +
+              ' • ' + d.toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour: 'numeric', minute: '2-digit', hour12: true }) + ' ET';
+            rawGamesMap.set(`espn_${ev.id}`, {
+              id: ev.id,
+              isoTime: ev.date,
+              slot,
+              awayName,
+              homeName: hName,
+              awayScore: a.score !== undefined ? String(a.score) : '',
+              homeScore: h.score !== undefined ? String(h.score) : '',
+              statusState: espnState,
+              statusDetail: espnDetail,
+              broadcast: espnBroadcast || 'TV',
+              venue: comp.venue?.fullName || ''
+            });
+          }
+        }
+      } catch (e) {
+        console.warn('ESPN scoreboard overlay fallback:', e.message);
+      }
+    }
+
+    // Calculate rooting verdicts and impact analysis for every matchup
+    for (const g of rawGamesMap.values()) {
+      const { awayName, homeName, awayScore, homeScore, statusState, statusDetail } = g;
       const isAwayAtlantic = atlanticPriority.includes(awayName);
       const isHomeAtlantic = atlanticPriority.includes(homeName);
       const isAwayMetro = metroContenders.includes(awayName);
@@ -621,15 +728,15 @@ async function fetchNhlScoreboard() {
       }
 
       const arena = getNhlArena(homeName);
-      const broadcastDetails = getNhlBroadcast(broadcast, homeName, awayName, false);
-      const windowInfo = getNhlWindow(ev.date);
+      const broadcastDetails = getNhlBroadcast(g.broadcast, homeName, awayName, false);
+      const windowInfo = getNhlWindow(g.isoTime);
 
       outOfTownGames.push({
-        isoTime: ev.date,
-        slot,
+        isoTime: g.isoTime,
+        slot: g.slot,
         broadcast: broadcastDetails.network,
         announcers: broadcastDetails.crew,
-        venue: `${arena.venue}, ${arena.city}`,
+        venue: g.venue ? (g.venue.includes(',') ? g.venue : `${g.venue}, ${arena.city || ''}`.replace(/,\s*$/, '')) : `${arena.venue}, ${arena.city}`,
         window: windowInfo.key,
         windowLabel: windowInfo.label,
         windowBadge: windowInfo.badge,
@@ -871,7 +978,7 @@ async function fetchNextGameSchedule() {
 
     if (schedRes.ok) {
       const data = await schedRes.json();
-      const nextGame = data.events?.find(e => e.competitions?.[0]?.status?.type?.state === 'pre');
+      const nextGame = data.events?.find(e => e.competitions?.[0]?.status?.type?.state === 'pre' || e.competitions?.[0]?.status?.type?.state === 'in');
       if (nextGame) {
         const comp = nextGame.competitions[0];
         const bufComp = comp.competitors.find(c => c.id === '2');
@@ -978,7 +1085,7 @@ async function fetchNextGameSchedule() {
     if (schedRes.ok) {
       const data = await schedRes.json();
       const now = new Date();
-      const nextGame = data.games?.find(g => new Date(g.startTimeUTC) > now && g.gameState !== 'FINAL');
+      const nextGame = data.games?.find(g => g.gameState === 'LIVE' || g.gameState === 'CRIT' || (g.gameState !== 'FINAL' && g.gameState !== 'OFF' && (new Date(g.startTimeUTC) > new Date(Date.now() - 4 * 3600 * 1000))));
       if (nextGame) {
         const isHome = nextGame.homeTeam.abbrev === 'BUF';
         const oppAbbrev = isHome ? nextGame.awayTeam.abbrev : nextGame.homeTeam.abbrev;
