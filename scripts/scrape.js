@@ -278,6 +278,91 @@ function getNflWindow(isoTime) {
   return { key: 'SPECIAL', label: `${day} Football Window`, badge: 'Marquee Broadcast', order: 7 };
 }
 
+
+function calculateNflOddsProb(comp) {
+  const odds = comp?.odds?.[0];
+  if (odds?.moneyline) {
+    const mlHome = parseFloat(odds.moneyline.home?.close?.odds || odds.moneyline.home?.open?.odds);
+    const mlAway = parseFloat(odds.moneyline.away?.close?.odds || odds.moneyline.away?.open?.odds);
+    if (!isNaN(mlHome) && !isNaN(mlAway)) {
+      const pH = mlHome < 0 ? (-mlHome) / (-mlHome + 100) : 100 / (mlHome + 100);
+      const pA = mlAway < 0 ? (-mlAway) / (-mlAway + 100) : 100 / (mlAway + 100);
+      const homeProb = Math.min(95, Math.max(5, Math.round((pH / (pH + pA)) * 100)));
+      return { homeWinChance: homeProb, awayWinChance: 100 - homeProb };
+    }
+  }
+
+  if (odds?.spread !== undefined && odds?.spread !== null) {
+    const spread = parseFloat(odds.spread);
+    if (!isNaN(spread)) {
+      const homeProb = Math.min(95, Math.max(5, Math.round((1 / (1 + Math.pow(10, spread / 14))) * 100)));
+      return { homeWinChance: homeProb, awayWinChance: 100 - homeProb };
+    }
+  }
+
+  if (comp?.predictor?.homeTeam?.gameProjection) {
+    const homeProj = parseFloat(comp.predictor.homeTeam.gameProjection);
+    if (!isNaN(homeProj)) {
+      const homeProb = Math.min(95, Math.max(5, Math.round(homeProj)));
+      return { homeWinChance: homeProb, awayWinChance: 100 - homeProb };
+    }
+  }
+
+  // Fallback to record-based estimation (Log5)
+  const homeComp = comp?.competitors?.find(c => c.homeAway === 'home');
+  const awayComp = comp?.competitors?.find(c => c.homeAway === 'away');
+  const homeRec = homeComp?.records?.find(r => r.type === 'total')?.summary;
+  const awayRec = awayComp?.records?.find(r => r.type === 'total')?.summary;
+
+  if (homeRec && awayRec) {
+    const [hW, hL] = homeRec.split('-').map(Number);
+    const [aW, aL] = awayRec.split('-').map(Number);
+    if (!isNaN(hW) && !isNaN(hL) && !isNaN(aW) && !isNaN(aL) && (hW + hL > 0) && (aW + aL > 0)) {
+      const pHome = (hW + 1) / (hW + hL + 2);
+      const pAway = (aW + 1) / (aW + aL + 2);
+      const log5 = (pHome - pHome * pAway) / (pHome + pAway - 2 * pHome * pAway);
+      const homeProb = Math.min(90, Math.max(10, Math.round((log5 + 0.04) * 100)));
+      return { homeWinChance: homeProb, awayWinChance: 100 - homeProb };
+    }
+  }
+
+  return { homeWinChance: 54, awayWinChance: 46 };
+}
+
+function calculateNhlOddsProb(homeName, awayName, standingsMap, comp) {
+  const odds = comp?.odds?.[0];
+  if (odds?.moneyline) {
+    const mlHome = parseFloat(odds.moneyline.home?.close?.odds || odds.moneyline.home?.open?.odds);
+    const mlAway = parseFloat(odds.moneyline.away?.close?.odds || odds.moneyline.away?.open?.odds);
+    if (!isNaN(mlHome) && !isNaN(mlAway)) {
+      const pH = mlHome < 0 ? (-mlHome) / (-mlHome + 100) : 100 / (mlHome + 100);
+      const pA = mlAway < 0 ? (-mlAway) / (-mlAway + 100) : 100 / (mlAway + 100);
+      const homeProb = Math.min(95, Math.max(5, Math.round((pH / (pH + pA)) * 100)));
+      return { homeWinChance: homeProb, awayWinChance: 100 - homeProb };
+    }
+  }
+
+  let homePct = standingsMap?.get(homeName);
+  let awayPct = standingsMap?.get(awayName);
+
+  if (homePct === undefined && standingsMap) {
+    for (const [key, val] of standingsMap.entries()) {
+      if (homeName.includes(key) || key.includes(homeName)) { homePct = val; break; }
+    }
+  }
+  if (awayPct === undefined && standingsMap) {
+    for (const [key, val] of standingsMap.entries()) {
+      if (awayName.includes(key) || key.includes(awayName)) { awayPct = val; break; }
+    }
+  }
+
+  const pH = Math.min(0.90, Math.max(0.10, homePct || 0.50));
+  const pA = Math.min(0.90, Math.max(0.10, awayPct || 0.50));
+  const log5 = (pH - pH * pA) / (pH + pA - 2 * pH * pA);
+  const homeProb = Math.min(88, Math.max(12, Math.round((log5 + 0.035) * 100)));
+  return { homeWinChance: homeProb, awayWinChance: 100 - homeProb };
+}
+
 // Fetch live out-of-town scoreboard and rooting leverage tags
 async function fetchNflScoreboard() {
   const outOfTownGames = [];
@@ -455,6 +540,8 @@ async function fetchNflScoreboard() {
       const broadcastDetails = getNflBroadcast(broadcast, homeName, awayName, ev.date);
       const windowInfo = getNflWindow(ev.date);
 
+      const nflOdds = calculateNflOddsProb(comp);
+
       outOfTownGames.push({
         isoTime: ev.date,
         slot,
@@ -473,6 +560,8 @@ async function fetchNflScoreboard() {
         awayScore,
         homeName,
         homeScore,
+        homeWinChance: nflOdds.homeWinChance,
+        awayWinChance: nflOdds.awayWinChance,
         verdict,
         impactClass,
         target,
@@ -583,11 +672,27 @@ async function fetchNhlScoreboard() {
     const past = new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000);
     const pastStr = past.toISOString().slice(0, 10);
 
-    const [nowRes, pastRes, espnRes] = await Promise.allSettled([
+    const [nowRes, pastRes, espnRes, standingsRes] = await Promise.allSettled([
       fetch('https://api-web.nhle.com/v1/schedule/now'),
       fetch(`https://api-web.nhle.com/v1/schedule/${pastStr}`),
-      fetch('https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard')
+      fetch('https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard'),
+      fetch('https://api-web.nhle.com/v1/standings/now')
     ]);
+
+    const standingsMap = new Map();
+    if (standingsRes.status === 'fulfilled' && standingsRes.value.ok) {
+      try {
+        const standingsData = await standingsRes.value.json();
+        (standingsData.standings || []).forEach(t => {
+          const ptPct = t.pointPctg || (t.points && t.gamesPlayed ? t.points / (t.gamesPlayed * 2) : 0.50);
+          if (t.teamName?.default) standingsMap.set(normalizeName(t.teamName.default), ptPct);
+          if (t.teamCommonName?.default) standingsMap.set(normalizeName(t.teamCommonName.default), ptPct);
+          if (t.teamAbbrev?.default) standingsMap.set(t.teamAbbrev.default, ptPct);
+        });
+      } catch (err) {
+        console.warn('NHL standings map build warning:', err.message);
+      }
+    }
 
     function processNhlScheduleData(data) {
       if (!data?.gameWeek) return;
@@ -677,6 +782,7 @@ async function fetchNhlScoreboard() {
           if (found) {
             found.statusState = espnState;
             found.statusDetail = espnDetail;
+            found.espnComp = comp;
             if (h.score !== undefined) found.homeScore = String(h.score);
             if (a.score !== undefined) found.awayScore = String(a.score);
             if (espnBroadcast) found.broadcast = espnBroadcast;
@@ -829,6 +935,8 @@ async function fetchNhlScoreboard() {
       const broadcastDetails = getNhlBroadcast(g.broadcast, homeName, awayName, false);
       const windowInfo = getNhlWindow(g.isoTime);
 
+      const nhlOdds = calculateNhlOddsProb(homeName, awayName, standingsMap, g.espnComp);
+
       outOfTownGames.push({
         isoTime: g.isoTime,
         slot: g.slot,
@@ -844,6 +952,8 @@ async function fetchNhlScoreboard() {
         awayScore,
         homeName,
         homeScore,
+        homeWinChance: nhlOdds.homeWinChance,
+        awayWinChance: nhlOdds.awayWinChance,
         verdict,
         impactClass,
         target,
@@ -1127,6 +1237,9 @@ async function fetchNextGameSchedule() {
           if (bufStats.w + bufStats.l > 0) { bufWins = bufStats.w; bufLosses = bufStats.l; }
           if (oppStats.w + oppStats.l > 0) { oppWins = oppStats.w; oppLosses = oppStats.l; }
         }
+
+        const bufDisplay = bufRecord ? `Bills (${bufRecord})` : 'Bills (5-1, W2)';
+        const oppDisplay = oppRecord ? `${oppName} (${oppRecord})` : `${oppName} (4-2, L1)`;
 
         const billsCompStatus = comp.status?.type?.state || 'pre';
         const billsStatusDetail = comp.status?.type?.shortDetail || `${dateStr} • ${timeStr} ET`;
