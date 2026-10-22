@@ -1043,6 +1043,11 @@ async function fetchNextGameSchedule() {
         const bufDisplay = bufRecord ? `Bills (${bufRecord})` : 'Bills';
         const oppDisplay = oppRecord ? `${oppName} (${oppRecord})` : oppName;
 
+        const billsCompStatus = comp.status?.type?.state || 'pre';
+        const billsStatusDetail = comp.status?.type?.shortDetail || `${dateStr} • ${timeStr} ET`;
+        const billsBufScore = bufComp?.score !== undefined ? String(bufComp.score) : '';
+        const billsOppScore = oppComp?.score !== undefined ? String(oppComp.score) : '';
+
         billsSchedule.opponent = `${isHome ? 'vs.' : '@'} ${oppName}`;
         billsSchedule.oppShortName = oppName;
         billsSchedule.oppId = oppId;
@@ -1051,6 +1056,13 @@ async function fetchNextGameSchedule() {
         billsSchedule.isoTime = nextGame.date;
         billsSchedule.winChance = winChance;
         billsSchedule.matchupRecords = `${bufDisplay} vs. ${oppDisplay}`;
+        billsSchedule.statusState = billsCompStatus;
+        billsSchedule.statusDetail = billsStatusDetail;
+        billsSchedule.bufScore = billsBufScore;
+        billsSchedule.oppScore = billsOppScore;
+        if (billsBufScore !== '' && billsOppScore !== '') {
+          billsSchedule.liveScore = isHome ? `Bills ${billsBufScore} - ${billsOppScore} ${oppName}` : `${oppName} ${billsOppScore} - ${billsBufScore} Bills`;
+        }
         const billsStadium = getNflStadium(isHome ? 'Buffalo Bills' : oppName, comp.venue, comp.weather);
         const billsBroadcast = getNflBroadcast(tvNetwork, isHome ? 'Buffalo Bills' : oppName, isHome ? oppName : 'Buffalo Bills', nextGame.date, true);
         const billsWindow = getNflWindow(nextGame.date);
@@ -1132,6 +1144,15 @@ async function fetchNextGameSchedule() {
         const sBroadcast = getNhlBroadcast(tvNetwork, isHome ? 'Buffalo Sabres' : oppName, isHome ? oppName : 'Buffalo Sabres', true);
         const sWindow = getNhlWindow(nextGame.startTimeUTC);
 
+        const isLive = nextGame.gameState === 'LIVE' || nextGame.gameState === 'CRIT';
+        const isPost = nextGame.gameState === 'FINAL' || nextGame.gameState === 'OFF';
+        const bufScore = isHome ? nextGame.homeTeam?.score : nextGame.awayTeam?.score;
+        const oppScore = isHome ? nextGame.awayTeam?.score : nextGame.homeTeam?.score;
+        const statusState = isLive ? 'in' : (isPost ? 'post' : 'pre');
+        const periodNum = nextGame.periodDescriptor?.number || 1;
+        const periodType = nextGame.periodDescriptor?.periodType || 'REG';
+        const statusDetail = isLive ? (periodType === 'OT' ? 'Overtime' : `Period ${periodNum}`) : (isPost ? (periodType === 'OT' ? 'Final/OT' : 'Final') : `${dateStr} • ${timeStr} ET`);
+
         sabresSchedule = {
           ...sabresSchedule,
           opponent: `${isHome ? 'vs.' : '@'} ${oppName}`,
@@ -1140,6 +1161,11 @@ async function fetchNextGameSchedule() {
           isoTime: nextGame.startTimeUTC,
           winChance: isHome ? 52 : 46,
           matchupRecords: `${bufInfo} vs. ${oppInfo}`,
+          statusState,
+          statusDetail,
+          bufScore: bufScore !== undefined ? String(bufScore) : '',
+          oppScore: oppScore !== undefined ? String(oppScore) : '',
+          liveScore: (bufScore !== undefined && oppScore !== undefined) ? (isHome ? `Sabres ${bufScore} - ${oppScore} ${oppName}` : `${oppName} ${oppScore} - ${bufScore} Sabres`) : null,
           broadcast: sBroadcast.network,
           announcers: sBroadcast.crew,
           venue: `${sArena.venue}, ${sArena.city}`,
@@ -1188,6 +1214,11 @@ async function scrapePlayoffStatus() {
       matchupRecords: billsSchedule.matchupRecords,
       broadcast: billsSchedule.broadcast,
       venue: billsSchedule.venue,
+      statusState: billsSchedule.statusState || 'pre',
+      statusDetail: billsSchedule.statusDetail || billsSchedule.gameTime,
+      bufScore: billsSchedule.bufScore || '',
+      oppScore: billsSchedule.oppScore || '',
+      liveScore: billsSchedule.liveScore || null,
       ifWin: 85,
       ifLoss: 69,
       leverage: 16,
@@ -1244,6 +1275,11 @@ async function scrapePlayoffStatus() {
       matchupRecords: sabresSchedule.matchupRecords,
       broadcast: sabresSchedule.broadcast,
       venue: sabresSchedule.venue || 'KeyBank Center, Buffalo',
+      statusState: sabresSchedule.statusState || 'pre',
+      statusDetail: sabresSchedule.statusDetail || sabresSchedule.gameTime,
+      bufScore: sabresSchedule.bufScore || '',
+      oppScore: sabresSchedule.oppScore || '',
+      liveScore: sabresSchedule.liveScore || null,
       ifWin: 44,
       ifLoss: 33,
       leverage: 11,

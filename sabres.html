@@ -237,6 +237,57 @@
       text-transform: uppercase;
     }
 
+    .live-radar-banner {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.18) 0%, rgba(9, 13, 22, 0.95) 100%);
+      border: 1px solid rgba(16, 185, 129, 0.45);
+      border-left: 4px solid #10b981;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .live-radar-left {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .live-radar-clock {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #10b981;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+    .live-radar-score {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #fff;
+    }
+    .live-radar-link {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #10b981;
+      font-weight: 700;
+      font-size: 0.75rem;
+      padding: 0.35rem 0.75rem;
+      border-radius: 6px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.15s ease;
+    }
+    .live-radar-link:hover {
+      background: rgba(16, 185, 129, 0.3);
+      color: #fff;
+    }
+    .card-live-border {
+      border: 1px solid rgba(16, 185, 129, 0.5) !important;
+      border-left: 5px solid #10b981 !important;
+      box-shadow: 0 4px 20px rgba(16, 185, 129, 0.2) !important;
+    }
+
     .countdown-box {
       display: flex;
       flex-direction: column;
@@ -914,6 +965,18 @@
     <!-- TAB 1: POSTSEASON RADAR -->
     <section id="tab-radar" class="tab-content active">
       <div class="card">
+        <!-- LIVE GAME BANNER (Visible on Radar when Sabres are live) -->
+        <div id="sabres-radar-live-banner" class="live-radar-banner" style="display: none;">
+          <div class="live-radar-left">
+            <span class="live-pulse-badge"><span class="live-dot"></span> LIVE NOW</span>
+            <span class="live-radar-clock" id="sabres-radar-live-clock">--</span>
+          </div>
+          <div class="live-radar-score" id="sabres-radar-live-score">
+            Sabres -- - -- Opponent
+          </div>
+          <button class="live-radar-link" onclick="switchTab('intel')">Matchup Intel →</button>
+        </div>
+
         <div class="clinch-alert-box" id="sabres-clinch-box">
           <span>🔒</span>
           <span id="sabres-clinch-text">Checking clinching status...</span>
@@ -961,7 +1024,7 @@
         <div class="stakes-banner">
           <div class="stakes-top-row">
             <div class="matchup-main">
-              <div class="matchup-prefix">Next Matchup:</div>
+              <div class="matchup-prefix" id="sabres-matchup-prefix">Next Matchup:</div>
               <div class="matchup-opp" id="sabres-next-opp">--</div>
               <div class="matchup-records-line" id="sabres-records">--</div>
               <div class="schedule-tag">
@@ -1138,9 +1201,95 @@
     }
 
     let liveSabresPollTimer = null;
+    let liveSabresGameData = null;
     let currentSabresOutOfTownGames = [];
     let currentSabresNextGame = null;
     let currentSlateFilter = 'all';
+
+    function updateSabresLiveUI(liveData) {
+      if (!liveData) return;
+      const { state, detail, bufScore, oppScore, oppName, records } = liveData;
+      const isLive = state === 'in';
+      const isPost = state === 'post';
+
+      // 1. Radar Live Banner (Tab 1)
+      const radarBanner = document.getElementById('sabres-radar-live-banner');
+      const radarClock = document.getElementById('sabres-radar-live-clock');
+      const radarScore = document.getElementById('sabres-radar-live-score');
+      if (radarBanner) {
+        if (isLive) {
+          radarBanner.style.display = 'flex';
+          if (radarClock) radarClock.textContent = detail || 'LIVE';
+          if (radarScore) radarScore.textContent = `Sabres ${bufScore ?? 0} - ${oppScore ?? 0} ${oppName || 'Opponent'}`;
+        } else {
+          radarBanner.style.display = 'none';
+        }
+      }
+
+      // 2. Matchup Intel Hero (Tab 2)
+      const prefixEl = document.getElementById('sabres-matchup-prefix');
+      const nextOppEl = document.getElementById('sabres-next-opp');
+      const recordsEl = document.getElementById('sabres-records');
+      const countdownEl = document.getElementById('sabres-countdown');
+      const countdownLabelEl = document.getElementById('sabres-countdown-label');
+
+      if (isLive) {
+        stopCountdown('sabres-countdown');
+        if (prefixEl) prefixEl.innerHTML = `<span class="live-pulse-badge"><span class="live-dot"></span> LIVE IN PROGRESS</span>`;
+        if (nextOppEl) nextOppEl.innerHTML = `<span class="live-score-highlight">Sabres ${bufScore ?? 0} - ${oppScore ?? 0} ${oppName || 'Opponent'}</span>`;
+        if (recordsEl) recordsEl.innerHTML = `⏱️ Period / Time: <strong style="color: #10b981;">${detail || 'LIVE'}</strong> • ${records || ''}`;
+        if (countdownEl) {
+          countdownEl.innerHTML = `<span class="live-dot"></span> ${detail || 'LIVE'}`;
+          countdownEl.style.color = '#10b981';
+        }
+        if (countdownLabelEl) {
+          countdownLabelEl.textContent = 'LIVE GAME CLOCK';
+          countdownLabelEl.style.color = '#10b981';
+        }
+      } else if (isPost) {
+        stopCountdown('sabres-countdown');
+        if (prefixEl) prefixEl.textContent = 'FINAL SCORE:';
+        if (nextOppEl) nextOppEl.textContent = `Sabres ${bufScore ?? 0} - ${oppScore ?? 0} ${oppName || 'Opponent'}`;
+        if (recordsEl) recordsEl.textContent = `Final: Sabres ${bufScore ?? 0}, ${oppName || 'Opponent'} ${oppScore ?? 0} • ${records || ''}`;
+        if (countdownEl) {
+          countdownEl.textContent = (detail || '').includes('OT') ? 'FINAL/OT' : 'FINAL';
+          countdownEl.style.color = '#fff';
+        }
+        if (countdownLabelEl) {
+          countdownLabelEl.textContent = 'FINAL SCORE';
+          countdownLabelEl.style.color = 'var(--text-muted)';
+        }
+      }
+
+      // 3. Tab 3 Pinned Card elements if in DOM
+      const pinnedCountdownEl = document.getElementById('pinned-sabres-countdown');
+      const pinnedRecordsEl = document.getElementById('pinned-sabres-records');
+      const pinnedTitleEl = document.getElementById('pinned-sabres-title');
+      const pinnedTagEl = document.getElementById('pinned-sabres-tag');
+      const pinnedCardEl = document.getElementById('pinned-sabres-card-wrap');
+
+      if (isLive) {
+        stopCountdown('pinned-sabres-countdown');
+        if (pinnedCardEl) pinnedCardEl.classList.add('card-live-border');
+        if (pinnedTagEl) pinnedTagEl.innerHTML = `<span class="live-dot"></span> LIVE NOW`;
+        if (pinnedCountdownEl) {
+          pinnedCountdownEl.innerHTML = `<span class="live-dot"></span> ${detail || 'LIVE'}`;
+          pinnedCountdownEl.style.color = '#10b981';
+        }
+        if (pinnedTitleEl) pinnedTitleEl.innerHTML = `Buffalo Sabres ${bufScore ?? 0} - ${oppScore ?? 0} ${oppName || 'Opponent'}`;
+        if (pinnedRecordsEl) pinnedRecordsEl.innerHTML = `⏱️ Period / Time: <strong style="color: #10b981;">${detail || 'LIVE'}</strong> • ${records || ''}`;
+      } else if (isPost) {
+        stopCountdown('pinned-sabres-countdown');
+        if (pinnedCardEl) pinnedCardEl.classList.remove('card-live-border');
+        if (pinnedTagEl) pinnedTagEl.textContent = 'FINAL';
+        if (pinnedCountdownEl) {
+          pinnedCountdownEl.textContent = (detail || '').includes('OT') ? 'FINAL/OT' : 'FINAL';
+          pinnedCountdownEl.style.color = '#fff';
+        }
+        if (pinnedTitleEl) pinnedTitleEl.textContent = `Buffalo Sabres ${bufScore ?? 0} - ${oppScore ?? 0} ${oppName || 'Opponent'}`;
+        if (pinnedRecordsEl) pinnedRecordsEl.textContent = `Final: Sabres ${bufScore ?? 0}, ${oppName || 'Opponent'} ${oppScore ?? 0} • ${records || ''}`;
+      }
+    }
 
     function setSlateFilter(filter) {
       if (currentSlateFilter === filter) return;
@@ -1401,6 +1550,18 @@
       // Pinned Buffalo Sabres Card
       let sabresCardHtml = '';
       if (sg) {
+        const liveInfo = liveSabresGameData || (sg.statusState === 'in' || sg.statusState === 'post' ? {
+          state: sg.statusState,
+          detail: sg.statusDetail || (sg.statusState === 'in' ? 'LIVE' : 'FINAL'),
+          bufScore: sg.bufScore,
+          oppScore: sg.oppScore,
+          oppName: sg.oppShortName || 'Flyers',
+          records: sg.matchupRecords || ''
+        } : null);
+
+        const isLive = liveInfo?.state === 'in';
+        const isPost = liveInfo?.state === 'post';
+
         const enrichedSabres = {
           opponent: sg.opponent || 'vs. Philadelphia',
           oppShortName: sg.oppShortName || 'Flyers',
@@ -1417,25 +1578,37 @@
         };
 
         const bcClass = getNhlBroadcastClass(enrichedSabres.broadcast);
+        const cardLiveClass = isLive ? 'card-live-border' : '';
+        const tagHtml = isLive ? '<span class="live-dot"></span> LIVE NOW' : (isPost ? 'FINAL' : 'WEEKLY SPOTLIGHT');
+        const countdownHtml = isLive ? `<span class="live-dot"></span> ${liveInfo.detail}` : (isPost ? 'FINAL' : '--:--:--');
+        const countdownStyle = isLive ? 'color: #10b981;' : '';
+        const matchupTitleHtml = (isLive || isPost)
+          ? `Buffalo Sabres ${liveInfo.bufScore ?? 0} - ${liveInfo.oppScore ?? 0} ${liveInfo.oppName || enrichedSabres.oppShortName}`
+          : `Buffalo Sabres ${enrichedSabres.opponent}`;
+        const recordsSubHtml = isLive
+          ? `⏱️ Period / Time: <strong style="color: #10b981;">${liveInfo.detail}</strong> • ${enrichedSabres.records}`
+          : (isPost
+            ? `Final: Sabres ${liveInfo.bufScore ?? 0}, ${liveInfo.oppName || enrichedSabres.oppShortName} ${liveInfo.oppScore ?? 0} • ${enrichedSabres.records}`
+            : `${enrichedSabres.records} • Puck Drop: ${enrichedSabres.gameTime}`);
 
         sabresCardHtml = `
-          <div class="pinned-sabres-card">
+          <div class="pinned-sabres-card ${cardLiveClass}" id="pinned-sabres-card-wrap">
             <div class="pinned-header-bar">
               <div class="pinned-title-group">
                 <span>📌</span>
                 <span>BUFFALO SABRES MARQUEE MATCHUP</span>
-                <span class="pinned-tag">WEEKLY SPOTLIGHT</span>
+                <span class="pinned-tag" id="pinned-sabres-tag">${tagHtml}</span>
               </div>
               <div class="pinned-countdown-wrap">
-                <span>⏳</span>
-                <span id="pinned-sabres-countdown">--:--:--</span>
+                <span>${isLive ? '⏱️' : '⏳'}</span>
+                <span id="pinned-sabres-countdown" style="${countdownStyle}">${countdownHtml}</span>
               </div>
             </div>
 
             <div class="pinned-main-grid">
               <div class="pinned-teams-col">
-                <div class="pinned-matchup-title">Buffalo Sabres ${enrichedSabres.opponent}</div>
-                <div class="pinned-records-sub" id="pinned-sabres-records">${enrichedSabres.records} • Puck Drop: ${enrichedSabres.gameTime}</div>
+                <div class="pinned-matchup-title" id="pinned-sabres-title">${matchupTitleHtml}</div>
+                <div class="pinned-records-sub" id="pinned-sabres-records">${recordsSubHtml}</div>
               </div>
               <div class="pinned-leverage-pills">
                 <span class="pill pill-win">Win: ${enrichedSabres.ifWin}%</span>
@@ -1496,8 +1669,10 @@
       scoreContainer.innerHTML = html;
       scoreContainer.setAttribute('data-filter', currentSlateFilter);
 
-      if (sg?.isoTime) {
+      if (!liveSabresGameData && sg?.statusState !== 'in' && sg?.statusState !== 'post' && sg?.isoTime) {
         startCountdown('pinned-sabres-countdown', sg.isoTime);
+      } else {
+        stopCountdown('pinned-sabres-countdown');
       }
     }
 
@@ -1511,7 +1686,7 @@
         const data = await res.json();
         const events = data.events || [];
 
-        // 1. Check Buffalo Sabres Hero Game (Tab 2)
+        // 1. Check Buffalo Sabres Hero Game (Tab 1, Tab 2, Tab 3)
         const sabresEv = events.find(ev => {
           const comp = ev.competitions?.[0];
           return comp?.competitors?.some(c => c.team?.abbreviation === 'BUF' || c.team?.id === '2' || c.team?.displayName === 'Buffalo Sabres');
@@ -1523,58 +1698,29 @@
           const detail = comp.status?.type?.shortDetail || 'LIVE';
           const buf = comp.competitors.find(c => c.team?.abbreviation === 'BUF' || c.team?.id === '2');
           const opp = comp.competitors.find(c => c !== buf);
-
-          const countdownEl = document.getElementById('sabres-countdown');
-          const countdownLabelEl = document.getElementById('sabres-countdown-label');
-          const recordsEl = document.getElementById('sabres-records');
-          const pinnedCountdownEl = document.getElementById('pinned-sabres-countdown');
+          const oppName = opp?.team?.shortDisplayName || opp?.team?.displayName || currentSabresNextGame?.oppShortName || 'Flyers';
 
           if (state === 'in') {
             isAnyLive = true;
-            stopCountdown('sabres-countdown');
-            stopCountdown('pinned-sabres-countdown');
-            if (countdownEl) {
-              countdownEl.innerHTML = `<span class="live-dot"></span> ${detail}`;
-              countdownEl.style.color = '#10b981';
+          }
+
+          if (state === 'in' || state === 'post') {
+            liveSabresGameData = {
+              state,
+              detail,
+              bufScore: buf?.score || 0,
+              oppScore: opp?.score || 0,
+              oppName,
+              records: currentSabresNextGame?.matchupRecords || ''
+            };
+            if (currentSabresNextGame) {
+              currentSabresNextGame.statusState = state;
+              currentSabresNextGame.statusDetail = detail;
+              currentSabresNextGame.bufScore = buf?.score || 0;
+              currentSabresNextGame.oppScore = opp?.score || 0;
+              currentSabresNextGame.liveScore = `Sabres ${buf?.score || 0} - ${opp?.score || 0} ${oppName}`;
             }
-            if (pinnedCountdownEl) {
-              pinnedCountdownEl.innerHTML = `<span class="live-dot"></span> ${detail}`;
-              pinnedCountdownEl.style.color = '#10b981';
-            }
-            if (countdownLabelEl) {
-              countdownLabelEl.textContent = 'LIVE PERIOD';
-              countdownLabelEl.style.color = '#10b981';
-            }
-            const pinnedRecordsEl = document.getElementById('pinned-sabres-records');
-            if (recordsEl && buf && opp) {
-              const oppName = opp.team?.shortDisplayName || opp.team?.displayName || 'Flyers';
-              const isHome = buf.homeAway === 'home';
-              const scoreHtml = `<span class="live-pulse-badge">LIVE</span> <span class="live-score-highlight">${isHome ? `Sabres ${buf.score || 0} - ${opp.score || 0} ${oppName}` : `${oppName} ${opp.score || 0} - ${buf.score || 0} Sabres`}</span>`;
-              recordsEl.innerHTML = scoreHtml;
-              if (pinnedRecordsEl) pinnedRecordsEl.innerHTML = scoreHtml;
-            }
-          } else if (state === 'post') {
-            stopCountdown('sabres-countdown');
-            stopCountdown('pinned-sabres-countdown');
-            if (countdownEl) {
-              countdownEl.textContent = detail.includes('OT') ? 'FINAL/OT' : 'FINAL';
-              countdownEl.style.color = '#fff';
-            }
-            if (pinnedCountdownEl) {
-              pinnedCountdownEl.textContent = detail.includes('OT') ? 'FINAL/OT' : 'FINAL';
-              pinnedCountdownEl.style.color = '#fff';
-            }
-            if (countdownLabelEl) {
-              countdownLabelEl.textContent = 'FINAL SCORE';
-            }
-            const pinnedRecordsEl = document.getElementById('pinned-sabres-records');
-            if (recordsEl && buf && opp) {
-              const oppName = opp.team?.shortDisplayName || opp.team?.displayName || 'Flyers';
-              const isHome = buf.homeAway === 'home';
-              const finalTxt = isHome ? `Final: Sabres ${buf.score || 0}, ${oppName} ${opp.score || 0}` : `Final: ${oppName} ${opp.score || 0}, Sabres ${buf.score || 0}`;
-              recordsEl.textContent = finalTxt;
-              if (pinnedRecordsEl) pinnedRecordsEl.textContent = finalTxt;
-            }
+            updateSabresLiveUI(liveSabresGameData);
           }
         }
 
@@ -3823,19 +3969,31 @@
         sClinchText.textContent = `No clinching scenarios available this week (${s.tragicNumber || 'Target: 92 Pts'})`;
       }
 
-      document.getElementById('sabres-next-opp').textContent = s.nextGame.opponent;
       document.getElementById('sabres-game-time').textContent = s.nextGame.gameTime || '';
       document.getElementById('sabres-broadcast').textContent = s.nextGame.broadcast || 'MSG-B';
       document.getElementById('sabres-win-chance').textContent = `${s.nextGame.winChance || 50}%`;
-      document.getElementById('sabres-records').textContent = s.nextGame.matchupRecords || '';
       document.getElementById('sabres-if-win').textContent = `Win: ${s.nextGame.ifWin}%`;
       document.getElementById('sabres-if-loss').textContent = `Loss: ${s.nextGame.ifLoss}%`;
 
       const sLeverage = s.nextGame.leverage || (s.nextGame.ifWin - s.nextGame.ifLoss);
       document.getElementById('sabres-leverage').textContent = `±${sLeverage}%`;
 
-      if (s.nextGame.isoTime) {
-        startCountdown('sabres-countdown', s.nextGame.isoTime);
+      if (s.nextGame.statusState === 'in' || s.nextGame.statusState === 'post') {
+        liveSabresGameData = {
+          state: s.nextGame.statusState,
+          detail: s.nextGame.statusDetail || (s.nextGame.statusState === 'in' ? 'LIVE' : 'FINAL'),
+          bufScore: s.nextGame.bufScore ?? 0,
+          oppScore: s.nextGame.oppScore ?? 0,
+          oppName: s.nextGame.oppShortName || 'Flyers',
+          records: s.nextGame.matchupRecords || ''
+        };
+        updateSabresLiveUI(liveSabresGameData);
+      } else {
+        document.getElementById('sabres-next-opp').textContent = s.nextGame.opponent;
+        document.getElementById('sabres-records').textContent = s.nextGame.matchupRecords || '';
+        if (s.nextGame.isoTime) {
+          startCountdown('sabres-countdown', s.nextGame.isoTime);
+        }
       }
 
       // Populate Postseason Radar
