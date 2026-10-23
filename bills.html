@@ -1369,75 +1369,14 @@
 
   <!-- SEGMENTED TABS -->
   <nav class="tab-bar">
-    <button class="tab-btn active" id="tab-btn-radar" onclick="switchTab('radar')">Postseason Radar</button>
-    <button class="tab-btn" id="tab-btn-intel" onclick="switchTab('intel')">Matchup Intel</button>
+    <button class="tab-btn active" id="tab-btn-intel" onclick="switchTab('intel')">Matchup Intel</button>
     <button class="tab-btn" id="tab-btn-rooting" onclick="switchTab('rooting')">Weekly Slate & TV Guide</button>
+    <button class="tab-btn" id="tab-btn-radar" onclick="switchTab('radar')">Postseason Radar</button>
   </nav>
 
   <main class="container">
-    <!-- TAB 1: POSTSEASON RADAR -->
-    <section id="tab-radar" class="tab-content active">
-      <div class="card">
-        <!-- LIVE GAME BANNER (Visible on Radar when Bills are live) -->
-        <div id="bills-radar-live-banner" class="live-radar-banner" style="display: none;">
-          <div class="live-radar-left">
-            <span class="live-pulse-badge"><span class="live-dot"></span> LIVE NOW</span>
-            <span class="live-radar-clock" id="bills-radar-live-clock">--</span>
-            <span class="live-radar-date" id="bills-radar-live-date" style="font-size: 0.78rem; color: #94a3b8; font-weight: 600;"></span>
-          </div>
-          <div class="live-radar-score" id="bills-radar-live-score">
-            Bills -- - -- Opponent
-          </div>
-          <div class="live-radar-right" style="display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;">
-            <span class="pill pill-chance" id="bills-radar-live-chance" style="font-size: 0.78rem; padding: 0.25rem 0.6rem;">Win Chance: <strong>--%</strong></span>
-            <button class="live-radar-link" onclick="switchTab('intel')">Matchup Intel →</button>
-          </div>
-        </div>
-
-        <div class="clinch-alert-box" id="bills-clinch-box">
-          <span>🔒</span>
-          <span id="bills-clinch-text">Checking clinching status...</span>
-        </div>
-
-        <div class="stat-row">
-          <div class="stat-box">
-            <div class="stat-val" id="bills-playoff-pct">--%</div>
-            <div class="stat-label">Playoffs</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-val" id="bills-div-pct">--%</div>
-            <div class="stat-label">AFC East</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-val" id="bills-bye-pct">--%</div>
-            <div class="stat-label">#1 Bye</div>
-          </div>
-          <div class="stat-box" title="Magic number to clinch the AFC East division title">
-            <div class="stat-val" id="bills-magic-num" style="color: var(--accent-blue);">--</div>
-            <div class="stat-label">Magic #</div>
-            <div class="stat-sublabel">To Clinch</div>
-          </div>
-        </div>
-
-        <div>
-          <div class="section-subtitle">AFC East Division Radar</div>
-          <div class="radar-wrap" id="bills-radar"></div>
-        </div>
-
-        <div>
-          <div class="section-subtitle">Playoff Seeding Distribution</div>
-          <div class="dist-bar-wrap" id="bills-distribution"></div>
-        </div>
-
-        <div>
-          <div class="section-subtitle">Likely 1st Round Matchups</div>
-          <div class="opponent-chips" id="bills-opponents"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- TAB 2: MATCHUP INTEL -->
-    <section id="tab-intel" class="tab-content">
+    <!-- TAB 1: MATCHUP INTEL -->
+    <section id="tab-intel" class="tab-content active">
       <div class="card">
         <div class="stakes-banner">
           <div class="stakes-top-row">
@@ -1521,7 +1460,7 @@
       </div>
     </section>
 
-    <!-- TAB 3: WEEKLY SLATE & TV GUIDE -->
+    <!-- TAB 2: WEEKLY SLATE & TV GUIDE -->
     <section id="tab-rooting" class="tab-content">
       <div class="card">
         <div class="section-subtitle">
@@ -1549,6 +1488,67 @@
           <div style="color: var(--text-muted); font-size: 0.85rem; text-align: center; padding: 1rem;">
             Loading weekly slate & broadcast lineups...
           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: POSTSEASON RADAR -->
+    <section id="tab-radar" class="tab-content">
+      <div class="card">
+        <!-- LIVE GAME BANNER (Visible on Radar when Bills are live) -->
+        <div id="bills-radar-live-banner" class="live-radar-banner" style="display: none;">
+          <div class="live-radar-left">
+            <span class="live-pulse-badge"><span class="live-dot"></span> LIVE NOW</span>
+            <span class="live-radar-clock" id="bills-radar-live-clock">--</span>
+            <span class="live-radar-date" id="bills-radar-live-date" style="font-size: 0.78rem; color: #94a3b8; font-weight: 600;"></span>
+          </div>
+          <div class="live-radar-score" id="bills-radar-live-score">
+            Bills -- - -- Opponent
+          </div>
+          <div class="live-radar-right" style="display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;">
+            <span class="pill pill-chance" id="bills-radar-live-chance" style="font-size: 0.78rem; padding: 0.25rem 0.6rem;">Win Chance: <strong>--%</strong></span>
+            <button class="live-radar-link" onclick="switchTab('intel')">Matchup Intel →</button>
+          </div>
+        </div>
+
+        <div class="clinch-alert-box" id="bills-clinch-box">
+          <span>🔒</span>
+          <span id="bills-clinch-text">Checking clinching status...</span>
+        </div>
+
+        <div class="stat-row">
+          <div class="stat-box">
+            <div class="stat-val" id="bills-playoff-pct">--%</div>
+            <div class="stat-label">Playoffs</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val" id="bills-div-pct">--%</div>
+            <div class="stat-label">AFC East</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val" id="bills-bye-pct">--%</div>
+            <div class="stat-label">#1 Bye</div>
+          </div>
+          <div class="stat-box" title="Magic number to clinch the AFC East division title">
+            <div class="stat-val" id="bills-magic-num" style="color: var(--accent-blue);">--</div>
+            <div class="stat-label">Magic #</div>
+            <div class="stat-sublabel">To Clinch</div>
+          </div>
+        </div>
+
+        <div>
+          <div class="section-subtitle">AFC East Division Radar</div>
+          <div class="radar-wrap" id="bills-radar"></div>
+        </div>
+
+        <div>
+          <div class="section-subtitle">Playoff Seeding Distribution</div>
+          <div class="dist-bar-wrap" id="bills-distribution"></div>
+        </div>
+
+        <div>
+          <div class="section-subtitle">Likely 1st Round Matchups</div>
+          <div class="opponent-chips" id="bills-opponents"></div>
         </div>
       </div>
     </section>
