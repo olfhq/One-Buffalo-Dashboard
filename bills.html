@@ -518,33 +518,198 @@
       font-weight: 600;
     }
 
-    /* INJURY WIRE CHIPS */
+    /* INJURY WIRE CARDS */
+    .availability-badge {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 0.2rem 0.55rem;
+      border-radius: 9999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      letter-spacing: 0.3px;
+    }
     .injury-list {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 0.5rem;
+      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+      gap: 0.75rem;
     }
-    .injury-chip {
-      background: var(--card-inner);
+    .injury-card {
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.035) 0%, rgba(255, 255, 255, 0.008) 100%), var(--card-inner);
       border: 1px solid var(--card-border);
-      border-radius: 6px;
-      padding: 0.45rem 0.65rem;
+      border-radius: 10px;
+      padding: 0.85rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .injury-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255, 255, 255, 0.18);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+    }
+    .injury-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 3.5px;
+      border-top-left-radius: 10px;
+      border-bottom-left-radius: 10px;
+      background: var(--status-accent, #64748b);
+    }
+    .injury-card.status-probable { --status-accent: #38bdf8; }
+    .injury-card.status-questionable { --status-accent: #fbbf24; }
+    .injury-card.status-active { --status-accent: #34d399; }
+    .injury-card.status-out { --status-accent: #f87171; }
+    .injury-card.status-suspension { --status-accent: #c084fc; }
+
+    .injury-card-top {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 0.8rem;
+      gap: 0.5rem;
     }
-    .injury-name { font-weight: 700; color: #fff; }
-    .injury-tag {
+    .injury-team-badge {
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.6px;
+      padding: 0.18rem 0.45rem;
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      text-transform: uppercase;
+      background: rgba(255, 255, 255, 0.06);
+      color: #94a3b8;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .injury-team-badge.team-buf {
+      background: rgba(56, 189, 248, 0.12);
+      color: #38bdf8;
+      border: 1px solid rgba(56, 189, 248, 0.35);
+    }
+    .injury-status-pill {
       font-size: 0.65rem;
       font-weight: 800;
+      letter-spacing: 0.4px;
       text-transform: uppercase;
-      padding: 0.1rem 0.4rem;
-      border-radius: 4px;
+      padding: 0.2rem 0.5rem;
+      border-radius: 9999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      white-space: nowrap;
     }
-    .tag-questionable { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
-    .tag-active { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
-    .tag-out { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); }
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .pill-probable {
+      background: rgba(56, 189, 248, 0.12);
+      color: #38bdf8;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+    .pill-probable .status-dot {
+      background: #38bdf8;
+      box-shadow: 0 0 6px #38bdf8;
+    }
+    .pill-questionable {
+      background: rgba(245, 158, 11, 0.12);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+    .pill-questionable .status-dot {
+      background: #fbbf24;
+      box-shadow: 0 0 6px #fbbf24;
+    }
+    .pill-out {
+      background: rgba(239, 68, 68, 0.12);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+    .pill-out .status-dot {
+      background: #f87171;
+      box-shadow: 0 0 6px #f87171;
+    }
+    .pill-active {
+      background: rgba(16, 185, 129, 0.12);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    .pill-active .status-dot {
+      background: #34d399;
+      box-shadow: 0 0 6px #34d399;
+    }
+    .pill-suspension {
+      background: rgba(168, 85, 247, 0.12);
+      color: #c084fc;
+      border: 1px solid rgba(168, 85, 247, 0.3);
+    }
+    .pill-suspension .status-dot {
+      background: #c084fc;
+      box-shadow: 0 0 6px #c084fc;
+    }
+
+    .injury-card-main {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+    .injury-player-name {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.25;
+      letter-spacing: -0.2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .injury-meta-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      padding-top: 0.45rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 0.74rem;
+    }
+    .injury-condition-text {
+      color: #cbd5e1;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-weight: 500;
+    }
+    .injury-stat-chip {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.7rem;
+      font-weight: 600;
+      background: rgba(56, 189, 248, 0.08);
+      color: #7dd3fc;
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      letter-spacing: 0.2px;
+    }
+    .injury-starter-tag {
+      color: #38bdf8;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
 
     /* DISTRIBUTION BARS */
     .dist-bar-wrap { display: flex; flex-direction: column; gap: 0.4rem; }
@@ -1273,7 +1438,10 @@
         </div>
 
         <div>
-          <div class="section-subtitle">Key Starter Availability Wire</div>
+          <div class="section-subtitle">
+            <span>Key Starter Availability Wire</span>
+            <span class="availability-badge" id="intel-injuries-badge">Game Day Wire</span>
+          </div>
           <div class="injury-list" id="intel-injuries-container">
             <!-- Populated dynamically via JS -->
           </div>
@@ -4157,23 +4325,95 @@
         ? b.nextGame.injuries
         : (FALLBACK_DATA.bills.nextGame.injuries || []);
 
+      const injuryBadge = document.getElementById('intel-injuries-badge');
+      if (injuryBadge && injuriesList.length > 0) {
+        injuryBadge.textContent = `${injuriesList.length} Active Reports`;
+      }
+
       if (injuryContainer && injuriesList.length > 0) {
+        const teamAbbrMap = {
+          'bills': 'BUF', 'buffalo': 'BUF', 'buffalo bills': 'BUF',
+          'ravens': 'BAL', 'baltimore': 'BAL', 'baltimore ravens': 'BAL',
+          'chiefs': 'KC', 'patriots': 'NE', 'jets': 'NYJ', 'dolphins': 'MIA',
+          'steelers': 'PIT', 'browns': 'CLE', 'bengals': 'CIN', 'texans': 'HOU',
+          'colts': 'IND', 'jaguars': 'JAX', 'titans': 'TEN', 'broncos': 'DEN',
+          'raiders': 'LV', 'chargers': 'LAC'
+        };
+
         injuryContainer.innerHTML = injuriesList.map(inj => {
-          let tagClass = 'tag-questionable';
-          const st = (inj.status || '').toLowerCase();
-          if (st.includes('active') || st.includes('probable')) tagClass = 'tag-active';
-          else if (st.includes('out') || st.includes('ir') || st.includes('reserve')) tagClass = 'tag-out';
+          const rawStatus = (inj.status || '').trim();
+          const st = rawStatus.toLowerCase();
+          const teamLower = (inj.team || '').toLowerCase();
+          const isHome = teamLower.includes('bills') || teamLower.includes('buffalo');
+          const teamAbbr = teamAbbrMap[teamLower] || (inj.team ? inj.team.slice(0, 3).toUpperCase() : 'NFL');
+
+          let statusClass = 'status-questionable';
+          let pillClass = 'pill-questionable';
+          let displayStatus = rawStatus || 'Questionable';
+          let icon = '⚠️';
+
+          if (st.includes('prob') || st.includes('start')) {
+            statusClass = 'status-probable';
+            pillClass = 'pill-probable';
+            displayStatus = 'Probable';
+            icon = '🟢';
+          } else if (st.includes('active')) {
+            statusClass = 'status-active';
+            pillClass = 'pill-active';
+            displayStatus = 'Active';
+            icon = '🟢';
+          } else if (st.includes('out') || st.includes('ir') || st.includes('reserve')) {
+            statusClass = 'status-out';
+            pillClass = 'pill-out';
+            displayStatus = st.includes('ir') || st.includes('reserve') ? 'Injured Reserve' : 'Out';
+            icon = '🏥';
+          } else if (st.includes('susp')) {
+            statusClass = 'status-suspension';
+            pillClass = 'pill-suspension';
+            displayStatus = 'Suspension';
+            icon = '⚖️';
+          }
+
+          // Parse injury / starter detail
+          let metaHtml = '';
+          const rawDetail = (inj.injury || '').trim();
+          const statMatch = rawDetail.match(/^(.*?)\s*\((.*?)\)$/);
+
+          if (statMatch) {
+            const noteText = statMatch[1].trim();
+            const stats = statMatch[2].trim();
+            metaHtml = `
+              <div class="injury-meta-row">
+                <span class="injury-starter-tag">🏈 ${noteText || 'Expected Starter'}</span>
+                <span class="injury-stat-chip">${stats}</span>
+              </div>
+            `;
+          } else if (rawDetail) {
+            metaHtml = `
+              <div class="injury-meta-row">
+                <span class="injury-condition-text">${icon} ${rawDetail}</span>
+              </div>
+            `;
+          }
 
           return `
-            <div class="injury-chip">
-              <span class="injury-name">${inj.player} (${inj.team} ${inj.pos})</span>
-              <span class="injury-tag ${tagClass}">${inj.status} • ${inj.injury}</span>
+            <div class="injury-card ${statusClass}">
+              <div class="injury-card-top">
+                <span class="injury-team-badge ${isHome ? 'team-buf' : ''}">${teamAbbr} • ${inj.pos || ''}</span>
+                <span class="injury-status-pill ${pillClass}">
+                  <span class="status-dot"></span>${displayStatus}
+                </span>
+              </div>
+              <div class="injury-card-main">
+                <div class="injury-player-name" title="${inj.player}">${inj.player}</div>
+              </div>
+              ${metaHtml}
             </div>
           `;
         }).join('');
       } else if (injuryContainer) {
         injuryContainer.innerHTML = `
-          <div style="color: var(--text-muted); font-size: 0.8rem; padding: 0.5rem;">
+          <div style="color: var(--text-muted); font-size: 0.8rem; padding: 0.85rem; background: var(--card-inner); border-radius: 8px; border: 1px dashed var(--card-border); text-align: center;">
             No official injury designations submitted for this game window yet.
           </div>
         `;
