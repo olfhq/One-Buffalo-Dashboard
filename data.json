@@ -606,6 +606,8 @@
     "winDivision": 24,
     "wildcard": 14,
     "tragicNumber": "91 PTS",
+    "projectedPoints": 91,
+    "magicNumber": null,
     "clinchAlert": {
       "active": false,
       "scenario": "No clinching scenarios available this week."

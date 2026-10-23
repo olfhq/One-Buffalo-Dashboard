@@ -1830,6 +1830,21 @@ async function fetchNextGameSchedule() {
             sabresPoints = bufStand.points;
             sabresRecord = `${bufStand.wins}-${bufStand.losses}-${bufStand.otLosses}`;
             sabresStreak = bufStand.streakCode ? `${bufStand.streakCode}${bufStand.streakCount || ''}` : '';
+            if (bufStand.gamesPlayed && bufStand.gamesPlayed > 0) {
+              const projPace = Math.round((sabresPoints / bufStand.gamesPlayed) * 82);
+              sabresSchedule.projectedPoints = projPace;
+              sabresSchedule.tragicNumber = `${projPace} PTS`;
+            }
+            if (bufStand.clinchIndicator) {
+              const ind = String(bufStand.clinchIndicator).toLowerCase();
+              if (['x', 'y', 'p', 'z'].includes(ind)) {
+                sabresSchedule.clinched = true;
+                sabresSchedule.clinchAlert = { active: true, scenario: 'Buffalo Sabres have clinched an NHL playoff berth.' };
+              } else if (ind === 'e') {
+                sabresSchedule.eliminated = true;
+                sabresSchedule.clinchAlert = { active: true, scenario: 'Buffalo Sabres are eliminated from playoff contention.' };
+              }
+            }
           }
           if (oppStand) {
             oppPoints = oppStand.points;
@@ -1974,7 +1989,9 @@ async function scrapePlayoffStatus() {
     winDivision: 28,
     wildcard: 14,
     tragicNumber: sabresSchedule.tragicNumber || '91 PTS',
-    clinchAlert: { active: false, scenario: 'No clinching scenarios available this week.' },
+    projectedPoints: sabresSchedule.projectedPoints || 91,
+    magicNumber: sabresSchedule.magicNumber || null,
+    clinchAlert: sabresSchedule.clinchAlert || { active: false, scenario: 'No clinching scenarios available this week.' },
     nextGame: {
       opponent: sabresSchedule.opponent,
       oppShortName: sabresSchedule.oppShortName || 'Opponent',
@@ -2139,7 +2156,28 @@ async function scrapePlayoffStatus() {
     console.warn('Bills clinch check fallback:', err.message);
   }
 
-  // 5. Sabres Standings & Atlantic Radar Scrape
+  // 5. Sabres Clinching Scenarios Scrape
+  try {
+    const clinchHtml = await fetchHtml(sabresClinchUrl);
+    const $ = cheerio.load(clinchHtml);
+    const scenarios = [];
+
+    $('tr').each((_, el) => {
+      const text = $(el).text();
+      if (text.includes('Case') && !text.includes('No clinching cases')) {
+        const cleaned = text.replace(/\s+/g, ' ').trim();
+        if (cleaned.length > 10) scenarios.push(cleaned);
+      }
+    });
+
+    if (scenarios.length > 0) {
+      sabresData.clinchAlert = { active: true, scenario: scenarios[0] };
+    }
+  } catch (err) {
+    console.warn('Sabres clinch check fallback:', err.message);
+  }
+
+  // 6. Sabres Standings & Atlantic Radar Scrape
   try {
     const html = await fetchHtml(sabresUrl);
     const $ = cheerio.load(html);

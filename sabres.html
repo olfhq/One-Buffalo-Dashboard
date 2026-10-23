@@ -428,13 +428,26 @@
       border: 1px solid rgba(255, 255, 255, 0.05);
       padding: 0.6rem 0.3rem;
       border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
     }
-    .stat-val { font-size: 1.35rem; font-weight: 800; color: #fff; }
+    .stat-val { font-size: 1.35rem; font-weight: 800; color: #fff; line-height: 1.1; }
     .stat-label {
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       color: var(--text-muted);
-      margin-top: 0.2rem;
+      margin-top: 0.25rem;
       text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    .stat-sublabel {
+      font-size: 0.62rem;
+      color: var(--text-muted);
+      margin-top: 0.15rem;
+      font-weight: 500;
+      opacity: 0.85;
+      letter-spacing: 0.2px;
     }
 
     .section-subtitle {
@@ -1284,9 +1297,10 @@
             <div class="stat-val" id="sabres-wildcard-pct">--%</div>
             <div class="stat-label">Wildcard</div>
           </div>
-          <div class="stat-box">
+          <div class="stat-box" id="sabres-projection-card" title="Projected 82-game regular season finish based on current points pace. Eastern Conference playoff cutline is typically ~95 pts.">
             <div class="stat-val" id="sabres-tragic-num" style="color: #FCB514;">--</div>
-            <div class="stat-label">82-Gm Pace</div>
+            <div class="stat-label" id="sabres-pace-label">Proj. Finish</div>
+            <div class="stat-sublabel" id="sabres-pace-sublabel">Cut: ~95</div>
           </div>
         </div>
 
@@ -2562,6 +2576,85 @@
       }
     }
 
+    function updateSabresProjectionTile(s) {
+      const valEl = document.getElementById('sabres-tragic-num');
+      const labelEl = document.getElementById('sabres-pace-label');
+      const sublabelEl = document.getElementById('sabres-pace-sublabel');
+      const cardEl = document.getElementById('sabres-projection-card');
+      if (!valEl) return;
+
+      const magicNum = s.magicNumber;
+      const rawTragic = s.tragicNumber || '91 PTS';
+      const clinchScenario = (s.clinchAlert && s.clinchAlert.scenario) ? s.clinchAlert.scenario.toLowerCase() : '';
+      const isClinched = s.clinched || clinchScenario.includes('clinched');
+      const isEliminated = s.eliminated || clinchScenario.includes('eliminated');
+
+      // 1. Clinched postseason
+      if (isClinched) {
+        valEl.textContent = 'IN';
+        valEl.style.color = '#34d399';
+        if (labelEl) labelEl.textContent = 'Playoffs';
+        if (sublabelEl) sublabelEl.textContent = 'Clinched';
+        if (cardEl) cardEl.title = 'Buffalo has clinched an NHL playoff berth!';
+        return;
+      }
+
+      // 2. Eliminated from contention
+      if (isEliminated) {
+        valEl.textContent = 'OUT';
+        valEl.style.color = '#f87171';
+        if (labelEl) labelEl.textContent = 'Playoffs';
+        if (sublabelEl) sublabelEl.textContent = 'Eliminated';
+        if (cardEl) cardEl.title = 'Buffalo is mathematically eliminated from playoff contention.';
+        return;
+      }
+
+      // 3. Late-season Clinching Hunt (Magic Number active)
+      const hasValidMagic = magicNum !== undefined && magicNum !== null && magicNum !== '' && !String(magicNum).includes('PTS');
+      if (hasValidMagic) {
+        const cleanMagic = String(magicNum).replace(/[^0-9]/g, '') || magicNum;
+        valEl.textContent = cleanMagic;
+        valEl.style.color = '#34d399';
+        if (labelEl) labelEl.textContent = 'Magic #';
+        if (sublabelEl) sublabelEl.textContent = 'To Clinch';
+        if (cardEl) cardEl.title = 'Combined Sabres wins and chaser losses required to mathematically clinch a playoff berth.';
+        return;
+      }
+
+      // 4. Late-season Elimination Danger (Tragic / Elimination Number)
+      const isTragicNumber = !rawTragic.includes('PTS') && !rawTragic.includes('Pace') && (rawTragic.startsWith('E#') || (!isNaN(parseInt(rawTragic, 10)) && parseInt(rawTragic, 10) <= 16));
+      if (isTragicNumber) {
+        valEl.textContent = rawTragic.startsWith('E#') ? rawTragic : `E# ${rawTragic}`;
+        valEl.style.color = '#f87171';
+        if (labelEl) labelEl.textContent = 'Tragic #';
+        if (sublabelEl) sublabelEl.textContent = 'To Elim.';
+        if (cardEl) cardEl.title = 'Combined Sabres dropped points and competitor points gained before mathematical elimination.';
+        return;
+      }
+
+      // 5. Early & Mid-Season Default: Projected Finish (82-Game Pace)
+      const paceMatch = rawTragic.match(/\d+/);
+      const pacePts = paceMatch ? parseInt(paceMatch[0], 10) : 91;
+      valEl.textContent = `${pacePts} PTS`;
+
+      if (pacePts >= 95) {
+        valEl.style.color = '#34d399';
+      } else if (pacePts >= 91) {
+        valEl.style.color = '#FCB514';
+      } else {
+        valEl.style.color = '#f87171';
+      }
+
+      if (labelEl) labelEl.textContent = 'Proj. Finish';
+      if (sublabelEl) {
+        const diff = pacePts - 95;
+        sublabelEl.textContent = diff >= 0 ? `Cut: ~95 (+${diff})` : `Cut: ~95 (${diff})`;
+      }
+      if (cardEl) {
+        cardEl.title = 'Projected 82-game regular season finish based on current points pace. Eastern Conference playoff cutline is typically ~95 pts.';
+      }
+    }
+
     let isDataLoading = false;
     async function loadData() {
       if (isDataLoading) return;
@@ -3177,6 +3270,8 @@
     "winDivision": 24,
     "wildcard": 14,
     "tragicNumber": "91 PTS",
+    "projectedPoints": 91,
+    "magicNumber": null,
     "clinchAlert": {
       "active": false,
       "scenario": "No clinching scenarios available this week."
@@ -4261,9 +4356,7 @@
       document.getElementById('sabres-playoff-pct').textContent = `${s.makePlayoffs}%`;
       document.getElementById('sabres-div-pct').textContent = `${s.winDivision}%`;
       document.getElementById('sabres-wildcard-pct').textContent = `${s.wildcard}%`;
-      const rawTragic = s.tragicNumber || '91 PTS';
-      const cleanTragic = rawTragic.includes('Pace:') ? (rawTragic.match(/\d+/) ? `${rawTragic.match(/\d+/)[0]} PTS` : rawTragic) : rawTragic;
-      document.getElementById('sabres-tragic-num').textContent = cleanTragic;
+      updateSabresProjectionTile(s);
 
       const sClinchBox = document.getElementById('sabres-clinch-box');
       const sClinchText = document.getElementById('sabres-clinch-text');
@@ -4272,7 +4365,10 @@
         sClinchText.textContent = `⚡ CLINCHING ACTIVE: ${s.clinchAlert.scenario}`;
       } else {
         sClinchBox.classList.remove('clinch-alert-active');
-        sClinchText.textContent = `No clinching scenarios available this week (${s.tragicNumber || 'Target: 92 Pts'})`;
+        const statusDetail = s.magicNumber 
+          ? `Magic #: ${s.magicNumber}` 
+          : `Projected: ${s.tragicNumber || '91 PTS'} • Target: ~95`;
+        sClinchText.textContent = `No clinching scenarios available this week (${statusDetail})`;
       }
 
       document.getElementById('sabres-game-time').textContent = s.nextGame.gameTime || '';
