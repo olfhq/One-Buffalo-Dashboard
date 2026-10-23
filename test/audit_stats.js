@@ -50,6 +50,13 @@ if (sabresRadarTeam) {
   check('Sabres makePlayoffs matches divisionRadar pct', sabresRadarTeam.pct === s.makePlayoffs, `makePlayoffs=${s.makePlayoffs}, radar=${sabresRadarTeam.pct}`);
 }
 
+// Radar descending sort checks
+const isBillsRadarSorted = b.divisionRadar.every((val, i, arr) => !i || arr[i - 1].pct >= val.pct);
+check('Bills division radar sorted descending by pct', isBillsRadarSorted, JSON.stringify(b.divisionRadar.map(r => `${r.team}:${r.pct}`)));
+
+const isSabresRadarSorted = s.divisionRadar.every((val, i, arr) => !i || arr[i - 1].pct >= val.pct);
+check('Sabres division radar sorted descending by pct', isSabresRadarSorted, JSON.stringify(s.divisionRadar.map(r => `${r.team}:${r.pct}`)));
+
 // 3. CHECK FALLBACK_DATA IN HTML FILES
 function extractFallback(html, filename) {
   const m = html.match(/const\s+FALLBACK_DATA\s*=\s*(\{[\s\S]*?\n\s*\};)/);

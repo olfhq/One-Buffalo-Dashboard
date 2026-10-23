@@ -3320,12 +3320,12 @@
     },
     "divisionRadar": [
       {
-        "team": "Bruins",
-        "pct": 67
-      },
-      {
         "team": "Lightning",
         "pct": 71
+      },
+      {
+        "team": "Bruins",
+        "pct": 67
       },
       {
         "team": "Senators",
@@ -4341,12 +4341,15 @@
       }
 
       // Populate Postseason Radar
-      document.getElementById('bills-radar').innerHTML = b.divisionRadar.map(r => `
-        <div class="radar-item">
-          <div class="radar-team">${r.team}</div>
-          <div class="radar-val">${r.pct}%</div>
-        </div>
-      `).join('');
+      if (Array.isArray(b.divisionRadar)) {
+        const sortedRadar = [...b.divisionRadar].sort((a, b) => (b.pct || 0) - (a.pct || 0));
+        document.getElementById('bills-radar').innerHTML = sortedRadar.map(r => `
+          <div class="radar-item">
+            <div class="radar-team">${r.team}</div>
+            <div class="radar-val">${r.pct}%</div>
+          </div>
+        `).join('');
+      }
 
       document.getElementById('bills-distribution').innerHTML = b.seedDistribution.map(item => `
         <div class="dist-row">

@@ -2037,8 +2037,8 @@ async function scrapePlayoffStatus() {
           ]
     },
     divisionRadar: [
-      { team: 'Bruins', pct: 65 },
       { team: 'Lightning', pct: 71 },
+      { team: 'Bruins', pct: 65 },
       { team: 'Senators', pct: 59 },
       { team: 'Sabres', pct: 42 }
     ],
@@ -2103,7 +2103,10 @@ async function scrapePlayoffStatus() {
       }
     });
 
-    if (radarResults.length === 4) billsData.divisionRadar = radarResults;
+    if (radarResults.length === 4) {
+      radarResults.sort((a, b) => (b.pct || 0) - (a.pct || 0));
+      billsData.divisionRadar = radarResults;
+    }
 
     // 2. Scrape Table (2) Bills 1st Round Playoff Matchup Probabilities
     const scrapedOpponents = [];
@@ -2225,6 +2228,7 @@ async function scrapePlayoffStatus() {
         sabresRadar.pop();
         sabresRadar.push({ team: 'Sabres', pct: sabresData.makePlayoffs });
       }
+      sabresRadar.sort((a, b) => (b.pct || 0) - (a.pct || 0));
       sabresData.divisionRadar = sabresRadar;
     }
   } catch (err) {

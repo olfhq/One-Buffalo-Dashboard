@@ -3621,12 +3621,12 @@
     },
     "divisionRadar": [
       {
-        "team": "Bruins",
-        "pct": 67
-      },
-      {
         "team": "Lightning",
         "pct": 71
+      },
+      {
+        "team": "Bruins",
+        "pct": 67
       },
       {
         "team": "Senators",
@@ -4646,7 +4646,8 @@
 
       // Populate Postseason Radar
       if (Array.isArray(s.divisionRadar)) {
-        document.getElementById('sabres-radar').innerHTML = s.divisionRadar.map(r => `
+        const sortedRadar = [...s.divisionRadar].sort((a, b) => (b.pct || 0) - (a.pct || 0));
+        document.getElementById('sabres-radar').innerHTML = sortedRadar.map(r => `
           <div class="radar-item">
             <div class="radar-team">${r.team}</div>
             <div class="radar-val">${r.pct}%</div>

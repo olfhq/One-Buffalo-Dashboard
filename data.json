@@ -718,12 +718,12 @@
     },
     "divisionRadar": [
       {
-        "team": "Bruins",
-        "pct": 67
-      },
-      {
         "team": "Lightning",
         "pct": 71
+      },
+      {
+        "team": "Bruins",
+        "pct": 67
       },
       {
         "team": "Senators",
