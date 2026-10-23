@@ -29,7 +29,7 @@ jobs:
           node-version: '20'
 
       - name: Install Dependencies
-        run: npm install --no-save cheerio
+        run: npm install --no-audit --no-fund
 
       - name: Run Scraper
         run: node scripts/scrape.js
@@ -44,7 +44,6 @@ jobs:
           git add data.json index.html bills.html sabres.html
           if ! git diff --staged --quiet; then
             git commit -m "Auto-update Buffalo playoff probabilities [skip ci]"
-            git checkout -- .
             git pull --rebase --autostash origin v4
             git push origin v4
           fi

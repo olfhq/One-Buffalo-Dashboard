@@ -252,10 +252,10 @@
         "slot": "Sun, Oct 25 • 9:30 AM ET",
         "broadcast": "NFL Net",
         "announcers": "Rich Eisen, Kurt Warner",
-        "venue": "Stade de France, Saint-Denis,",
-        "roof": "Domed Stadium",
-        "surface": "Turf Nation",
-        "weather": "Controlled 72°F Climate",
+        "venue": "Stade de France, Saint-Denis, France",
+        "roof": "Open-Air Stadium",
+        "surface": "Natural Grass",
+        "weather": "58°F, 9mph Wind, 15% PoP",
         "window": "INTL",
         "windowLabel": "NFL International Series",
         "windowBadge": "Morning London / Germany Slate",
@@ -296,16 +296,16 @@
         "homeScore": "0",
         "homeWinChance": 43,
         "awayWinChance": 57,
-        "verdict": "NEUTRAL",
+        "verdict": "NFC MATCHUP",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
-        "why": "Non-conference game with zero immediate AFC tiebreaker leverage."
+        "why": "Non-conference NFC matchup with zero direct AFC tiebreaker leverage."
       },
       {
         "isoTime": "2026-10-25T17:00Z",
         "slot": "Sun, Oct 25 • 1:00 PM ET",
         "broadcast": "CBS",
-        "announcers": "Andrew Catalon, Tiki Barber",
+        "announcers": "Spero Dedes, Adam Archuleta",
         "venue": "Nissan Stadium, Nashville, TN",
         "roof": "Open-Air Stadium",
         "surface": "Matrix Helix Turf",
@@ -323,16 +323,16 @@
         "homeScore": "0",
         "homeWinChance": 46,
         "awayWinChance": 54,
-        "verdict": "NEUTRAL",
-        "impactClass": "neutral",
-        "target": "Neutral Matchup",
-        "why": "Non-conference game with zero immediate AFC tiebreaker leverage."
+        "verdict": "SEEDING WATCH",
+        "impactClass": "good",
+        "target": "Root for Tennessee Titans",
+        "why": "A Cleveland Browns loss knocks down the higher-seeded AFC contender in conference tiebreakers."
       },
       {
         "isoTime": "2026-10-25T17:00Z",
         "slot": "Sun, Oct 25 • 1:00 PM ET",
         "broadcast": "CBS",
-        "announcers": "Andrew Catalon, Tiki Barber",
+        "announcers": "Kevin Harlan, Trent Green",
         "venue": "U.S. Bank Stadium, Minneapolis, MN",
         "roof": "Domed Stadium",
         "surface": "Act Global Turf",
@@ -350,10 +350,10 @@
         "homeScore": "0",
         "homeWinChance": 71,
         "awayWinChance": 29,
-        "verdict": "NEUTRAL",
-        "impactClass": "neutral",
-        "target": "Neutral Matchup",
-        "why": "Non-conference game with zero immediate AFC tiebreaker leverage."
+        "verdict": "SEEDING WATCH",
+        "impactClass": "good",
+        "target": "Root for Minnesota Vikings",
+        "why": "An NFC win over Indianapolis Colts hands an AFC team a loss without adding a win to the AFC standings pool."
       },
       {
         "isoTime": "2026-10-25T17:00Z",
@@ -379,14 +379,14 @@
         "awayWinChance": 34,
         "verdict": "AFC EAST WATCH",
         "impactClass": "bad",
-        "target": "Root for New York Jets",
-        "why": "A Miami Dolphins loss knocks down Buffalo's closest challenger in the AFC East."
+        "target": "Root for Miami Dolphins",
+        "why": "A New York Jets loss knocks down the higher-standing AFC East rival in the division race."
       },
       {
         "isoTime": "2026-10-25T17:00Z",
         "slot": "Sun, Oct 25 • 1:00 PM ET",
         "broadcast": "FOX",
-        "announcers": "Adam Amin, Mark Sanchez",
+        "announcers": "Chris Myers, Mark Schlereth",
         "venue": "Bank of America Stadium, Charlotte, NC",
         "roof": "Open-Air Stadium",
         "surface": "FieldTurf",
@@ -404,16 +404,16 @@
         "homeScore": "0",
         "homeWinChance": 59,
         "awayWinChance": 41,
-        "verdict": "NEUTRAL",
+        "verdict": "NFC MATCHUP",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
-        "why": "Non-conference game with zero immediate AFC tiebreaker leverage."
+        "why": "Non-conference NFC matchup with zero direct AFC tiebreaker leverage."
       },
       {
         "isoTime": "2026-10-25T17:00Z",
         "slot": "Sun, Oct 25 • 1:00 PM ET",
         "broadcast": "CBS",
-        "announcers": "Andrew Catalon, Tiki Barber",
+        "announcers": "Ian Eagle, Charles Davis",
         "venue": "M&T Bank Stadium, Baltimore, MD",
         "roof": "Open-Air Stadium",
         "surface": "Natural Bermuda Grass",
@@ -485,10 +485,10 @@
         "homeScore": "0",
         "homeWinChance": 33,
         "awayWinChance": 67,
-        "verdict": "NEUTRAL",
-        "impactClass": "neutral",
-        "target": "Neutral Matchup",
-        "why": "Non-conference game with zero immediate AFC tiebreaker leverage."
+        "verdict": "SEEDING WATCH",
+        "impactClass": "good",
+        "target": "Root for Arizona Cardinals",
+        "why": "An NFC win over Denver Broncos hands an AFC team a loss without adding a win to the AFC standings pool."
       },
       {
         "isoTime": "2026-10-25T20:25Z",
@@ -512,16 +512,16 @@
         "homeScore": "0",
         "homeWinChance": 60,
         "awayWinChance": 40,
-        "verdict": "NEUTRAL",
+        "verdict": "NFC MATCHUP",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
-        "why": "Non-conference game with zero immediate AFC tiebreaker leverage."
+        "why": "Non-conference NFC matchup with zero direct AFC tiebreaker leverage."
       },
       {
         "isoTime": "2026-10-25T20:25Z",
         "slot": "Sun, Oct 25 • 4:25 PM ET",
         "broadcast": "FOX",
-        "announcers": "Kevin Burkhardt, Tom Brady",
+        "announcers": "Kenny Albert, Jonathan Vilma",
         "venue": "Allegiant Stadium, Las Vegas, NV",
         "roof": "Domed Stadium",
         "surface": "Natural Bermuda Grass Tray",
@@ -539,10 +539,10 @@
         "homeScore": "0",
         "homeWinChance": 37,
         "awayWinChance": 63,
-        "verdict": "NEUTRAL",
-        "impactClass": "neutral",
-        "target": "Neutral Matchup",
-        "why": "Non-conference game with zero immediate AFC tiebreaker leverage."
+        "verdict": "SEEDING WATCH",
+        "impactClass": "good",
+        "target": "Root for Los Angeles Rams",
+        "why": "An NFC win over Las Vegas Raiders hands an AFC team a loss without adding a win to the AFC standings pool."
       },
       {
         "isoTime": "2026-10-26T00:20Z",
@@ -593,10 +593,10 @@
         "homeScore": "0",
         "homeWinChance": 34,
         "awayWinChance": 66,
-        "verdict": "NEUTRAL",
+        "verdict": "NFC MATCHUP",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
-        "why": "Non-conference game with zero immediate AFC tiebreaker leverage."
+        "why": "Non-conference NFC matchup with zero direct AFC tiebreaker leverage."
       }
     ]
   },
@@ -701,17 +701,17 @@
           "team": "Sabres"
         },
         {
-          "player": "T.J. Oshie",
-          "pos": "RW",
+          "player": "Sonny Milano",
+          "pos": "LW",
           "status": "Injured Reserve",
-          "injury": "Back",
+          "injury": "Upper Body",
           "team": "Washington"
         },
         {
-          "player": "Nicklas Backstrom",
-          "pos": "C",
-          "status": "Injured Reserve",
-          "injury": "Hip",
+          "player": "Jakob Chychrun",
+          "pos": "D",
+          "status": "Questionable",
+          "injury": "Upper Body",
           "team": "Washington"
         }
       ]
@@ -800,10 +800,10 @@
         "homeScore": "5",
         "homeWinChance": 63,
         "awayWinChance": 37,
-        "verdict": "REGULATION LOSS",
-        "impactClass": "good",
-        "target": "Root for Ottawa Senators in Regulation",
-        "why": "Ottawa Senators defeated Florida Panthers in regulation, keeping them at 0 points."
+        "verdict": "RIVAL WIN",
+        "impactClass": "bad",
+        "target": "Root for Florida Panthers in Regulation",
+        "why": "Ottawa Senators won in regulation, collecting 2 points in the division chase."
       },
       {
         "isoTime": "2026-10-22T23:00:00Z",
@@ -833,7 +833,7 @@
         "isoTime": "2026-10-22T23:00:00Z",
         "slot": "Thu, Oct 22 • 7:00 PM ET",
         "broadcast": "ESPN+",
-        "announcers": "Bob Wischusen, Kevin Weekes",
+        "announcers": "John Buccigross, Ryan Callahan",
         "venue": "Scotiabank Arena, Toronto, ON",
         "window": "THU",
         "windowLabel": "Thursday Prime NHL Slate",
@@ -857,7 +857,7 @@
         "isoTime": "2026-10-22T23:00:00Z",
         "slot": "Thu, Oct 22 • 7:00 PM ET",
         "broadcast": "ESPN+",
-        "announcers": "Bob Wischusen, Kevin Weekes",
+        "announcers": "Mike Monaco, A.J. Mleczko",
         "venue": "Canadian Tire Centre, Ottawa, ON",
         "window": "THU",
         "windowLabel": "Thursday Prime NHL Slate",
@@ -881,7 +881,7 @@
         "isoTime": "2026-10-22T23:00:00Z",
         "slot": "Thu, Oct 22 • 7:00 PM ET",
         "broadcast": "ESPN+",
-        "announcers": "Bob Wischusen, Kevin Weekes",
+        "announcers": "Roxy Bernstein, Cassie Campbell-Pascall",
         "venue": "Prudential Center, Newark, NJ",
         "window": "THU",
         "windowLabel": "Thursday Prime NHL Slate",
@@ -905,7 +905,7 @@
         "isoTime": "2026-10-22T23:00:00Z",
         "slot": "Thu, Oct 22 • 7:00 PM ET",
         "broadcast": "ESPN+",
-        "announcers": "Bob Wischusen, Kevin Weekes",
+        "announcers": "Leah Hextall, Dominic Moore",
         "venue": "PPG Paints Arena, Pittsburgh, PA",
         "window": "THU",
         "windowLabel": "Thursday Prime NHL Slate",
@@ -1072,7 +1072,7 @@
       {
         "isoTime": "2026-10-24T19:30:00Z",
         "slot": "Sat, Oct 24 • 3:30 PM ET",
-        "broadcast": "ABTV ",
+        "broadcast": "ABTV",
         "announcers": "Regional Broadcast Crew",
         "venue": "Prudential Center, Newark, NJ",
         "window": "SAT",
@@ -1360,7 +1360,7 @@
       {
         "isoTime": "2026-10-26T23:00:00Z",
         "slot": "Mon, Oct 26 • 7:00 PM ET",
-        "broadcast": "ABTV ",
+        "broadcast": "ABTV",
         "announcers": "Regional Broadcast Crew",
         "venue": "Madison Square Garden, New York, NY",
         "window": "MON",
@@ -1450,8 +1450,8 @@
         "awayWinChance": 46,
         "verdict": "WILD CARD WATCH",
         "impactClass": "neutral",
-        "target": "Root for Philadelphia Flyers in Regulation",
-        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points."
+        "target": "Root for Columbus Blue Jackets in Regulation",
+        "why": "A regulation loss for higher-standing Philadelphia Flyers prevents a 3-point overtime game in the Wild Card race."
       },
       {
         "isoTime": "2026-10-28T00:00:00Z",
@@ -1618,8 +1618,8 @@
         "awayWinChance": 29,
         "verdict": "WILD CARD WATCH",
         "impactClass": "neutral",
-        "target": "Root for Washington Capitals in Regulation",
-        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points."
+        "target": "Root for Philadelphia Flyers in Regulation",
+        "why": "A regulation loss for higher-standing Washington Capitals prevents a 3-point overtime game in the Wild Card race."
       },
       {
         "isoTime": "2026-10-29T01:00:00Z",

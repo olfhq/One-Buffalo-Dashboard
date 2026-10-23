@@ -128,36 +128,76 @@ async function fetchBillsLeverage(oppShortName, billsCurrentPlayoffPct) {
       const text = $(el).text();
       const oppRegex = new RegExp(`\\b${oppShortName}\\b`, 'i');
       if (oppRegex.test(text) || (oppShortName === 'Ravens' && text.includes('Baltimore'))) {
-        const cells = $(el).find('td').map((_, td) =>$(td).text().trim()).get();
+        const cells = $(el).find('td').map((_, td) => $(td).text().trim()).get();
         const pcts = cells.map(parseCellPct).filter(n => n >= 0 && n <= 100);
 
-        // billsmig.html presents 8 seed columns for "If Win" (col 8 is No POs)
-        // and 8 seed columns for "If Lose" (col 16 is No POs)
+        // billsmig.html presents 8 seed columns for "If Win" (8th is No POs)
+        // and 8 seed columns for "If Lose" (16th is No POs) at the end of the row
         if (pcts.length >= 16) {
-          const winNoPo = pcts[7];   // 8th percentage is No POs if win
-          const lossNoPo = pcts[15]; // 16th percentage is No POs if loss
+          const tail = pcts.slice(-16);
+          const winNoPo = tail[7];   // 8th percentage in 16-col block is No POs if win
+          const lossNoPo = tail[15]; // 16th percentage in 16-col block is No POs if loss
           const winTotal = Math.round(100 - winNoPo);
           const lossTotal = Math.round(100 - lossNoPo);
 
-          leverageData = {
-            ifWin: winTotal,
-            ifLoss: lossTotal,
-            leverage: Math.abs(winTotal - lossTotal)
-          };
-        } else if (pcts.length >= 2) {
-          // Fallback if structure varies
-          const winTotal = Math.min(99, Math.round(base + 6));
-          const lossTotal = Math.max(50, Math.round(base - 10));
-          leverageData = {
-            ifWin: winTotal,
-            ifLoss: lossTotal,
-            leverage: Math.abs(winTotal - lossTotal)
-          };
+          if (winTotal >= lossTotal && winTotal > 0) {
+            leverageData = {
+              ifWin: winTotal,
+              ifLoss: lossTotal,
+              leverage: Math.abs(winTotal - lossTotal)
+            };
+          }
         }
       }
     });
   } catch (err) {
     console.warn('Bills MIG leverage scrape fallback:', err.message);
+  }
+  return leverageData;
+}
+
+// Scrape dynamic Sabres Playoff Leverage (If Win / If Lose / Swing) from PlayoffStatus.com
+async function fetchSabresLeverage(oppShortName, sabresCurrentPlayoffPct) {
+  const base = sabresCurrentPlayoffPct || 42;
+  let leverageData = {
+    ifWin: Math.min(99, Math.round(base + 6)),
+    ifLoss: Math.max(1, Math.round(base - 5)),
+    leverage: 11
+  };
+  leverageData.leverage = Math.abs(leverageData.ifWin - leverageData.ifLoss);
+
+  try {
+    const html = await fetchHtml('http://www.playoffstatus.com/nhl/sabresmig.html');
+    const $ = cheerio.load(html);
+
+    $('tr').each((_, el) => {
+      const text = $(el).text();
+      const oppRegex = new RegExp(`\\b${oppShortName}\\b`, 'i');
+      if (oppShortName && oppRegex.test(text)) {
+        const cells = $(el).find('td').map((_, td) => $(td).text().trim()).get();
+        const pcts = cells.map(parseCellPct).filter(n => n >= 0 && n <= 100);
+
+        // sabresmig.html presents 6 columns for "If Win" (Div 1-3, WC 1-2, No POs)
+        // and 6 columns for "If Lose" at the end of the row
+        if (pcts.length >= 12) {
+          const tail = pcts.slice(-12);
+          const winNoPo = tail[5];
+          const lossNoPo = tail[11];
+          const winTotal = Math.round(100 - winNoPo);
+          const lossTotal = Math.round(100 - lossNoPo);
+
+          if (winTotal >= lossTotal && winTotal >= base && lossTotal <= base) {
+            leverageData = {
+              ifWin: winTotal,
+              ifLoss: lossTotal,
+              leverage: Math.abs(winTotal - lossTotal)
+            };
+          }
+        }
+      }
+    });
+  } catch (err) {
+    console.warn('Sabres MIG leverage scrape fallback:', err.message);
   }
   return leverageData;
 }
@@ -201,61 +241,72 @@ const NFL_STADIUMS = {
 function getNflStadium(teamName, compVenue, compWeather) {
   const key = Object.keys(NFL_STADIUMS).find(k => (teamName || '').includes(k));
   const base = key ? NFL_STADIUMS[key] : { venue: compVenue?.fullName || 'NFL Stadium', city: compVenue?.address?.city || '', roof: compVenue?.indoor ? 'Indoor Dome' : 'Open-Air Stadium', surface: 'Natural Grass', weather: '55°F, 10mph Wind, 10% PoP' };
-  
-  let weather = base.weather;
+
+  const venueName = (compVenue?.fullName || base.venue).trim();
+  const isNeutralVenue = Boolean(compVenue?.fullName && key && !venueName.toLowerCase().includes(base.venue.split(' ')[0].toLowerCase()));
+
+  let roof = isNeutralVenue ? (compVenue?.indoor ? 'Indoor Stadium' : 'Open-Air Stadium') : base.roof;
+  let surface = isNeutralVenue ? 'Natural Grass' : base.surface;
+  let weather = isNeutralVenue ? (compVenue?.indoor ? 'Controlled 70°F Climate' : '58°F, 9mph Wind, 15% PoP') : base.weather;
+
   if (compWeather && compWeather.temperature) {
     const gust = compWeather.gust ? `${compWeather.gust} Wind` : '10mph Wind';
     const pop = compWeather.precipitation ? `${compWeather.precipitation} PoP` : '10% PoP';
     weather = `${compWeather.temperature}°F, ${gust}, ${pop}`;
   }
-  const cityName = compVenue?.address?.city ? `${compVenue.address.city}, ${compVenue.address.state || ''}`.trim() : base.city;
+  const cityParts = [compVenue?.address?.city, compVenue?.address?.state || compVenue?.address?.country].map(s => (s || '').trim()).filter(Boolean);
+  const cityName = cityParts.length > 0 ? cityParts.join(', ') : base.city;
   return {
-    venue: compVenue?.fullName || base.venue,
+    venue: venueName,
     city: cityName,
-    fullVenue: cityName ? `${compVenue?.fullName || base.venue}, ${cityName}` : (compVenue?.fullName || base.venue),
-    roof: base.roof,
-    surface: base.surface,
+    fullVenue: cityName ? `${venueName}, ${cityName}` : venueName,
+    roof,
+    surface,
     weather
   };
 }
 
 function getNflBroadcast(rawNet, homeName, awayName, isoTime, isBillsGame = false) {
-  const net = (rawNet || 'CBS').toUpperCase();
+  const net = (rawNet || 'CBS').trim().toUpperCase();
   const dt = new Date(isoTime);
   const hour = parseInt(dt.toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour12: false, hour: '2-digit' }), 10);
-  
+  const matchHash = ((homeName || '').length * 7 + (awayName || '').length * 13 + (homeName || '').charCodeAt(0) || 0);
+
   if (net.includes('PRIME')) return { network: 'Prime Video', crew: 'Al Michaels, Kirk Herbstreit', tag: 'tv-prime' };
   if (net.includes('NBC') || net.includes('PEACOCK')) return { network: 'NBC', crew: 'Mike Tirico, Cris Collinsworth', tag: 'tv-nbc' };
   if (net.includes('ESPN') || net.includes('ABC')) return { network: net.includes('ABC') ? 'ABC/ESPN' : 'ESPN', crew: 'Joe Buck, Troy Aikman', tag: 'tv-espn' };
   if (net.includes('NFL')) return { network: 'NFL Net', crew: 'Rich Eisen, Kurt Warner', tag: 'tv-nfln' };
 
   if (net.includes('FOX')) {
-    if (homeName.includes('Rams') || homeName.includes('Chiefs') || awayName.includes('Chiefs') || hour >= 16) {
+    if (hour >= 16 && (homeName.includes('Chiefs') || awayName.includes('Chiefs') || homeName.includes('Cowboys') || homeName.includes('49ers') || homeName.includes('Eagles'))) {
       return { network: 'FOX', crew: 'Kevin Burkhardt, Tom Brady', tag: 'tv-fox' };
     }
-    if (homeName.includes('Falcons') || homeName.includes('Packers')) {
-      return { network: 'FOX', crew: 'Joe Davis, Greg Olsen', tag: 'tv-fox' };
-    }
-    if (homeName.includes('Colts')) {
-      return { network: 'FOX', crew: 'Kenny Albert, Jonathan Vilma', tag: 'tv-fox' };
-    }
-    return { network: 'FOX', crew: 'Adam Amin, Mark Sanchez', tag: 'tv-fox' };
+    const foxCrews = [
+      'Joe Davis, Greg Olsen',
+      'Kenny Albert, Jonathan Vilma',
+      'Adam Amin, Mark Sanchez',
+      'Kevin Kugler, Daryl Johnston',
+      'Chris Myers, Mark Schlereth',
+      'Kevin Burkhardt, Tom Brady'
+    ];
+    return { network: 'FOX', crew: foxCrews[matchHash % foxCrews.length], tag: 'tv-fox' };
   }
 
   if (net.includes('CBS')) {
-    if (isBillsGame || homeName.includes('Chiefs') || awayName.includes('Chiefs') || hour >= 16) {
+    if (isBillsGame || (hour >= 16 && (homeName.includes('Chiefs') || awayName.includes('Chiefs') || homeName.includes('Ravens')))) {
       return { network: 'CBS', crew: 'Jim Nantz, Tony Romo', tag: 'tv-cbs' };
     }
-    if (homeName.includes('Patriots') || homeName.includes('Bills')) {
-      return { network: 'CBS', crew: 'Ian Eagle, Charles Davis', tag: 'tv-cbs' };
-    }
-    if (homeName.includes('Buccaneers')) {
-      return { network: 'CBS', crew: 'Kevin Harlan, Trent Green', tag: 'tv-cbs' };
-    }
-    return { network: 'CBS', crew: 'Andrew Catalon, Tiki Barber', tag: 'tv-cbs' };
+    const cbsCrews = [
+      'Ian Eagle, Charles Davis',
+      'Kevin Harlan, Trent Green',
+      'Andrew Catalon, Tiki Barber',
+      'Spero Dedes, Adam Archuleta',
+      'Tom McCarthy, Jay Feely'
+    ];
+    return { network: 'CBS', crew: cbsCrews[matchHash % cbsCrews.length], tag: 'tv-cbs' };
   }
 
-  return { network: rawNet || 'CBS', crew: 'Regional Broadcast Crew', tag: 'tv-cbs' };
+  return { network: (rawNet || 'CBS').trim(), crew: 'Regional Broadcast Crew', tag: 'tv-cbs' };
 }
 
 function getNflWindow(isoTime) {
@@ -445,7 +496,21 @@ async function fetchNflScoreboard() {
 
     const combinedEvents = [...events, ...extraEvents];
     const afcEastPriority = ['New England Patriots', 'Miami Dolphins', 'New York Jets'];
-    const afcContenders = ['Kansas City Chiefs', 'Baltimore Ravens', 'Houston Texans', 'Pittsburgh Steelers', 'Los Angeles Chargers'];
+    const afcConferenceTeams = [
+      'Kansas City Chiefs', 'Baltimore Ravens', 'Houston Texans', 'Pittsburgh Steelers',
+      'Los Angeles Chargers', 'Denver Broncos', 'Indianapolis Colts', 'Cincinnati Bengals',
+      'Jacksonville Jaguars', 'Las Vegas Raiders', 'Cleveland Browns', 'Tennessee Titans'
+    ];
+
+    function parseNflStandingMetric(recStr, fallbackIdx = 99) {
+      const m = String(recStr || '').match(/(\d+)-(\d+)(?:-(\d+))?/);
+      if (!m) return { wins: 0, losses: 0, pct: 0.5 - fallbackIdx * 0.01 };
+      const w = parseInt(m[1], 10);
+      const l = parseInt(m[2], 10);
+      const t = m[3] ? parseInt(m[3], 10) : 0;
+      const total = w + l + t;
+      return { wins: w, losses: l, pct: total > 0 ? (w + 0.5 * t) / total : 0.5 };
+    }
 
     for (const ev of combinedEvents) {
       const comp = ev.competitions?.[0];
@@ -466,29 +531,35 @@ async function fetchNflScoreboard() {
       const awayScore = away.score || '0';
       const statusState = comp.status?.type?.state;
       const statusDetail = comp.status?.type?.shortDetail || 'Scheduled';
-      const broadcast = comp.broadcasts?.[0]?.names?.[0] || 'TV';
+      const broadcast = (comp.broadcasts?.[0]?.names?.[0] || 'TV').trim();
+
+      const awayRecordStr = getNflRecordStr(away, awayName);
+      const homeRecordStr = getNflRecordStr(home, homeName);
+      const awayMetric = parseNflStandingMetric(awayRecordStr, afcEastPriority.indexOf(awayName));
+      const homeMetric = parseNflStandingMetric(homeRecordStr, afcEastPriority.indexOf(homeName));
 
       const d = new Date(ev.date);
       const slot = d.toLocaleDateString('en-US', { timeZone: 'America/New_York', weekday: 'short', month: 'short', day: 'numeric' }) +
         ' • ' + d.toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour: 'numeric', minute: '2-digit', hour12: true }) + ' ET';
 
-      let verdict = 'NEUTRAL';
+      let verdict = 'NFC MATCHUP';
       let impactClass = 'neutral';
       let target = 'Neutral Matchup';
-      let why = 'Non-conference game with zero immediate AFC tiebreaker leverage.';
+      let why = 'Non-conference NFC matchup with zero direct AFC tiebreaker leverage.';
 
       const isAwayEast = afcEastPriority.includes(awayName);
       const isHomeEast = afcEastPriority.includes(homeName);
+      const isAwayAfc = isAwayEast || afcConferenceTeams.includes(awayName);
+      const isHomeAfc = isHomeEast || afcConferenceTeams.includes(homeName);
       const hasChiefs = awayName === 'Kansas City Chiefs' || homeName === 'Kansas City Chiefs';
 
       if (isAwayEast && isHomeEast) {
-        const awayIndex = afcEastPriority.indexOf(awayName);
-        const homeIndex = afcEastPriority.indexOf(homeName);
-        const biggerThreat = awayIndex <= homeIndex ? awayName : homeName;
+        const awayHigher = awayMetric.pct > homeMetric.pct || (awayMetric.pct === homeMetric.pct && awayMetric.wins > homeMetric.wins);
+        const biggerThreat = awayHigher ? awayName : homeName;
         const underdog = biggerThreat === awayName ? homeName : awayName;
 
         target = `Root for ${underdog}`;
-        why = `A ${biggerThreat} loss knocks down Buffalo's closest challenger in the AFC East.`;
+        why = `A ${biggerThreat} loss knocks down the higher-standing AFC East rival in the division race.`;
 
         if (statusState === 'post') {
           const biggerScore = biggerThreat === awayName ? parseInt(awayScore) : parseInt(homeScore);
@@ -509,23 +580,33 @@ async function fetchNflScoreboard() {
         }
       } else if (hasChiefs && (isAwayEast || isHomeEast)) {
         const rival = isAwayEast ? awayName : homeName;
-        target = `Root for Kansas City Chiefs`;
-        why = `AFC East division title takes precedence: A ${rival} loss widens Buffalo's division lead.`;
-        verdict = 'AFC EAST WATCH';
-        impactClass = 'good';
+        const rivalMetric = isAwayEast ? awayMetric : homeMetric;
+        if (rivalMetric.pct >= 0.45) {
+          target = `Root for Kansas City Chiefs`;
+          why = `AFC East division title takes precedence: A ${rival} loss widens Buffalo's division lead.`;
+        } else {
+          target = `Root for ${rival}`;
+          why = `With ${rival} buried in the standings, a Chiefs loss directly boosts Buffalo's #1 AFC seed odds.`;
+        }
 
         if (statusState === 'post') {
           const rivalScore = rival === awayName ? parseInt(awayScore) : parseInt(homeScore);
           const kcScore = rival === awayName ? parseInt(homeScore) : parseInt(awayScore);
+          const wantedKc = rivalMetric.pct >= 0.45;
+          const goodOutcome = wantedKc ? (kcScore > rivalScore) : (rivalScore > kcScore);
 
-          if (kcScore > rivalScore) {
+          if (goodOutcome) {
             verdict = 'GOOD FOR BUFFALO';
             impactClass = 'good';
-            why = `Kansas City defeated ${rival}, protecting Buffalo's lead in the AFC East.`;
+            why = wantedKc
+              ? `Kansas City defeated ${rival}, protecting Buffalo's lead in the AFC East.`
+              : `${rival} upset Kansas City, boosting Buffalo's path to the AFC #1 seed.`;
           } else {
             verdict = 'BAD FOR BUFFALO';
             impactClass = 'bad';
-            why = `${rival} won, keeping division pressure on the Bills.`;
+            why = wantedKc
+              ? `${rival} won, keeping division pressure on the Bills.`
+              : `Kansas City won, maintaining pressure in the AFC #1 seed race.`;
           }
         } else {
           verdict = 'AFC EAST WATCH';
@@ -555,12 +636,13 @@ async function fetchNflScoreboard() {
           verdict = 'AFC EAST WATCH';
           impactClass = 'bad';
         }
-      } else if (afcContenders.some(c => awayName === c || homeName === c)) {
-        const contender = afcContenders.find(c => awayName === c || homeName === c);
+      } else if (isAwayAfc && isHomeAfc) {
+        const awayHigher = awayMetric.pct > homeMetric.pct || (awayMetric.pct === homeMetric.pct && awayMetric.wins >= homeMetric.wins);
+        const contender = awayHigher ? awayName : homeName;
         const opponent = contender === awayName ? homeName : awayName;
 
         target = `Root for ${opponent}`;
-        why = `${contender} loss clears tiebreaker paths for Buffalo's AFC conference seeding & bye week odds.`;
+        why = `A ${contender} loss knocks down the higher-seeded AFC contender in conference tiebreakers.`;
         verdict = 'SEEDING WATCH';
         impactClass = 'good';
 
@@ -571,10 +653,34 @@ async function fetchNflScoreboard() {
           if (oppScore > contScore) {
             verdict = 'GOOD FOR BUFFALO';
             impactClass = 'good';
-            why = `${contender} lost, boosting Buffalo's path to a higher AFC playoff seed.`;
+            why = `${opponent} defeated ${contender}, improving Buffalo's AFC seeding cushion.`;
           } else {
             verdict = 'RIVAL WIN';
             impactClass = 'neutral';
+            why = `${contender} won, keeping pace in the AFC playoff picture.`;
+          }
+        }
+      } else if (isAwayAfc || isHomeAfc) {
+        const afcTeam = isAwayAfc ? awayName : homeName;
+        const nfcTeam = isAwayAfc ? homeName : awayName;
+
+        target = `Root for ${nfcTeam}`;
+        why = `An NFC win over ${afcTeam} hands an AFC team a loss without adding a win to the AFC standings pool.`;
+        verdict = 'SEEDING WATCH';
+        impactClass = 'good';
+
+        if (statusState === 'post') {
+          const afcScore = afcTeam === awayName ? parseInt(awayScore) : parseInt(homeScore);
+          const nfcScore = afcTeam === awayName ? parseInt(homeScore) : parseInt(awayScore);
+
+          if (nfcScore > afcScore) {
+            verdict = 'GOOD FOR BUFFALO';
+            impactClass = 'good';
+            why = `${nfcTeam} defeated ${afcTeam}, knocking an AFC rival down a game in conference standings.`;
+          } else {
+            verdict = 'RIVAL WIN';
+            impactClass = 'neutral';
+            why = `${afcTeam} picked up an out-of-conference victory.`;
           }
         }
       }
@@ -600,10 +706,10 @@ async function fetchNflScoreboard() {
         statusState,
         statusDetail,
         awayName,
-        awayRecord: getNflRecordStr(away, awayName),
+        awayRecord: awayRecordStr,
         awayScore,
         homeName,
-        homeRecord: getNflRecordStr(home, homeName),
+        homeRecord: homeRecordStr,
         homeScore,
         homeWinChance: nflOdds.homeWinChance,
         awayWinChance: nflOdds.awayWinChance,
@@ -811,7 +917,7 @@ const NHL_ARENA_DATABASE = [
   { aliases: ['Predators', 'Nashville', 'NSH', 'Nashville Predators'], venue: 'Bridgestone Arena', city: 'Nashville, TN' },
   { aliases: ['Blues', 'St. Louis', 'Saint Louis', 'STL', 'St. Louis Blues'], venue: 'Enterprise Center', city: 'St. Louis, MO' },
   { aliases: ['Jets', 'Winnipeg', 'WPG', 'Winnipeg Jets'], venue: 'Canada Life Centre', city: 'Winnipeg, MB' },
-  { aliases: ['Utah', 'UTA', 'Utah Hockey Club'], venue: 'Delta Center', city: 'Salt Lake City, UT' },
+  { aliases: ['Mammoth', 'Utah Mammoth', 'Utah', 'UTA', 'Utah Hockey Club'], venue: 'Delta Center', city: 'Salt Lake City, UT' },
   { aliases: ['Ducks', 'Anaheim', 'ANA', 'Anaheim Ducks'], venue: 'Honda Center', city: 'Anaheim, CA' },
   { aliases: ['Flames', 'Calgary', 'CGY', 'Calgary Flames'], venue: 'Scotiabank Saddledome', city: 'Calgary, AB' },
   { aliases: ['Oilers', 'Edmonton', 'EDM', 'Edmonton Oilers'], venue: 'Rogers Place', city: 'Edmonton, AB' },
@@ -862,20 +968,53 @@ function getNhlArena(homeName) {
 }
 
 function getNhlBroadcast(rawNet, homeName, awayName, isSabresGame = false) {
-  const net = (rawNet || 'ESPN+').toUpperCase();
+  const cleanRaw = (rawNet || 'ESPN+').trim();
+  const net = cleanRaw.toUpperCase();
+  const matchHash = ((homeName || '').length * 7 + (awayName || '').length * 13 + ((homeName || '').charCodeAt(0) || 0));
+
   if (isSabresGame) {
     if (net.includes('TNT')) return { network: 'TNT', crew: 'Kenny Albert, Eddie Olczyk, Brian Boucher', tag: 'tv-tnt' };
-    if (net.includes('ESPN')) return { network: 'ESPN', crew: 'Sean McDonough, Ray Ferraro', tag: 'tv-espn' };
+    if (net.includes('ABC') || (net.includes('ESPN') && !net.includes('ESPN+'))) return { network: net.includes('ABC') ? 'ABC' : 'ESPN', crew: 'Sean McDonough, Ray Ferraro', tag: 'tv-espn' };
     return { network: 'MSG-B', crew: 'Dan Dunleavy, Rob Ray', tag: 'tv-msg' };
   }
-  if (net.includes('TNT') || net.includes('MAX')) return { network: 'TNT', crew: 'Kenny Albert, Eddie Olczyk, Brian Boucher', tag: 'tv-tnt' };
+  if (net.includes('TNT') || net.includes('MAX')) {
+    const tntCrews = [
+      'Kenny Albert, Eddie Olczyk, Brian Boucher',
+      'Brendan Burke, Darren Pang, Jackie Redmond'
+    ];
+    return { network: 'TNT', crew: tntCrews[matchHash % tntCrews.length], tag: 'tv-tnt' };
+  }
   if (net.includes('ABC')) return { network: 'ABC', crew: 'Sean McDonough, Ray Ferraro', tag: 'tv-espn' };
-  if (net.includes('ESPN+')) return { network: 'ESPN+', crew: 'Bob Wischusen, Kevin Weekes', tag: 'tv-espn' };
+  if (net.includes('ESPN+')) {
+    const espnPlusCrews = [
+      'Bob Wischusen, Kevin Weekes',
+      'John Buccigross, Ryan Callahan',
+      'Mike Monaco, A.J. Mleczko',
+      'Roxy Bernstein, Cassie Campbell-Pascall',
+      'Leah Hextall,Dominic Moore',
+      'Regional RSN / ESPN+ Out-of-Market Feed'
+    ];
+    return { network: 'ESPN+', crew: espnPlusCrews[matchHash % espnPlusCrews.length].replace(',', ', '), tag: 'tv-espn' };
+  }
   if (net.includes('ESPN')) return { network: 'ESPN', crew: 'Steve Levy, Ray Ferraro', tag: 'tv-espn' };
-  if (net.includes('SN') || net.includes('SPORTSNET')) return { network: 'Sportsnet', crew: 'Chris Cuthbert, Craig Simpson', tag: 'tv-sn' };
-  if (net.includes('TSN')) return { network: 'TSN4', crew: 'Gord Miller, Mike Johnson', tag: 'tv-tsn' };
+  if (net.includes('SN') || net.includes('SPORTSNET')) {
+    const snCrews = [
+      'Chris Cuthbert, Craig Simpson',
+      'John Bartlett, Garry Galley',
+      'Rick Ball, Kelly Hrudey'
+    ];
+    return { network: 'Sportsnet', crew: snCrews[matchHash % snCrews.length], tag: 'tv-sn' };
+  }
+  if (net.includes('TSN')) {
+    const tsnCrews = [
+      'Gord Miller, Mike Johnson',
+      'Bryan Mudryk, Frankie Corrado'
+    ];
+    return { network: cleanRaw.includes('TSN') ? cleanRaw : 'TSN', crew: tsnCrews[matchHash % tsnCrews.length], tag: 'tv-tsn' };
+  }
   if (net.includes('NESN')) return { network: 'NESN', crew: 'Judd Sirott, Andy Brickley', tag: 'tv-nesn' };
-  return { network: rawNet || 'TV', crew: 'Regional Broadcast Crew', tag: 'tv-rsn' };
+  if (net.includes('MSG')) return { network: cleanRaw, crew: 'Sam Rosen, Joe Micheletti', tag: 'tv-msg' };
+  return { network: cleanRaw || 'TV', crew: `${homeName || 'Home'} Regional Broadcast Crew`, tag: 'tv-rsn' };
 }
 
 function getNhlWindow(isoTime) {
@@ -1074,6 +1213,28 @@ async function fetchNhlScoreboard() {
       }
     }
 
+    function getNhlStandingPct(teamName, recStr, fallbackIdx = 50) {
+      let pct = standingsMap?.get(teamName);
+      if (pct === undefined && standingsMap) {
+        for (const [key, val] of standingsMap.entries()) {
+          if ((teamName || '').includes(key) || key.includes(teamName || '')) {
+            pct = val;
+            break;
+          }
+        }
+      }
+      if (pct !== undefined) return pct;
+      const m = String(recStr || '').match(/(\d+)-(\d+)-(\d+)/);
+      if (m) {
+        const w = parseInt(m[1], 10);
+        const l = parseInt(m[2], 10);
+        const otl = parseInt(m[3], 10);
+        const gp = w + l + otl;
+        if (gp > 0) return (w * 2 + otl) / (gp * 2);
+      }
+      return 0.55 - (fallbackIdx >= 0 ? fallbackIdx * 0.01 : 0);
+    }
+
     // Calculate rooting verdicts and impact analysis for every matchup
     for (const g of rawGamesMap.values()) {
       const { awayName, homeName, awayScore, homeScore, statusState, statusDetail } = g;
@@ -1090,19 +1251,22 @@ async function fetchNhlScoreboard() {
         continue;
       }
 
+      const awayRecordStr = getNhlRecordStr(awayName, g.espnComp?.competitors?.find(c => c.homeAway === 'away'));
+      const homeRecordStr = getNhlRecordStr(homeName, g.espnComp?.competitors?.find(c => c.homeAway === 'home'));
+      const awayPct = getNhlStandingPct(awayName, awayRecordStr, atlanticPriority.indexOf(awayName));
+      const homePct = getNhlStandingPct(homeName, homeRecordStr, atlanticPriority.indexOf(homeName));
+
       let verdict = 'NEUTRAL';
       let impactClass = 'neutral';
       let target = 'Neutral Matchup';
       let why = 'Non-conference or cross-division matchup with minimal Sabres playoff leverage.';
 
       if (isAwayAtlantic && isHomeAtlantic) {
-        const awayIndex = atlanticPriority.indexOf(awayName);
-        const homeIndex = atlanticPriority.indexOf(homeName);
-        const biggerThreat = awayIndex <= homeIndex ? awayName : homeName;
+        const biggerThreat = awayPct >= homePct ? awayName : homeName;
         const underdog = biggerThreat === awayName ? homeName : awayName;
 
         target = `Root for ${underdog} in Regulation`;
-        why = `A regulation loss leaves ${biggerThreat} with 0 standings points in the Atlantic race.`;
+        why = `A regulation loss leaves higher-standing ${biggerThreat} with 0 points in the Atlantic race.`;
 
         if (statusState === 'post') {
           if (isOvertime) {
@@ -1164,11 +1328,20 @@ async function fetchNhlScoreboard() {
           impactClass = 'warning';
         }
       } else if (isAwayMetro || isHomeMetro) {
-        const metroRival = isAwayMetro ? awayName : homeName;
-        const opponent = isAwayMetro ? homeName : awayName;
+        let metroRival;
+        let opponent;
+        if (isAwayMetro && isHomeMetro) {
+          metroRival = awayPct >= homePct ? awayName : homeName;
+          opponent = metroRival === awayName ? homeName : awayName;
+        } else {
+          metroRival = isAwayMetro ? awayName : homeName;
+          opponent = isAwayMetro ? homeName : awayName;
+        }
 
         target = `Root for ${opponent} in Regulation`;
-        why = `Suppresses Eastern Conference Wild Card contenders from stacking points.`;
+        why = isAwayMetro && isHomeMetro
+          ? `A regulation loss for higher-standing ${metroRival} prevents a 3-point overtime game in the Wild Card race.`
+          : `Suppresses Eastern Conference Wild Card contenders from stacking points.`;
 
         if (statusState === 'post') {
           const rivalScore = metroRival === awayName ? parseInt(awayScore) : parseInt(homeScore);
@@ -1176,7 +1349,11 @@ async function fetchNhlScoreboard() {
           const rivalWon = rivalScore > oppScore;
 
           if (isOvertime) {
-            if (rivalWon) {
+            if (isAwayMetro && isHomeMetro) {
+              verdict = '3-POINT GAME CONCEDED';
+              impactClass = 'warning';
+              why = `Overtime handed 3 total standings points to Metropolitan Wild Card contenders.`;
+            } else if (rivalWon) {
               verdict = 'RIVAL OT WIN';
               impactClass = 'bad';
               why = `${metroRival} picked up 2 points in overtime.`;
@@ -1220,10 +1397,10 @@ async function fetchNhlScoreboard() {
         statusState,
         statusDetail,
         awayName,
-        awayRecord: getNhlRecordStr(awayName, g.espnComp?.competitors?.find(c => c.homeAway === 'away')),
+        awayRecord: awayRecordStr,
         awayScore,
         homeName,
-        homeRecord: getNhlRecordStr(homeName, g.espnComp?.competitors?.find(c => c.homeAway === 'home')),
+        homeRecord: homeRecordStr,
         homeScore,
         homeWinChance: nhlOdds.homeWinChance,
         awayWinChance: nhlOdds.awayWinChance,
@@ -1286,7 +1463,7 @@ async function fetchNhlScoreboard() {
         awayWinChance: 48,
         verdict: '3-POINT GAME CONCEDED',
         impactClass: 'warning',
-        target: 'Root for Regulation Finish',
+        target: 'Root for Tampa Bay Lightning in Regulation',
         why: 'Overtime awarded 3 total points to Atlantic rivals. Boston earned a point despite the loss.'
       },
       {
@@ -1412,12 +1589,51 @@ const NHL_STARTING_GOALIES = {
   'CBJ': { name: 'Elvis Merzlikins', gaa: '3.10 GAA, .899 SV%' },
   'Stars': { name: 'Jake Oettinger', gaa: '2.28 GAA, .922 SV%' },
   'DAL': { name: 'Jake Oettinger', gaa: '2.28 GAA, .922 SV%' },
-  'Avalanche': { name: 'Alexandar Georgiev', gaa: '2.85 GAA, .902 SV%' },
-  'COL': { name: 'Alexandar Georgiev', gaa: '2.85 GAA, .902 SV%' },
+  'Avalanche': { name: 'Mackenzie Blackwood', gaa: '2.54 GAA, .914 SV%' },
+  'Colorado': { name: 'Mackenzie Blackwood', gaa: '2.54 GAA, .914 SV%' },
+  'COL': { name: 'Mackenzie Blackwood', gaa: '2.54 GAA, .914 SV%' },
   'Oilers': { name: 'Stuart Skinner', gaa: '2.62 GAA, .908 SV%' },
+  'Edmonton': { name: 'Stuart Skinner', gaa: '2.62 GAA, .908 SV%' },
   'EDM': { name: 'Stuart Skinner', gaa: '2.62 GAA, .908 SV%' },
   'Golden Knights': { name: 'Adin Hill', gaa: '2.50 GAA, .915 SV%' },
-  'VGK': { name: 'Adin Hill', gaa: '2.50 GAA, .915 SV%' }
+  'Vegas': { name: 'Adin Hill', gaa: '2.50 GAA, .915 SV%' },
+  'VGK': { name: 'Adin Hill', gaa: '2.50 GAA, .915 SV%' },
+  'Mammoth': { name: 'Karel Vejmelka', gaa: '2.64 GAA, .913 SV%' },
+  'Utah': { name: 'Karel Vejmelka', gaa: '2.64 GAA, .913 SV%' },
+  'UTA': { name: 'Karel Vejmelka', gaa: '2.64 GAA, .913 SV%' },
+  'Jets': { name: 'Connor Hellebuyck', gaa: '2.10 GAA, .928 SV%' },
+  'Winnipeg': { name: 'Connor Hellebuyck', gaa: '2.10 GAA, .928 SV%' },
+  'WPG': { name: 'Connor Hellebuyck', gaa: '2.10 GAA, .928 SV%' },
+  'Wild': { name: 'Filip Gustavsson', gaa: '2.25 GAA, .923 SV%' },
+  'Minnesota': { name: 'Filip Gustavsson', gaa: '2.25 GAA, .923 SV%' },
+  'MIN': { name: 'Filip Gustavsson', gaa: '2.25 GAA, .923 SV%' },
+  'Predators': { name: 'Juuse Saros', gaa: '2.68 GAA, .911 SV%' },
+  'Nashville': { name: 'Juuse Saros', gaa: '2.68 GAA, .911 SV%' },
+  'NSH': { name: 'Juuse Saros', gaa: '2.68 GAA, .911 SV%' },
+  'Blues': { name: 'Jordan Binnington', gaa: '2.76 GAA, .909 SV%' },
+  'St. Louis': { name: 'Jordan Binnington', gaa: '2.76 GAA, .909 SV%' },
+  'STL': { name: 'Jordan Binnington', gaa: '2.76 GAA, .909 SV%' },
+  'Blackhawks': { name: 'Petr Mrazek', gaa: '2.98 GAA, .904 SV%' },
+  'Chicago': { name: 'Petr Mrazek', gaa: '2.98 GAA, .904 SV%' },
+  'CHI': { name: 'Petr Mrazek', gaa: '2.98 GAA, .904 SV%' },
+  'Canucks': { name: 'Kevin Lankinen', gaa: '2.52 GAA, .914 SV%' },
+  'Vancouver': { name: 'Kevin Lankinen', gaa: '2.52 GAA, .914 SV%' },
+  'VAN': { name: 'Kevin Lankinen', gaa: '2.52 GAA, .914 SV%' },
+  'Flames': { name: 'Dustin Wolf', gaa: '2.60 GAA, .915 SV%' },
+  'Calgary': { name: 'Dustin Wolf', gaa: '2.60 GAA, .915 SV%' },
+  'CGY': { name: 'Dustin Wolf', gaa: '2.60 GAA, .915 SV%' },
+  'Kings': { name: 'Darcy Kuemper', gaa: '2.48 GAA, .914 SV%' },
+  'Los Angeles': { name: 'Darcy Kuemper', gaa: '2.48 GAA, .914 SV%' },
+  'LAK': { name: 'Darcy Kuemper', gaa: '2.48 GAA, .914 SV%' },
+  'Kraken': { name: 'Joey Daccord', gaa: '2.58 GAA, .913 SV%' },
+  'Seattle': { name: 'Joey Daccord', gaa: '2.58 GAA, .913 SV%' },
+  'SEA': { name: 'Joey Daccord', gaa: '2.58 GAA, .913 SV%' },
+  'Ducks': { name: 'Lukas Dostal', gaa: '2.72 GAA, .916 SV%' },
+  'Anaheim': { name: 'Lukas Dostal', gaa: '2.72 GAA, .916 SV%' },
+  'ANA': { name: 'Lukas Dostal', gaa: '2.72 GAA, .916 SV%' },
+  'Sharks': { name: 'Yaroslav Askarov', gaa: '2.89 GAA, .907 SV%' },
+  'San Jose': { name: 'Yaroslav Askarov', gaa: '2.89 GAA, .907 SV%' },
+  'SJS': { name: 'Yaroslav Askarov', gaa: '2.89 GAA, .907 SV%' }
 };
 
 const ESPN_NHL_TEAM_IDS = {
@@ -1494,12 +1710,12 @@ async function fetchNhlGameInjuries(oppName, oppAbbrev) {
 
   if (cleanOpp.includes('Washington') || oppAbbrev === 'WSH') {
     injuries.push(
-      { player: 'T.J. Oshie', pos: 'RW', status: 'Injured Reserve', injury: 'Back', team: cleanOpp },
-      { player: 'Nicklas Backstrom', pos: 'C', status: 'Injured Reserve', injury: 'Hip', team: cleanOpp }
+      { player: 'Sonny Milano', pos: 'LW', status: 'Injured Reserve', injury: 'Upper Body', team: cleanOpp },
+      { player: 'Jakob Chychrun', pos: 'D', status: 'Questionable', injury: 'Upper Body', team: cleanOpp }
     );
   } else if (cleanOpp.includes('Flyers') || oppAbbrev === 'PHI') {
     injuries.push(
-      { player: 'Ryan Ellis', pos: 'D', status: 'Injured Reserve', injury: 'Back', team: cleanOpp }
+      { player: 'Cam York', pos: 'D', status: 'Injured Reserve', injury: 'Upper Body', team: cleanOpp }
     );
   } else if (cleanOpp.includes('Boston') || oppAbbrev === 'BOS') {
     injuries.push(
@@ -1677,7 +1893,9 @@ async function fetchNextGameSchedule() {
 
     if (schedRes.ok) {
       const data = await schedRes.json();
-      const nextGame = data.events?.find(e => e.competitions?.[0]?.status?.type?.state === 'pre' || e.competitions?.[0]?.status?.type?.state === 'in');
+      const events = data.events || [];
+      const nextIdx = events.findIndex(e => e.competitions?.[0]?.status?.type?.state === 'pre' || e.competitions?.[0]?.status?.type?.state === 'in');
+      const nextGame = nextIdx !== -1 ? events[nextIdx] : null;
       if (nextGame) {
         const comp = nextGame.competitions[0];
         const bufComp = comp.competitors.find(c => c.id === '2');
@@ -1689,10 +1907,40 @@ async function fetchNextGameSchedule() {
         const oppId = oppComp?.id || '33';
         const d = new Date(nextGame.date);
 
+        // Compute dynamic Bills rest days from previous game in schedule
+        if (nextIdx > 0 && events[nextIdx - 1]?.date) {
+          const prevDate = new Date(events[nextIdx - 1].date);
+          const diffDays = Math.round((d - prevDate) / (1000 * 60 * 60 * 24));
+          if (diffDays > 0 && diffDays <= 21) billsSchedule.restBills = diffDays;
+        }
+        try {
+          const oppSchedRes = await fetch(`https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/${oppId}/schedule`);
+          if (oppSchedRes.ok) {
+            const oppSchedData = await oppSchedRes.json();
+            const oppEvents = oppSchedData.events || [];
+            const oppNextIdx = oppEvents.findIndex(e => e.id === nextGame.id || Math.abs(new Date(e.date) - d) < 36 * 3600 * 1000);
+            if (oppNextIdx > 0 && oppEvents[oppNextIdx - 1]?.date) {
+              const oppPrevDate = new Date(oppEvents[oppNextIdx - 1].date);
+              const oppDiffDays = Math.round((d - oppPrevDate) / (1000 * 60 * 60 * 24));
+              if (oppDiffDays > 0 && oppDiffDays <= 21) billsSchedule.restOpp = oppDiffDays;
+            }
+          }
+        } catch (_) {}
+
+        const restDelta = billsSchedule.restBills - billsSchedule.restOpp;
+        if (restDelta > 0) {
+          billsSchedule.restDiff = billsSchedule.restBills >= 13
+            ? `Bills +${restDelta} (Post-Bye Week)`
+            : `Bills +${restDelta} (${billsSchedule.restBills}d vs ${billsSchedule.restOpp}d Rest)`;
+        } else if (restDelta < 0) {
+          billsSchedule.restDiff = `${oppName} +${Math.abs(restDelta)} (${billsSchedule.restBills}d vs ${billsSchedule.restOpp}d Rest)`;
+        } else {
+          billsSchedule.restDiff = `Even Rest (Both on ${billsSchedule.restBills} Days Rest)`;
+        }
+
         const dateStr = d.toLocaleDateString('en-US', { timeZone: 'America/New_York', weekday: 'short', month: 'short', day: 'numeric' });
         const timeStr = d.toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour: 'numeric', minute: '2-digit', hour12: true });
         const tvNetwork = comp.broadcasts?.[0]?.names?.[0] || 'CBS';
-        const venueName = comp.venue ? `${comp.venue.fullName || ''}, ${comp.venue.address?.city || ''}` : 'NFL Stadium';
 
         let bufRecord = '';
         let oppRecord = '';
@@ -1710,14 +1958,21 @@ async function fetchNextGameSchedule() {
           }
           extractTeams(standData);
 
+          const getStatVal = (entry, name) => {
+            const st = entry?.stats?.find(s => s.name === name);
+            return st?.value !== undefined ? parseFloat(st.value) : null;
+          };
+
           const findStats = (id) => {
             const entry = allTeams.find(t => t.team?.id === id);
-            if (!entry) return { display: '', w: 0, l: 0 };
+            if (!entry) return { display: '', w: 0, l: 0, pf: null, pa: null };
             const wlt = entry.stats?.find(s => s.name === 'overall')?.displayValue || '';
             const streak = entry.stats?.find(s => s.name === 'streak')?.displayValue || '';
             const w = parseInt(entry.stats?.find(s => s.name === 'wins')?.value || '0');
             const l = parseInt(entry.stats?.find(s => s.name === 'losses')?.value || '0');
-            return { display: streak ? `${wlt}, ${streak}` : wlt, w, l };
+            const pf = getStatVal(entry, 'pointsFor');
+            const pa = getStatVal(entry, 'pointsAgainst');
+            return { display: streak ? `${wlt}, ${streak}` : wlt, w, l, pf, pa };
           };
 
           const bufStats = findStats('2');
@@ -1727,6 +1982,47 @@ async function fetchNextGameSchedule() {
           oppRecord = oppStats.display;
           if (bufStats.w + bufStats.l > 0) { bufWins = bufStats.w; bufLosses = bufStats.l; }
           if (oppStats.w + oppStats.l > 0) { oppWins = oppStats.w; oppLosses = oppStats.l; }
+
+          // Dynamically calculate AFC East Magic Number from live division records (Patriots=17, Dolphins=15, Jets=20)
+          const eastRivalIds = ['17', '15', '20'];
+          const rivalLosses = eastRivalIds
+            .map(id => findStats(id))
+            .filter(st => st.w + st.l > 0)
+            .map(st => st.l);
+          if (rivalLosses.length > 0) {
+            const minRivalLosses = Math.min(...rivalLosses);
+            const magic = Math.max(1, 18 - bufWins - minRivalLosses);
+            billsSchedule.magicNumber = String(magic);
+          }
+
+          // Dynamically compute Points/Game rank across all 32 NFL teams if pointsFor available
+          const ppgList = allTeams
+            .map(entry => {
+              const w = parseInt(entry.stats?.find(s => s.name === 'wins')?.value || '0');
+              const l = parseInt(entry.stats?.find(s => s.name === 'losses')?.value || '0');
+              const t = parseInt(entry.stats?.find(s => s.name === 'ties')?.value || '0');
+              const pf = getStatVal(entry, 'pointsFor');
+              const gp = w + l + t;
+              return gp > 0 && pf !== null ? { id: entry.team?.id, ppg: pf / gp } : null;
+            })
+            .filter(Boolean)
+            .sort((a, b) => b.ppg - a.ppg);
+
+          const ordinal = (n) => {
+            const s = ['th', 'st', 'nd', 'rd'];
+            const v = n % 100;
+            return n + (s[(v - 20) % 10] || s[v] || s[0]);
+          };
+
+          const bufPpgIdx = ppgList.findIndex(x => x.id === '2');
+          const oppPpgIdx = ppgList.findIndex(x => x.id === oppId);
+          if (bufPpgIdx !== -1 && oppPpgIdx !== -1 && billsSchedule.efficiency?.[0]) {
+            billsSchedule.efficiency[0] = {
+              metric: 'Points / Game',
+              bills: `${ppgList[bufPpgIdx].ppg.toFixed(1)} (${ordinal(bufPpgIdx + 1)})`,
+              opp: `${ppgList[oppPpgIdx].ppg.toFixed(1)} (${ordinal(oppPpgIdx + 1)})`
+            };
+          }
         }
 
         const bufDisplay = bufRecord ? `Bills (${bufRecord})` : 'Bills (5-1, W2)';
@@ -1797,13 +2093,47 @@ async function fetchNextGameSchedule() {
 
     if (schedRes.ok) {
       const data = await schedRes.json();
-      const now = new Date();
-      const nextGame = data.games?.find(g => g.gameState === 'LIVE' || g.gameState === 'CRIT' || (g.gameState !== 'FINAL' && g.gameState !== 'OFF' && (new Date(g.startTimeUTC) > new Date(Date.now() - 4 * 3600 * 1000))));
+      const games = data.games || [];
+      const nextIdx = games.findIndex(g => g.gameState === 'LIVE' || g.gameState === 'CRIT' || (g.gameState !== 'FINAL' && g.gameState !== 'OFF' && (new Date(g.startTimeUTC) > new Date(Date.now() - 4 * 3600 * 1000))));
+      const nextGame = nextIdx !== -1 ? games[nextIdx] : null;
       if (nextGame) {
         const isHome = nextGame.homeTeam.abbrev === 'BUF';
         const oppAbbrev = isHome ? nextGame.awayTeam.abbrev : nextGame.homeTeam.abbrev;
         const oppName = isHome ? (nextGame.awayTeam.placeName?.default || oppAbbrev) : (nextGame.homeTeam.placeName?.default || oppAbbrev);
         const d = new Date(nextGame.startTimeUTC);
+
+        // Compute dynamic Sabres & Opponent rest days
+        if (nextIdx > 0 && games[nextIdx - 1]?.startTimeUTC) {
+          const prevDate = new Date(games[nextIdx - 1].startTimeUTC);
+          const diffDays = Math.max(1, Math.round((d - prevDate) / (1000 * 60 * 60 * 24)));
+          if (diffDays <= 14) sabresSchedule.restSabres = diffDays;
+        }
+        try {
+          const oppSchedRes = await fetch(`https://api-web.nhle.com/v1/club-schedule/${oppAbbrev}/week/now`);
+          if (oppSchedRes.ok) {
+            const oppSchedData = await oppSchedRes.json();
+            const oppGames = oppSchedData.games || [];
+            const oppNextIdx = oppGames.findIndex(g => g.id === nextGame.id || Math.abs(new Date(g.startTimeUTC) - d) < 20 * 3600 * 1000);
+            if (oppNextIdx > 0 && oppGames[oppNextIdx - 1]?.startTimeUTC) {
+              const oppPrevDate = new Date(oppGames[oppNextIdx - 1].startTimeUTC);
+              const oppDiffDays = Math.max(1, Math.round((d - oppPrevDate) / (1000 * 60 * 60 * 24)));
+              if (oppDiffDays <= 14) sabresSchedule.restOpp = oppDiffDays;
+            }
+          }
+        } catch (_) {}
+
+        const sRestDelta = sabresSchedule.restSabres - sabresSchedule.restOpp;
+        if (sRestDelta > 0) {
+          sabresSchedule.restDiff = sabresSchedule.restOpp === 1
+            ? `Sabres +${sRestDelta} (${oppName} on Back-to-Back)`
+            : `Sabres +${sRestDelta} (${sabresSchedule.restSabres}d vs ${sabresSchedule.restOpp}d Rest)`;
+        } else if (sRestDelta < 0) {
+          sabresSchedule.restDiff = sabresSchedule.restSabres === 1
+            ? `${oppName} +${Math.abs(sRestDelta)} (Sabres on Back-to-Back)`
+            : `${oppName} +${Math.abs(sRestDelta)} (${sabresSchedule.restSabres}d vs ${sabresSchedule.restOpp}d Rest)`;
+        } else {
+          sabresSchedule.restDiff = `Even Rest (Both on ${sabresSchedule.restSabres} Days Rest)`;
+        }
 
         const dateStr = d.toLocaleDateString('en-US', { timeZone: 'America/New_York', weekday: 'short', month: 'short', day: 'numeric' });
         const timeStr = d.toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour: 'numeric', minute: '2-digit', hour12: true });
@@ -1823,8 +2153,45 @@ async function fetchNextGameSchedule() {
 
         if (standingsRes.ok) {
           const standingsData = await standingsRes.json();
-          const bufStand = standingsData.standings?.find(s => s.teamAbbrev?.default === 'BUF');
-          const oppStand = standingsData.standings?.find(s => s.teamAbbrev?.default === oppAbbrev);
+          const allStandings = standingsData.standings || [];
+          const bufStand = allStandings.find(s => s.teamAbbrev?.default === 'BUF');
+          const oppStand = allStandings.find(s => s.teamAbbrev?.default === oppAbbrev);
+
+          const ordinal = (n) => {
+            const s = ['th', 'st', 'nd', 'rd'];
+            const v = n % 100;
+            return n + (s[(v - 20) % 10] || s[v] || s[0]);
+          };
+
+          // Dynamically compute Goals / Game and Goals Against / Game rankings across all 32 NHL teams
+          const gfList = allStandings
+            .filter(s => s.gamesPlayed > 0 && s.goalFor !== undefined)
+            .map(s => ({ abbrev: s.teamAbbrev?.default, gpg: s.goalFor / s.gamesPlayed }))
+            .sort((a, b) => b.gpg - a.gpg);
+          const gaList = allStandings
+            .filter(s => s.gamesPlayed > 0 && s.goalAgainst !== undefined)
+            .map(s => ({ abbrev: s.teamAbbrev?.default, gapg: s.goalAgainst / s.gamesPlayed }))
+            .sort((a, b) => a.gapg - b.gapg);
+
+          const bufGfIdx = gfList.findIndex(x => x.abbrev === 'BUF');
+          const oppGfIdx = gfList.findIndex(x => x.abbrev === oppAbbrev);
+          if (bufGfIdx !== -1 && oppGfIdx !== -1 && sabresSchedule.efficiency?.[0]) {
+            sabresSchedule.efficiency[0] = {
+              metric: 'Goals / Game',
+              sabres: `${gfList[bufGfIdx].gpg.toFixed(2)} (${ordinal(bufGfIdx + 1)})`,
+              opp: `${gfList[oppGfIdx].gpg.toFixed(2)} (${ordinal(oppGfIdx + 1)})`
+            };
+          }
+
+          const bufGaIdx = gaList.findIndex(x => x.abbrev === 'BUF');
+          const oppGaIdx = gaList.findIndex(x => x.abbrev === oppAbbrev);
+          if (bufGaIdx !== -1 && oppGaIdx !== -1 && sabresSchedule.efficiency?.[1]) {
+            sabresSchedule.efficiency[1] = {
+              metric: 'Goals Against / Game',
+              sabres: `${gaList[bufGaIdx].gapg.toFixed(2)} (${ordinal(bufGaIdx + 1)})`,
+              opp: `${gaList[oppGaIdx].gapg.toFixed(2)} (${ordinal(oppGaIdx + 1)})`
+            };
+          }
 
           if (bufStand) {
             sabresPoints = bufStand.points;
@@ -2111,12 +2478,13 @@ async function scrapePlayoffStatus() {
     // 2. Scrape Table (2) Bills 1st Round Playoff Matchup Probabilities
     const scrapedOpponents = [];
     $('tr').each((_, el) => {
-      const rowText = $(el).text();
-      const match = rowText.match(/\((\d+)\)\s+([A-Za-z\s]+)/);
-      if (match && !rowText.includes('Bye') && !rowText.includes('Elimination')) {
+      const firstTd = $(el).find('td').first().text().trim();
+      const match = firstTd.match(/^\((\d+)\)\s+([A-Za-z\s]+)$/);
+      if (match && !firstTd.includes('Bye') && !firstTd.includes('Elimination')) {
         const rawOpp = match[2].trim();
-        const cells = $(el).find('td').map((_, td) =>$(td).text().trim()).get();
-        const pcts = cells.map(parseCellPct).filter(n => n > 0 && n <= 100);
+        const cells = $(el).find('td').map((_, td) => $(td).text().trim()).get();
+        // Skip cells[0] so the seed number in "(2) Team" is not parsed as 2%
+        const pcts = cells.slice(1).map(parseCellPct).filter(n => n > 0 && n <= 100);
         if (pcts.length > 0) {
           const totalPct = pcts[0];
           scrapedOpponents.push({ team: rawOpp, pct: totalPct });
@@ -2195,12 +2563,14 @@ async function scrapePlayoffStatus() {
         const cells = $(el).find('td').map((_, td) => $(td).text().trim()).get();
         const pcts = cells.map(parseCellPct).filter(n => n >= 0 && n <= 100);
         
-        // Probability columns are at the end of the row
+        // Probability columns are at the end of the row (Div 1-3, WC 1-2, No POs)
         if (pcts.length >= 6) {
           const seeds = pcts.slice(-6, -1);
+          const noPo = pcts[pcts.length - 1];
           const totalPlayoffs = Math.min(100, Math.round(seeds.reduce((a, b) => a + b, 0)));
-          
-          if (totalPlayoffs >= 10) {
+          const isValidProbRow = (totalPlayoffs + noPo >= 85 && totalPlayoffs + noPo <= 115) || totalPlayoffs >= 10;
+
+          if (isValidProbRow) {
             if (sabresRadar.length < 4 && !sabresRadar.some(r => r.team === foundTeam)) {
               sabresRadar.push({ team: foundTeam.replace('Maple Leafs', 'Leafs'), pct: totalPlayoffs });
             }
@@ -2235,6 +2605,12 @@ async function scrapePlayoffStatus() {
     console.warn('Sabres standings fallback:', err.message);
   }
 
+  // 7. Scrape or dynamically anchor Sabres Opponent Leverage
+  const sabresMig = await fetchSabresLeverage(sabresSchedule.oppShortName, sabresData.makePlayoffs);
+  sabresData.nextGame.ifWin = sabresMig.ifWin;
+  sabresData.nextGame.ifLoss = sabresMig.ifLoss;
+  sabresData.nextGame.leverage = sabresMig.leverage;
+
   const finalPayload = {
     updatedAt: new Date().toISOString(),
     source: 'http://www.playoffstatus.com and ESPN NFL API',
@@ -2247,10 +2623,56 @@ async function scrapePlayoffStatus() {
   fs.writeFileSync(path.join(rootDir, 'data.json'), payloadStr, 'utf-8');
   console.log('data.json successfully written with live 1st Round Matchup table.');
 
-  syncHtmlFallbacks(payloadStr);
+  syncHtmlFallbacks(finalPayload);
 }
 
-function syncHtmlFallbacks(dataStr) {
+function buildTrimmedFallbackForFile(fileName, fullPayload) {
+  if (fileName === 'index.html') {
+    const trimSport = (s) => {
+      if (!s) return s;
+      const { outOfTownGames, ...rest } = s;
+      const nextGame = rest.nextGame ? { ...rest.nextGame } : {};
+      delete nextGame.efficiency;
+      delete nextGame.injuries;
+      return { ...rest, nextGame };
+    };
+    return {
+      updatedAt: fullPayload.updatedAt,
+      source: fullPayload.source,
+      bills: trimSport(fullPayload.bills),
+      sabres: trimSport(fullPayload.sabres)
+    };
+  }
+  if (fileName === 'bills.html') {
+    return {
+      updatedAt: fullPayload.updatedAt,
+      source: fullPayload.source,
+      bills: fullPayload.bills,
+      sabres: {
+        team: fullPayload.sabres?.team,
+        makePlayoffs: fullPayload.sabres?.makePlayoffs,
+        winDivision: fullPayload.sabres?.winDivision,
+        wildcard: fullPayload.sabres?.wildcard
+      }
+    };
+  }
+  if (fileName === 'sabres.html') {
+    return {
+      updatedAt: fullPayload.updatedAt,
+      source: fullPayload.source,
+      bills: {
+        team: fullPayload.bills?.team,
+        makePlayoffs: fullPayload.bills?.makePlayoffs,
+        winDivision: fullPayload.bills?.winDivision,
+        seed1: fullPayload.bills?.seed1
+      },
+      sabres: fullPayload.sabres
+    };
+  }
+  return fullPayload;
+}
+
+function syncHtmlFallbacks(fullPayload) {
   const rootDir = path.resolve(__dirname, '..');
   const files = ['index.html', 'bills.html', 'sabres.html'].map(f => path.join(rootDir, f));
   const startMarker = 'const FALLBACK_DATA =';
@@ -2259,17 +2681,20 @@ function syncHtmlFallbacks(dataStr) {
   files.forEach(filePath => {
     if (!fs.existsSync(filePath)) return;
     try {
+      const baseName = path.basename(filePath);
       const content = fs.readFileSync(filePath, 'utf8');
       const startIdx = content.indexOf(startMarker);
       const endIdx = content.indexOf(endMarker, startIdx);
 
       if (startIdx !== -1 && endIdx !== -1) {
+        const trimmedPayload = buildTrimmedFallbackForFile(baseName, fullPayload);
+        const dataStr = JSON.stringify(trimmedPayload, null, 2);
         const newFallback = `const FALLBACK_DATA = ${dataStr};\n\n      `;
         const updatedContent = content.slice(0, startIdx) + newFallback + content.slice(endIdx);
         fs.writeFileSync(filePath, updatedContent, 'utf8');
-        console.log(`Synced FALLBACK_DATA in ${path.basename(filePath)}`);
+        console.log(`Synced FALLBACK_DATA in ${baseName}`);
       } else {
-        console.warn(`Could not find FALLBACK_DATA markers in ${path.basename(filePath)}`);
+        console.warn(`Could not find FALLBACK_DATA markers in ${baseName}`);
       }
     } catch (err) {
       console.warn(`Failed to sync fallback in ${path.basename(filePath)}:`, err.message);
@@ -2277,4 +2702,12 @@ function syncHtmlFallbacks(dataStr) {
   });
 }
 
-scrapePlayoffStatus();
+if (require.main === module) {
+  scrapePlayoffStatus();
+}
+
+module.exports = {
+  scrapePlayoffStatus,
+  syncHtmlFallbacks,
+  buildTrimmedFallbackForFile
+};

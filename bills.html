@@ -2,7 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Live Buffalo Bills playoff odds, AFC East division radar, matchup intelligence, injury wire, and weekly NFL rooting guide.">
+  <link rel="canonical" href="https://onebuffalotracker.fyi/bills.html">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
@@ -394,7 +396,10 @@
     }
     .win-chance-value { font-size: 1.15rem; font-weight: 800; color: #34d399; line-height: 1.1; }
 
-    .impact-badges-group { display: flex; gap: 0.35rem; align-items: center; flex-wrap: nowrap; }
+    .impact-badges-group { display: flex; gap: 0.35rem; align-items: center; flex-wrap: wrap; }
+    @media (max-width: 420px) {
+      .stakes-bottom-row { grid-template-columns: 1fr; gap: 0.5rem; }
+    }
     .pill {
       font-size: 0.75rem;
       padding: 0.22rem 0.5rem;
@@ -1368,15 +1373,15 @@
   </header>
 
   <!-- SEGMENTED TABS -->
-  <nav class="tab-bar">
-    <button class="tab-btn active" id="tab-btn-intel" onclick="switchTab('intel')">Matchup Intel</button>
-    <button class="tab-btn" id="tab-btn-rooting" onclick="switchTab('rooting')">Weekly Slate & TV Guide</button>
-    <button class="tab-btn" id="tab-btn-radar" onclick="switchTab('radar')">Postseason Radar</button>
+  <nav class="tab-bar" role="tablist" aria-label="Bills Hub Sections">
+    <button class="tab-btn active" id="tab-btn-intel" role="tab" aria-selected="true" aria-controls="tab-intel" onclick="switchTab('intel')">Matchup Intel</button>
+    <button class="tab-btn" id="tab-btn-rooting" role="tab" aria-selected="false" aria-controls="tab-rooting" onclick="switchTab('rooting')">Weekly Slate & TV Guide</button>
+    <button class="tab-btn" id="tab-btn-radar" role="tab" aria-selected="false" aria-controls="tab-radar" onclick="switchTab('radar')">Postseason Radar</button>
   </nav>
 
   <main class="container">
     <!-- TAB 1: MATCHUP INTEL -->
-    <section id="tab-intel" class="tab-content active">
+    <section id="tab-intel" class="tab-content active" role="tabpanel" aria-labelledby="tab-btn-intel">
       <div class="card">
         <div class="stakes-banner">
           <div class="stakes-top-row">
@@ -1461,7 +1466,7 @@
     </section>
 
     <!-- TAB 2: WEEKLY SLATE & TV GUIDE -->
-    <section id="tab-rooting" class="tab-content">
+    <section id="tab-rooting" class="tab-content" role="tabpanel" aria-labelledby="tab-btn-rooting">
       <div class="card">
         <div class="section-subtitle">
           <span>Weekly NFL Schedule & Broadcast Guide</span>
@@ -1493,7 +1498,7 @@
     </section>
 
     <!-- TAB 3: POSTSEASON RADAR -->
-    <section id="tab-radar" class="tab-content">
+    <section id="tab-radar" class="tab-content" role="tabpanel" aria-labelledby="tab-btn-radar">
       <div class="card">
         <!-- LIVE GAME BANNER (Visible on Radar when Bills are live) -->
         <div id="bills-radar-live-banner" class="live-radar-banner" style="display: none;">
@@ -1564,8 +1569,12 @@
       if (!targetBtn || targetBtn.classList.contains('active')) return;
 
       // 1. Instant visual response for tab button (< 16ms)
-      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+        btn.setAttribute('aria-selected', 'false');
+      });
       targetBtn.classList.add('active');
+      targetBtn.setAttribute('aria-selected', 'true');
 
       // 2. Yield before activating heavy tab content
       requestAnimationFrame(() => {
@@ -1629,6 +1638,19 @@
       activeCountdowns.delete(elementId);
     }
 
+    function getEasternOffset(dateCandidate) {
+      try {
+        const parts = new Intl.DateTimeFormat('en-US', {
+          timeZone: 'America/New_York',
+          timeZoneName: 'shortOffset'
+        }).formatToParts(dateCandidate || new Date());
+        const tz = parts.find(p => p.type === 'timeZoneName')?.value || '';
+        if (tz.includes('-5')) return 'GMT-0500';
+        if (tz.includes('-4')) return 'GMT-0400';
+      } catch (_) {}
+      return 'GMT-0500';
+    }
+
     function resolveGameIso(game) {
       if (!game) return null;
       if (game.isoTime) {
@@ -1642,7 +1664,9 @@
           if (parts.length === 2) {
             const curYear = new Date().getFullYear();
             const timePart = parts[1].replace(/\s*ET$/, '');
-            const candidateStr = `${parts[0]}, ${curYear} ${timePart} GMT-0400`;
+            const approx = new Date(`${parts[0]}, ${curYear} ${timePart}`);
+            const offset = getEasternOffset(isNaN(approx.getTime()) ? new Date() : approx);
+            const candidateStr = `${parts[0]}, ${curYear} ${timePart} ${offset}`;
             const candidate = new Date(candidateStr);
             if (!isNaN(candidate.getTime())) {
               return candidate.toISOString();
@@ -2543,13 +2567,19 @@
               }
             }
 
+            const targetLower = (g.target || '').toLowerCase();
+            const matchesTarget = (teamName) => {
+              const low = (teamName || '').toLowerCase();
+              const lastWord = low.split(/\s+/).pop();
+              return Boolean(low && (targetLower.includes(low) || (lastWord && lastWord.length >= 3 && targetLower.includes(lastWord))));
+            };
+            const targetIsHome = matchesTarget(g.homeName);
+            const targetIsAway = matchesTarget(g.awayName);
+
             if (state === 'in') {
               isAnyLive = true;
               const hSc = parseInt(g.homeScore) || 0;
               const aSc = parseInt(g.awayScore) || 0;
-              const targetLower = (g.target || '').toLowerCase();
-              const targetIsHome = targetLower.includes((g.homeName || '').toLowerCase());
-              const targetIsAway = targetLower.includes((g.awayName || '').toLowerCase());
 
               if (targetIsHome) {
                 if (hSc > aSc) { g.verdict = 'GOOD FOR BUFFALO (LEAD)'; g.impactClass = 'good'; }
@@ -2563,9 +2593,6 @@
             } else if (state === 'post') {
               const hSc = parseInt(g.homeScore) || 0;
               const aSc = parseInt(g.awayScore) || 0;
-              const targetLower = (g.target || '').toLowerCase();
-              const targetIsHome = targetLower.includes((g.homeName || '').toLowerCase());
-              const targetIsAway = targetLower.includes((g.awayName || '').toLowerCase());
 
               if (targetIsHome) {
                 if (hSc > aSc) { g.verdict = 'GOOD FOR BUFFALO'; g.impactClass = 'good'; }
@@ -2854,10 +2881,10 @@
         "slot": "Sun, Oct 25 • 9:30 AM ET",
         "broadcast": "NFL Net",
         "announcers": "Rich Eisen, Kurt Warner",
-        "venue": "Stade de France, Saint-Denis,",
-        "roof": "Domed Stadium",
-        "surface": "Turf Nation",
-        "weather": "Controlled 72°F Climate",
+        "venue": "Stade de France, Saint-Denis, France",
+        "roof": "Open-Air Stadium",
+        "surface": "Natural Grass",
+        "weather": "58°F, 9mph Wind, 15% PoP",
         "window": "INTL",
         "windowLabel": "NFL International Series",
         "windowBadge": "Morning London / Germany Slate",
@@ -2898,16 +2925,16 @@
         "homeScore": "0",
         "homeWinChance": 43,
         "awayWinChance": 57,
-        "verdict": "NEUTRAL",
+        "verdict": "NFC MATCHUP",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
-        "why": "Non-conference game with zero immediate AFC tiebreaker leverage."
+        "why": "Non-conference NFC matchup with zero direct AFC tiebreaker leverage."
       },
       {
         "isoTime": "2026-10-25T17:00Z",
         "slot": "Sun, Oct 25 • 1:00 PM ET",
         "broadcast": "CBS",
-        "announcers": "Andrew Catalon, Tiki Barber",
+        "announcers": "Spero Dedes, Adam Archuleta",
         "venue": "Nissan Stadium, Nashville, TN",
         "roof": "Open-Air Stadium",
         "surface": "Matrix Helix Turf",
@@ -2925,16 +2952,16 @@
         "homeScore": "0",
         "homeWinChance": 46,
         "awayWinChance": 54,
-        "verdict": "NEUTRAL",
-        "impactClass": "neutral",
-        "target": "Neutral Matchup",
-        "why": "Non-conference game with zero immediate AFC tiebreaker leverage."
+        "verdict": "SEEDING WATCH",
+        "impactClass": "good",
+        "target": "Root for Tennessee Titans",
+        "why": "A Cleveland Browns loss knocks down the higher-seeded AFC contender in conference tiebreakers."
       },
       {
         "isoTime": "2026-10-25T17:00Z",
         "slot": "Sun, Oct 25 • 1:00 PM ET",
         "broadcast": "CBS",
-        "announcers": "Andrew Catalon, Tiki Barber",
+        "announcers": "Kevin Harlan, Trent Green",
         "venue": "U.S. Bank Stadium, Minneapolis, MN",
         "roof": "Domed Stadium",
         "surface": "Act Global Turf",
@@ -2952,10 +2979,10 @@
         "homeScore": "0",
         "homeWinChance": 71,
         "awayWinChance": 29,
-        "verdict": "NEUTRAL",
-        "impactClass": "neutral",
-        "target": "Neutral Matchup",
-        "why": "Non-conference game with zero immediate AFC tiebreaker leverage."
+        "verdict": "SEEDING WATCH",
+        "impactClass": "good",
+        "target": "Root for Minnesota Vikings",
+        "why": "An NFC win over Indianapolis Colts hands an AFC team a loss without adding a win to the AFC standings pool."
       },
       {
         "isoTime": "2026-10-25T17:00Z",
@@ -2981,14 +3008,14 @@
         "awayWinChance": 34,
         "verdict": "AFC EAST WATCH",
         "impactClass": "bad",
-        "target": "Root for New York Jets",
-        "why": "A Miami Dolphins loss knocks down Buffalo's closest challenger in the AFC East."
+        "target": "Root for Miami Dolphins",
+        "why": "A New York Jets loss knocks down the higher-standing AFC East rival in the division race."
       },
       {
         "isoTime": "2026-10-25T17:00Z",
         "slot": "Sun, Oct 25 • 1:00 PM ET",
         "broadcast": "FOX",
-        "announcers": "Adam Amin, Mark Sanchez",
+        "announcers": "Chris Myers, Mark Schlereth",
         "venue": "Bank of America Stadium, Charlotte, NC",
         "roof": "Open-Air Stadium",
         "surface": "FieldTurf",
@@ -3006,16 +3033,16 @@
         "homeScore": "0",
         "homeWinChance": 59,
         "awayWinChance": 41,
-        "verdict": "NEUTRAL",
+        "verdict": "NFC MATCHUP",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
-        "why": "Non-conference game with zero immediate AFC tiebreaker leverage."
+        "why": "Non-conference NFC matchup with zero direct AFC tiebreaker leverage."
       },
       {
         "isoTime": "2026-10-25T17:00Z",
         "slot": "Sun, Oct 25 • 1:00 PM ET",
         "broadcast": "CBS",
-        "announcers": "Andrew Catalon, Tiki Barber",
+        "announcers": "Ian Eagle, Charles Davis",
         "venue": "M&T Bank Stadium, Baltimore, MD",
         "roof": "Open-Air Stadium",
         "surface": "Natural Bermuda Grass",
@@ -3087,10 +3114,10 @@
         "homeScore": "0",
         "homeWinChance": 33,
         "awayWinChance": 67,
-        "verdict": "NEUTRAL",
-        "impactClass": "neutral",
-        "target": "Neutral Matchup",
-        "why": "Non-conference game with zero immediate AFC tiebreaker leverage."
+        "verdict": "SEEDING WATCH",
+        "impactClass": "good",
+        "target": "Root for Arizona Cardinals",
+        "why": "An NFC win over Denver Broncos hands an AFC team a loss without adding a win to the AFC standings pool."
       },
       {
         "isoTime": "2026-10-25T20:25Z",
@@ -3114,16 +3141,16 @@
         "homeScore": "0",
         "homeWinChance": 60,
         "awayWinChance": 40,
-        "verdict": "NEUTRAL",
+        "verdict": "NFC MATCHUP",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
-        "why": "Non-conference game with zero immediate AFC tiebreaker leverage."
+        "why": "Non-conference NFC matchup with zero direct AFC tiebreaker leverage."
       },
       {
         "isoTime": "2026-10-25T20:25Z",
         "slot": "Sun, Oct 25 • 4:25 PM ET",
         "broadcast": "FOX",
-        "announcers": "Kevin Burkhardt, Tom Brady",
+        "announcers": "Kenny Albert, Jonathan Vilma",
         "venue": "Allegiant Stadium, Las Vegas, NV",
         "roof": "Domed Stadium",
         "surface": "Natural Bermuda Grass Tray",
@@ -3141,10 +3168,10 @@
         "homeScore": "0",
         "homeWinChance": 37,
         "awayWinChance": 63,
-        "verdict": "NEUTRAL",
-        "impactClass": "neutral",
-        "target": "Neutral Matchup",
-        "why": "Non-conference game with zero immediate AFC tiebreaker leverage."
+        "verdict": "SEEDING WATCH",
+        "impactClass": "good",
+        "target": "Root for Los Angeles Rams",
+        "why": "An NFC win over Las Vegas Raiders hands an AFC team a loss without adding a win to the AFC standings pool."
       },
       {
         "isoTime": "2026-10-26T00:20Z",
@@ -3195,10 +3222,10 @@
         "homeScore": "0",
         "homeWinChance": 34,
         "awayWinChance": 66,
-        "verdict": "NEUTRAL",
+        "verdict": "NFC MATCHUP",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
-        "why": "Non-conference game with zero immediate AFC tiebreaker leverage."
+        "why": "Non-conference NFC matchup with zero direct AFC tiebreaker leverage."
       }
     ]
   },
@@ -3206,1072 +3233,7 @@
     "team": "Buffalo Sabres",
     "makePlayoffs": 37,
     "winDivision": 23,
-    "wildcard": 14,
-    "tragicNumber": "82 PTS",
-    "projectedPoints": 82,
-    "magicNumber": null,
-    "clinchAlert": {
-      "active": false,
-      "scenario": "No clinching scenarios available this week."
-    },
-    "nextGame": {
-      "opponent": "@ Washington",
-      "oppShortName": "Washington",
-      "gameTime": "Sat, Oct 24 • 7:00 PM ET",
-      "isoTime": "2026-10-24T23:00:00Z",
-      "winChance": 46,
-      "matchupRecords": "Sabres (4-4-2, 10 pts, L1) vs. Washington (5-4-0, 10 pts, L1)",
-      "broadcast": "MSG-B",
-      "venue": "Capital One Arena, Washington, DC",
-      "statusState": "pre",
-      "statusDetail": "Sat, Oct 24 • 7:00 PM ET",
-      "bufScore": "",
-      "oppScore": "",
-      "liveScore": null,
-      "ifWin": 44,
-      "ifLoss": 33,
-      "leverage": 11,
-      "restAdvantage": {
-        "sabresDays": 2,
-        "oppDays": 2,
-        "summary": "Even Rest (Both on 2 Days Rest)"
-      },
-      "specialTeams": {
-        "sabres": "PP: 19.5% (17th) | PK: 81.2% (11th)",
-        "opp": "PP: 15.6% (26th) | PK: 78.9% (19th)",
-        "advantage": "Sabres Special Teams Edge (+6.2% Net Margin)"
-      },
-      "efficiency": [
-        {
-          "metric": "Goals / Game",
-          "sabres": "3.12 (12th)",
-          "opp": "3.30 (10th)"
-        },
-        {
-          "metric": "Goals Against / Game",
-          "sabres": "3.20 (18th)",
-          "opp": "2.90 (12th)"
-        },
-        {
-          "metric": "Power Play %",
-          "sabres": "19.5% (17th)",
-          "opp": "15.6% (26th)"
-        },
-        {
-          "metric": "Penalty Kill %",
-          "sabres": "81.2% (11th)",
-          "opp": "78.9% (19th)"
-        },
-        {
-          "metric": "Shots / Game",
-          "sabres": "29.8 (15th)",
-          "opp": "28.5 (20th)"
-        },
-        {
-          "metric": "Faceoff Win %",
-          "sabres": "48.2% (22nd)",
-          "opp": "49.8% (16th)"
-        }
-      ],
-      "injuries": [
-        {
-          "player": "Ukko-Pekka Luukkonen",
-          "pos": "G",
-          "status": "Probable",
-          "injury": "Expected Starter (2.78 GAA, .912 SV%)",
-          "team": "Sabres"
-        },
-        {
-          "player": "Charlie Lindgren",
-          "pos": "G",
-          "status": "Probable",
-          "injury": "Expected Starter (2.67 GAA, .914 SV%)",
-          "team": "Washington"
-        },
-        {
-          "player": "Zach Benson",
-          "pos": "LW",
-          "status": "Questionable",
-          "injury": "Lower Body",
-          "team": "Sabres"
-        },
-        {
-          "player": "Mattias Samuelsson",
-          "pos": "D",
-          "status": "Injured Reserve",
-          "injury": "Lower Body",
-          "team": "Sabres"
-        },
-        {
-          "player": "T.J. Oshie",
-          "pos": "RW",
-          "status": "Injured Reserve",
-          "injury": "Back",
-          "team": "Washington"
-        },
-        {
-          "player": "Nicklas Backstrom",
-          "pos": "C",
-          "status": "Injured Reserve",
-          "injury": "Hip",
-          "team": "Washington"
-        }
-      ]
-    },
-    "divisionRadar": [
-      {
-        "team": "Lightning",
-        "pct": 73
-      },
-      {
-        "team": "Bruins",
-        "pct": 71
-      },
-      {
-        "team": "Senators",
-        "pct": 59
-      },
-      {
-        "team": "Sabres",
-        "pct": 37
-      }
-    ],
-    "seedDistribution": [
-      {
-        "seed": "Div 1",
-        "pct": 4
-      },
-      {
-        "seed": "Div 2",
-        "pct": 8
-      },
-      {
-        "seed": "Div 3",
-        "pct": 11
-      },
-      {
-        "seed": "Wildcard 1",
-        "pct": 7
-      },
-      {
-        "seed": "Wildcard 2",
-        "pct": 7
-      }
-    ],
-    "opponents": [
-      {
-        "team": "Florida Panthers",
-        "pct": 24
-      },
-      {
-        "team": "Tampa Bay Lightning",
-        "pct": 18
-      },
-      {
-        "team": "Toronto Maple Leafs",
-        "pct": 14
-      }
-    ],
-    "rootingGuide": [
-      {
-        "target": "Regulation Losses for Atlantic Rivals",
-        "why": "Ensure games involving BOS, TBL, and FLA do not go to 3-point overtimes."
-      },
-      {
-        "target": "Western Conference Wins vs. Metro",
-        "why": "Protects Eastern Conference Wild Card slot thresholds."
-      }
-    ],
-    "outOfTownGames": [
-      {
-        "isoTime": "2026-10-21T23:30:00Z",
-        "slot": "Wed, Oct 21 • 7:30 PM ET",
-        "broadcast": "Prime",
-        "announcers": "Regional Broadcast Crew",
-        "venue": "Canadian Tire Centre, Ottawa, ON",
-        "window": "WED",
-        "windowLabel": "Wednesday Night Hockey Showcase",
-        "windowBadge": "TNT / Max / National Slate",
-        "statusState": "post",
-        "statusDetail": "Final",
-        "awayName": "Florida Panthers",
-        "awayRecord": "5-4-2, L2",
-        "awayScore": "1",
-        "homeName": "Ottawa Senators",
-        "homeRecord": "7-4-0, L1",
-        "homeScore": "5",
-        "homeWinChance": 63,
-        "awayWinChance": 37,
-        "verdict": "REGULATION LOSS",
-        "impactClass": "good",
-        "target": "Root for Ottawa Senators in Regulation",
-        "why": "Ottawa Senators defeated Florida Panthers in regulation, keeping them at 0 points."
-      },
-      {
-        "isoTime": "2026-10-22T23:00:00Z",
-        "slot": "Thu, Oct 22 • 7:00 PM ET",
-        "broadcast": "ESPN+",
-        "announcers": "Bob Wischusen, Kevin Weekes",
-        "venue": "TD Garden, Boston, MA",
-        "window": "THU",
-        "windowLabel": "Thursday Prime NHL Slate",
-        "windowBadge": "ESPN+ / RSN Lineups",
-        "statusState": "post",
-        "statusDetail": "Final",
-        "awayName": "Nashville Predators",
-        "awayRecord": "3-3-3, L1",
-        "awayScore": "0",
-        "homeName": "Boston Bruins",
-        "homeRecord": "8-2-1, W1",
-        "homeScore": "6",
-        "homeWinChance": 81,
-        "awayWinChance": 19,
-        "verdict": "BAD FOR BUFFALO",
-        "impactClass": "bad",
-        "target": "Root for Nashville Predators in Regulation",
-        "why": "Boston Bruins collected 2 standings points in the Atlantic race."
-      },
-      {
-        "isoTime": "2026-10-22T23:00:00Z",
-        "slot": "Thu, Oct 22 • 7:00 PM ET",
-        "broadcast": "ESPN+",
-        "announcers": "Bob Wischusen, Kevin Weekes",
-        "venue": "Scotiabank Arena, Toronto, ON",
-        "window": "THU",
-        "windowLabel": "Thursday Prime NHL Slate",
-        "windowBadge": "ESPN+ / RSN Lineups",
-        "statusState": "post",
-        "statusDetail": "Final",
-        "awayName": "New York Rangers",
-        "awayRecord": "7-4-1, L1",
-        "awayScore": "4",
-        "homeName": "Toronto Maple Leafs",
-        "homeRecord": "6-4-2, W3",
-        "homeScore": "5",
-        "homeWinChance": 49,
-        "awayWinChance": 51,
-        "verdict": "BAD FOR BUFFALO",
-        "impactClass": "bad",
-        "target": "Root for New York Rangers in Regulation",
-        "why": "Toronto Maple Leafs collected 2 standings points in the Atlantic race."
-      },
-      {
-        "isoTime": "2026-10-22T23:00:00Z",
-        "slot": "Thu, Oct 22 • 7:00 PM ET",
-        "broadcast": "ESPN+",
-        "announcers": "Bob Wischusen, Kevin Weekes",
-        "venue": "Canadian Tire Centre, Ottawa, ON",
-        "window": "THU",
-        "windowLabel": "Thursday Prime NHL Slate",
-        "windowBadge": "ESPN+ / RSN Lineups",
-        "statusState": "post",
-        "statusDetail": "Final",
-        "awayName": "San Jose Sharks",
-        "awayRecord": "6-4-1, W2",
-        "awayScore": "6",
-        "homeName": "Ottawa Senators",
-        "homeRecord": "7-4-0, L1",
-        "homeScore": "2",
-        "homeWinChance": 58,
-        "awayWinChance": 42,
-        "verdict": "GOOD FOR BUFFALO",
-        "impactClass": "good",
-        "target": "Root for San Jose Sharks in Regulation",
-        "why": "San Jose Sharks handed Ottawa Senators a regulation loss, keeping them at 0 points."
-      },
-      {
-        "isoTime": "2026-10-22T23:00:00Z",
-        "slot": "Thu, Oct 22 • 7:00 PM ET",
-        "broadcast": "ESPN+",
-        "announcers": "Bob Wischusen, Kevin Weekes",
-        "venue": "Prudential Center, Newark, NJ",
-        "window": "THU",
-        "windowLabel": "Thursday Prime NHL Slate",
-        "windowBadge": "ESPN+ / RSN Lineups",
-        "statusState": "post",
-        "statusDetail": "Final",
-        "awayName": "Anaheim Ducks",
-        "awayRecord": "4-6-0, L5",
-        "awayScore": "1",
-        "homeName": "New Jersey Devils",
-        "homeRecord": "6-4-0, W2",
-        "homeScore": "4",
-        "homeWinChance": 73,
-        "awayWinChance": 27,
-        "verdict": "RIVAL WIN",
-        "impactClass": "neutral",
-        "target": "Root for Anaheim Ducks in Regulation",
-        "why": "New Jersey Devils picked up 2 points in the Eastern playoff race."
-      },
-      {
-        "isoTime": "2026-10-22T23:00:00Z",
-        "slot": "Thu, Oct 22 • 7:00 PM ET",
-        "broadcast": "ESPN+",
-        "announcers": "Bob Wischusen, Kevin Weekes",
-        "venue": "PPG Paints Arena, Pittsburgh, PA",
-        "window": "THU",
-        "windowLabel": "Thursday Prime NHL Slate",
-        "windowBadge": "ESPN+ / RSN Lineups",
-        "statusState": "post",
-        "statusDetail": "Final",
-        "awayName": "Florida Panthers",
-        "awayRecord": "5-4-2, L2",
-        "awayScore": "0",
-        "homeName": "Pittsburgh Penguins",
-        "homeRecord": "4-6-1, W1",
-        "homeScore": "4",
-        "homeWinChance": 40,
-        "awayWinChance": 60,
-        "verdict": "GOOD FOR BUFFALO",
-        "impactClass": "good",
-        "target": "Root for Pittsburgh Penguins in Regulation",
-        "why": "Pittsburgh Penguins handed Florida Panthers a regulation loss, keeping them at 0 points."
-      },
-      {
-        "isoTime": "2026-10-22T23:30:00Z",
-        "slot": "Thu, Oct 22 • 7:30 PM ET",
-        "broadcast": "Sportsnet",
-        "announcers": "Chris Cuthbert, Craig Simpson",
-        "venue": "UBS Arena, Elmont, NY",
-        "window": "THU",
-        "windowLabel": "Thursday Prime NHL Slate",
-        "windowBadge": "ESPN+ / RSN Lineups",
-        "statusState": "post",
-        "statusDetail": "Final/OT",
-        "awayName": "Los Angeles Kings",
-        "awayRecord": "2-4-2, W2",
-        "awayScore": "3",
-        "homeName": "New York Islanders",
-        "homeRecord": "5-3-2, OT1",
-        "homeScore": "2",
-        "homeWinChance": 75,
-        "awayWinChance": 25,
-        "verdict": "WILDCARD OT POINT",
-        "impactClass": "warning",
-        "target": "Root for Los Angeles Kings in Regulation",
-        "why": "Los Angeles Kings won in overtime, but Wild Card contender New York Islanders salvaged a point."
-      },
-      {
-        "isoTime": "2026-10-23T01:00:00Z",
-        "slot": "Thu, Oct 22 • 9:00 PM ET",
-        "broadcast": "ESPN+",
-        "announcers": "Bob Wischusen, Kevin Weekes",
-        "venue": "Rogers Place, Edmonton, AB",
-        "window": "THU",
-        "windowLabel": "Thursday Prime NHL Slate",
-        "windowBadge": "ESPN+ / RSN Lineups",
-        "statusState": "post",
-        "statusDetail": "Final/SO",
-        "awayName": "Carolina Hurricanes",
-        "awayRecord": "8-2-2, OT1",
-        "awayScore": "5",
-        "homeName": "Edmonton Oilers",
-        "homeRecord": "8-1-1, W3",
-        "homeScore": "6",
-        "homeWinChance": 69,
-        "awayWinChance": 31,
-        "verdict": "WILDCARD OT POINT",
-        "impactClass": "warning",
-        "target": "Root for Edmonton Oilers in Regulation",
-        "why": "Edmonton Oilers won in overtime, but Wild Card contender Carolina Hurricanes salvaged a point."
-      },
-      {
-        "isoTime": "2026-10-23T02:00:00Z",
-        "slot": "Thu, Oct 22 • 10:00 PM ET",
-        "broadcast": "ESPN+",
-        "announcers": "Bob Wischusen, Kevin Weekes",
-        "venue": "Rogers Arena, Vancouver, BC",
-        "window": "THU",
-        "windowLabel": "Thursday Prime NHL Slate",
-        "windowBadge": "ESPN+ / RSN Lineups",
-        "statusState": "post",
-        "statusDetail": "Final",
-        "awayName": "Detroit Red Wings",
-        "awayRecord": "4-3-3, W1",
-        "awayScore": "5",
-        "homeName": "Vancouver Canucks",
-        "homeRecord": "2-9-1, L3",
-        "homeScore": "2",
-        "homeWinChance": 21,
-        "awayWinChance": 79,
-        "verdict": "BAD FOR BUFFALO",
-        "impactClass": "bad",
-        "target": "Root for Vancouver Canucks in Regulation",
-        "why": "Detroit Red Wings collected 2 standings points in the Atlantic race."
-      },
-      {
-        "isoTime": "2026-10-24T00:00:00Z",
-        "slot": "Fri, Oct 23 • 8:00 PM ET",
-        "broadcast": "NHLN",
-        "announcers": "Regional Broadcast Crew",
-        "venue": "United Center, Chicago, IL",
-        "window": "FRI",
-        "windowLabel": "Friday Night NHL Matchups",
-        "windowBadge": "Regional & Streaming Lineup",
-        "statusState": "pre",
-        "statusDetail": "Scheduled",
-        "awayName": "Montreal Canadiens",
-        "awayRecord": "4-3-2, OT1",
-        "awayScore": "",
-        "homeName": "Chicago Blackhawks",
-        "homeRecord": "3-6-0, L1",
-        "homeScore": "",
-        "homeWinChance": 32,
-        "awayWinChance": 68,
-        "verdict": "ATLANTIC WATCH",
-        "impactClass": "warning",
-        "target": "Root for Chicago Blackhawks in Regulation",
-        "why": "A regulation loss leaves Montreal Canadiens with 0 standings points in the Atlantic Division."
-      },
-      {
-        "isoTime": "2026-10-24T01:00:00Z",
-        "slot": "Fri, Oct 23 • 9:00 PM ET",
-        "broadcast": "Sportsnet",
-        "announcers": "Chris Cuthbert, Craig Simpson",
-        "venue": "Ball Arena, Denver, CO",
-        "window": "FRI",
-        "windowLabel": "Friday Night NHL Matchups",
-        "windowBadge": "Regional & Streaming Lineup",
-        "statusState": "pre",
-        "statusDetail": "Scheduled",
-        "awayName": "Tampa Bay Lightning",
-        "awayRecord": "7-2-0, W3",
-        "awayScore": "",
-        "homeName": "Colorado Avalanche",
-        "homeRecord": "5-4-1, L2",
-        "homeScore": "",
-        "homeWinChance": 29,
-        "awayWinChance": 71,
-        "verdict": "ATLANTIC WATCH",
-        "impactClass": "warning",
-        "target": "Root for Colorado Avalanche in Regulation",
-        "why": "A regulation loss leaves Tampa Bay Lightning with 0 standings points in the Atlantic Division."
-      },
-      {
-        "isoTime": "2026-10-24T17:00:00Z",
-        "slot": "Sat, Oct 24 • 1:00 PM ET",
-        "broadcast": "FOXLA+",
-        "announcers": "Regional Broadcast Crew",
-        "venue": "Xfinity Mobile Arena, Philadelphia, PA",
-        "window": "SAT",
-        "windowLabel": "Hockey Night in Canada & Saturday National",
-        "windowBadge": "CBC / Sportsnet / NHL Network",
-        "statusState": "pre",
-        "statusDetail": "Scheduled",
-        "awayName": "Anaheim Ducks",
-        "awayRecord": "4-6-0, L5",
-        "awayScore": "",
-        "homeName": "Philadelphia Flyers",
-        "homeRecord": "3-6-3, W3",
-        "homeScore": "",
-        "homeWinChance": 51,
-        "awayWinChance": 49,
-        "verdict": "WILD CARD WATCH",
-        "impactClass": "neutral",
-        "target": "Root for Anaheim Ducks in Regulation",
-        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points."
-      },
-      {
-        "isoTime": "2026-10-24T19:30:00Z",
-        "slot": "Sat, Oct 24 • 3:30 PM ET",
-        "broadcast": "ABTV ",
-        "announcers": "Regional Broadcast Crew",
-        "venue": "Prudential Center, Newark, NJ",
-        "window": "SAT",
-        "windowLabel": "Hockey Night in Canada & Saturday National",
-        "windowBadge": "CBC / Sportsnet / NHL Network",
-        "statusState": "pre",
-        "statusDetail": "Scheduled",
-        "awayName": "Los Angeles Kings",
-        "awayRecord": "2-4-2, W2",
-        "awayScore": "",
-        "homeName": "New Jersey Devils",
-        "homeRecord": "6-4-0, W2",
-        "homeScore": "",
-        "homeWinChance": 75,
-        "awayWinChance": 25,
-        "verdict": "WILD CARD WATCH",
-        "impactClass": "neutral",
-        "target": "Root for Los Angeles Kings in Regulation",
-        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points."
-      },
-      {
-        "isoTime": "2026-10-24T23:00:00Z",
-        "slot": "Sat, Oct 24 • 7:00 PM ET",
-        "broadcast": "NBCSCA",
-        "announcers": "Regional Broadcast Crew",
-        "venue": "TD Garden, Boston, MA",
-        "window": "SAT",
-        "windowLabel": "Hockey Night in Canada & Saturday National",
-        "windowBadge": "CBC / Sportsnet / NHL Network",
-        "statusState": "pre",
-        "statusDetail": "Scheduled",
-        "awayName": "San Jose Sharks",
-        "awayRecord": "6-4-1, W2",
-        "awayScore": "",
-        "homeName": "Boston Bruins",
-        "homeRecord": "8-2-1, W1",
-        "homeScore": "",
-        "homeWinChance": 74,
-        "awayWinChance": 26,
-        "verdict": "ATLANTIC WATCH",
-        "impactClass": "warning",
-        "target": "Root for San Jose Sharks in Regulation",
-        "why": "A regulation loss leaves Boston Bruins with 0 standings points in the Atlantic Division."
-      },
-      {
-        "isoTime": "2026-10-24T23:00:00Z",
-        "slot": "Sat, Oct 24 • 7:00 PM ET",
-        "broadcast": "Sportsnet",
-        "announcers": "Chris Cuthbert, Craig Simpson",
-        "venue": "Canadian Tire Centre, Ottawa, ON",
-        "window": "SAT",
-        "windowLabel": "Hockey Night in Canada & Saturday National",
-        "windowBadge": "CBC / Sportsnet / NHL Network",
-        "statusState": "pre",
-        "statusDetail": "Scheduled",
-        "awayName": "New York Rangers",
-        "awayRecord": "7-4-1, L1",
-        "awayScore": "",
-        "homeName": "Ottawa Senators",
-        "homeRecord": "7-4-0, L1",
-        "homeScore": "",
-        "homeWinChance": 55,
-        "awayWinChance": 45,
-        "verdict": "ATLANTIC WATCH",
-        "impactClass": "warning",
-        "target": "Root for New York Rangers in Regulation",
-        "why": "A regulation loss leaves Ottawa Senators with 0 standings points in the Atlantic Division."
-      },
-      {
-        "isoTime": "2026-10-24T23:00:00Z",
-        "slot": "Sat, Oct 24 • 7:00 PM ET",
-        "broadcast": "Sportsnet",
-        "announcers": "Chris Cuthbert, Craig Simpson",
-        "venue": "PPG Paints Arena, Pittsburgh, PA",
-        "window": "SAT",
-        "windowLabel": "Hockey Night in Canada & Saturday National",
-        "windowBadge": "CBC / Sportsnet / NHL Network",
-        "statusState": "pre",
-        "statusDetail": "Scheduled",
-        "awayName": "Nashville Predators",
-        "awayRecord": "3-3-3, L1",
-        "awayScore": "",
-        "homeName": "Pittsburgh Penguins",
-        "homeRecord": "4-6-1, W1",
-        "homeScore": "",
-        "homeWinChance": 44,
-        "awayWinChance": 56,
-        "verdict": "WILD CARD WATCH",
-        "impactClass": "neutral",
-        "target": "Root for Nashville Predators in Regulation",
-        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points."
-      },
-      {
-        "isoTime": "2026-10-24T23:00:00Z",
-        "slot": "Sat, Oct 24 • 7:00 PM ET",
-        "broadcast": "CBJNHL",
-        "announcers": "Regional Broadcast Crew",
-        "venue": "Nationwide Arena, Columbus, OH",
-        "window": "SAT",
-        "windowLabel": "Hockey Night in Canada & Saturday National",
-        "windowBadge": "CBC / Sportsnet / NHL Network",
-        "statusState": "pre",
-        "statusDetail": "Scheduled",
-        "awayName": "Vegas Golden Knights",
-        "awayRecord": "8-4-0, L2",
-        "awayScore": "",
-        "homeName": "Columbus Blue Jackets",
-        "homeRecord": "3-5-0, L2",
-        "homeScore": "",
-        "homeWinChance": 27,
-        "awayWinChance": 73,
-        "verdict": "WILD CARD WATCH",
-        "impactClass": "neutral",
-        "target": "Root for Vegas Golden Knights in Regulation",
-        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points."
-      },
-      {
-        "isoTime": "2026-10-24T23:00:00Z",
-        "slot": "Sat, Oct 24 • 7:00 PM ET",
-        "broadcast": "CARNHL",
-        "announcers": "Regional Broadcast Crew",
-        "venue": "Enterprise Center, St. Louis, MO",
-        "window": "SAT",
-        "windowLabel": "Hockey Night in Canada & Saturday National",
-        "windowBadge": "CBC / Sportsnet / NHL Network",
-        "statusState": "pre",
-        "statusDetail": "Scheduled",
-        "awayName": "Carolina Hurricanes",
-        "awayRecord": "8-2-2, OT1",
-        "awayScore": "",
-        "homeName": "St. Louis Blues",
-        "homeRecord": "5-4-1, W2",
-        "homeScore": "",
-        "homeWinChance": 32,
-        "awayWinChance": 68,
-        "verdict": "WILD CARD WATCH",
-        "impactClass": "neutral",
-        "target": "Root for St. Louis Blues in Regulation",
-        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points."
-      },
-      {
-        "isoTime": "2026-10-24T23:00:00Z",
-        "slot": "Sat, Oct 24 • 7:00 PM ET",
-        "broadcast": "Sportsnet",
-        "announcers": "Chris Cuthbert, Craig Simpson",
-        "venue": "Rogers Place, Edmonton, AB",
-        "window": "SAT",
-        "windowLabel": "Hockey Night in Canada & Saturday National",
-        "windowBadge": "CBC / Sportsnet / NHL Network",
-        "statusState": "pre",
-        "statusDetail": "Scheduled",
-        "awayName": "Toronto Maple Leafs",
-        "awayRecord": "6-4-2, W3",
-        "awayScore": "",
-        "homeName": "Edmonton Oilers",
-        "homeRecord": "8-1-1, W3",
-        "homeScore": "",
-        "homeWinChance": 84,
-        "awayWinChance": 16,
-        "verdict": "ATLANTIC WATCH",
-        "impactClass": "warning",
-        "target": "Root for Edmonton Oilers in Regulation",
-        "why": "A regulation loss leaves Toronto Maple Leafs with 0 standings points in the Atlantic Division."
-      },
-      {
-        "isoTime": "2026-10-25T01:00:00Z",
-        "slot": "Sat, Oct 24 • 9:00 PM ET",
-        "broadcast": "Mammoth+",
-        "announcers": "Regional Broadcast Crew",
-        "venue": "Delta Center, Salt Lake City, UT",
-        "window": "SAT",
-        "windowLabel": "Hockey Night in Canada & Saturday National",
-        "windowBadge": "CBC / Sportsnet / NHL Network",
-        "statusState": "pre",
-        "statusDetail": "Scheduled",
-        "awayName": "Tampa Bay Lightning",
-        "awayRecord": "7-2-0, W3",
-        "awayScore": "",
-        "homeName": "Utah Mammoth",
-        "homeRecord": "7-4-0, L1",
-        "homeScore": "",
-        "homeWinChance": 37,
-        "awayWinChance": 63,
-        "verdict": "ATLANTIC WATCH",
-        "impactClass": "warning",
-        "target": "Root for Utah Mammoth in Regulation",
-        "why": "A regulation loss leaves Tampa Bay Lightning with 0 standings points in the Atlantic Division."
-      },
-      {
-        "isoTime": "2026-10-25T02:00:00Z",
-        "slot": "Sat, Oct 24 • 10:00 PM ET",
-        "broadcast": "Sportsnet",
-        "announcers": "Chris Cuthbert, Craig Simpson",
-        "venue": "Scotiabank Saddledome, Calgary, AB",
-        "window": "SAT",
-        "windowLabel": "Hockey Night in Canada & Saturday National",
-        "windowBadge": "CBC / Sportsnet / NHL Network",
-        "statusState": "pre",
-        "statusDetail": "Scheduled",
-        "awayName": "Detroit Red Wings",
-        "awayRecord": "4-3-3, W1",
-        "awayScore": "",
-        "homeName": "Calgary Flames",
-        "homeRecord": "3-6-0, W2",
-        "homeScore": "",
-        "homeWinChance": 33,
-        "awayWinChance": 67,
-        "verdict": "ATLANTIC WATCH",
-        "impactClass": "warning",
-        "target": "Root for Calgary Flames in Regulation",
-        "why": "A regulation loss leaves Detroit Red Wings with 0 standings points in the Atlantic Division."
-      },
-      {
-        "isoTime": "2026-10-25T19:00:00Z",
-        "slot": "Sun, Oct 25 • 3:00 PM ET",
-        "broadcast": "Sportsnet",
-        "announcers": "Chris Cuthbert, Craig Simpson",
-        "venue": "United Center, Chicago, IL",
-        "window": "SUN",
-        "windowLabel": "Sunday NHL Showcase Slate",
-        "windowBadge": "National & Matinee Window",
-        "statusState": "pre",
-        "statusDetail": "Scheduled",
-        "awayName": "Florida Panthers",
-        "awayRecord": "5-4-2, L2",
-        "awayScore": "",
-        "homeName": "Chicago Blackhawks",
-        "homeRecord": "3-6-0, L1",
-        "homeScore": "",
-        "homeWinChance": 33,
-        "awayWinChance": 67,
-        "verdict": "ATLANTIC WATCH",
-        "impactClass": "warning",
-        "target": "Root for Chicago Blackhawks in Regulation",
-        "why": "A regulation loss leaves Florida Panthers with 0 standings points in the Atlantic Division."
-      },
-      {
-        "isoTime": "2026-10-25T22:00:00Z",
-        "slot": "Sun, Oct 25 • 6:00 PM ET",
-        "broadcast": "Prime Video",
-        "announcers": "Regional Broadcast Crew",
-        "venue": "American Airlines Center, Dallas, TX",
-        "window": "SUN",
-        "windowLabel": "Sunday NHL Showcase Slate",
-        "windowBadge": "National & Matinee Window",
-        "statusState": "pre",
-        "statusDetail": "Scheduled",
-        "awayName": "New York Islanders",
-        "awayRecord": "5-3-2, OT1",
-        "awayScore": "",
-        "homeName": "Dallas Stars",
-        "homeRecord": "6-3-1, W4",
-        "homeScore": "",
-        "homeWinChance": 59,
-        "awayWinChance": 41,
-        "verdict": "WILD CARD WATCH",
-        "impactClass": "neutral",
-        "target": "Root for Dallas Stars in Regulation",
-        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points."
-      },
-      {
-        "isoTime": "2026-10-25T23:00:00Z",
-        "slot": "Sun, Oct 25 • 7:00 PM ET",
-        "broadcast": "TNT",
-        "announcers": "Kenny Albert, Eddie Olczyk, Brian Boucher",
-        "venue": "Princess Auto Stadium, Winnipeg, MB",
-        "window": "SUN",
-        "windowLabel": "Sunday NHL Showcase Slate",
-        "windowBadge": "National & Matinee Window",
-        "statusState": "pre",
-        "statusDetail": "Scheduled",
-        "awayName": "Montreal Canadiens",
-        "awayRecord": "4-3-2, OT1",
-        "awayScore": "",
-        "homeName": "Winnipeg Jets",
-        "homeRecord": "4-3-3, OT1",
-        "homeScore": "",
-        "homeWinChance": 53,
-        "awayWinChance": 47,
-        "verdict": "ATLANTIC WATCH",
-        "impactClass": "warning",
-        "target": "Root for Winnipeg Jets in Regulation",
-        "why": "A regulation loss leaves Montreal Canadiens with 0 standings points in the Atlantic Division."
-      },
-      {
-        "isoTime": "2026-10-26T23:00:00Z",
-        "slot": "Mon, Oct 26 • 7:00 PM ET",
-        "broadcast": "ABTV ",
-        "announcers": "Regional Broadcast Crew",
-        "venue": "Madison Square Garden, New York, NY",
-        "window": "MON",
-        "windowLabel": "Monday Night NHL Action",
-        "windowBadge": "Early Week Matchups",
-        "statusState": "pre",
-        "statusDetail": "Scheduled",
-        "awayName": "Los Angeles Kings",
-        "awayRecord": "2-4-2, W2",
-        "awayScore": "",
-        "homeName": "New York Rangers",
-        "homeRecord": "7-4-1, L1",
-        "homeScore": "",
-        "homeWinChance": 77,
-        "awayWinChance": 23,
-        "verdict": "WILD CARD WATCH",
-        "impactClass": "neutral",
-        "target": "Root for Los Angeles Kings in Regulation",
-        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points."
-      },
-      {
-        "isoTime": "2026-10-27T00:30:00Z",
-        "slot": "Mon, Oct 26 • 8:30 PM ET",
-        "broadcast": "Sportsnet",
-        "announcers": "Chris Cuthbert, Craig Simpson",
-        "venue": "Scotiabank Saddledome, Calgary, AB",
-        "window": "MON",
-        "windowLabel": "Monday Night NHL Action",
-        "windowBadge": "Early Week Matchups",
-        "statusState": "pre",
-        "statusDetail": "Scheduled",
-        "awayName": "Toronto Maple Leafs",
-        "awayRecord": "6-4-2, W3",
-        "awayScore": "",
-        "homeName": "Calgary Flames",
-        "homeRecord": "3-6-0, W2",
-        "homeScore": "",
-        "homeWinChance": 30,
-        "awayWinChance": 70,
-        "verdict": "ATLANTIC WATCH",
-        "impactClass": "warning",
-        "target": "Root for Calgary Flames in Regulation",
-        "why": "A regulation loss leaves Toronto Maple Leafs with 0 standings points in the Atlantic Division."
-      },
-      {
-        "isoTime": "2026-10-27T01:30:00Z",
-        "slot": "Mon, Oct 26 • 9:30 PM ET",
-        "broadcast": "Sportsnet",
-        "announcers": "Chris Cuthbert, Craig Simpson",
-        "venue": "Rogers Place, Edmonton, AB",
-        "window": "MON",
-        "windowLabel": "Monday Night NHL Action",
-        "windowBadge": "Early Week Matchups",
-        "statusState": "pre",
-        "statusDetail": "Scheduled",
-        "awayName": "Detroit Red Wings",
-        "awayRecord": "4-3-3, W1",
-        "awayScore": "",
-        "homeName": "Edmonton Oilers",
-        "homeRecord": "8-1-1, W3",
-        "homeScore": "",
-        "homeWinChance": 86,
-        "awayWinChance": 14,
-        "verdict": "ATLANTIC WATCH",
-        "impactClass": "warning",
-        "target": "Root for Edmonton Oilers in Regulation",
-        "why": "A regulation loss leaves Detroit Red Wings with 0 standings points in the Atlantic Division."
-      },
-      {
-        "isoTime": "2026-10-27T23:00:00Z",
-        "slot": "Tue, Oct 27 • 7:00 PM ET",
-        "broadcast": "CBJNHL",
-        "announcers": "Regional Broadcast Crew",
-        "venue": "Xfinity Mobile Arena, Philadelphia, PA",
-        "window": "TUE",
-        "windowLabel": "Tuesday Night NHL Slate",
-        "windowBadge": "Frozen Frenzy / Regional Lineups",
-        "statusState": "pre",
-        "statusDetail": "Scheduled",
-        "awayName": "Columbus Blue Jackets",
-        "awayRecord": "3-5-0, L2",
-        "awayScore": "",
-        "homeName": "Philadelphia Flyers",
-        "homeRecord": "3-6-3, W3",
-        "homeScore": "",
-        "homeWinChance": 54,
-        "awayWinChance": 46,
-        "verdict": "WILD CARD WATCH",
-        "impactClass": "neutral",
-        "target": "Root for Philadelphia Flyers in Regulation",
-        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points."
-      },
-      {
-        "isoTime": "2026-10-28T00:00:00Z",
-        "slot": "Tue, Oct 27 • 8:00 PM ET",
-        "broadcast": "ESPN",
-        "announcers": "Steve Levy, Ray Ferraro",
-        "venue": "Lenovo Center, Raleigh, NC",
-        "window": "TUE",
-        "windowLabel": "Tuesday Night NHL Slate",
-        "windowBadge": "Frozen Frenzy / Regional Lineups",
-        "statusState": "pre",
-        "statusDetail": "Scheduled",
-        "awayName": "Boston Bruins",
-        "awayRecord": "8-2-1, W1",
-        "awayScore": "",
-        "homeName": "Carolina Hurricanes",
-        "homeRecord": "8-2-2, OT1",
-        "homeScore": "",
-        "homeWinChance": 50,
-        "awayWinChance": 50,
-        "verdict": "ATLANTIC WATCH",
-        "impactClass": "warning",
-        "target": "Root for Carolina Hurricanes in Regulation",
-        "why": "A regulation loss leaves Boston Bruins with 0 standings points in the Atlantic Division."
-      },
-      {
-        "isoTime": "2026-10-28T00:00:00Z",
-        "slot": "Tue, Oct 27 • 8:00 PM ET",
-        "broadcast": "STLNHL",
-        "announcers": "Regional Broadcast Crew",
-        "venue": "Enterprise Center, St. Louis, MO",
-        "window": "TUE",
-        "windowLabel": "Tuesday Night NHL Slate",
-        "windowBadge": "Frozen Frenzy / Regional Lineups",
-        "statusState": "pre",
-        "statusDetail": "Scheduled",
-        "awayName": "Montreal Canadiens",
-        "awayRecord": "4-3-2, OT1",
-        "awayScore": "",
-        "homeName": "St. Louis Blues",
-        "homeRecord": "5-4-1, W2",
-        "homeScore": "",
-        "homeWinChance": 53,
-        "awayWinChance": 47,
-        "verdict": "ATLANTIC WATCH",
-        "impactClass": "warning",
-        "target": "Root for St. Louis Blues in Regulation",
-        "why": "A regulation loss leaves Montreal Canadiens with 0 standings points in the Atlantic Division."
-      },
-      {
-        "isoTime": "2026-10-28T00:00:00Z",
-        "slot": "Tue, Oct 27 • 8:00 PM ET",
-        "broadcast": "Sportsnet",
-        "announcers": "Chris Cuthbert, Craig Simpson",
-        "venue": "Bridgestone Arena, Nashville, TN",
-        "window": "TUE",
-        "windowLabel": "Tuesday Night NHL Slate",
-        "windowBadge": "Frozen Frenzy / Regional Lineups",
-        "statusState": "pre",
-        "statusDetail": "Scheduled",
-        "awayName": "New York Islanders",
-        "awayRecord": "5-3-2, OT1",
-        "awayScore": "",
-        "homeName": "Nashville Predators",
-        "homeRecord": "3-3-3, L1",
-        "homeScore": "",
-        "homeWinChance": 43,
-        "awayWinChance": 57,
-        "verdict": "WILD CARD WATCH",
-        "impactClass": "neutral",
-        "target": "Root for Nashville Predators in Regulation",
-        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points."
-      },
-      {
-        "isoTime": "2026-10-28T00:00:00Z",
-        "slot": "Tue, Oct 27 • 8:00 PM ET",
-        "broadcast": "Prime Video",
-        "announcers": "Regional Broadcast Crew",
-        "venue": "American Airlines Center, Dallas, TX",
-        "window": "TUE",
-        "windowLabel": "Tuesday Night NHL Slate",
-        "windowBadge": "Frozen Frenzy / Regional Lineups",
-        "statusState": "pre",
-        "statusDetail": "Scheduled",
-        "awayName": "New Jersey Devils",
-        "awayRecord": "6-4-0, W2",
-        "awayScore": "",
-        "homeName": "Dallas Stars",
-        "homeRecord": "6-3-1, W4",
-        "homeScore": "",
-        "homeWinChance": 59,
-        "awayWinChance": 41,
-        "verdict": "WILD CARD WATCH",
-        "impactClass": "neutral",
-        "target": "Root for Dallas Stars in Regulation",
-        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points."
-      },
-      {
-        "isoTime": "2026-10-28T00:00:00Z",
-        "slot": "Tue, Oct 27 • 8:00 PM ET",
-        "broadcast": "SCRIPPS",
-        "announcers": "Regional Broadcast Crew",
-        "venue": "Canada Life Centre, Winnipeg, MB",
-        "window": "TUE",
-        "windowLabel": "Tuesday Night NHL Slate",
-        "windowBadge": "Frozen Frenzy / Regional Lineups",
-        "statusState": "pre",
-        "statusDetail": "Scheduled",
-        "awayName": "Florida Panthers",
-        "awayRecord": "5-4-2, L2",
-        "awayScore": "",
-        "homeName": "Winnipeg Jets",
-        "homeRecord": "4-3-3, OT1",
-        "homeScore": "",
-        "homeWinChance": 54,
-        "awayWinChance": 46,
-        "verdict": "ATLANTIC WATCH",
-        "impactClass": "warning",
-        "target": "Root for Winnipeg Jets in Regulation",
-        "why": "A regulation loss leaves Florida Panthers with 0 standings points in the Atlantic Division."
-      },
-      {
-        "isoTime": "2026-10-28T02:00:00Z",
-        "slot": "Tue, Oct 27 • 10:00 PM ET",
-        "broadcast": "SCRIPPS",
-        "announcers": "Regional Broadcast Crew",
-        "venue": "T-Mobile Arena, Las Vegas, NV",
-        "window": "TUE",
-        "windowLabel": "Tuesday Night NHL Slate",
-        "windowBadge": "Frozen Frenzy / Regional Lineups",
-        "statusState": "pre",
-        "statusDetail": "Scheduled",
-        "awayName": "Ottawa Senators",
-        "awayRecord": "7-4-0, L1",
-        "awayScore": "",
-        "homeName": "Vegas Golden Knights",
-        "homeRecord": "8-4-0, L2",
-        "homeScore": "",
-        "homeWinChance": 57,
-        "awayWinChance": 43,
-        "verdict": "ATLANTIC WATCH",
-        "impactClass": "warning",
-        "target": "Root for Vegas Golden Knights in Regulation",
-        "why": "A regulation loss leaves Ottawa Senators with 0 standings points in the Atlantic Division."
-      },
-      {
-        "isoTime": "2026-10-28T23:30:00Z",
-        "slot": "Wed, Oct 28 • 7:30 PM ET",
-        "broadcast": "TNT",
-        "announcers": "Kenny Albert, Eddie Olczyk, Brian Boucher",
-        "venue": "Capital One Arena, Washington, DC",
-        "window": "WED",
-        "windowLabel": "Wednesday Night Hockey Showcase",
-        "windowBadge": "TNT / Max / National Slate",
-        "statusState": "pre",
-        "statusDetail": "Scheduled",
-        "awayName": "Philadelphia Flyers",
-        "awayRecord": "3-6-3, W3",
-        "awayScore": "",
-        "homeName": "Washington Capitals",
-        "homeRecord": "5-4-0, L1",
-        "homeScore": "",
-        "homeWinChance": 71,
-        "awayWinChance": 29,
-        "verdict": "WILD CARD WATCH",
-        "impactClass": "neutral",
-        "target": "Root for Washington Capitals in Regulation",
-        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points."
-      },
-      {
-        "isoTime": "2026-10-29T01:00:00Z",
-        "slot": "Wed, Oct 28 • 9:00 PM ET",
-        "broadcast": "ALT",
-        "announcers": "Regional Broadcast Crew",
-        "venue": "Ball Arena, Denver, CO",
-        "window": "WED",
-        "windowLabel": "Wednesday Night Hockey Showcase",
-        "windowBadge": "TNT / Max / National Slate",
-        "statusState": "pre",
-        "statusDetail": "Scheduled",
-        "awayName": "New Jersey Devils",
-        "awayRecord": "6-4-0, W2",
-        "awayScore": "",
-        "homeName": "Colorado Avalanche",
-        "homeRecord": "5-4-1, L2",
-        "homeScore": "",
-        "homeWinChance": 48,
-        "awayWinChance": 52,
-        "verdict": "WILD CARD WATCH",
-        "impactClass": "neutral",
-        "target": "Root for Colorado Avalanche in Regulation",
-        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points."
-      },
-      {
-        "isoTime": "2026-10-29T02:00:00Z",
-        "slot": "Wed, Oct 28 • 10:00 PM ET",
-        "broadcast": "Prime Video",
-        "announcers": "Regional Broadcast Crew",
-        "venue": "Climate Pledge Arena, Seattle, WA",
-        "window": "WED",
-        "windowLabel": "Wednesday Night Hockey Showcase",
-        "windowBadge": "TNT / Max / National Slate",
-        "statusState": "pre",
-        "statusDetail": "Scheduled",
-        "awayName": "Toronto Maple Leafs",
-        "awayRecord": "6-4-2, W3",
-        "awayScore": "",
-        "homeName": "Seattle Kraken",
-        "homeRecord": "7-3-1, W2",
-        "homeScore": "",
-        "homeWinChance": 64,
-        "awayWinChance": 36,
-        "verdict": "ATLANTIC WATCH",
-        "impactClass": "warning",
-        "target": "Root for Seattle Kraken in Regulation",
-        "why": "A regulation loss leaves Toronto Maple Leafs with 0 standings points in the Atlantic Division."
-      }
-    ]
+    "wildcard": 14
   }
 };
 
@@ -4308,7 +3270,6 @@
 
       document.getElementById('bills-game-time').textContent = b.nextGame.gameTime || '';
       document.getElementById('bills-broadcast').textContent = b.nextGame.broadcast || 'CBS';
-      document.getElementById('bills-win-chance').textContent = `${b.nextGame.winChance || 68}%`;
       document.getElementById('bills-if-win').textContent = `Win: ${b.nextGame.ifWin}%`;
       document.getElementById('bills-if-loss').textContent = `Loss: ${b.nextGame.ifLoss}%`;
       
@@ -4326,7 +3287,18 @@
           winChance: b.nextGame.winChance
         };
         updateBillsLiveUI(liveBillsGameData);
+      } else if (liveBillsGameData && (liveBillsGameData.state === 'in' || liveBillsGameData.state === 'post')) {
+        if (currentBillsNextGame) {
+          currentBillsNextGame.statusState = liveBillsGameData.state;
+          currentBillsNextGame.statusDetail = liveBillsGameData.detail;
+          currentBillsNextGame.bufScore = liveBillsGameData.bufScore;
+          currentBillsNextGame.oppScore = liveBillsGameData.oppScore;
+          currentBillsNextGame.winChance = liveBillsGameData.winChance;
+        }
+        updateBillsLiveUI(liveBillsGameData);
       } else {
+        document.getElementById('bills-win-chance').textContent = `${b.nextGame.winChance || 68}%`;
+        document.getElementById('bills-matchup-prefix').textContent = 'Next Matchup:';
         document.getElementById('bills-next-opp').textContent = b.nextGame.opponent;
         document.getElementById('bills-records').textContent = b.nextGame.matchupRecords || '';
         const billsIso = resolveGameIso(b.nextGame);
@@ -4541,9 +3513,24 @@
         `;
       }
 
-      // Populate Chronological Out-of-Town Scoreboard & TV Guide
-      currentBillsOutOfTownGames = Array.isArray(b.outOfTownGames) ? b.outOfTownGames : [];
-      currentBillsNextGame = b.nextGame || null;
+      // Populate Chronological Out-of-Town Scoreboard & TV Guide (preserve any live/post overlay state)
+      const incomingGames = Array.isArray(b.outOfTownGames) ? b.outOfTownGames : [];
+      if (currentBillsOutOfTownGames.length > 0) {
+        incomingGames.forEach(ng => {
+          const prev = currentBillsOutOfTownGames.find(og => og.homeName === ng.homeName && og.awayName === ng.awayName);
+          if (prev && (prev.statusState === 'in' || prev.statusState === 'post') && ng.statusState === 'pre') {
+            ng.statusState = prev.statusState;
+            ng.statusDetail = prev.statusDetail;
+            ng.homeScore = prev.homeScore;
+            ng.awayScore = prev.awayScore;
+            ng.verdict = prev.verdict;
+            ng.impactClass = prev.impactClass;
+            ng.homeWinChance = prev.homeWinChance;
+            ng.awayWinChance = prev.awayWinChance;
+          }
+        });
+      }
+      currentBillsOutOfTownGames = incomingGames;
       renderBillsScoreboard(currentBillsOutOfTownGames, currentBillsNextGame);
 
       // Check real-time live scores immediately
