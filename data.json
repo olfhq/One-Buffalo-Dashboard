@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-23T16:41:51.973Z",
+  "updatedAt": "2026-10-23T21:09:04.002Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
   "bills": {
     "team": "Buffalo Bills",
@@ -79,13 +79,6 @@
           "team": "Bills"
         },
         {
-          "player": "Sam Franklin Jr.",
-          "pos": "S",
-          "status": "Suspension",
-          "injury": "Suspension",
-          "team": "Bills"
-        },
-        {
           "player": "DJ Moore",
           "pos": "WR",
           "status": "Questionable",
@@ -107,6 +100,13 @@
           "team": "Bills"
         },
         {
+          "player": "Jordan Hancock",
+          "pos": "CB",
+          "status": "Injured Reserve",
+          "injury": "Hamstring",
+          "team": "Bills"
+        },
+        {
           "player": "Lamar Jackson",
           "pos": "QB",
           "status": "Questionable",
@@ -116,22 +116,15 @@
         {
           "player": "Jaylinn Hawkins",
           "pos": "S",
-          "status": "Questionable",
+          "status": "Out",
           "injury": "Knee",
           "team": "Ravens"
         },
         {
           "player": "Tavius Robinson",
           "pos": "LB",
-          "status": "Questionable",
+          "status": "Out",
           "injury": "Pectoral",
-          "team": "Ravens"
-        },
-        {
-          "player": "Cam Jurgens",
-          "pos": "C",
-          "status": "Questionable",
-          "injury": "Concussion",
           "team": "Ravens"
         },
         {
@@ -139,6 +132,13 @@
           "pos": "CB",
           "status": "Injured Reserve",
           "injury": "Toe",
+          "team": "Ravens"
+        },
+        {
+          "player": "Broderick Washington Jr.",
+          "pos": "DT",
+          "status": "Questionable",
+          "injury": "Ankle",
           "team": "Ravens"
         }
       ]
@@ -267,8 +267,8 @@
         "homeName": "New Orleans Saints",
         "homeRecord": "2-4, W1",
         "homeScore": "0",
-        "homeWinChance": 39,
-        "awayWinChance": 61,
+        "homeWinChance": 40,
+        "awayWinChance": 60,
         "verdict": "SEEDING WATCH",
         "impactClass": "good",
         "target": "Root for New Orleans Saints",
@@ -321,8 +321,8 @@
         "homeName": "Tennessee Titans",
         "homeRecord": "1-5, W1",
         "homeScore": "0",
-        "homeWinChance": 46,
-        "awayWinChance": 54,
+        "homeWinChance": 45,
+        "awayWinChance": 55,
         "verdict": "SEEDING WATCH",
         "impactClass": "good",
         "target": "Root for Tennessee Titans",
@@ -402,8 +402,8 @@
         "homeName": "Carolina Panthers",
         "homeRecord": "3-2, W2",
         "homeScore": "0",
-        "homeWinChance": 59,
-        "awayWinChance": 41,
+        "homeWinChance": 58,
+        "awayWinChance": 42,
         "verdict": "NFC MATCHUP",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
@@ -429,8 +429,8 @@
         "homeName": "Baltimore Ravens",
         "homeRecord": "4-2, L1",
         "homeScore": "0",
-        "homeWinChance": 53,
-        "awayWinChance": 47,
+        "homeWinChance": 50,
+        "awayWinChance": 50,
         "verdict": "SEEDING WATCH",
         "impactClass": "good",
         "target": "Root for Cincinnati Bengals",
@@ -537,8 +537,8 @@
         "homeName": "Las Vegas Raiders",
         "homeRecord": "3-3, L3",
         "homeScore": "0",
-        "homeWinChance": 37,
-        "awayWinChance": 63,
+        "homeWinChance": 39,
+        "awayWinChance": 61,
         "verdict": "SEEDING WATCH",
         "impactClass": "good",
         "target": "Root for Los Angeles Rams",
@@ -564,8 +564,8 @@
         "homeName": "Seattle Seahawks",
         "homeRecord": "3-3, L2",
         "homeScore": "0",
-        "homeWinChance": 56,
-        "awayWinChance": 44,
+        "homeWinChance": 57,
+        "awayWinChance": 43,
         "verdict": "SEEDING WATCH",
         "impactClass": "good",
         "target": "Root for Seattle Seahawks",
