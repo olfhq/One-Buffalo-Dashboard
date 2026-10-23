@@ -1077,11 +1077,18 @@ async function fetchNhlScoreboard() {
     // Calculate rooting verdicts and impact analysis for every matchup
     for (const g of rawGamesMap.values()) {
       const { awayName, homeName, awayScore, homeScore, statusState, statusDetail } = g;
-      const isAwayAtlantic = atlanticPriority.includes(awayName);
-      const isHomeAtlantic = atlanticPriority.includes(homeName);
-      const isAwayMetro = metroContenders.includes(awayName);
-      const isHomeMetro = metroContenders.includes(homeName);
+      const matchesTeam = (name, list) => list.some(t => (name || '').toLowerCase().includes(t.toLowerCase()) || t.toLowerCase().includes((name || '').toLowerCase()));
+      const isAwayAtlantic = matchesTeam(awayName, atlanticPriority);
+      const isHomeAtlantic = matchesTeam(homeName, atlanticPriority);
+      const isAwayMetro = matchesTeam(awayName, metroContenders);
+      const isHomeMetro = matchesTeam(homeName, metroContenders);
       const isOvertime = statusDetail.includes('OT') || statusDetail.includes('SO');
+
+      // Filter out Western vs Western matchups during regular season (until playoffs)
+      const isEastRelevant = isAwayAtlantic || isHomeAtlantic || isAwayMetro || isHomeMetro;
+      if (!isEastRelevant) {
+        continue;
+      }
 
       let verdict = 'NEUTRAL';
       let impactClass = 'neutral';

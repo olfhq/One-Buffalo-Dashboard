@@ -907,6 +907,144 @@
       letter-spacing: 0.4px;
     }
 
+    /* SLATE ACCORDION STYLES */
+    .slate-accordion-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.45rem 0.75rem;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px dashed rgba(255, 255, 255, 0.12);
+      border-radius: 6px;
+      margin-bottom: 0.75rem;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    .slate-toolbar-note {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .slate-toolbar-actions {
+      display: flex;
+      gap: 0.4rem;
+    }
+
+    .slate-toolbar-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--text-muted);
+      border-radius: 4px;
+      padding: 0.2rem 0.55rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .slate-toolbar-btn:hover {
+      background: rgba(252, 181, 20, 0.2);
+      color: #fbbf24;
+      border-color: rgba(252, 181, 20, 0.4);
+    }
+
+    .slate-accordion-group {
+      margin-bottom: 0.75rem;
+    }
+
+    .slate-accordion-header {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 0.95rem;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-left: 4px solid #fbbf24;
+      border-radius: 8px;
+      color: #fff;
+      font-family: inherit;
+      cursor: pointer;
+      text-align: left;
+      transition: background 0.2s ease, border-color 0.2s ease;
+      box-sizing: border-box;
+    }
+
+    .slate-accordion-header:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(252, 181, 20, 0.4);
+    }
+
+    .slate-accordion-header.active {
+      background: rgba(252, 181, 20, 0.08);
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      border-color: rgba(252, 181, 20, 0.35);
+    }
+
+    .slate-accordion-left {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: 0.3px;
+    }
+
+    .slate-accordion-chevron {
+      display: inline-block;
+      font-size: 0.72rem;
+      color: #fbbf24;
+      transition: transform 0.2s ease;
+    }
+
+    .slate-accordion-header.active .slate-accordion-chevron {
+      transform: rotate(90deg);
+    }
+
+    .slate-accordion-right {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .slate-accordion-count {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #38bdf8;
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      padding: 0.15rem 0.5rem;
+      border-radius: 12px;
+    }
+
+    .slate-accordion-content {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      padding: 0.85rem;
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(252, 181, 20, 0.25);
+      border-top: none;
+      border-bottom-left-radius: 8px;
+      border-bottom-right-radius: 8px;
+    }
+
+    @media (max-width: 600px) {
+      .slate-accordion-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.4rem;
+      }
+      .slate-accordion-right {
+        margin-left: 1.25rem;
+      }
+    }
+
     /* UNIFIED VENUE / BROADCAST / ICE PILLS STRIP */
     .game-venue-strip {
       display: flex;
@@ -1945,38 +2083,138 @@
       `;
     }
 
-    function renderWindowGroups(gamesList) {
-      if (!gamesList || gamesList.length === 0) return '';
-      // Group games in chronological appearance order based on game start time
-      const sorted = [...gamesList].sort((a, b) => new Date(a.isoTime) - new Date(b.isoTime));
-      const seenWindows = [];
-      const grouped = {};
-      sorted.forEach(g => {
-        const wKey = g.window || 'WED';
-        if (!grouped[wKey]) {
-          grouped[wKey] = [];
-          seenWindows.push(wKey);
+    const NHL_EASTERN_TEAMS = [
+      'Sabres', 'Buffalo', 'Panthers', 'Florida', 'Lightning', 'Tampa Bay', 'Bruins', 'Boston',
+      'Maple Leafs', 'Leafs', 'Toronto', 'Canadiens', 'Montreal', 'Montréal', 'Senators', 'Ottawa',
+      'Red Wings', 'Detroit', 'Hurricanes', 'Carolina', 'Devils', 'New Jersey', 'Rangers', 'NY Rangers',
+      'Islanders', 'NY Islanders', 'Capitals', 'Washington', 'Flyers', 'Philadelphia', 'Penguins', 'Pittsburgh',
+      'Blue Jackets', 'Columbus'
+    ];
+
+    function isEasternNhlGame(g) {
+      const home = (g.homeName || '').toLowerCase();
+      const away = (g.awayName || '').toLowerCase();
+      const homeEast = NHL_EASTERN_TEAMS.some(t => home.includes(t.toLowerCase()));
+      const awayEast = NHL_EASTERN_TEAMS.some(t => away.includes(t.toLowerCase()));
+      return homeEast || awayEast;
+    }
+
+    function toggleSlateAccordion(btn) {
+      const isActive = btn.classList.toggle('active');
+      btn.setAttribute('aria-expanded', isActive ? 'true' : 'false');
+      const content = btn.nextElementSibling;
+      if (content) {
+        if (isActive) {
+          content.classList.add('open');
+          content.style.display = 'flex';
+        } else {
+          content.classList.remove('open');
+          content.style.display = 'none';
         }
-        grouped[wKey].push(g);
+      }
+    }
+
+    function toggleAllSlateAccordions(expand) {
+      document.querySelectorAll('.slate-accordion-header').forEach(btn => {
+        const content = btn.nextElementSibling;
+        if (expand) {
+          btn.classList.add('active');
+          btn.setAttribute('aria-expanded', 'true');
+          if (content) {
+            content.classList.add('open');
+            content.style.display = 'flex';
+          }
+        } else {
+          btn.classList.remove('active');
+          btn.setAttribute('aria-expanded', 'false');
+          if (content) {
+            content.classList.remove('open');
+            content.style.display = 'none';
+          }
+        }
+      });
+    }
+
+    function renderWindowGroups(gamesList, sectionType = 'upcoming') {
+      if (!gamesList || gamesList.length === 0) return '';
+      // Group games chronologically by date
+      const sorted = [...gamesList].sort((a, b) => new Date(a.isoTime) - new Date(b.isoTime));
+      const seenDates = [];
+      const grouped = {};
+      
+      sorted.forEach(g => {
+        const dt = new Date(g.isoTime);
+        const dateKey = dt.toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
+        if (!grouped[dateKey]) {
+          grouped[dateKey] = [];
+          seenDates.push(dateKey);
+        }
+        grouped[dateKey].push(g);
       });
 
-      let out = '';
-      seenWindows.forEach(wKey => {
-        const list = grouped[wKey];
+      const todayKey = new Date().toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
+
+      // Determine default expanded date: today if present; else first for upcoming, last for results
+      let defaultOpenDate = '';
+      if (seenDates.includes(todayKey)) {
+        defaultOpenDate = todayKey;
+      } else if (sectionType === 'results') {
+        defaultOpenDate = seenDates[seenDates.length - 1];
+      } else {
+        defaultOpenDate = seenDates[0];
+      }
+
+      let out = `
+        <div class="slate-accordion-toolbar">
+          <span class="slate-toolbar-note">💡 Tap day headers to expand or collapse slates</span>
+          <div class="slate-toolbar-actions">
+            <button type="button" class="slate-toolbar-btn" onclick="toggleAllSlateAccordions(true)">Expand All</button>
+            <button type="button" class="slate-toolbar-btn" onclick="toggleAllSlateAccordions(false)">Collapse All</button>
+          </div>
+        </div>
+      `;
+
+      seenDates.forEach(dateKey => {
+        const list = grouped[dateKey];
         if (!list || list.length === 0) return;
         const firstGame = list[0];
-        const wTitle = firstGame.windowLabel || `${wKey} Window`;
+        const dt = new Date(firstGame.isoTime);
+        const dayLabel = dt.toLocaleDateString('en-US', { timeZone: 'America/New_York', weekday: 'short', month: 'short', day: 'numeric' });
+        const wTitle = firstGame.windowLabel || `${firstGame.window || 'NHL'} Slate`;
         const wBadge = firstGame.windowBadge || 'Broadcast Lineup';
 
+        const isOpen = dateKey === defaultOpenDate;
+
+        const atlCount = list.filter(g => {
+          const h = (g.homeName || '').toLowerCase();
+          const a = (g.awayName || '').toLowerCase();
+          const atl = ['sabres', 'panthers', 'lightning', 'bruins', 'leafs', 'maple leafs', 'senators', 'canadiens', 'red wings'];
+          return atl.some(t => h.includes(t)) || atl.some(t => a.includes(t));
+        }).length;
+
+        const countBadgeText = atlCount > 0 
+          ? `${list.length} Games • ${atlCount} Atlantic` 
+          : `${list.length} Games`;
+
+        const displayTitle = `${dayLabel} • ${wTitle}`;
+
         out += `
-          <div class="window-header">
-            <span class="window-title">⚡ ${wTitle}</span>
-            <span class="window-badge">${wBadge}</span>
+          <div class="slate-accordion-group">
+            <button type="button" class="slate-accordion-header ${isOpen ? 'active' : ''}" onclick="toggleSlateAccordion(this)" aria-expanded="${isOpen}">
+              <div class="slate-accordion-left">
+                <span class="slate-accordion-chevron">▶</span>
+                <span class="slate-accordion-title">⚡ ${displayTitle}</span>
+              </div>
+              <div class="slate-accordion-right">
+                <span class="slate-accordion-count">${countBadgeText}</span>
+                <span class="window-badge">${wBadge}</span>
+              </div>
+            </button>
+            <div class="slate-accordion-content ${isOpen ? 'open' : ''}" style="${isOpen ? 'display: flex;' : 'display: none;'}">
+              ${list.map(renderGameCardHtml).join('')}
+            </div>
           </div>
         `;
-        list.forEach(g => {
-          out += renderGameCardHtml(g);
-        });
       });
       return out;
     }
@@ -1986,7 +2224,9 @@
       if (!scoreContainer) return;
 
       const sg = sabresGame || currentSabresNextGame;
-      const allGames = (Array.isArray(games) ? games : []).map(enrichNhlGameMetadata);
+      const allGames = (Array.isArray(games) ? games : [])
+        .filter(isEasternNhlGame)
+        .map(enrichNhlGameMetadata);
 
       const upcomingGames = allGames.filter(g => g.statusState !== 'post');
       const resultsGames = allGames.filter(g => g.statusState === 'post');
@@ -2107,7 +2347,7 @@
             <span style="font-size: 0.72rem; font-weight: 700;">${upcomingGames.length} Scheduled</span>
           </div>
           <div class="slate-section-upcoming" style="display: flex; flex-direction: column; gap: 0.85rem;">
-            ${renderWindowGroups(upcomingGames)}
+            ${renderWindowGroups(upcomingGames, 'upcoming')}
           </div>
         `;
       } else {
@@ -2126,7 +2366,7 @@
             <span style="font-size: 0.72rem; font-weight: 700;">${resultsGames.length} Final</span>
           </div>
           <div class="slate-section-results" style="display: flex; flex-direction: column; gap: 0.85rem;">
-            ${renderWindowGroups(resultsGames)}
+            ${renderWindowGroups(resultsGames, 'results')}
           </div>
         `;
       } else {
@@ -2330,7 +2570,7 @@
       let data = null;
 
       const FALLBACK_DATA = {
-  "updatedAt": "2026-10-23T04:00:24.557Z",
+  "updatedAt": "2026-10-23T04:44:42.470Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
   "bills": {
     "team": "Buffalo Bills",
@@ -3279,78 +3519,6 @@
         "why": "Los Angeles Kings won in overtime, but Wild Card contender New York Islanders salvaged a point."
       },
       {
-        "isoTime": "2026-10-23T00:00:00Z",
-        "slot": "Thu, Oct 22 • 8:00 PM ET",
-        "broadcast": "ESPN+",
-        "announcers": "Bob Wischusen, Kevin Weekes",
-        "venue": "Enterprise Center, St. Louis, MO",
-        "window": "THU",
-        "windowLabel": "Thursday Prime NHL Slate",
-        "windowBadge": "ESPN+ / RSN Lineups",
-        "statusState": "post",
-        "statusDetail": "Final",
-        "awayName": "Vegas Golden Knights",
-        "awayRecord": "8-4-0, L2",
-        "awayScore": "2",
-        "homeName": "St. Louis Blues",
-        "homeRecord": "5-4-1, W2",
-        "homeScore": "6",
-        "homeWinChance": 41,
-        "awayWinChance": 59,
-        "verdict": "NEUTRAL",
-        "impactClass": "neutral",
-        "target": "Neutral Matchup",
-        "why": "Non-conference or cross-division matchup with minimal Sabres playoff leverage."
-      },
-      {
-        "isoTime": "2026-10-23T00:00:00Z",
-        "slot": "Thu, Oct 22 • 8:00 PM ET",
-        "broadcast": "ESPN+",
-        "announcers": "Bob Wischusen, Kevin Weekes",
-        "venue": "American Airlines Center, Dallas, TX",
-        "window": "THU",
-        "windowLabel": "Thursday Prime NHL Slate",
-        "windowBadge": "ESPN+ / RSN Lineups",
-        "statusState": "post",
-        "statusDetail": "Final/OT",
-        "awayName": "Winnipeg Jets",
-        "awayRecord": "4-3-3, OT1",
-        "awayScore": "2",
-        "homeName": "Dallas Stars",
-        "homeRecord": "6-3-1, W4",
-        "homeScore": "3",
-        "homeWinChance": 64,
-        "awayWinChance": 36,
-        "verdict": "NEUTRAL",
-        "impactClass": "neutral",
-        "target": "Neutral Matchup",
-        "why": "Non-conference or cross-division matchup with minimal Sabres playoff leverage."
-      },
-      {
-        "isoTime": "2026-10-23T01:00:00Z",
-        "slot": "Thu, Oct 22 • 9:00 PM ET",
-        "broadcast": "ESPN+",
-        "announcers": "Bob Wischusen, Kevin Weekes",
-        "venue": "Scotiabank Saddledome, Calgary, AB",
-        "window": "THU",
-        "windowLabel": "Thursday Prime NHL Slate",
-        "windowBadge": "ESPN+ / RSN Lineups",
-        "statusState": "post",
-        "statusDetail": "Final",
-        "awayName": "Minnesota Wild",
-        "awayRecord": "6-3-2, L1",
-        "awayScore": "1",
-        "homeName": "Calgary Flames",
-        "homeRecord": "3-6-0, W2",
-        "homeScore": "2",
-        "homeWinChance": 26,
-        "awayWinChance": 74,
-        "verdict": "NEUTRAL",
-        "impactClass": "neutral",
-        "target": "Neutral Matchup",
-        "why": "Non-conference or cross-division matchup with minimal Sabres playoff leverage."
-      },
-      {
         "isoTime": "2026-10-23T01:00:00Z",
         "slot": "Thu, Oct 22 • 9:00 PM ET",
         "broadcast": "ESPN+",
@@ -3362,41 +3530,17 @@
         "statusState": "post",
         "statusDetail": "Final/SO",
         "awayName": "Carolina Hurricanes",
-        "awayRecord": "8-2-1, W1",
+        "awayRecord": "8-2-2, OT1",
         "awayScore": "5",
         "homeName": "Edmonton Oilers",
-        "homeRecord": "7-1-1, W2",
+        "homeRecord": "8-1-1, W3",
         "homeScore": "6",
-        "homeWinChance": 63,
-        "awayWinChance": 37,
+        "homeWinChance": 69,
+        "awayWinChance": 31,
         "verdict": "WILDCARD OT POINT",
         "impactClass": "warning",
         "target": "Root for Edmonton Oilers in Regulation",
         "why": "Edmonton Oilers won in overtime, but Wild Card contender Carolina Hurricanes salvaged a point."
-      },
-      {
-        "isoTime": "2026-10-23T02:00:00Z",
-        "slot": "Thu, Oct 22 • 10:00 PM ET",
-        "broadcast": "Sportsnet",
-        "announcers": "Chris Cuthbert, Craig Simpson",
-        "venue": "Climate Pledge Arena, Seattle, WA",
-        "window": "THU",
-        "windowLabel": "Thursday Prime NHL Slate",
-        "windowBadge": "ESPN+ / RSN Lineups",
-        "statusState": "in",
-        "statusDetail": "End of 2nd",
-        "awayName": "Utah Mammoth",
-        "awayRecord": "7-3-0, W1",
-        "awayScore": "1",
-        "homeName": "Seattle Kraken",
-        "homeRecord": "6-3-1, W1",
-        "homeScore": "3",
-        "homeWinChance": 48,
-        "awayWinChance": 52,
-        "verdict": "NEUTRAL",
-        "impactClass": "neutral",
-        "target": "Neutral Matchup",
-        "why": "Non-conference or cross-division matchup with minimal Sabres playoff leverage."
       },
       {
         "isoTime": "2026-10-23T02:00:00Z",
@@ -3407,20 +3551,20 @@
         "window": "THU",
         "windowLabel": "Thursday Prime NHL Slate",
         "windowBadge": "ESPN+ / RSN Lineups",
-        "statusState": "in",
-        "statusDetail": "16:00 - 3rd",
+        "statusState": "post",
+        "statusDetail": "Final",
         "awayName": "Detroit Red Wings",
-        "awayRecord": "3-3-3, OT1",
+        "awayRecord": "4-3-3, W1",
         "awayScore": "5",
         "homeName": "Vancouver Canucks",
-        "homeRecord": "2-8-1, L2",
-        "homeScore": "1",
-        "homeWinChance": 26,
-        "awayWinChance": 74,
-        "verdict": "ATLANTIC WATCH",
-        "impactClass": "warning",
+        "homeRecord": "2-9-1, L3",
+        "homeScore": "2",
+        "homeWinChance": 21,
+        "awayWinChance": 79,
+        "verdict": "BAD FOR BUFFALO",
+        "impactClass": "bad",
         "target": "Root for Vancouver Canucks in Regulation",
-        "why": "A regulation loss leaves Detroit Red Wings with 0 standings points in the Atlantic Division."
+        "why": "Detroit Red Wings collected 2 standings points in the Atlantic race."
       },
       {
         "isoTime": "2026-10-24T00:00:00Z",
@@ -3626,13 +3770,13 @@
         "statusState": "pre",
         "statusDetail": "Scheduled",
         "awayName": "Carolina Hurricanes",
-        "awayRecord": "8-2-1, W1",
+        "awayRecord": "8-2-2, OT1",
         "awayScore": "",
         "homeName": "St. Louis Blues",
         "homeRecord": "5-4-1, W2",
         "homeScore": "",
-        "homeWinChance": 30,
-        "awayWinChance": 70,
+        "homeWinChance": 32,
+        "awayWinChance": 68,
         "verdict": "WILD CARD WATCH",
         "impactClass": "neutral",
         "target": "Root for St. Louis Blues in Regulation",
@@ -3653,10 +3797,10 @@
         "awayRecord": "6-4-2, W3",
         "awayScore": "",
         "homeName": "Edmonton Oilers",
-        "homeRecord": "7-1-1, W2",
+        "homeRecord": "8-1-1, W3",
         "homeScore": "",
-        "homeWinChance": 82,
-        "awayWinChance": 18,
+        "homeWinChance": 84,
+        "awayWinChance": 16,
         "verdict": "ATLANTIC WATCH",
         "impactClass": "warning",
         "target": "Root for Edmonton Oilers in Regulation",
@@ -3698,41 +3842,17 @@
         "statusState": "pre",
         "statusDetail": "Scheduled",
         "awayName": "Detroit Red Wings",
-        "awayRecord": "3-3-3, OT1",
+        "awayRecord": "4-3-3, W1",
         "awayScore": "",
         "homeName": "Calgary Flames",
         "homeRecord": "3-6-0, W2",
         "homeScore": "",
-        "homeWinChance": 37,
-        "awayWinChance": 63,
+        "homeWinChance": 33,
+        "awayWinChance": 67,
         "verdict": "ATLANTIC WATCH",
         "impactClass": "warning",
         "target": "Root for Calgary Flames in Regulation",
         "why": "A regulation loss leaves Detroit Red Wings with 0 standings points in the Atlantic Division."
-      },
-      {
-        "isoTime": "2026-10-25T02:00:00Z",
-        "slot": "Sat, Oct 24 • 10:00 PM ET",
-        "broadcast": "MINNHL",
-        "announcers": "Regional Broadcast Crew",
-        "venue": "Climate Pledge Arena, Seattle, WA",
-        "window": "SAT",
-        "windowLabel": "Hockey Night in Canada & Saturday National",
-        "windowBadge": "CBC / Sportsnet / NHL Network",
-        "statusState": "pre",
-        "statusDetail": "Scheduled",
-        "awayName": "Minnesota Wild",
-        "awayRecord": "6-3-2, L1",
-        "awayScore": "",
-        "homeName": "Seattle Kraken",
-        "homeRecord": "6-3-1, W1",
-        "homeScore": "",
-        "homeWinChance": 55,
-        "awayWinChance": 45,
-        "verdict": "NEUTRAL",
-        "impactClass": "neutral",
-        "target": "Neutral Matchup",
-        "why": "Non-conference or cross-division matchup with minimal Sabres playoff leverage."
       },
       {
         "isoTime": "2026-10-25T19:00:00Z",
@@ -3807,54 +3927,6 @@
         "why": "A regulation loss leaves Montreal Canadiens with 0 standings points in the Atlantic Division."
       },
       {
-        "isoTime": "2026-10-26T00:00:00Z",
-        "slot": "Sun, Oct 25 • 8:00 PM ET",
-        "broadcast": "ALT",
-        "announcers": "Regional Broadcast Crew",
-        "venue": "Bridgestone Arena, Nashville, TN",
-        "window": "SUN",
-        "windowLabel": "Sunday NHL Showcase Slate",
-        "windowBadge": "National & Matinee Window",
-        "statusState": "pre",
-        "statusDetail": "Scheduled",
-        "awayName": "Colorado Avalanche",
-        "awayRecord": "5-4-1, L2",
-        "awayScore": "",
-        "homeName": "Nashville Predators",
-        "homeRecord": "3-3-3, L1",
-        "homeScore": "",
-        "homeWinChance": 49,
-        "awayWinChance": 51,
-        "verdict": "NEUTRAL",
-        "impactClass": "neutral",
-        "target": "Neutral Matchup",
-        "why": "Non-conference or cross-division matchup with minimal Sabres playoff leverage."
-      },
-      {
-        "isoTime": "2026-10-26T02:00:00Z",
-        "slot": "Sun, Oct 25 • 10:00 PM ET",
-        "broadcast": "MINNHL",
-        "announcers": "Regional Broadcast Crew",
-        "venue": "Rogers Arena, Vancouver, BC",
-        "window": "SUN",
-        "windowLabel": "Sunday NHL Showcase Slate",
-        "windowBadge": "National & Matinee Window",
-        "statusState": "pre",
-        "statusDetail": "Scheduled",
-        "awayName": "Minnesota Wild",
-        "awayRecord": "6-3-2, L1",
-        "awayScore": "",
-        "homeName": "Vancouver Canucks",
-        "homeRecord": "2-8-1, L2",
-        "homeScore": "",
-        "homeWinChance": 18,
-        "awayWinChance": 82,
-        "verdict": "NEUTRAL",
-        "impactClass": "neutral",
-        "target": "Neutral Matchup",
-        "why": "Non-conference or cross-division matchup with minimal Sabres playoff leverage."
-      },
-      {
         "isoTime": "2026-10-26T23:00:00Z",
         "slot": "Mon, Oct 26 • 7:00 PM ET",
         "broadcast": "ABTV ",
@@ -3914,13 +3986,13 @@
         "statusState": "pre",
         "statusDetail": "Scheduled",
         "awayName": "Detroit Red Wings",
-        "awayRecord": "3-3-3, OT1",
+        "awayRecord": "4-3-3, W1",
         "awayScore": "",
         "homeName": "Edmonton Oilers",
-        "homeRecord": "7-1-1, W2",
+        "homeRecord": "8-1-1, W3",
         "homeScore": "",
-        "homeWinChance": 87,
-        "awayWinChance": 13,
+        "homeWinChance": 86,
+        "awayWinChance": 14,
         "verdict": "ATLANTIC WATCH",
         "impactClass": "warning",
         "target": "Root for Edmonton Oilers in Regulation",
@@ -3965,38 +4037,14 @@
         "awayRecord": "8-2-1, W1",
         "awayScore": "",
         "homeName": "Carolina Hurricanes",
-        "homeRecord": "8-2-1, W1",
+        "homeRecord": "8-2-2, OT1",
         "homeScore": "",
-        "homeWinChance": 54,
-        "awayWinChance": 46,
+        "homeWinChance": 50,
+        "awayWinChance": 50,
         "verdict": "ATLANTIC WATCH",
         "impactClass": "warning",
         "target": "Root for Carolina Hurricanes in Regulation",
         "why": "A regulation loss leaves Boston Bruins with 0 standings points in the Atlantic Division."
-      },
-      {
-        "isoTime": "2026-10-28T00:00:00Z",
-        "slot": "Tue, Oct 27 • 8:00 PM ET",
-        "broadcast": "ABTV ",
-        "announcers": "Regional Broadcast Crew",
-        "venue": "United Center, Chicago, IL",
-        "window": "TUE",
-        "windowLabel": "Tuesday Night NHL Slate",
-        "windowBadge": "Frozen Frenzy / Regional Lineups",
-        "statusState": "pre",
-        "statusDetail": "Scheduled",
-        "awayName": "Los Angeles Kings",
-        "awayRecord": "2-4-2, W2",
-        "awayScore": "",
-        "homeName": "Chicago Blackhawks",
-        "homeRecord": "3-6-0, L1",
-        "homeScore": "",
-        "homeWinChance": 49,
-        "awayWinChance": 51,
-        "verdict": "NEUTRAL",
-        "impactClass": "neutral",
-        "target": "Neutral Matchup",
-        "why": "Non-conference or cross-division matchup with minimal Sabres playoff leverage."
       },
       {
         "isoTime": "2026-10-28T00:00:00Z",
@@ -4095,30 +4143,6 @@
         "why": "A regulation loss leaves Florida Panthers with 0 standings points in the Atlantic Division."
       },
       {
-        "isoTime": "2026-10-28T01:00:00Z",
-        "slot": "Tue, Oct 27 • 9:00 PM ET",
-        "broadcast": "MINNHL",
-        "announcers": "Regional Broadcast Crew",
-        "venue": "Delta Center, Salt Lake City, UT",
-        "window": "TUE",
-        "windowLabel": "Tuesday Night NHL Slate",
-        "windowBadge": "Frozen Frenzy / Regional Lineups",
-        "statusState": "pre",
-        "statusDetail": "Scheduled",
-        "awayName": "Minnesota Wild",
-        "awayRecord": "6-3-2, L1",
-        "awayScore": "",
-        "homeName": "Utah Mammoth",
-        "homeRecord": "7-3-0, W1",
-        "homeScore": "",
-        "homeWinChance": 61,
-        "awayWinChance": 39,
-        "verdict": "NEUTRAL",
-        "impactClass": "neutral",
-        "target": "Neutral Matchup",
-        "why": "Non-conference or cross-division matchup with minimal Sabres playoff leverage."
-      },
-      {
         "isoTime": "2026-10-28T02:00:00Z",
         "slot": "Tue, Oct 27 • 10:00 PM ET",
         "broadcast": "SCRIPPS",
@@ -4143,30 +4167,6 @@
         "why": "A regulation loss leaves Ottawa Senators with 0 standings points in the Atlantic Division."
       },
       {
-        "isoTime": "2026-10-28T02:00:00Z",
-        "slot": "Tue, Oct 27 • 10:00 PM ET",
-        "broadcast": "FOXLA+",
-        "announcers": "Regional Broadcast Crew",
-        "venue": "Honda Center, Anaheim, CA",
-        "window": "TUE",
-        "windowLabel": "Tuesday Night NHL Slate",
-        "windowBadge": "Frozen Frenzy / Regional Lineups",
-        "statusState": "pre",
-        "statusDetail": "Scheduled",
-        "awayName": "Vancouver Canucks",
-        "awayRecord": "2-8-1, L2",
-        "awayScore": "",
-        "homeName": "Anaheim Ducks",
-        "homeRecord": "4-6-0, L5",
-        "homeScore": "",
-        "homeWinChance": 73,
-        "awayWinChance": 27,
-        "verdict": "NEUTRAL",
-        "impactClass": "neutral",
-        "target": "Neutral Matchup",
-        "why": "Non-conference or cross-division matchup with minimal Sabres playoff leverage."
-      },
-      {
         "isoTime": "2026-10-28T23:30:00Z",
         "slot": "Wed, Oct 28 • 7:30 PM ET",
         "broadcast": "TNT",
@@ -4189,30 +4189,6 @@
         "impactClass": "neutral",
         "target": "Root for Washington Capitals in Regulation",
         "why": "Suppresses Eastern Conference Wild Card contenders from stacking points."
-      },
-      {
-        "isoTime": "2026-10-29T00:30:00Z",
-        "slot": "Wed, Oct 28 • 8:30 PM ET",
-        "broadcast": "Prime",
-        "announcers": "Regional Broadcast Crew",
-        "venue": "Rogers Place, Edmonton, AB",
-        "window": "WED",
-        "windowLabel": "Wednesday Night Hockey Showcase",
-        "windowBadge": "TNT / Max / National Slate",
-        "statusState": "pre",
-        "statusDetail": "Scheduled",
-        "awayName": "Calgary Flames",
-        "awayRecord": "3-6-0, W2",
-        "awayScore": "",
-        "homeName": "Edmonton Oilers",
-        "homeRecord": "7-1-1, W2",
-        "homeScore": "",
-        "homeWinChance": 88,
-        "awayWinChance": 12,
-        "verdict": "NEUTRAL",
-        "impactClass": "neutral",
-        "target": "Neutral Matchup",
-        "why": "Non-conference or cross-division matchup with minimal Sabres playoff leverage."
       },
       {
         "isoTime": "2026-10-29T01:00:00Z",
