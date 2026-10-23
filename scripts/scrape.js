@@ -367,10 +367,53 @@ function calculateNhlOddsProb(homeName, awayName, standingsMap, comp) {
 async function fetchNflScoreboard() {
   const outOfTownGames = [];
   try {
-    const res = await fetch('https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard');
+    const [res, standingsRes] = await Promise.all([
+      fetch('https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard'),
+      fetch('https://site.web.api.espn.com/apis/v2/sports/football/nfl/standings').catch(() => null)
+    ]);
     if (!res.ok) return outOfTownGames;
     const data = await res.json();
     const events = data.events || [];
+
+    const nflStandingsMap = new Map();
+    if (standingsRes && standingsRes.ok) {
+      try {
+        const standData = await standingsRes.json();
+        function extractTeams(node) {
+          if (node.standings?.entries) {
+            node.standings.entries.forEach(entry => {
+              const wlt = entry.stats?.find(s => s.name === 'overall')?.displayValue || '';
+              const streak = entry.stats?.find(s => s.name === 'streak')?.displayValue || '';
+              const recStr = streak ? `${wlt}, ${streak}` : wlt;
+              const name = entry.team?.displayName;
+              const short = entry.team?.shortDisplayName;
+              const tName = entry.team?.name;
+              const id = entry.team?.id;
+              if (name) nflStandingsMap.set(name.toLowerCase().trim(), recStr);
+              if (short) nflStandingsMap.set(short.toLowerCase().trim(), recStr);
+              if (tName) nflStandingsMap.set(tName.toLowerCase().trim(), recStr);
+              if (id) nflStandingsMap.set(String(id), recStr);
+            });
+          }
+          if (node.children) node.children.forEach(extractTeams);
+        }
+        extractTeams(standData);
+      } catch (err) {
+        console.warn('NFL standings extract warning:', err.message);
+      }
+    }
+
+    function getNflRecordStr(competitor, teamName) {
+      const id = competitor?.team?.id ? String(competitor.team.id) : '';
+      if (id && nflStandingsMap.has(id)) return nflStandingsMap.get(id);
+      const cleanName = (teamName || '').toLowerCase().trim();
+      if (nflStandingsMap.has(cleanName)) return nflStandingsMap.get(cleanName);
+      for (const [k, v] of nflStandingsMap.entries()) {
+        if (cleanName.includes(k) || k.includes(cleanName)) return v;
+      }
+      const totalRec = competitor?.records?.find(r => r.type === 'total')?.summary;
+      return totalRec || '';
+    }
 
     // Ensure we capture both current results and upcoming games
     const currentWeekNum = data.week?.number;
@@ -557,8 +600,10 @@ async function fetchNflScoreboard() {
         statusState,
         statusDetail,
         awayName,
+        awayRecord: getNflRecordStr(away, awayName),
         awayScore,
         homeName,
+        homeRecord: getNflRecordStr(home, homeName),
         homeScore,
         homeWinChance: nflOdds.homeWinChance,
         awayWinChance: nflOdds.awayWinChance,
@@ -591,8 +636,10 @@ async function fetchNflScoreboard() {
         statusState: 'pre',
         statusDetail: 'Thu, Oct 22 • 8:15 PM ET',
         awayName: 'Minnesota Vikings',
+        awayRecord: '5-1, L1',
         awayScore: '',
         homeName: 'Los Angeles Rams',
+        homeRecord: '2-4, W1',
         homeScore: '',
         homeWinChance: 48,
         awayWinChance: 52,
@@ -616,8 +663,10 @@ async function fetchNflScoreboard() {
         statusState: 'pre',
         statusDetail: 'Sun, Oct 25 • 1:00 PM ET',
         awayName: 'Miami Dolphins',
+        awayRecord: '2-4, L1',
         awayScore: '',
         homeName: 'Indianapolis Colts',
+        homeRecord: '4-3, W1',
         homeScore: '',
         homeWinChance: 56,
         awayWinChance: 44,
@@ -641,8 +690,10 @@ async function fetchNflScoreboard() {
         statusState: 'pre',
         statusDetail: 'Sun, Oct 25 • 1:00 PM ET',
         awayName: 'New York Jets',
+        awayRecord: '2-5, L4',
         awayScore: '',
         homeName: 'Pittsburgh Steelers',
+        homeRecord: '5-2, W2',
         homeScore: '',
         homeWinChance: 54,
         awayWinChance: 46,
@@ -666,8 +717,10 @@ async function fetchNflScoreboard() {
         statusState: 'pre',
         statusDetail: 'Sun, Oct 25 • 4:25 PM ET',
         awayName: 'Kansas City Chiefs',
+        awayRecord: '6-0, W6',
         awayScore: '',
         homeName: 'San Francisco 49ers',
+        homeRecord: '3-4, L1',
         homeScore: '',
         homeWinChance: 51,
         awayWinChance: 49,
@@ -691,8 +744,10 @@ async function fetchNflScoreboard() {
         statusState: 'pre',
         statusDetail: 'Sun, Oct 25 • 8:20 PM ET',
         awayName: 'Los Angeles Chargers',
+        awayRecord: '3-3, L1',
         awayScore: '',
         homeName: 'Denver Broncos',
+        homeRecord: '4-3, W1',
         homeScore: '',
         homeWinChance: 46,
         awayWinChance: 54,
@@ -869,6 +924,7 @@ async function fetchNhlScoreboard() {
     ]);
 
     const standingsMap = new Map();
+    const nhlRecordsMap = new Map();
     if (standingsRes.status === 'fulfilled' && standingsRes.value.ok) {
       try {
         const standingsData = await standingsRes.value.json();
@@ -877,10 +933,29 @@ async function fetchNhlScoreboard() {
           if (t.teamName?.default) standingsMap.set(normalizeName(t.teamName.default), ptPct);
           if (t.teamCommonName?.default) standingsMap.set(normalizeName(t.teamCommonName.default), ptPct);
           if (t.teamAbbrev?.default) standingsMap.set(t.teamAbbrev.default, ptPct);
+
+          const rec = `${t.wins}-${t.losses}-${t.otLosses}`;
+          const streak = t.streakCode ? `${t.streakCode}${t.streakCount || ''}` : '';
+          const recStr = streak ? `${rec}, ${streak}` : rec;
+          const full = `${t.placeName?.default || t.teamName?.default || ''} ${t.teamCommonName?.default || ''}`.trim();
+          if (full) nhlRecordsMap.set(normalizeName(full).toLowerCase(), recStr);
+          if (t.teamCommonName?.default) nhlRecordsMap.set(normalizeName(t.teamCommonName.default).toLowerCase(), recStr);
+          if (t.teamName?.default) nhlRecordsMap.set(normalizeName(t.teamName.default).toLowerCase(), recStr);
+          if (t.teamAbbrev?.default) nhlRecordsMap.set(t.teamAbbrev.default.toLowerCase(), recStr);
         });
       } catch (err) {
         console.warn('NHL standings map build warning:', err.message);
       }
+    }
+
+    function getNhlRecordStr(teamName, comp) {
+      const cleanName = normalizeName(teamName || '').toLowerCase().trim();
+      if (nhlRecordsMap.has(cleanName)) return nhlRecordsMap.get(cleanName);
+      for (const [k, v] of nhlRecordsMap.entries()) {
+        if (cleanName.includes(k) || k.includes(cleanName)) return v;
+      }
+      const totalRec = comp?.records?.[0]?.summary;
+      return totalRec || '';
     }
 
     function processNhlScheduleData(data) {
@@ -1138,8 +1213,10 @@ async function fetchNhlScoreboard() {
         statusState,
         statusDetail,
         awayName,
+        awayRecord: getNhlRecordStr(awayName, g.espnComp?.competitors?.find(c => c.homeAway === 'away')),
         awayScore,
         homeName,
+        homeRecord: getNhlRecordStr(homeName, g.espnComp?.competitors?.find(c => c.homeAway === 'home')),
         homeScore,
         homeWinChance: nhlOdds.homeWinChance,
         awayWinChance: nhlOdds.awayWinChance,
@@ -1169,8 +1246,10 @@ async function fetchNhlScoreboard() {
         statusState: 'post',
         statusDetail: 'Final',
         awayName: 'Minnesota Wild',
+        awayRecord: '5-0-2, W4',
         awayScore: '4',
         homeName: 'Florida Panthers',
+        homeRecord: '4-3-1, L1',
         homeScore: '1',
         homeWinChance: 54,
         awayWinChance: 46,
@@ -1191,8 +1270,10 @@ async function fetchNhlScoreboard() {
         statusState: 'post',
         statusDetail: 'Final/OT',
         awayName: 'Tampa Bay Lightning',
+        awayRecord: '4-2-0, W1',
         awayScore: '3',
         homeName: 'Boston Bruins',
+        homeRecord: '8-2-1, W1',
         homeScore: '2',
         homeWinChance: 52,
         awayWinChance: 48,
@@ -1213,8 +1294,10 @@ async function fetchNhlScoreboard() {
         statusState: 'post',
         statusDetail: 'Final',
         awayName: 'New York Rangers',
+        awayRecord: '5-0-1, W4',
         awayScore: '4',
         homeName: 'Toronto Maple Leafs',
+        homeRecord: '6-4-2, W3',
         homeScore: '1',
         homeWinChance: 53,
         awayWinChance: 47,
@@ -1235,8 +1318,10 @@ async function fetchNhlScoreboard() {
         statusState: 'pre',
         statusDetail: 'Scheduled',
         awayName: 'Detroit Red Wings',
+        awayRecord: '4-3-0, W1',
         awayScore: '0',
         homeName: 'New York Islanders',
+        homeRecord: '5-3-2, OT1',
         homeScore: '0',
         homeWinChance: 51,
         awayWinChance: 49,

@@ -691,6 +691,20 @@
       color: #fff;
     }
 
+    .score-team-name {
+      display: inline-flex;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 0.2rem 0.35rem;
+    }
+
+    .score-team-record {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #94a3b8;
+      letter-spacing: 0.01em;
+    }
+
     .score-team-val-group {
       display: flex;
       align-items: center;
@@ -1880,6 +1894,9 @@
         headerChancePill = `<span class="card-win-pill card-win-pre">${leaderShort}: <strong>${leaderProb}%</strong></span>`;
       }
 
+      const awayRecordStr = (g.awayRecord && !g.awayName.includes('(')) ? ` <span class="score-team-record">(${g.awayRecord})</span>` : '';
+      const homeRecordStr = (g.homeRecord && !g.homeName.includes('(')) ? ` <span class="score-team-record">(${g.homeRecord})</span>` : '';
+
       return `
         <div class="score-card ${cardBorderClass}">
           <div class="score-card-header">
@@ -1895,14 +1912,14 @@
 
           <div class="score-teams-grid">
             <div class="score-team-row ${awayRowClass}">
-              <span>${g.awayName}</span>
+              <span class="score-team-name">${g.awayName}${awayRecordStr}</span>
               <div class="score-team-val-group">
                 <span class="win-prob-chip" style="${awayChipStyle}">${probInfo.awayProb}%</span>
                 <span class="score-team-points ${awayPtsClass}">${awayDisplayScore}</span>
               </div>
             </div>
             <div class="score-team-row ${homeRowClass}">
-              <span>${g.homeName}</span>
+              <span class="score-team-name">${g.homeName}${homeRecordStr}</span>
               <div class="score-team-val-group">
                 <span class="win-prob-chip" style="${homeChipStyle}">${probInfo.homeProb}%</span>
                 <span class="score-team-points ${homePtsClass}">${homeDisplayScore}</span>
@@ -2557,7 +2574,9 @@
         "verdict": "NEUTRAL",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
-        "why": "Non-conference game with zero immediate AFC tiebreaker leverage."
+        "why": "Non-conference game with zero immediate AFC tiebreaker leverage.",
+        "awayRecord": "3-3, L2",
+        "homeRecord": "4-2, W2"
       },
       {
         "isoTime": "2026-10-18T13:30Z",
@@ -2582,7 +2601,9 @@
         "verdict": "RIVAL WIN",
         "impactClass": "neutral",
         "target": "Root for Jacksonville Jaguars",
-        "why": "Houston Texans loss clears tiebreaker paths for Buffalo's AFC conference seeding & bye week odds."
+        "why": "Houston Texans loss clears tiebreaker paths for Buffalo's AFC conference seeding & bye week odds.",
+        "awayRecord": "2-4, W2",
+        "homeRecord": "4-2, L1"
       },
       {
         "isoTime": "2026-10-18T17:00Z",
@@ -2607,7 +2628,9 @@
         "verdict": "NEUTRAL",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
-        "why": "Non-conference game with zero immediate AFC tiebreaker leverage."
+        "why": "Non-conference game with zero immediate AFC tiebreaker leverage.",
+        "awayRecord": "5-2, W2",
+        "homeRecord": "2-4, L2"
       },
       {
         "isoTime": "2026-10-18T17:00Z",
@@ -2632,7 +2655,9 @@
         "verdict": "GOOD FOR BUFFALO",
         "impactClass": "good",
         "target": "Root for Cleveland Browns",
-        "why": "Baltimore Ravens lost, boosting Buffalo's path to a higher AFC playoff seed."
+        "why": "Baltimore Ravens lost, boosting Buffalo's path to a higher AFC playoff seed.",
+        "awayRecord": "4-2, L1",
+        "homeRecord": "4-2, W1"
       },
       {
         "isoTime": "2026-10-18T17:00Z",
@@ -2657,7 +2682,9 @@
         "verdict": "NEUTRAL",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
-        "why": "Non-conference game with zero immediate AFC tiebreaker leverage."
+        "why": "Non-conference game with zero immediate AFC tiebreaker leverage.",
+        "awayRecord": "1-5, W1",
+        "homeRecord": "2-4, L2"
       },
       {
         "isoTime": "2026-10-18T17:00Z",
@@ -2682,7 +2709,9 @@
         "verdict": "BAD FOR BUFFALO",
         "impactClass": "bad",
         "target": "Root for New York Jets",
-        "why": "New England Patriots win keeps division pressure on the Bills."
+        "why": "New England Patriots win keeps division pressure on the Bills.",
+        "awayRecord": "2-4, L1",
+        "homeRecord": "4-3, L1"
       },
       {
         "isoTime": "2026-10-18T17:00Z",
@@ -2707,7 +2736,9 @@
         "verdict": "NEUTRAL",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
-        "why": "Non-conference game with zero immediate AFC tiebreaker leverage."
+        "why": "Non-conference game with zero immediate AFC tiebreaker leverage.",
+        "awayRecord": "2-4, W1",
+        "homeRecord": "3-2-1, L1"
       },
       {
         "isoTime": "2026-10-18T17:00Z",
@@ -2732,7 +2763,9 @@
         "verdict": "NEUTRAL",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
-        "why": "Non-conference game with zero immediate AFC tiebreaker leverage."
+        "why": "Non-conference game with zero immediate AFC tiebreaker leverage.",
+        "awayRecord": "3-2, W2",
+        "homeRecord": "2-4, L4"
       },
       {
         "isoTime": "2026-10-18T17:00Z",
@@ -2757,7 +2790,9 @@
         "verdict": "RIVAL WIN",
         "impactClass": "neutral",
         "target": "Root for Tampa Bay Buccaneers",
-        "why": "Pittsburgh Steelers loss clears tiebreaker paths for Buffalo's AFC conference seeding & bye week odds."
+        "why": "Pittsburgh Steelers loss clears tiebreaker paths for Buffalo's AFC conference seeding & bye week odds.",
+        "awayRecord": "4-2, W2",
+        "homeRecord": "1-5, L1"
       },
       {
         "isoTime": "2026-10-18T20:05Z",
@@ -2782,7 +2817,9 @@
         "verdict": "NEUTRAL",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
-        "why": "Non-conference game with zero immediate AFC tiebreaker leverage."
+        "why": "Non-conference game with zero immediate AFC tiebreaker leverage.",
+        "awayRecord": "2-4, W1",
+        "homeRecord": "2-4, L2"
       },
       {
         "isoTime": "2026-10-18T20:25Z",
@@ -2807,7 +2844,9 @@
         "verdict": "RIVAL WIN",
         "impactClass": "neutral",
         "target": "Root for Los Angeles Chargers",
-        "why": "Kansas City Chiefs loss clears tiebreaker paths for Buffalo's AFC conference seeding & bye week odds."
+        "why": "Kansas City Chiefs loss clears tiebreaker paths for Buffalo's AFC conference seeding & bye week odds.",
+        "awayRecord": "0-6, L6",
+        "homeRecord": "5-0, W5"
       },
       {
         "isoTime": "2026-10-19T00:20Z",
@@ -2832,7 +2871,9 @@
         "verdict": "NEUTRAL",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
-        "why": "Non-conference game with zero immediate AFC tiebreaker leverage."
+        "why": "Non-conference game with zero immediate AFC tiebreaker leverage.",
+        "awayRecord": "2-4, L2",
+        "homeRecord": "4-2, W3"
       },
       {
         "isoTime": "2026-10-20T00:15Z",
@@ -2857,7 +2898,9 @@
         "verdict": "NEUTRAL",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
-        "why": "Non-conference game with zero immediate AFC tiebreaker leverage."
+        "why": "Non-conference game with zero immediate AFC tiebreaker leverage.",
+        "awayRecord": "1-4-1, L1",
+        "homeRecord": "6-0, W6"
       },
       {
         "isoTime": "2026-10-23T00:15Z",
@@ -2882,7 +2925,9 @@
         "verdict": "AFC EAST WATCH",
         "impactClass": "bad",
         "target": "Root for Chicago Bears",
-        "why": "New England Patriots loss suppresses division pressure in the AFC East standings."
+        "why": "New England Patriots loss suppresses division pressure in the AFC East standings.",
+        "awayRecord": "4-3, L1",
+        "homeRecord": "5-2, W2"
       },
       {
         "isoTime": "2026-10-25T13:30Z",
@@ -2907,7 +2952,9 @@
         "verdict": "SEEDING WATCH",
         "impactClass": "good",
         "target": "Root for New Orleans Saints",
-        "why": "Pittsburgh Steelers loss clears tiebreaker paths for Buffalo's AFC conference seeding & bye week odds."
+        "why": "Pittsburgh Steelers loss clears tiebreaker paths for Buffalo's AFC conference seeding & bye week odds.",
+        "awayRecord": "4-2, W2",
+        "homeRecord": "2-4, W1"
       },
       {
         "isoTime": "2026-10-25T17:00Z",
@@ -2932,7 +2979,9 @@
         "verdict": "NEUTRAL",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
-        "why": "Non-conference game with zero immediate AFC tiebreaker leverage."
+        "why": "Non-conference game with zero immediate AFC tiebreaker leverage.",
+        "awayRecord": "6-0, W6",
+        "homeRecord": "2-4, L2"
       },
       {
         "isoTime": "2026-10-25T17:00Z",
@@ -2957,7 +3006,9 @@
         "verdict": "NEUTRAL",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
-        "why": "Non-conference game with zero immediate AFC tiebreaker leverage."
+        "why": "Non-conference game with zero immediate AFC tiebreaker leverage.",
+        "awayRecord": "4-2, W1",
+        "homeRecord": "1-5, W1"
       },
       {
         "isoTime": "2026-10-25T17:00Z",
@@ -2982,7 +3033,9 @@
         "verdict": "NEUTRAL",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
-        "why": "Non-conference game with zero immediate AFC tiebreaker leverage."
+        "why": "Non-conference game with zero immediate AFC tiebreaker leverage.",
+        "awayRecord": "2-4, L2",
+        "homeRecord": "5-0, W5"
       },
       {
         "isoTime": "2026-10-25T17:00Z",
@@ -3007,7 +3060,9 @@
         "verdict": "AFC EAST WATCH",
         "impactClass": "bad",
         "target": "Root for New York Jets",
-        "why": "A Miami Dolphins loss knocks down Buffalo's closest challenger in the AFC East."
+        "why": "A Miami Dolphins loss knocks down Buffalo's closest challenger in the AFC East.",
+        "awayRecord": "0-5, L5",
+        "homeRecord": "2-4, L1"
       },
       {
         "isoTime": "2026-10-25T17:00Z",
@@ -3032,7 +3087,9 @@
         "verdict": "NEUTRAL",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
-        "why": "Non-conference game with zero immediate AFC tiebreaker leverage."
+        "why": "Non-conference game with zero immediate AFC tiebreaker leverage.",
+        "awayRecord": "1-5, L1",
+        "homeRecord": "3-2, W2"
       },
       {
         "isoTime": "2026-10-25T17:00Z",
@@ -3057,7 +3114,9 @@
         "verdict": "SEEDING WATCH",
         "impactClass": "good",
         "target": "Root for Cincinnati Bengals",
-        "why": "Baltimore Ravens loss clears tiebreaker paths for Buffalo's AFC conference seeding & bye week odds."
+        "why": "Baltimore Ravens loss clears tiebreaker paths for Buffalo's AFC conference seeding & bye week odds.",
+        "awayRecord": "3-2, W1",
+        "homeRecord": "4-2, L1"
       },
       {
         "isoTime": "2026-10-25T17:00Z",
@@ -3082,7 +3141,9 @@
         "verdict": "SEEDING WATCH",
         "impactClass": "good",
         "target": "Root for New York Giants",
-        "why": "Houston Texans loss clears tiebreaker paths for Buffalo's AFC conference seeding & bye week odds."
+        "why": "Houston Texans loss clears tiebreaker paths for Buffalo's AFC conference seeding & bye week odds.",
+        "awayRecord": "3-2-1, L1",
+        "homeRecord": "2-4, W2"
       },
       {
         "isoTime": "2026-10-25T20:05Z",
@@ -3107,7 +3168,9 @@
         "verdict": "NEUTRAL",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
-        "why": "Non-conference game with zero immediate AFC tiebreaker leverage."
+        "why": "Non-conference game with zero immediate AFC tiebreaker leverage.",
+        "awayRecord": "4-2, W2",
+        "homeRecord": "2-4, W1"
       },
       {
         "isoTime": "2026-10-25T20:25Z",
@@ -3132,7 +3195,9 @@
         "verdict": "NEUTRAL",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
-        "why": "Non-conference game with zero immediate AFC tiebreaker leverage."
+        "why": "Non-conference game with zero immediate AFC tiebreaker leverage.",
+        "awayRecord": "4-2, W3",
+        "homeRecord": "3-2, W1"
       },
       {
         "isoTime": "2026-10-25T20:25Z",
@@ -3157,7 +3222,9 @@
         "verdict": "NEUTRAL",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
-        "why": "Non-conference game with zero immediate AFC tiebreaker leverage."
+        "why": "Non-conference game with zero immediate AFC tiebreaker leverage.",
+        "awayRecord": "2-4, L2",
+        "homeRecord": "3-3, L3"
       },
       {
         "isoTime": "2026-10-26T00:20Z",
@@ -3182,7 +3249,9 @@
         "verdict": "SEEDING WATCH",
         "impactClass": "good",
         "target": "Root for Seattle Seahawks",
-        "why": "Kansas City Chiefs loss clears tiebreaker paths for Buffalo's AFC conference seeding & bye week odds."
+        "why": "Kansas City Chiefs loss clears tiebreaker paths for Buffalo's AFC conference seeding & bye week odds.",
+        "awayRecord": "5-0, W5",
+        "homeRecord": "3-3, L2"
       },
       {
         "isoTime": "2026-10-27T00:15Z",
@@ -3207,7 +3276,9 @@
         "verdict": "NEUTRAL",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
-        "why": "Non-conference game with zero immediate AFC tiebreaker leverage."
+        "why": "Non-conference game with zero immediate AFC tiebreaker leverage.",
+        "awayRecord": "2-4, L2",
+        "homeRecord": "2-4, L4"
       }
     ]
   },
@@ -3410,7 +3481,9 @@
         "verdict": "RIVAL STOLE OT POINT",
         "impactClass": "warning",
         "target": "Root for San Jose Sharks in Regulation",
-        "why": "San Jose Sharks won in overtime, but Montreal Canadiens salvaged a loser point."
+        "why": "San Jose Sharks won in overtime, but Montreal Canadiens salvaged a loser point.",
+        "awayRecord": "6-4-1, W2",
+        "homeRecord": "4-3-2, OT1"
       },
       {
         "isoTime": "2026-10-20T23:00:00Z",
@@ -3432,7 +3505,9 @@
         "verdict": "RIVAL WIN",
         "impactClass": "neutral",
         "target": "Root for Colorado Avalanche in Regulation",
-        "why": "New Jersey Devils picked up 2 points in the Eastern playoff race."
+        "why": "New Jersey Devils picked up 2 points in the Eastern playoff race.",
+        "awayRecord": "5-4-1, L2",
+        "homeRecord": "6-4-0, W2"
       },
       {
         "isoTime": "2026-10-20T23:00:00Z",
@@ -3454,7 +3529,9 @@
         "verdict": "RIVAL WIN",
         "impactClass": "neutral",
         "target": "Root for Anaheim Ducks in Regulation",
-        "why": "New York Islanders picked up 2 points in the Eastern playoff race."
+        "why": "New York Islanders picked up 2 points in the Eastern playoff race.",
+        "awayRecord": "4-6-0, L5",
+        "homeRecord": "5-3-2, OT1"
       },
       {
         "isoTime": "2026-10-20T23:00:00Z",
@@ -3476,7 +3553,9 @@
         "verdict": "GOOD FOR BUFFALO",
         "impactClass": "good",
         "target": "Root for Los Angeles Kings in Regulation",
-        "why": "Washington Capitals suffered a regulation loss, freezing their wildcard point total."
+        "why": "Washington Capitals suffered a regulation loss, freezing their wildcard point total.",
+        "awayRecord": "2-4-2, W2",
+        "homeRecord": "5-4-0, L1"
       },
       {
         "isoTime": "2026-10-20T23:00:00Z",
@@ -3498,7 +3577,9 @@
         "verdict": "BAD FOR BUFFALO",
         "impactClass": "bad",
         "target": "Root for Columbus Blue Jackets in Regulation",
-        "why": "Toronto Maple Leafs collected 2 standings points in the Atlantic race."
+        "why": "Toronto Maple Leafs collected 2 standings points in the Atlantic race.",
+        "awayRecord": "6-4-2, W3",
+        "homeRecord": "3-5-0, L2"
       },
       {
         "isoTime": "2026-10-21T00:00:00Z",
@@ -3520,7 +3601,9 @@
         "verdict": "NEUTRAL",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
-        "why": "Non-conference or cross-division matchup with minimal Sabres playoff leverage."
+        "why": "Non-conference or cross-division matchup with minimal Sabres playoff leverage.",
+        "awayRecord": "4-3-3, OT1",
+        "homeRecord": "5-4-1, W2"
       },
       {
         "isoTime": "2026-10-21T00:00:00Z",
@@ -3542,7 +3625,9 @@
         "verdict": "RIVAL STOLE OT POINT",
         "impactClass": "warning",
         "target": "Root for Dallas Stars in Regulation",
-        "why": "Dallas Stars won in overtime, but Boston Bruins salvaged a loser point."
+        "why": "Dallas Stars won in overtime, but Boston Bruins salvaged a loser point.",
+        "awayRecord": "8-2-1, W1",
+        "homeRecord": "6-3-1, W4"
       },
       {
         "isoTime": "2026-10-21T01:00:00Z",
@@ -3564,7 +3649,9 @@
         "verdict": "NEUTRAL",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
-        "why": "Non-conference or cross-division matchup with minimal Sabres playoff leverage."
+        "why": "Non-conference or cross-division matchup with minimal Sabres playoff leverage.",
+        "awayRecord": "6-2-2, OT1",
+        "homeRecord": "7-1-1, W2"
       },
       {
         "isoTime": "2026-10-21T01:40:00Z",
@@ -3586,7 +3673,9 @@
         "verdict": "RIVAL STOLE OT POINT",
         "impactClass": "warning",
         "target": "Root for Seattle Kraken in Regulation",
-        "why": "Seattle Kraken won in overtime, but Detroit Red Wings salvaged a loser point."
+        "why": "Seattle Kraken won in overtime, but Detroit Red Wings salvaged a loser point.",
+        "awayRecord": "3-3-3, OT1",
+        "homeRecord": "6-3-1, W1"
       },
       {
         "isoTime": "2026-10-21T02:00:00Z",
@@ -3608,7 +3697,9 @@
         "verdict": "RIVAL WIN",
         "impactClass": "neutral",
         "target": "Root for Vancouver Canucks in Regulation",
-        "why": "Carolina Hurricanes picked up 2 points in the Eastern playoff race."
+        "why": "Carolina Hurricanes picked up 2 points in the Eastern playoff race.",
+        "awayRecord": "8-2-1, W1",
+        "homeRecord": "2-8-1, L2"
       },
       {
         "isoTime": "2026-10-21T02:30:00Z",
@@ -3630,7 +3721,9 @@
         "verdict": "BAD FOR BUFFALO",
         "impactClass": "bad",
         "target": "Root for Vegas Golden Knights in Regulation",
-        "why": "Tampa Bay Lightning collected 2 standings points in the Atlantic race."
+        "why": "Tampa Bay Lightning collected 2 standings points in the Atlantic race.",
+        "awayRecord": "7-2-0, W3",
+        "homeRecord": "8-4-0, L2"
       },
       {
         "isoTime": "2026-10-21T23:30:00Z",
@@ -3652,7 +3745,9 @@
         "verdict": "REGULATION LOSS",
         "impactClass": "good",
         "target": "Root for Ottawa Senators in Regulation",
-        "why": "Ottawa Senators defeated Florida Panthers in regulation, keeping them at 0 points."
+        "why": "Ottawa Senators defeated Florida Panthers in regulation, keeping them at 0 points.",
+        "awayRecord": "5-4-2, L2",
+        "homeRecord": "7-4-0, L1"
       },
       {
         "isoTime": "2026-10-22T23:00:00Z",
@@ -3674,7 +3769,9 @@
         "verdict": "ATLANTIC WATCH",
         "impactClass": "warning",
         "target": "Root for Nashville Predators in Regulation",
-        "why": "A regulation loss leaves Boston Bruins with 0 standings points in the Atlantic Division."
+        "why": "A regulation loss leaves Boston Bruins with 0 standings points in the Atlantic Division.",
+        "awayRecord": "3-3-3, L1",
+        "homeRecord": "8-2-1, W1"
       },
       {
         "isoTime": "2026-10-22T23:00:00Z",
@@ -3696,7 +3793,9 @@
         "verdict": "ATLANTIC WATCH",
         "impactClass": "warning",
         "target": "Root for New York Rangers in Regulation",
-        "why": "A regulation loss leaves Toronto Maple Leafs with 0 standings points in the Atlantic Division."
+        "why": "A regulation loss leaves Toronto Maple Leafs with 0 standings points in the Atlantic Division.",
+        "awayRecord": "7-4-1, L1",
+        "homeRecord": "6-4-2, W3"
       },
       {
         "isoTime": "2026-10-22T23:00:00Z",
@@ -3718,7 +3817,9 @@
         "verdict": "ATLANTIC WATCH",
         "impactClass": "warning",
         "target": "Root for San Jose Sharks in Regulation",
-        "why": "A regulation loss leaves Ottawa Senators with 0 standings points in the Atlantic Division."
+        "why": "A regulation loss leaves Ottawa Senators with 0 standings points in the Atlantic Division.",
+        "awayRecord": "6-4-1, W2",
+        "homeRecord": "7-4-0, L1"
       },
       {
         "isoTime": "2026-10-22T23:00:00Z",
@@ -3740,7 +3841,9 @@
         "verdict": "WILD CARD WATCH",
         "impactClass": "neutral",
         "target": "Root for Anaheim Ducks in Regulation",
-        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points."
+        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points.",
+        "awayRecord": "4-6-0, L5",
+        "homeRecord": "6-4-0, W2"
       },
       {
         "isoTime": "2026-10-22T23:00:00Z",
@@ -3762,7 +3865,9 @@
         "verdict": "ATLANTIC WATCH",
         "impactClass": "warning",
         "target": "Root for Pittsburgh Penguins in Regulation",
-        "why": "A regulation loss leaves Florida Panthers with 0 standings points in the Atlantic Division."
+        "why": "A regulation loss leaves Florida Panthers with 0 standings points in the Atlantic Division.",
+        "awayRecord": "5-4-2, L2",
+        "homeRecord": "4-6-1, W1"
       },
       {
         "isoTime": "2026-10-22T23:30:00Z",
@@ -3784,7 +3889,9 @@
         "verdict": "WILD CARD WATCH",
         "impactClass": "neutral",
         "target": "Root for Los Angeles Kings in Regulation",
-        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points."
+        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points.",
+        "awayRecord": "2-4-2, W2",
+        "homeRecord": "5-3-2, OT1"
       },
       {
         "isoTime": "2026-10-23T00:00:00Z",
@@ -3806,7 +3913,9 @@
         "verdict": "NEUTRAL",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
-        "why": "Non-conference or cross-division matchup with minimal Sabres playoff leverage."
+        "why": "Non-conference or cross-division matchup with minimal Sabres playoff leverage.",
+        "awayRecord": "8-4-0, L2",
+        "homeRecord": "5-4-1, W2"
       },
       {
         "isoTime": "2026-10-23T00:00:00Z",
@@ -3828,7 +3937,9 @@
         "verdict": "NEUTRAL",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
-        "why": "Non-conference or cross-division matchup with minimal Sabres playoff leverage."
+        "why": "Non-conference or cross-division matchup with minimal Sabres playoff leverage.",
+        "awayRecord": "4-3-3, OT1",
+        "homeRecord": "6-3-1, W4"
       },
       {
         "isoTime": "2026-10-23T01:00:00Z",
@@ -3850,7 +3961,9 @@
         "verdict": "NEUTRAL",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
-        "why": "Non-conference or cross-division matchup with minimal Sabres playoff leverage."
+        "why": "Non-conference or cross-division matchup with minimal Sabres playoff leverage.",
+        "awayRecord": "6-2-2, OT1",
+        "homeRecord": "2-6-0, W1"
       },
       {
         "isoTime": "2026-10-23T01:00:00Z",
@@ -3872,7 +3985,9 @@
         "verdict": "WILD CARD WATCH",
         "impactClass": "neutral",
         "target": "Root for Edmonton Oilers in Regulation",
-        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points."
+        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points.",
+        "awayRecord": "8-2-1, W1",
+        "homeRecord": "7-1-1, W2"
       },
       {
         "isoTime": "2026-10-23T02:00:00Z",
@@ -3894,7 +4009,9 @@
         "verdict": "NEUTRAL",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
-        "why": "Non-conference or cross-division matchup with minimal Sabres playoff leverage."
+        "why": "Non-conference or cross-division matchup with minimal Sabres playoff leverage.",
+        "awayRecord": "7-3-0, W1",
+        "homeRecord": "6-3-1, W1"
       },
       {
         "isoTime": "2026-10-23T02:00:00Z",
@@ -3916,7 +4033,9 @@
         "verdict": "ATLANTIC WATCH",
         "impactClass": "warning",
         "target": "Root for Vancouver Canucks in Regulation",
-        "why": "A regulation loss leaves Detroit Red Wings with 0 standings points in the Atlantic Division."
+        "why": "A regulation loss leaves Detroit Red Wings with 0 standings points in the Atlantic Division.",
+        "awayRecord": "3-3-3, OT1",
+        "homeRecord": "2-8-1, L2"
       },
       {
         "isoTime": "2026-10-24T00:00:00Z",
@@ -3938,7 +4057,9 @@
         "verdict": "ATLANTIC WATCH",
         "impactClass": "warning",
         "target": "Root for Chicago Blackhawks in Regulation",
-        "why": "A regulation loss leaves Montreal Canadiens with 0 standings points in the Atlantic Division."
+        "why": "A regulation loss leaves Montreal Canadiens with 0 standings points in the Atlantic Division.",
+        "awayRecord": "4-3-2, OT1",
+        "homeRecord": "3-6-0, L1"
       },
       {
         "isoTime": "2026-10-24T01:00:00Z",
@@ -3960,7 +4081,9 @@
         "verdict": "ATLANTIC WATCH",
         "impactClass": "warning",
         "target": "Root for Colorado Avalanche in Regulation",
-        "why": "A regulation loss leaves Tampa Bay Lightning with 0 standings points in the Atlantic Division."
+        "why": "A regulation loss leaves Tampa Bay Lightning with 0 standings points in the Atlantic Division.",
+        "awayRecord": "7-2-0, W3",
+        "homeRecord": "5-4-1, L2"
       },
       {
         "isoTime": "2026-10-24T17:00:00Z",
@@ -3982,7 +4105,9 @@
         "verdict": "WILD CARD WATCH",
         "impactClass": "neutral",
         "target": "Root for Anaheim Ducks in Regulation",
-        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points."
+        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points.",
+        "awayRecord": "4-6-0, L5",
+        "homeRecord": "3-6-3, W3"
       },
       {
         "isoTime": "2026-10-24T19:30:00Z",
@@ -4004,7 +4129,9 @@
         "verdict": "WILD CARD WATCH",
         "impactClass": "neutral",
         "target": "Root for Los Angeles Kings in Regulation",
-        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points."
+        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points.",
+        "awayRecord": "2-4-2, W2",
+        "homeRecord": "6-4-0, W2"
       },
       {
         "isoTime": "2026-10-24T23:00:00Z",
@@ -4026,7 +4153,9 @@
         "verdict": "ATLANTIC WATCH",
         "impactClass": "warning",
         "target": "Root for San Jose Sharks in Regulation",
-        "why": "A regulation loss leaves Boston Bruins with 0 standings points in the Atlantic Division."
+        "why": "A regulation loss leaves Boston Bruins with 0 standings points in the Atlantic Division.",
+        "awayRecord": "6-4-1, W2",
+        "homeRecord": "8-2-1, W1"
       },
       {
         "isoTime": "2026-10-24T23:00:00Z",
@@ -4048,7 +4177,9 @@
         "verdict": "ATLANTIC WATCH",
         "impactClass": "warning",
         "target": "Root for New York Rangers in Regulation",
-        "why": "A regulation loss leaves Ottawa Senators with 0 standings points in the Atlantic Division."
+        "why": "A regulation loss leaves Ottawa Senators with 0 standings points in the Atlantic Division.",
+        "awayRecord": "7-4-1, L1",
+        "homeRecord": "7-4-0, L1"
       },
       {
         "isoTime": "2026-10-24T23:00:00Z",
@@ -4070,7 +4201,9 @@
         "verdict": "WILD CARD WATCH",
         "impactClass": "neutral",
         "target": "Root for Nashville Predators in Regulation",
-        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points."
+        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points.",
+        "awayRecord": "3-3-3, L1",
+        "homeRecord": "4-6-1, W1"
       },
       {
         "isoTime": "2026-10-24T23:00:00Z",
@@ -4092,7 +4225,9 @@
         "verdict": "WILD CARD WATCH",
         "impactClass": "neutral",
         "target": "Root for Vegas Golden Knights in Regulation",
-        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points."
+        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points.",
+        "awayRecord": "8-4-0, L2",
+        "homeRecord": "3-5-0, L2"
       },
       {
         "isoTime": "2026-10-24T23:00:00Z",
@@ -4114,7 +4249,9 @@
         "verdict": "WILD CARD WATCH",
         "impactClass": "neutral",
         "target": "Root for St. Louis Blues in Regulation",
-        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points."
+        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points.",
+        "awayRecord": "8-2-1, W1",
+        "homeRecord": "5-4-1, W2"
       },
       {
         "isoTime": "2026-10-24T23:00:00Z",
@@ -4136,7 +4273,9 @@
         "verdict": "ATLANTIC WATCH",
         "impactClass": "warning",
         "target": "Root for Edmonton Oilers in Regulation",
-        "why": "A regulation loss leaves Toronto Maple Leafs with 0 standings points in the Atlantic Division."
+        "why": "A regulation loss leaves Toronto Maple Leafs with 0 standings points in the Atlantic Division.",
+        "awayRecord": "6-4-2, W3",
+        "homeRecord": "7-1-1, W2"
       },
       {
         "isoTime": "2026-10-25T01:00:00Z",
@@ -4158,7 +4297,9 @@
         "verdict": "ATLANTIC WATCH",
         "impactClass": "warning",
         "target": "Root for Utah Mammoth in Regulation",
-        "why": "A regulation loss leaves Tampa Bay Lightning with 0 standings points in the Atlantic Division."
+        "why": "A regulation loss leaves Tampa Bay Lightning with 0 standings points in the Atlantic Division.",
+        "awayRecord": "7-2-0, W3",
+        "homeRecord": "7-3-0, W1"
       },
       {
         "isoTime": "2026-10-25T02:00:00Z",
@@ -4180,7 +4321,9 @@
         "verdict": "ATLANTIC WATCH",
         "impactClass": "warning",
         "target": "Root for Calgary Flames in Regulation",
-        "why": "A regulation loss leaves Detroit Red Wings with 0 standings points in the Atlantic Division."
+        "why": "A regulation loss leaves Detroit Red Wings with 0 standings points in the Atlantic Division.",
+        "awayRecord": "3-3-3, OT1",
+        "homeRecord": "2-6-0, W1"
       },
       {
         "isoTime": "2026-10-25T02:00:00Z",
@@ -4202,7 +4345,9 @@
         "verdict": "NEUTRAL",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
-        "why": "Non-conference or cross-division matchup with minimal Sabres playoff leverage."
+        "why": "Non-conference or cross-division matchup with minimal Sabres playoff leverage.",
+        "awayRecord": "6-2-2, OT1",
+        "homeRecord": "6-3-1, W1"
       },
       {
         "isoTime": "2026-10-25T19:00:00Z",
@@ -4224,7 +4369,9 @@
         "verdict": "ATLANTIC WATCH",
         "impactClass": "warning",
         "target": "Root for Chicago Blackhawks in Regulation",
-        "why": "A regulation loss leaves Florida Panthers with 0 standings points in the Atlantic Division."
+        "why": "A regulation loss leaves Florida Panthers with 0 standings points in the Atlantic Division.",
+        "awayRecord": "5-4-2, L2",
+        "homeRecord": "3-6-0, L1"
       },
       {
         "isoTime": "2026-10-25T22:00:00Z",
@@ -4246,7 +4393,9 @@
         "verdict": "WILD CARD WATCH",
         "impactClass": "neutral",
         "target": "Root for Dallas Stars in Regulation",
-        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points."
+        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points.",
+        "awayRecord": "5-3-2, OT1",
+        "homeRecord": "6-3-1, W4"
       },
       {
         "isoTime": "2026-10-25T23:00:00Z",
@@ -4268,7 +4417,9 @@
         "verdict": "ATLANTIC WATCH",
         "impactClass": "warning",
         "target": "Root for Winnipeg Jets in Regulation",
-        "why": "A regulation loss leaves Montreal Canadiens with 0 standings points in the Atlantic Division."
+        "why": "A regulation loss leaves Montreal Canadiens with 0 standings points in the Atlantic Division.",
+        "awayRecord": "4-3-2, OT1",
+        "homeRecord": "4-3-3, OT1"
       },
       {
         "isoTime": "2026-10-26T00:00:00Z",
@@ -4290,7 +4441,9 @@
         "verdict": "NEUTRAL",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
-        "why": "Non-conference or cross-division matchup with minimal Sabres playoff leverage."
+        "why": "Non-conference or cross-division matchup with minimal Sabres playoff leverage.",
+        "awayRecord": "5-4-1, L2",
+        "homeRecord": "3-3-3, L1"
       },
       {
         "isoTime": "2026-10-26T02:00:00Z",
@@ -4312,7 +4465,9 @@
         "verdict": "NEUTRAL",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
-        "why": "Non-conference or cross-division matchup with minimal Sabres playoff leverage."
+        "why": "Non-conference or cross-division matchup with minimal Sabres playoff leverage.",
+        "awayRecord": "6-2-2, OT1",
+        "homeRecord": "2-8-1, L2"
       },
       {
         "isoTime": "2026-10-26T23:00:00Z",
@@ -4334,7 +4489,9 @@
         "verdict": "WILD CARD WATCH",
         "impactClass": "neutral",
         "target": "Root for Los Angeles Kings in Regulation",
-        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points."
+        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points.",
+        "awayRecord": "2-4-2, W2",
+        "homeRecord": "7-4-1, L1"
       },
       {
         "isoTime": "2026-10-27T00:30:00Z",
@@ -4356,7 +4513,9 @@
         "verdict": "ATLANTIC WATCH",
         "impactClass": "warning",
         "target": "Root for Calgary Flames in Regulation",
-        "why": "A regulation loss leaves Toronto Maple Leafs with 0 standings points in the Atlantic Division."
+        "why": "A regulation loss leaves Toronto Maple Leafs with 0 standings points in the Atlantic Division.",
+        "awayRecord": "6-4-2, W3",
+        "homeRecord": "2-6-0, W1"
       },
       {
         "isoTime": "2026-10-27T01:30:00Z",
@@ -4378,7 +4537,9 @@
         "verdict": "ATLANTIC WATCH",
         "impactClass": "warning",
         "target": "Root for Edmonton Oilers in Regulation",
-        "why": "A regulation loss leaves Detroit Red Wings with 0 standings points in the Atlantic Division."
+        "why": "A regulation loss leaves Detroit Red Wings with 0 standings points in the Atlantic Division.",
+        "awayRecord": "3-3-3, OT1",
+        "homeRecord": "7-1-1, W2"
       },
       {
         "isoTime": "2026-10-27T23:00:00Z",
@@ -4400,7 +4561,9 @@
         "verdict": "WILD CARD WATCH",
         "impactClass": "neutral",
         "target": "Root for Philadelphia Flyers in Regulation",
-        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points."
+        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points.",
+        "awayRecord": "3-5-0, L2",
+        "homeRecord": "3-6-3, W3"
       },
       {
         "isoTime": "2026-10-28T00:00:00Z",
@@ -4422,7 +4585,9 @@
         "verdict": "ATLANTIC WATCH",
         "impactClass": "warning",
         "target": "Root for Carolina Hurricanes in Regulation",
-        "why": "A regulation loss leaves Boston Bruins with 0 standings points in the Atlantic Division."
+        "why": "A regulation loss leaves Boston Bruins with 0 standings points in the Atlantic Division.",
+        "awayRecord": "8-2-1, W1",
+        "homeRecord": "8-2-1, W1"
       },
       {
         "isoTime": "2026-10-28T00:00:00Z",
@@ -4444,7 +4609,9 @@
         "verdict": "NEUTRAL",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
-        "why": "Non-conference or cross-division matchup with minimal Sabres playoff leverage."
+        "why": "Non-conference or cross-division matchup with minimal Sabres playoff leverage.",
+        "awayRecord": "2-4-2, W2",
+        "homeRecord": "3-6-0, L1"
       },
       {
         "isoTime": "2026-10-28T00:00:00Z",
@@ -4466,7 +4633,9 @@
         "verdict": "ATLANTIC WATCH",
         "impactClass": "warning",
         "target": "Root for St. Louis Blues in Regulation",
-        "why": "A regulation loss leaves Montreal Canadiens with 0 standings points in the Atlantic Division."
+        "why": "A regulation loss leaves Montreal Canadiens with 0 standings points in the Atlantic Division.",
+        "awayRecord": "4-3-2, OT1",
+        "homeRecord": "5-4-1, W2"
       },
       {
         "isoTime": "2026-10-28T00:00:00Z",
@@ -4488,7 +4657,9 @@
         "verdict": "WILD CARD WATCH",
         "impactClass": "neutral",
         "target": "Root for Nashville Predators in Regulation",
-        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points."
+        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points.",
+        "awayRecord": "5-3-2, OT1",
+        "homeRecord": "3-3-3, L1"
       },
       {
         "isoTime": "2026-10-28T00:00:00Z",
@@ -4510,7 +4681,9 @@
         "verdict": "WILD CARD WATCH",
         "impactClass": "neutral",
         "target": "Root for Dallas Stars in Regulation",
-        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points."
+        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points.",
+        "awayRecord": "6-4-0, W2",
+        "homeRecord": "6-3-1, W4"
       },
       {
         "isoTime": "2026-10-28T00:00:00Z",
@@ -4532,7 +4705,9 @@
         "verdict": "ATLANTIC WATCH",
         "impactClass": "warning",
         "target": "Root for Winnipeg Jets in Regulation",
-        "why": "A regulation loss leaves Florida Panthers with 0 standings points in the Atlantic Division."
+        "why": "A regulation loss leaves Florida Panthers with 0 standings points in the Atlantic Division.",
+        "awayRecord": "5-4-2, L2",
+        "homeRecord": "4-3-3, OT1"
       },
       {
         "isoTime": "2026-10-28T01:00:00Z",
@@ -4554,7 +4729,9 @@
         "verdict": "NEUTRAL",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
-        "why": "Non-conference or cross-division matchup with minimal Sabres playoff leverage."
+        "why": "Non-conference or cross-division matchup with minimal Sabres playoff leverage.",
+        "awayRecord": "6-2-2, OT1",
+        "homeRecord": "7-3-0, W1"
       },
       {
         "isoTime": "2026-10-28T02:00:00Z",
@@ -4576,7 +4753,9 @@
         "verdict": "ATLANTIC WATCH",
         "impactClass": "warning",
         "target": "Root for Vegas Golden Knights in Regulation",
-        "why": "A regulation loss leaves Ottawa Senators with 0 standings points in the Atlantic Division."
+        "why": "A regulation loss leaves Ottawa Senators with 0 standings points in the Atlantic Division.",
+        "awayRecord": "7-4-0, L1",
+        "homeRecord": "8-4-0, L2"
       },
       {
         "isoTime": "2026-10-28T02:00:00Z",
@@ -4598,7 +4777,9 @@
         "verdict": "NEUTRAL",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
-        "why": "Non-conference or cross-division matchup with minimal Sabres playoff leverage."
+        "why": "Non-conference or cross-division matchup with minimal Sabres playoff leverage.",
+        "awayRecord": "2-8-1, L2",
+        "homeRecord": "4-6-0, L5"
       }
     ]
   }

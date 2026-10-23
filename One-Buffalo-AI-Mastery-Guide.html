@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>One Buffalo Tracker: Engineering Assessment & Agentic AI Mastery Guide</title>
+<style>
+  :root {
+    --bills-blue: #003366;
+    --bills-red: #C60C30;
+    --sabres-gold: #FFB81C;
+    --text-dark: #1E293B;
+    --text-muted: #64748B;
+    --bg-light: #F8FAFC;
+    --border-color: #E2E8F0;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.65;
+    color: var(--text-dark);
+    background: #F1F5F9;
+    margin: 0;
+    padding: 30px 15px;
+  }
+  .action-banner {
+    max-width: 860px;
+    margin: 0 auto 20px auto;
+    background: linear-gradient(135deg, #003366, #1A365D);
+    color: white;
+    padding: 18px 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .action-banner h4 { margin: 0 0 4px 0; font-size: 1.1rem; }
+  .action-banner p { margin: 0; font-size: 0.9rem; opacity: 0.9; }
+  .action-btns { display: flex; gap: 10px; }
+  .btn {
+    padding: 9px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.88rem;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    transition: transform 0.1s, opacity 0.2s;
+  }
+  .btn-primary {
+    background: #FFB81C;
+    color: #003366;
+  }
+  .btn-secondary {
+    background: rgba(255,255,255,0.18);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.4);
+  }
+  .btn:hover { opacity: 0.92; transform: translateY(-1px); }
+  .doc-container {
+    max-width: 860px;
+    margin: 0 auto;
+    background: white;
+    padding: 50px 60px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    border: 1px solid var(--border-color);
+  }
+  .doc-title {
+    color: var(--bills-blue);
+    font-size: 2.1rem;
+    margin: 0 0 8px 0;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+  .doc-subtitle {
+    color: var(--bills-red);
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0 0 12px 0;
+  }
+  .doc-meta {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin: 0 0 16px 0;
+  }
+  .divider {
+    border: 0;
+    border-top: 2px solid var(--border-color);
+    margin: 20px 0 35px 0;
+  }
+  .section-h1 {
+    color: var(--bills-blue);
+    font-size: 1.55rem;
+    font-weight: 700;
+    margin: 40px 0 16px 0;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--bills-blue);
+  }
+  .section-h2 {
+    color: #1A365D;
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 28px 0 12px 0;
+  }
+  .doc-text {
+    font-size: 1.02rem;
+    margin: 0 0 16px 0;
+    color: #334155;
+  }
+  .bullet-list {
+    margin: 0 0 20px 0;
+    padding-left: 24px;
+    color: #334155;
+  }
+  .bullet-list li {
+    margin-bottom: 10px;
+    font-size: 1rem;
+  }
+  .bullet-list strong {
+    color: #0F172A;
+  }
+  .callout-box {
+    background: #EFF6FF;
+    border-left: 4px solid var(--bills-blue);
+    padding: 16px 20px;
+    border-radius: 6px;
+    margin: 20px 0;
+    font-style: italic;
+    color: #1E3A8A;
+    font-size: 0.98rem;
+  }
+  .playlist-card {
+    background: var(--bg-light);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 14px;
+    transition: border-color 0.15s;
+  }
+  .playlist-card:hover {
+    border-color: #CBD5E1;
+  }
+  .track-header {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .track-num {
+    background: var(--bills-blue);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+  }
+  .track-title {
+    color: #0284C7;
+    font-weight: 700;
+    font-size: 1.05rem;
+    text-decoration: underline;
+  }
+  .track-creator {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    font-style: italic;
+  }
+  .track-desc {
+    margin: 0;
+    color: #475569;
+    font-size: 0.95rem;
+  }
+  .code-block {
+    background: #0F172A;
+    color: #E2E8F0;
+    padding: 16px 20px;
+    border-radius: 8px;
+    font-family: Consolas, Monaco, "Courier New", monospace;
+    font-size: 0.9rem;
+    overflow-x: auto;
+    line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+
+<div class="action-banner">
+  <div>
+    <h4>📄 Export to Google Docs in 5 Seconds</h4>
+    <p>Upload the generated <code>One-Buffalo-AI-Mastery-Guide.docx</code> to Google Drive or copy directly to docs.new.</p>
+  </div>
+  <div class="action-btns">
+    <button class="btn btn-primary" onclick="copyDocument()">📋 Copy for Google Docs</button>
+    <a href="https://docs.new" target="_blank" class="btn btn-secondary">Open docs.new ↗</a>
+  </div>
+</div>
+
+<div class="doc-container" id="printable-doc">
+  <h1 class="doc-title">🦬 One Buffalo Tracker: Engineering Assessment &amp; Agentic AI Mastery Guide</h1><p class="doc-subtitle">From Resilient Edge Architecture to Staff-Level Pair Programming with Antigravity</p><p class="doc-meta">Generated for olfhq • Project: One Buffalo Dashboard (onebuffalotracker.fyi) • October 2026</p><hr class="divider"/><h2 class="section-h1">1. Engineering Skill Level Assessment</h2><p class="doc-text">Based on a structural and behavioral audit of the One-Buffalo-Dashboard codebase, your software engineering instincts operate at a Senior / Lead Systems Architect level:</p><ul class="bullet-list"><li><strong>Pragmatic, Zero-Maintenance Architecture: </strong>Instead of choosing heavy server-side frameworks (Next.js, Remix, Docker) that require recurring hosting fees and compute management, you deployed a high-performance static PWA on GitHub Pages with custom domain routing (onebuffalotracker.fyi).</li><li><strong>Defensive Dual-Layer Resilience: </strong>The data scraper (scripts/scrape.js) updates canonical data.json while synchronizing inline FALLBACK_DATA directly into bills.html, sabres.html, and index.html. The application remains fully functional with zero UI glitches even during total upstream API outages or offline scenarios.</li><li><strong>Applied Mathematical Modeling: </strong>In scripts/scrape.js, you developed custom logistic regression log-odds algorithms (calculateLiveNhlWinChance and calculateLiveNflWinChance) incorporating score differentials, non-linear time-decay curves, and baseline win probabilities.</li><li><strong>Verification-First Quality Gate: </strong>A 4-tier automated test harness (audit_deep.js, test_out_of_town_cards.js, audit_stats.js, audit_full_codebase.js) runs via GitHub Actions CI/CD to prevent regressions prior to auto-committing upstream.</li></ul><div class="callout-box">Staff-Level Insight: Because you possess strong architectural foundations, you do not need generic beginner prompt templates. Your highest leverage comes from Context Engineering, Executable Contract Prompting, and Subagent Orchestration.</div><h2 class="section-h1">2. Curated YouTube Playlist</h2><h3 class="section-h2">Part 1: The Engine (What We Built &amp; Deepening the Foundations)</h3>
+            <div class="playlist-card">
+              <div class="track-header">
+                <span class="track-num">Track 1</span>
+                <a href="https://www.youtube.com/results?search_query=Google+Chrome+Developers+Building+Offline+First+Web+Apps+Jake+Archibald" target="_blank" class="track-title">Building Offline-First Progressive Web Apps</a>
+                <span class="track-creator">— Google Chrome Developers / Jake Archibald</span>
+              </div>
+              <p class="track-desc">Deep dive into Service Worker lifecycle management, Stale-While-Revalidate caching strategies, and safely bypassing service worker caches for high-frequency client-side polling endpoints (such as your 25s ESPN score updates).</p>
+            </div>
+            
+            <div class="playlist-card">
+              <div class="track-header">
+                <span class="track-num">Track 2</span>
+                <a href="https://www.youtube.com/results?search_query=StatQuest+Josh+Starmer+Logistic+Regression+Log+Odds" target="_blank" class="track-title">Logistic Regression &amp; Log-Odds to Probability</a>
+                <span class="track-creator">— StatQuest with Josh Starmer</span>
+              </div>
+              <p class="track-desc">Clear visual deconstruction of the sigmoid logit function ln(p / (1 - p)) implemented in scripts/scrape.js. Demonstrates how time remaining acts as a confidence variance factor that converges toward certainty at the final whistle.</p>
+            </div>
+            
+            <div class="playlist-card">
+              <div class="track-header">
+                <span class="track-num">Track 3</span>
+                <a href="https://www.youtube.com/results?search_query=Fireship+GitHub+Actions+in+100+Seconds+and+Full+Tutorial" target="_blank" class="track-title">Automating Pipelines with GitHub Actions &amp; Quality Gates</a>
+                <span class="track-creator">— Fireship / GitHub</span>
+              </div>
+              <p class="track-desc">Covers scheduled cron runners, dirty git diff assertions, and headless Node.js test execution directly mirroring your .github/workflows/update.yml configuration.</p>
+            </div>
+            <h3 class="section-h2">Part 2: The AI Pair Programmer (Prompting &amp; Agentic Orchestration)</h3>
+            <div class="playlist-card">
+              <div class="track-header">
+                <span class="track-num">Track 4</span>
+                <a href="https://www.youtube.com/watch?v=zjkBMFhNj_g" target="_blank" class="track-title">Intro to Large Language Models (The LLM OS)</a>
+                <span class="track-creator">— Andrej Karpathy</span>
+              </div>
+              <p class="track-desc">Karpathy explains the fundamental mental model: the LLM is the CPU, the context window is RAM, and agent tools (terminal, file read/write, web search) are disk and I/O. Essential for understanding how to optimize context memory.</p>
+            </div>
+            
+            <div class="playlist-card">
+              <div class="track-header">
+                <span class="track-num">Track 5</span>
+                <a href="https://www.youtube.com/results?search_query=AWS+Developers+Quit+Tokenmaxxing+Context+Engineering+Techniques" target="_blank" class="track-title">Quit Tokenmaxxing: Context Engineering for AI Agents</a>
+                <span class="track-creator">— AWS Developers / Latent Space</span>
+              </div>
+              <p class="track-desc">Explains why &#x27;tokenmaxxing&#x27; (stuffing giant files into prompt context) degrades reasoning. Outlines context rot, context poisoning, and how selective context curation dramatically increases accuracy.</p>
+            </div>
+            
+            <div class="playlist-card">
+              <div class="track-header">
+                <span class="track-num">Track 6</span>
+                <a href="https://www.youtube.com/results?search_query=Dave+Farley+Continuous+Delivery+Acceptance+Testing+is+the+FUTURE+of+programming" target="_blank" class="track-title">Acceptance Testing Is the FUTURE of Programming</a>
+                <span class="track-creator">— Continuous Delivery (Dave Farley)</span>
+              </div>
+              <p class="track-desc">Dave Farley explains why natural language is too vague for coding assistants, and why executable test suites (ATDD/TDD) serve as the ultimate unambiguous prompt for AI agents.</p>
+            </div>
+            
+            <div class="playlist-card">
+              <div class="track-header">
+                <span class="track-num">Track 7</span>
+                <a href="https://www.youtube.com/results?search_query=Anthropic+Building+more+effective+AI+agents+Alex+Albert+Erik" target="_blank" class="track-title">Building Effective Agents</a>
+                <span class="track-creator">— Anthropic (Alex Albert &amp; Erik Schluntz)</span>
+              </div>
+              <p class="track-desc">Breakdown of modern agentic design patterns: orchestrator-workers, prompt chaining, tool calling, and automated evaluator-optimizer loops that match Antigravity&#x27;s architecture.</p>
+            </div>
+            
+            <div class="playlist-card">
+              <div class="track-header">
+                <span class="track-num">Track 8</span>
+                <a href="https://www.youtube.com/results?search_query=Dave+Farley+Continuous+Delivery+How+to+Actually+Succeed+with+AI+Development" target="_blank" class="track-title">How to Actually Succeed with AI Development</a>
+                <span class="track-creator">— Continuous Delivery (Dave Farley)</span>
+              </div>
+              <p class="track-desc">How senior engineers establish strict architectural boundaries and automated verification harnesses so AI agents accelerate output without accumulating technical debt.</p>
+            </div>
+            <h2 class="section-h1">3. Executive Prompting Blueprints for Antigravity</h2><p class="doc-text">Adopt these four battle-tested prompting patterns when collaborating with Antigravity:</p><h3 class="section-h2">Pattern 1: The Contract-First (Spec-Driven) Prompt</h3><p class="doc-text">Rather than describing line-by-line coding steps, define the strict contract, data invariants, and verification criteria:</p><pre class="code-block"><code>Goal: Add an NHL tiebreaker matrix to `sabres.html`.
+
+Contract &amp; Invariants:
+1. Inputs: Reads from `data.json` under `sabres.tiebreakers`.
+2. Output: Render a 3-column responsive flex grid (#1 Seed, Wildcard 1, Wildcard 2).
+3. Invariant: Vanilla CSS only. Do not add external CDNs or JS libraries.
+4. Verification: Run `npm test` and assert all 4 audit suites pass.</code></pre><h3 class="section-h2">Pattern 2: The Self-Correcting Test Loop Prompt</h3><p class="doc-text">Leverage Antigravity&#x27;s terminal execution capability by instructing it to run in a test-verification loop:</p><pre class="code-block"><code>Goal: Fix the overtime time-decay anomaly in `calculateLiveNhlWinChance`.
+Action Loop:
+1. Add a failing unit test in `test/audit_stats.js` for an OT scenario (0-0 score, 1:30 left in OT).
+2. Edit `scripts/scrape.js` to fix the decay curve.
+3. Run `npm test` autonomously until the test passes.
+4. Report the mathematical diff.</code></pre><h3 class="section-h2">Pattern 3: The Architectural Interrogation</h3><p class="doc-text">Before letting the agent write hundreds of lines of code, force it to challenge your assumptions and surface hidden edge cases:</p><div class="callout-box">&quot;I want to add a push-notification system for live Bills scores. Before writing any code, interview me on my constraints using /grill-me. Challenge my data frequency, battery impact on mobile PWAs, and serverless cost limits.&quot;</div><h3 class="section-h2">Pattern 4: Antigravity Slash Commands Reference</h3><ul class="bullet-list"><li><strong>/plan: </strong>Drafts an architectural step-by-step roadmap before files are modified.</li><li><strong>/grill-me: </strong>Triggers an interactive design interview to resolve ambiguities before execution.</li><li><strong>/boost: </strong>Activates multi-perspective deep reasoning for complex mathematical or structural problems.</li><li><strong>/compact: </strong>Compresses conversation history to eliminate context rot and save token capacity.</li><li><strong>/learn: </strong>Persists repository rules and preferred coding standards across sessions.</li></ul>
+</div>
+
+<script>
+function copyDocument() {
+  const doc = document.getElementById('printable-doc');
+  const listener = function(e) {
+    e.clipboardData.setData('text/html', doc.innerHTML);
+    e.clipboardData.setData('text/plain', doc.innerText);
+    e.preventDefault();
+  };
+  document.addEventListener('copy', listener);
+  document.execCommand('copy');
+  document.removeEventListener('copy', listener);
+  alert('Document copied! Now open docs.new and press Ctrl+V (or Cmd+V) to paste with full formatting intact.');
+}
+</script>
+
+</body>
+</html>

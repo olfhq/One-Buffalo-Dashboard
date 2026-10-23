@@ -91,6 +91,20 @@ function testCards(file, html, sport) {
   assert(preHtml.includes('win-prob-chip'), `${sport} PRE card missing win-prob-chip`);
   assert(preHtml.includes('win-chance-meter-wrap'), `${sport} PRE card missing win-chance-meter-wrap`);
   console.log(`${sport} PRE card rendered properly.`);
+
+  // 4. Game with record and streak (e.g. Ravens 4-2, L1)
+  const gameWithRecords = {
+    ...liveGame,
+    awayName: 'Baltimore Ravens',
+    awayRecord: '4-2, L1',
+    homeName: 'Cleveland Browns',
+    homeRecord: '1-5, L4'
+  };
+  const recordHtml = renderGameCardHtml(gameWithRecords);
+  assert(recordHtml.includes('score-team-record'), `${sport} card missing score-team-record element`);
+  assert(recordHtml.includes('(4-2, L1)'), `${sport} card missing away record and streak like (4-2, L1)`);
+  assert(recordHtml.includes('(1-5, L4)'), `${sport} card missing home record and streak like (1-5, L4)`);
+  console.log(`${sport} card with records and streaks rendered properly.`);
 }
 
 testCards('sabres.html', sabresHtml, 'Nhl');
