@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-25T10:00:24.777Z",
+  "updatedAt": "2026-10-25T10:57:21.477Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
   "bills": {
     "team": "Buffalo Bills",
@@ -456,8 +456,8 @@
         "homeName": "Houston Texans",
         "homeRecord": "2-4, W2",
         "homeScore": "0",
-        "homeWinChance": 81,
-        "awayWinChance": 19,
+        "homeWinChance": 80,
+        "awayWinChance": 20,
         "verdict": "SEEDING WATCH",
         "impactClass": "good",
         "target": "Root for New York Giants",
