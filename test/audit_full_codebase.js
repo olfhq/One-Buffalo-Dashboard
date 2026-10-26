@@ -191,6 +191,128 @@ try {
 
 console.log('Accessibility & Shared Architecture Audit complete. Issues so far:', issues.length);
 
+// 6. Global Canned Themes & Central Control Verification (Tier #3)
+try {
+  const sharedCss = fs.readFileSync('assets/shared.css', 'utf8');
+  const sharedJs = fs.readFileSync('assets/shared.js', 'utf8');
+  const expectedThemes = ['regular', 'goathead', 'snow-game', 'heritage', 'gameday', 'halloween', 'christmas', 'new-years'];
+  const requiredTokens = [
+    '--bg-canvas',
+    '--surface-card',
+    '--surface-inset',
+    '--border-subtle',
+    '--radius-card',
+    '--font-display',
+    '--font-data',
+    '--bills-accent',
+    '--sabres-accent'
+  ];
+
+  expectedThemes.forEach(theme => {
+    const selector = `html[data-theme="${theme}"]`;
+    if (!sharedCss.includes(selector)) {
+      issues.push(`assets/shared.css missing required theme selector: ${selector}`);
+    }
+  });
+
+  requiredTokens.forEach(token => {
+    if (!sharedCss.includes(token)) {
+      issues.push(`assets/shared.css missing required theme design token: ${token}`);
+    }
+  });
+
+  const dataJson = JSON.parse(fs.readFileSync('data.json', 'utf8'));
+  if (!('theme' in dataJson)) {
+    issues.push('data.json missing "theme" attribute');
+  }
+  if (!('themeUntil' in dataJson)) {
+    issues.push('data.json missing "themeUntil" attribute');
+  }
+
+  pages.forEach(page => {
+    const html = fs.readFileSync(page, 'utf8');
+    const $ = cheerio.load(html);
+    const rootTheme = $('html').attr('data-theme');
+    if (!rootTheme) {
+      issues.push(`${page} <html> tag is missing data-theme attribute`);
+    }
+
+    const fontsLink = $('link[href*="Barlow+Condensed"][href*="JetBrains+Mono"]');
+    if (fontsLink.length === 0) {
+      issues.push(`${page} is missing Google Fonts link for Barlow Condensed and JetBrains Mono`);
+    }
+
+    if (!html.includes('applyTheme(data.theme, data.themeUntil)')) {
+      issues.push(`${page} does not call applyTheme(data.theme, data.themeUntil) in loadData()`);
+    }
+
+    // Constraint: NO client-side switcher UI or localStorage overrides
+    if ($('#theme-select').length > 0 || $('.theme-switcher').length > 0 || $('#theme-toggle').length > 0) {
+      issues.push(`${page} contains forbidden client-side theme switcher UI elements`);
+    }
+    if (html.includes("localStorage.getItem('theme')") || html.includes('localStorage.setItem("theme"')) {
+      issues.push(`${page} contains forbidden localStorage theme overrides`);
+    }
+  });
+
+  // Verify applyTheme functional execution
+  const applyThemeMatch = sharedJs.match(/(const VALID_THEMES =[\s\S]*?function applyTheme\([\s\S]*?^    \})/m);
+  if (!applyThemeMatch) {
+    issues.push('assets/shared.js missing applyTheme function');
+  } else {
+    // Mock environment for testing applyTheme logic
+    let mockRootTheme = null;
+    let mockMetaColor = null;
+    const mockDocument = {
+      documentElement: {
+        setAttribute: (attr, val) => { if (attr === 'data-theme') mockRootTheme = val; },
+        getAttribute: (attr) => attr === 'data-theme' ? mockRootTheme : null
+      },
+      querySelector: (sel) => {
+        if (sel === 'meta[name="theme-color"]') {
+          return {
+            setAttribute: (attr, val) => { if (attr === 'content') mockMetaColor = val; },
+            getAttribute: (attr) => attr === 'content' ? mockMetaColor : null
+          };
+        }
+        return null;
+      }
+    };
+
+    const fnText = applyThemeMatch[1];
+    const testApplyTheme = new Function('document', 'Date', `${fnText}; return applyTheme;`)(mockDocument, Date);
+
+    // 1. Valid theme
+    testApplyTheme('goathead');
+    if (mockRootTheme !== 'goathead') {
+      issues.push(`applyTheme('goathead') did not set data-theme="goathead", got "${mockRootTheme}"`);
+    }
+
+    // 2. Fallback on invalid theme
+    testApplyTheme('non-existent-theme');
+    if (mockRootTheme !== 'regular') {
+      issues.push(`applyTheme('non-existent-theme') did not fallback to "regular", got "${mockRootTheme}"`);
+    }
+
+    // 3. Expiration in past
+    testApplyTheme('christmas', '2020-01-01T00:00:00Z');
+    if (mockRootTheme !== 'regular') {
+      issues.push(`applyTheme with expired timestamp did not fallback to "regular", got "${mockRootTheme}"`);
+    }
+
+    // 4. Future expiration preserves theme
+    const futureDate = new Date(Date.now() + 86400000).toISOString();
+    testApplyTheme('snow-game', futureDate);
+    if (mockRootTheme !== 'snow-game') {
+      issues.push(`applyTheme with future timestamp failed to apply "snow-game", got "${mockRootTheme}"`);
+    }
+  }
+} catch (err) {
+  issues.push(`Theme architecture test failed: ${err.message}`);
+}
+
+console.log('Global Canned Themes Audit complete. Issues so far:', issues.length);
+
 if (issues.length > 0) {
   console.error('\nIssues found:');
   issues.forEach(i => console.error('  [!] ' + i));

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="regular">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -53,6 +53,10 @@
   </script>
 
   <title>Buffalo Sabres Hub | One Buffalo Tracker</title>
+  <!-- Typography Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./assets/shared.css">
   <script src="./assets/shared.js"></script>
   <style>
@@ -2671,6 +2675,8 @@
       const FALLBACK_DATA = {
   "updatedAt": "2026-10-26T19:20:54.814Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
+  "theme": "regular",
+  "themeUntil": null,
   "bills": {
     "team": "Buffalo Bills",
     "makePlayoffs": 83,
@@ -4109,6 +4115,10 @@
       } catch (err) {
         console.warn('Network/CORS fetch failed, using embedded fallback data:', err);
         data = FALLBACK_DATA;
+      }
+
+      if (data && data.theme && typeof applyTheme === 'function') {
+        applyTheme(data.theme, data.themeUntil);
       }
 
       const dateStr = new Date(data.updatedAt).toLocaleDateString(undefined, {

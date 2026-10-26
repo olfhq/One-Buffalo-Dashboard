@@ -272,6 +272,46 @@
       }
     }
 
+    // Centralized Canned Theme Engine (Controlled via data.json or <html data-theme="...">)
+    const VALID_THEMES = ['regular', 'goathead', 'snow-game', 'heritage', 'gameday', 'halloween', 'christmas', 'new-years'];
+    const THEME_COLORS = {
+      'regular': '#080a0f',
+      'goathead': '#060606',
+      'snow-game': '#060f1c',
+      'heritage': '#051329',
+      'gameday': '#020617',
+      'halloween': '#09050e',
+      'christmas': '#030e07',
+      'new-years': '#0a0907'
+    };
+
+    function applyTheme(themeName, themeUntil) {
+      if (typeof document === 'undefined') return 'regular';
+      let target = (themeName || '').toLowerCase().trim();
+      if (themeUntil) {
+        const exp = new Date(themeUntil).getTime();
+        if (!isNaN(exp) && Date.now() > exp) {
+          target = 'regular';
+        }
+      }
+      if (!VALID_THEMES.includes(target)) {
+        target = 'regular';
+      }
+
+      document.documentElement.setAttribute('data-theme', target);
+
+      const metaTheme = document.querySelector('meta[name="theme-color"]');
+      if (metaTheme) {
+        metaTheme.setAttribute('content', THEME_COLORS[target] || '#080a0f');
+      }
+      return target;
+    }
+
+    if (typeof document !== 'undefined') {
+      const initialTheme = document.documentElement.getAttribute('data-theme') || 'regular';
+      applyTheme(initialTheme);
+    }
+
     // WAI-ARIA Accessible Tab Switching & URL Hash Deep-Linking
     const VALID_TAB_IDS = ['intel', 'rooting', 'radar'];
 

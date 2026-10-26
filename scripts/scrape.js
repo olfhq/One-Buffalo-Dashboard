@@ -3043,22 +3043,53 @@ async function scrapePlayoffStatus() {
   sabresData.nextGame.ifLoss = sabresMig.ifLoss;
   sabresData.nextGame.leverage = sabresMig.leverage;
 
+  const rootDir = path.resolve(__dirname, '..');
+  const dataJsonPath = path.join(rootDir, 'data.json');
+  let currentTheme = 'regular';
+  let currentThemeUntil = null;
+  if (fs.existsSync(dataJsonPath)) {
+    try {
+      const existingData = JSON.parse(fs.readFileSync(dataJsonPath, 'utf8'));
+      if (existingData.theme) {
+        currentTheme = existingData.theme;
+        currentThemeUntil = existingData.themeUntil || null;
+        if (currentThemeUntil && !isNaN(Date.parse(currentThemeUntil))) {
+          if (Date.now() > Date.parse(currentThemeUntil)) {
+            console.log(`Theme "${currentTheme}" expired at ${currentThemeUntil}. Reverting to "regular".`);
+            currentTheme = 'regular';
+            currentThemeUntil = null;
+          }
+        }
+      }
+    } catch (e) {
+      console.warn('Failed to parse existing data.json for theme state:', e.message);
+    }
+  }
+
   const finalPayload = {
     updatedAt: new Date().toISOString(),
     source: 'http://www.playoffstatus.com and ESPN NFL API',
+    theme: currentTheme,
+    themeUntil: currentThemeUntil,
     bills: billsData,
     sabres: sabresData
   };
 
   const payloadStr = JSON.stringify(finalPayload, null, 2);
-  const rootDir = path.resolve(__dirname, '..');
-  fs.writeFileSync(path.join(rootDir, 'data.json'), payloadStr, 'utf-8');
+  fs.writeFileSync(dataJsonPath, payloadStr, 'utf-8');
   console.log('data.json successfully written with live 1st Round Matchup table.');
 
   syncHtmlFallbacks(finalPayload);
 }
 
 function buildTrimmedFallbackForFile(fileName, fullPayload) {
+  const baseFallback = {
+    updatedAt: fullPayload.updatedAt,
+    source: fullPayload.source,
+    theme: fullPayload.theme || 'regular',
+    themeUntil: fullPayload.themeUntil || null
+  };
+
   if (fileName === 'index.html') {
     const trimSport = (s) => {
       if (!s) return s;
@@ -3069,16 +3100,14 @@ function buildTrimmedFallbackForFile(fileName, fullPayload) {
       return { ...rest, nextGame };
     };
     return {
-      updatedAt: fullPayload.updatedAt,
-      source: fullPayload.source,
+      ...baseFallback,
       bills: trimSport(fullPayload.bills),
       sabres: trimSport(fullPayload.sabres)
     };
   }
   if (fileName === 'bills.html') {
     return {
-      updatedAt: fullPayload.updatedAt,
-      source: fullPayload.source,
+      ...baseFallback,
       bills: fullPayload.bills,
       sabres: {
         team: fullPayload.sabres?.team,
@@ -3090,8 +3119,7 @@ function buildTrimmedFallbackForFile(fileName, fullPayload) {
   }
   if (fileName === 'sabres.html') {
     return {
-      updatedAt: fullPayload.updatedAt,
-      source: fullPayload.source,
+      ...baseFallback,
       bills: {
         team: fullPayload.bills?.team,
         makePlayoffs: fullPayload.bills?.makePlayoffs,
@@ -3122,9 +3150,19 @@ function syncHtmlFallbacks(fullPayload) {
         const trimmedPayload = buildTrimmedFallbackForFile(baseName, fullPayload);
         const dataStr = JSON.stringify(trimmedPayload, null, 2);
         const newFallback = `const FALLBACK_DATA = ${dataStr};\n\n      `;
-        const updatedContent = content.slice(0, startIdx) + newFallback + content.slice(endIdx);
+        let updatedContent = content.slice(0, startIdx) + newFallback + content.slice(endIdx);
+
+        // Keep root data-theme attribute in sync with payload theme
+        const activeTheme = trimmedPayload.theme || 'regular';
+        updatedContent = updatedContent.replace(/<html([^>]*)>/i, (match, attrs) => {
+          if (/data-theme="[^"]*"/.test(attrs)) {
+            return `<html${attrs.replace(/data-theme="[^"]*"/, `data-theme="${activeTheme}"`)}>`;
+          }
+          return `<html${attrs} data-theme="${activeTheme}">`;
+        });
+
         fs.writeFileSync(filePath, updatedContent, 'utf8');
-        console.log(`Synced FALLBACK_DATA in ${baseName}`);
+        console.log(`Synced FALLBACK_DATA and data-theme in ${baseName}`);
       } else {
         console.warn(`Could not find FALLBACK_DATA markers in ${baseName}`);
       }

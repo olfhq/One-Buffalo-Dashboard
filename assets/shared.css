@@ -1,23 +1,258 @@
 /* ==========================================================================
-   ONE BUFFALO DASHBOARD — SHARED DESIGN SYSTEM & ACCESSIBILITY STYLES
+   ONE BUFFALO DASHBOARD — SHARED DESIGN SYSTEM & CANNED THEMES
    Shared across index.html, bills.html, and sabres.html
+   Controlled globally via <html data-theme="...">
    ========================================================================== */
 
-:root {
-  --bills-blue: #00338D;
-  --bills-red: #C60C30;
-  --sabres-blue: #002654;
-  --sabres-gold: #FCB514;
-  --bg-dark: #090d16;
-  --card-bg: #141c2c;
-  --card-inner: #0d1422;
-  --card-border: #1f2c44;
-  --text-main: #f3f4f6;
-  --text-muted: #94a3b8;
-  --accent-green: #10b981;
+/* --------------------------------------------------------------------------
+   THEME DEFINITIONS: 8 CANNED THEMES
+   -------------------------------------------------------------------------- */
+
+/* 1. REGULAR (Default Modern Industrial Command Center) */
+:root,
+html[data-theme="regular"],
+[data-theme="regular"] {
+  --bg-canvas: #080a0f;
+  --surface-card: #141c2c;
+  --surface-inset: #0d1422;
+  --border-subtle: #1f2c44;
+  --radius-card: 10px;
+  --font-display: 'Barlow Condensed', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-data: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --bills-accent: #00338D;
+  --sabres-accent: #FCB514;
   --accent-blue: #38bdf8;
   --accent-gold: #FCB514;
+  --accent-green: #10b981;
+  --text-main: #f3f4f6;
+  --text-muted: #94a3b8;
+  --focus-ring: #38bdf8;
+  --theme-color: #080a0f;
+
+  /* Legacy Variable Aliases for 100% Backward Compatibility */
+  --bg-dark: var(--bg-canvas);
+  --card-bg: var(--surface-card);
+  --card-inner: var(--surface-inset);
+  --card-border: var(--border-subtle);
+  --bills-blue: var(--bills-accent);
+  --bills-red: #C60C30;
+  --sabres-blue: #002654;
+  --sabres-gold: var(--sabres-accent);
 }
+
+/* 2. GOATHEAD (Tribute to 90s Sabres Black & Red Era) */
+html[data-theme="goathead"],
+[data-theme="goathead"] {
+  --bg-canvas: #060606;
+  --surface-card: #121212;
+  --surface-inset: #0a0a0a;
+  --border-subtle: #2a2a2a;
+  --radius-card: 3px;
+  --font-display: 'Barlow Condensed', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-data: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --bills-accent: #C60C30;
+  --sabres-accent: #C60C30;
+  --accent-blue: #e2e8f0;
+  --accent-gold: #C60C30;
+  --accent-green: #10b981;
+  --text-main: #f8fafc;
+  --text-muted: #9ca3af;
+  --focus-ring: #C60C30;
+  --theme-color: #060606;
+
+  --bg-dark: var(--bg-canvas);
+  --card-bg: var(--surface-card);
+  --card-inner: var(--surface-inset);
+  --card-border: var(--border-subtle);
+  --bills-blue: var(--bills-accent);
+  --bills-red: #C60C30;
+  --sabres-blue: #1c1c1c;
+  --sabres-gold: #C60C30;
+}
+
+/* 3. SNOW-GAME (Lake Effect / Winter Classic Blizzard) */
+html[data-theme="snow-game"],
+[data-theme="snow-game"] {
+  --bg-canvas: #060f1c;
+  --surface-card: #0f1e33;
+  --surface-inset: #091526;
+  --border-subtle: #1e3b5e;
+  --radius-card: 12px;
+  --font-display: 'Barlow Condensed', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-data: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --bills-accent: #38bdf8;
+  --sabres-accent: #67e8f9;
+  --accent-blue: #38bdf8;
+  --accent-gold: #7dd3fc;
+  --accent-green: #10b981;
+  --text-main: #f0f9ff;
+  --text-muted: #7dd3fc;
+  --focus-ring: #67e8f9;
+  --theme-color: #060f1c;
+
+  --bg-dark: var(--bg-canvas);
+  --card-bg: var(--surface-card);
+  --card-inner: var(--surface-inset);
+  --card-border: var(--border-subtle);
+  --bills-blue: var(--bills-accent);
+  --bills-red: #38bdf8;
+  --sabres-blue: #091a33;
+  --sabres-gold: #7dd3fc;
+}
+
+/* 4. HERITAGE (Vintage 1970s Aud Blue & Gold Classic) */
+html[data-theme="heritage"],
+[data-theme="heritage"] {
+  --bg-canvas: #051329;
+  --surface-card: #0c234b;
+  --surface-inset: #071835;
+  --border-subtle: #1d3d75;
+  --radius-card: 14px;
+  --font-display: 'Barlow Condensed', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-data: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --bills-accent: #1d4ed8;
+  --sabres-accent: #facc15;
+  --accent-blue: #60a5fa;
+  --accent-gold: #fde047;
+  --accent-green: #10b981;
+  --text-main: #fefce8;
+  --text-muted: #93c5fd;
+  --focus-ring: #facc15;
+  --theme-color: #051329;
+
+  --bg-dark: var(--bg-canvas);
+  --card-bg: var(--surface-card);
+  --card-inner: var(--surface-inset);
+  --card-border: var(--border-subtle);
+  --bills-blue: var(--bills-accent);
+  --bills-red: #b91c1c;
+  --sabres-blue: #071c3d;
+  --sabres-gold: #facc15;
+}
+
+/* 5. GAMEDAY (Bills Mafia High-Voltage Stadium Night) */
+html[data-theme="gameday"],
+[data-theme="gameday"] {
+  --bg-canvas: #020617;
+  --surface-card: #0f172a;
+  --surface-inset: #090e1a;
+  --border-subtle: #334155;
+  --radius-card: 8px;
+  --font-display: 'Barlow Condensed', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-data: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --bills-accent: #ef4444;
+  --sabres-accent: #38bdf8;
+  --accent-blue: #60a5fa;
+  --accent-gold: #fbbf24;
+  --accent-green: #10b981;
+  --text-main: #ffffff;
+  --text-muted: #94a3b8;
+  --focus-ring: #ef4444;
+  --theme-color: #020617;
+
+  --bg-dark: var(--bg-canvas);
+  --card-bg: var(--surface-card);
+  --card-inner: var(--surface-inset);
+  --card-border: var(--border-subtle);
+  --bills-blue: #1d4ed8;
+  --bills-red: #ef4444;
+  --sabres-blue: #0b192e;
+  --sabres-gold: #fbbf24;
+}
+
+/* 6. HALLOWEEN (October Night & Frozen Frenzy) */
+html[data-theme="halloween"],
+[data-theme="halloween"] {
+  --bg-canvas: #09050e;
+  --surface-card: #160d21;
+  --surface-inset: #0e0716;
+  --border-subtle: #3b1d54;
+  --radius-card: 8px;
+  --font-display: 'Barlow Condensed', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-data: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --bills-accent: #ea580c;
+  --sabres-accent: #c084fc;
+  --accent-blue: #f97316;
+  --accent-gold: #f59e0b;
+  --accent-green: #10b981;
+  --text-main: #faf5ff;
+  --text-muted: #c084fc;
+  --focus-ring: #ea580c;
+  --theme-color: #09050e;
+
+  --bg-dark: var(--bg-canvas);
+  --card-bg: var(--surface-card);
+  --card-inner: var(--surface-inset);
+  --card-border: var(--border-subtle);
+  --bills-blue: #9333ea;
+  --bills-red: #ea580c;
+  --sabres-blue: #1d0f2b;
+  --sabres-gold: #f59e0b;
+}
+
+/* 7. CHRISTMAS (Holiday Showcase & World Juniors Evergreen) */
+html[data-theme="christmas"],
+[data-theme="christmas"] {
+  --bg-canvas: #030e07;
+  --surface-card: #0a1d10;
+  --surface-inset: #051208;
+  --border-subtle: #164324;
+  --radius-card: 10px;
+  --font-display: 'Barlow Condensed', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-data: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --bills-accent: #dc2626;
+  --sabres-accent: #eab308;
+  --accent-blue: #34d399;
+  --accent-gold: #fbbf24;
+  --accent-green: #10b981;
+  --text-main: #f0fdf4;
+  --text-muted: #86efac;
+  --focus-ring: #dc2626;
+  --theme-color: #030e07;
+
+  --bg-dark: var(--bg-canvas);
+  --card-bg: var(--surface-card);
+  --card-inner: var(--surface-inset);
+  --card-border: var(--border-subtle);
+  --bills-blue: #15803d;
+  --bills-red: #dc2626;
+  --sabres-blue: #062312;
+  --sabres-gold: #facc15;
+}
+
+/* 8. NEW-YEARS (NYE Countdown & Winter Gala Champagne Onyx) */
+html[data-theme="new-years"],
+[data-theme="new-years"] {
+  --bg-canvas: #0a0907;
+  --surface-card: #17140e;
+  --surface-inset: #0e0c08;
+  --border-subtle: #3a3321;
+  --radius-card: 10px;
+  --font-display: 'Barlow Condensed', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-data: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --bills-accent: #d4af37;
+  --sabres-accent: #fef08a;
+  --accent-blue: #fde047;
+  --accent-gold: #e5c158;
+  --accent-green: #10b981;
+  --text-main: #fffbeb;
+  --text-muted: #d5c7a3;
+  --focus-ring: #d4af37;
+  --theme-color: #0a0907;
+
+  --bg-dark: var(--bg-canvas);
+  --card-bg: var(--surface-card);
+  --card-inner: var(--surface-inset);
+  --card-border: var(--border-subtle);
+  --bills-blue: #d4af37;
+  --bills-red: #b45309;
+  --sabres-blue: #1c1810;
+  --sabres-gold: #fef08a;
+}
+
+/* --------------------------------------------------------------------------
+   CORE BASE STYLES & TYPOGRAPHY
+   -------------------------------------------------------------------------- */
 
 * {
   box-sizing: border-box;
@@ -27,11 +262,29 @@
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  background-color: var(--bg-dark);
+  background-color: var(--bg-canvas);
   color: var(--text-main);
   padding: 1.5rem;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+h1, h2, h3, .section-subtitle, .matchup-opp, .pinned-matchup-title {
+  font-family: var(--font-display);
+  letter-spacing: 0.5px;
+}
+
+.countdown-val {
+  font-family: var(--font-data) !important;
+}
+
+/* CARD ARCHITECTURE WITH THEMED CORNERS & SURFACES */
+.card {
+  border-radius: var(--radius-card) !important;
+  background: var(--surface-card) !important;
+  border-color: var(--border-subtle) !important;
+  transition: border-radius 0.2s ease, background 0.2s ease, border-color 0.2s ease;
 }
 
 /* KEYBOARD FOCUS & WAI-ARIA ACCESSIBILITY */
@@ -43,7 +296,7 @@ body {
 .back-nav-btn:focus-visible,
 .hub-pill:focus-visible,
 .live-radar-link:focus-visible {
-  outline: 2px solid var(--accent-blue);
+  outline: 2px solid var(--focus-ring);
   outline-offset: 2px;
 }
 
@@ -91,7 +344,7 @@ body {
 }
 
 .intel-table td.intel-col-buf.intel-edge-win {
-  color: #38bdf8 !important;
+  color: var(--accent-blue) !important;
   background: rgba(56, 189, 248, 0.1);
 }
 
@@ -106,7 +359,7 @@ body {
 }
 
 .intel-table td.intel-col-trailing {
-  color: #94a3b8 !important;
+  color: var(--text-muted) !important;
   font-weight: 600;
 }
 
@@ -121,7 +374,7 @@ body {
   margin-left: 0.35rem;
   border-radius: 4px;
   background: rgba(56, 189, 248, 0.18);
-  color: #38bdf8;
+  color: var(--accent-blue);
   border: 1px solid rgba(56, 189, 248, 0.35);
   vertical-align: middle;
   letter-spacing: 0.3px;
@@ -146,7 +399,7 @@ body {
 }
 
 .dist-row.dist-row-leader .dist-pct {
-  color: #38bdf8;
+  color: var(--accent-blue);
 }
 
 .sabres-theme .dist-row.dist-row-leader .dist-pct {
