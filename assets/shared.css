@@ -522,30 +522,54 @@ html[data-theme="regular"] .card:hover {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35), 0 0 14px rgba(56, 189, 248, 0.15) !important;
 }
 
-/* 2. GOATHEAD (90s CRT Rasterline & Crimson Edge Glow) */
+/* 2. GOATHEAD (Authentic 90s Broadcast CRT Scanlines & Cathode Sweep) */
 html[data-theme="goathead"] body::before {
   content: "";
   position: fixed;
   inset: 0;
   pointer-events: none;
-  z-index: 0;
+  z-index: 998;
   background: repeating-linear-gradient(
     0deg,
-    rgba(0, 0, 0, 0.18),
-    rgba(0, 0, 0, 0.18) 1px,
-    transparent 1px,
-    transparent 3px
+    rgba(0, 0, 0, 0.42) 0px,
+    rgba(0, 0, 0, 0.42) 1.5px,
+    transparent 1.5px,
+    transparent 3.5px
   );
-  opacity: 0.5;
+  opacity: 0.85;
+}
+
+html[data-theme="goathead"] body::after {
+  content: "";
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: -20%;
+  height: 20%;
+  pointer-events: none;
+  z-index: 999;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(198, 12, 48, 0.08) 50%,
+    rgba(255, 255, 255, 0.12) 95%,
+    rgba(198, 12, 48, 0.15) 100%
+  );
+  animation: crt-beam-sweep 7s linear infinite;
+}
+
+@keyframes crt-beam-sweep {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(600%); }
 }
 
 html[data-theme="goathead"] .card:hover {
   border-color: #C60C30 !important;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 16px rgba(198, 12, 48, 0.35) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 16px rgba(198, 12, 48, 0.45) !important;
 }
 
-/* 3. SNOW-GAME (Lake Effect Blizzard Drift) */
-html[data-theme="snow-game"] body::before {
+/* 3. SNOW-GAME (Lake Effect Blizzard Drift Across Viewport) */
+html[data-theme="snow-game"] body::after {
   content: "";
   position: fixed;
   top: -300px;
@@ -553,15 +577,15 @@ html[data-theme="snow-game"] body::before {
   right: 0;
   bottom: 0;
   pointer-events: none;
-  z-index: 0;
+  z-index: 999;
   background-image:
-    radial-gradient(2px 2px at 20px 30px, rgba(255, 255, 255, 0.8), transparent),
-    radial-gradient(3px 3px at 75px 90px, rgba(125, 211, 252, 0.65), transparent),
-    radial-gradient(1.5px 1.5px at 140px 50px, rgba(255, 255, 255, 0.75), transparent),
-    radial-gradient(2.5px 2.5px at 210px 160px, rgba(200, 240, 255, 0.7), transparent),
-    radial-gradient(2px 2px at 270px 220px, rgba(255, 255, 255, 0.8), transparent);
+    radial-gradient(2px 2px at 20px 30px, rgba(255, 255, 255, 0.9), transparent),
+    radial-gradient(3.5px 3.5px at 75px 90px, rgba(125, 211, 252, 0.8), transparent),
+    radial-gradient(2px 2px at 140px 50px, rgba(255, 255, 255, 0.85), transparent),
+    radial-gradient(3px 3px at 210px 160px, rgba(200, 240, 255, 0.8), transparent),
+    radial-gradient(2px 2px at 270px 220px, rgba(255, 255, 255, 0.9), transparent);
   background-size: 300px 300px;
-  opacity: 0.7;
+  opacity: 0.8;
   animation: snow-drift 14s linear infinite;
 }
 
@@ -586,7 +610,7 @@ html[data-theme="heritage"] body::before {
   height: 320px;
   pointer-events: none;
   z-index: 0;
-  background: radial-gradient(ellipse at 50% 0%, rgba(250, 204, 21, 0.08), rgba(12, 35, 75, 0.15) 55%, transparent 75%);
+  background: radial-gradient(ellipse at 50% 0%, rgba(250, 204, 21, 0.12), rgba(12, 35, 75, 0.2) 55%, transparent 75%);
 }
 
 html[data-theme="heritage"] .card:hover {
@@ -594,23 +618,40 @@ html[data-theme="heritage"] .card:hover {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 16px rgba(250, 204, 21, 0.25) !important;
 }
 
-/* 5. GAMEDAY (Stadium Floodlight Ambient Sway) */
+/* 5. GAMEDAY (High-Intensity Stadium Floodlight Towers & Night Sky Beams) */
 html[data-theme="gameday"] body::before {
   content: "";
   position: fixed;
   top: 0;
-  left: 5%;
-  right: 5%;
-  height: 300px;
+  left: 0;
+  right: 0;
+  height: 450px;
   pointer-events: none;
   z-index: 0;
-  background: radial-gradient(ellipse at 50% 0%, rgba(239, 68, 68, 0.1), rgba(0, 51, 141, 0.12) 50%, transparent 80%);
+  background:
+    radial-gradient(circle at 10% 0%, rgba(255, 255, 255, 0.35) 0%, rgba(0, 51, 141, 0.35) 20%, transparent 55%),
+    radial-gradient(circle at 90% 0%, rgba(255, 255, 255, 0.35) 0%, rgba(198, 12, 48, 0.35) 20%, transparent 55%);
+}
+
+html[data-theme="gameday"] body::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 550px;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    conic-gradient(from 145deg at 10% 0%, rgba(255, 255, 255, 0.22) 0deg, rgba(0, 51, 141, 0.26) 18deg, transparent 38deg),
+    conic-gradient(from 175deg at 90% 0%, rgba(255, 255, 255, 0.22) 0deg, rgba(198, 12, 48, 0.26) 18deg, transparent 38deg);
+  opacity: 0.9;
   animation: stadium-lights-sway 8s ease-in-out infinite alternate;
 }
 
 @keyframes stadium-lights-sway {
-  0% { opacity: 0.7; transform: scaleX(0.96); }
-  100% { opacity: 1; transform: scaleX(1.04); }
+  0% { transform: scaleX(0.95) rotate(-0.5deg); opacity: 0.75; }
+  100% { transform: scaleX(1.05) rotate(0.5deg); opacity: 1; }
 }
 
 html[data-theme="gameday"] .card:hover {

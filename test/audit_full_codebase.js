@@ -226,6 +226,7 @@ try {
     'live-radar-ping',
     'snow-drift',
     'stadium-lights-sway',
+    'crt-beam-sweep',
     'spooky-flicker',
     'holiday-twinkle',
     'gold-shimmer-sweep',
