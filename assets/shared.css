@@ -197,29 +197,29 @@ html[data-theme="halloween"],
 /* 7. THANKSGIVING (Harvest Feast, Turkey Leg Tradition & Cider Amber) */
 html[data-theme="thanksgiving"],
 [data-theme="thanksgiving"] {
-  --bg-canvas: #0c0704;
-  --surface-card: #190f08;
-  --surface-inset: #100a05;
-  --border-subtle: #3d2010;
+  --bg-canvas: #150a04;
+  --surface-card: #241208;
+  --surface-inset: #180c05;
+  --border-subtle: #78350f;
   --radius-card: 10px;
   --font-display: 'Barlow Condensed', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-data: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  --bills-accent: #be123c;
+  --bills-accent: #e11d48;
   --sabres-accent: #f59e0b;
   --accent-blue: #fbbf24;
   --accent-gold: #f59e0b;
   --accent-green: #10b981;
   --text-main: #fef3c7;
   --text-muted: #d97706;
-  --focus-ring: #d97706;
-  --theme-color: #0c0704;
+  --focus-ring: #f59e0b;
+  --theme-color: #150a04;
 
   --bg-dark: var(--bg-canvas);
   --card-bg: var(--surface-card);
   --card-inner: var(--surface-inset);
   --card-border: var(--border-subtle);
   --bills-blue: #9a3412;
-  --bills-red: #be123c;
+  --bills-red: #e11d48;
   --sabres-blue: #1c1008;
   --sabres-gold: #f59e0b;
 }
@@ -407,6 +407,31 @@ html[data-theme="french-connection"] .card:hover {
   --sabres-accent: #FCB514;
   --card-border: #1f2c44;
   --focus-ring: #38bdf8;
+}
+
+/* TEAM THEME: THANKSGIVING */
+[data-team-theme="thanksgiving"].card-bills {
+  --bills-accent: #e11d48 !important;
+  --card-border: #9f1239 !important;
+  --border-subtle: #9f1239 !important;
+  --surface-card: #230d14 !important;
+  --focus-ring: #e11d48 !important;
+}
+[data-team-theme="thanksgiving"].card-bills:hover {
+  border-color: #e11d48 !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55), 0 0 16px rgba(225, 29, 72, 0.4) !important;
+}
+
+[data-team-theme="thanksgiving"].card-sabres {
+  --sabres-accent: #f59e0b !important;
+  --card-border: #78350f !important;
+  --border-subtle: #78350f !important;
+  --surface-card: #261407 !important;
+  --focus-ring: #f59e0b !important;
+}
+[data-team-theme="thanksgiving"].card-sabres:hover {
+  border-color: #f59e0b !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55), 0 0 16px rgba(245, 158, 11, 0.4) !important;
 }
 
 /* --------------------------------------------------------------------------
@@ -852,26 +877,49 @@ html[data-theme="halloween"] .card:hover {
 html[data-theme="thanksgiving"] body::before {
   content: "";
   position: fixed;
-  inset: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 420px;
   pointer-events: none;
   z-index: 0;
-  background-image:
-    radial-gradient(2.5px 2.5px at 20% 30%, rgba(245, 158, 11, 0.7), transparent),
-    radial-gradient(3px 3px at 75% 15%, rgba(190, 18, 60, 0.6), transparent),
-    radial-gradient(2px 2px at 50% 70%, rgba(217, 119, 6, 0.65), transparent),
-    radial-gradient(3px 3px at 85% 80%, rgba(251, 191, 36, 0.6), transparent);
-  background-size: 260px 260px;
-  animation: harvest-glow 5s ease-in-out infinite alternate;
+  background: radial-gradient(ellipse at 50% 0%, rgba(245, 158, 11, 0.22), rgba(225, 29, 72, 0.14) 50%, transparent 75%);
+  animation: harvest-glow 6s ease-in-out infinite alternate;
 }
 
 @keyframes harvest-glow {
-  0% { opacity: 0.4; transform: scale(0.98); }
-  100% { opacity: 0.9; transform: scale(1.02); }
+  0% { opacity: 0.6; transform: scaleY(0.95); }
+  100% { opacity: 1; transform: scaleY(1.05); }
+}
+
+html[data-theme="thanksgiving"] body::after {
+  content: "";
+  position: fixed;
+  top: -300px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 999;
+  background-image:
+    radial-gradient(3px 3px at 30px 40px, rgba(245, 158, 11, 0.85), transparent),
+    radial-gradient(4.5px 4.5px at 110px 120px, rgba(225, 29, 72, 0.8), transparent),
+    radial-gradient(3px 3px at 190px 70px, rgba(217, 119, 6, 0.85), transparent),
+    radial-gradient(4px 4px at 250px 210px, rgba(251, 191, 36, 0.75), transparent);
+  background-size: 320px 320px;
+  opacity: 0.85;
+  animation: autumn-drift 12s linear infinite;
+}
+
+@keyframes autumn-drift {
+  0% { transform: translateY(0) translateX(0); }
+  50% { transform: translateY(160px) translateX(16px); }
+  100% { transform: translateY(320px) translateX(0); }
 }
 
 html[data-theme="thanksgiving"] .card:hover {
-  border-color: #d97706 !important;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55), 0 0 18px rgba(217, 119, 6, 0.35) !important;
+  border-color: #f59e0b !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55), 0 0 20px rgba(245, 158, 11, 0.35) !important;
 }
 
 /* 8. CHRISTMAS (Evergreen & Holiday Twinkle) */
