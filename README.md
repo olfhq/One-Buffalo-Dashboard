@@ -107,4 +107,4 @@ npx serve .
 ---
 
 ## 📄 License
-MIT License. Created for the One Buffalo sports community.
+MIT License. Created for the Buffalo sports community.
