@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-26T12:28:58.693Z",
+  "updatedAt": "2026-10-26T19:20:54.814Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
   "bills": {
     "team": "Buffalo Bills",
@@ -41,34 +41,34 @@
         },
         {
           "metric": "Total Yards / Game",
-          "bills": "374.2 (5th)",
-          "opp": "360.2 (7th)"
+          "bills": "399.5 (4th)",
+          "opp": "383.7 (7th)"
         },
         {
           "metric": "Passing Yards / Game",
-          "bills": "248.5 (6th)",
-          "opp": "215.4 (15th)"
+          "bills": "238.8 (12th)",
+          "opp": "224.7 (18th)"
         },
         {
           "metric": "Rushing Yards / Game",
-          "bills": "125.7 (8th)",
-          "opp": "144.8 (3rd)"
+          "bills": "148.8 (2nd)",
+          "opp": "141.7 (4th)"
         },
         {
           "metric": "3rd Down Conversion %",
-          "bills": "46.8% (3rd)",
-          "opp": "41.2% (9th)"
+          "bills": "47.6% (4th)",
+          "opp": "41.7% (9th)"
         },
         {
           "metric": "Red Zone TD %",
-          "bills": "68.2% (4th)",
-          "opp": "58.0% (11th)"
+          "bills": "69.2% (6th)",
+          "opp": "62.5% (13th)"
         }
       ],
       "turnoverRatio": {
-        "bills": "+4 (8 Takeaways / 4 Giveaways)",
-        "opp": "+1 (7 Takeaways / 6 Giveaways)",
-        "advantage": "Bills (+3 Differential Margin)"
+        "bills": "-3 (6 Takeaways / 9 Giveaways)",
+        "opp": "+1 (6 Takeaways / 5 Giveaways)",
+        "advantage": "Ravens (+4 Differential Margin)"
       },
       "injuries": [
         {
@@ -107,13 +107,6 @@
           "team": "Bills"
         },
         {
-          "player": "Olaivavega Ioane",
-          "pos": "G",
-          "status": "Questionable",
-          "injury": "Knee",
-          "team": "Ravens"
-        },
-        {
           "player": "Broderick Washington Jr.",
           "pos": "DT",
           "status": "Out",
@@ -121,24 +114,31 @@
           "team": "Ravens"
         },
         {
-          "player": "Elijah Sarratt",
-          "pos": "WR",
-          "status": "Out",
-          "injury": "Coach's Decision",
-          "team": "Ravens"
-        },
-        {
-          "player": "Andrew Vorhees",
-          "pos": "G",
-          "status": "Out",
-          "injury": "Coach's Decision",
-          "team": "Ravens"
-        },
-        {
           "player": "Jaylinn Hawkins",
           "pos": "S",
           "status": "Out",
           "injury": "Knee",
+          "team": "Ravens"
+        },
+        {
+          "player": "Lamar Jackson",
+          "pos": "QB",
+          "status": "Out",
+          "injury": "Ankle",
+          "team": "Ravens"
+        },
+        {
+          "player": "Olaivavega Ioane",
+          "pos": "G",
+          "status": "Questionable",
+          "injury": "Knee",
+          "team": "Ravens"
+        },
+        {
+          "player": "Tavius Robinson",
+          "pos": "LB",
+          "status": "Injured Reserve",
+          "injury": "Pectoral",
           "team": "Ravens"
         }
       ]
@@ -194,29 +194,15 @@
     "opponents": [
       {
         "team": "New England Patriots",
-        "pct": 10
+        "pct": 9
       },
       {
         "team": "Denver Broncos",
-        "pct": 7
+        "pct": 8
       },
       {
         "team": "Cleveland Browns",
-        "pct": 7
-      }
-    ],
-    "rootingGuide": [
-      {
-        "target": "Root for Chargers Win",
-        "why": "Maximizes odds for Buffalo's AFC #1 overall seed & bye week."
-      },
-      {
-        "target": "Root for Jets Win",
-        "why": "Suppresses division chasers in the AFC East standings."
-      },
-      {
-        "target": "Root for Texans Win",
-        "why": "Creates favorable seeding tiebreaker positioning."
+        "pct": 8
       }
     ],
     "outOfTownGames": [
@@ -228,7 +214,7 @@
         "venue": "Soldier Field, Chicago, IL",
         "roof": "Open-Air Stadium",
         "surface": "Natural Bermuda Grass",
-        "weather": "49°F, 15mph Wind, 20% PoP",
+        "weather": "55°F, 2mph Wind, 0% PoP",
         "window": "TNF",
         "windowLabel": "Thursday Night Football",
         "windowBadge": "Prime Video Exclusive",
@@ -305,11 +291,11 @@
         "isoTime": "2026-10-25T17:00Z",
         "slot": "Sun, Oct 25 • 1:00 PM ET",
         "broadcast": "CBS",
-        "announcers": "Tom McCarthy, Jay Feely",
+        "announcers": "Tom McCarthy, Ross Tucker",
         "venue": "Nissan Stadium, Nashville, TN",
         "roof": "Open-Air Stadium",
         "surface": "Matrix Helix Turf",
-        "weather": "62°F, 9mph Wind, 10% PoP",
+        "weather": "74°F, 1mph Wind, 0% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -332,7 +318,7 @@
         "isoTime": "2026-10-25T17:00Z",
         "slot": "Sun, Oct 25 • 1:00 PM ET",
         "broadcast": "CBS",
-        "announcers": "Ian Eagle, Charles Davis",
+        "announcers": "Ian Eagle, J.J. Watt",
         "venue": "U.S. Bank Stadium, Minneapolis, MN",
         "roof": "Domed Stadium",
         "surface": "Act Global Turf",
@@ -363,7 +349,7 @@
         "venue": "MetLife Stadium, East Rutherford, NJ",
         "roof": "Open-Air Stadium",
         "surface": "FieldTurf CORE",
-        "weather": "54°F, 8mph Wind, 10% PoP",
+        "weather": "67°F, 2mph Wind, 0% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -386,11 +372,11 @@
         "isoTime": "2026-10-25T17:00Z",
         "slot": "Sun, Oct 25 • 1:00 PM ET",
         "broadcast": "FOX",
-        "announcers": "Adam Amin, Mark Sanchez",
+        "announcers": "Adam Amin, Drew Brees",
         "venue": "Bank of America Stadium, Charlotte, NC",
         "roof": "Open-Air Stadium",
         "surface": "FieldTurf",
-        "weather": "66°F, 6mph Wind, 10% PoP",
+        "weather": "66°F, 10mph Wind, 0% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -413,11 +399,11 @@
         "isoTime": "2026-10-25T17:00Z",
         "slot": "Sun, Oct 25 • 1:00 PM ET",
         "broadcast": "CBS",
-        "announcers": "Andrew Catalon, Tiki Barber",
+        "announcers": "Andrew Catalon, Tiki Barber, Jason McCourty",
         "venue": "M&T Bank Stadium, Baltimore, MD",
         "roof": "Open-Air Stadium",
         "surface": "Natural Bermuda Grass",
-        "weather": "58°F, 8mph Wind, 10% PoP",
+        "weather": "65°F, 2mph Wind, 0% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -442,9 +428,9 @@
         "broadcast": "FOX",
         "announcers": "Kevin Burkhardt, Tom Brady",
         "venue": "Reliant Stadium, Houston, TX",
-        "roof": "Indoor Stadium",
-        "surface": "Natural Grass",
-        "weather": "Controlled 70°F Climate",
+        "roof": "Retractable Roof (Closed)",
+        "surface": "Hellas Matrix Turf",
+        "weather": "Controlled 72°F Climate",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -494,7 +480,7 @@
         "isoTime": "2026-10-25T20:25Z",
         "slot": "Sun, Oct 25 • 4:25 PM ET",
         "broadcast": "FOX",
-        "announcers": "Adam Amin, Mark Sanchez",
+        "announcers": "Adam Amin, Drew Brees",
         "venue": "Ford Field, Detroit, MI",
         "roof": "Domed Stadium",
         "surface": "FieldTurf CORE",
@@ -552,7 +538,7 @@
         "venue": "Lumen Field, Seattle, WA",
         "roof": "Open-Air Stadium",
         "surface": "FieldTurf Revolution",
-        "weather": "53°F, 12mph Wind, 40% Rain",
+        "weather": "57°F, 4mph Wind, 8% PoP",
         "window": "SNF",
         "windowLabel": "Sunday Night Football",
         "windowBadge": "NBC / Peacock Marquee",
@@ -579,7 +565,7 @@
         "venue": "Lincoln Financial Field, Philadelphia, PA",
         "roof": "Open-Air Stadium",
         "surface": "Natural Grass (Desso)",
-        "weather": "56°F, 10mph Wind, 10% PoP",
+        "weather": "59°F, 5mph Wind, 0% PoP",
         "window": "MNF",
         "windowLabel": "Monday Night Football",
         "windowBadge": "ESPN / ABC Prime Time",
@@ -617,7 +603,7 @@
       "oppShortName": "San Jose",
       "gameTime": "Tue, Oct 27 • 10:30 PM ET",
       "isoTime": "2026-10-28T02:30:00Z",
-      "winChance": 46,
+      "winChance": 42,
       "matchupRecords": "Sabres (4-4-3, 11 pts, OT1) vs. San Jose (6-5-1, 13 pts, L1)",
       "broadcast": "ESPN",
       "venue": "SAP Center, San Jose, CA",
@@ -635,40 +621,40 @@
         "summary": "Even Rest (Both on 2 Days Rest)"
       },
       "specialTeams": {
-        "sabres": "PP: 19.5% (17th) | PK: 81.2% (11th)",
-        "opp": "PP: 15.6% (26th) | PK: 78.9% (19th)",
-        "advantage": "Sabres Special Teams Edge (+6.2% Net Margin)"
+        "sabres": "PP: 10.5% (31st) | PK: 69.2% (27th)",
+        "opp": "PP: 26.8% (6th) | PK: 80.5% (15th)",
+        "advantage": "San Jose Special Teams Edge (+27.6% Net Margin)"
       },
       "efficiency": [
         {
           "metric": "Goals / Game",
           "sabres": "2.82 (25th)",
-          "opp": "3.08 (18th)"
+          "opp": "3.00 (18th)"
         },
         {
           "metric": "Goals Against / Game",
-          "sabres": "3.73 (29th)",
-          "opp": "3.58 (28th)"
+          "sabres": "3.64 (29th)",
+          "opp": "3.50 (25th)"
         },
         {
           "metric": "Power Play %",
-          "sabres": "19.5% (17th)",
-          "opp": "15.6% (26th)"
+          "sabres": "10.5% (31st)",
+          "opp": "26.8% (6th)"
         },
         {
           "metric": "Penalty Kill %",
-          "sabres": "81.2% (11th)",
-          "opp": "78.9% (19th)"
+          "sabres": "69.2% (27th)",
+          "opp": "80.5% (15th)"
         },
         {
           "metric": "Shots / Game",
-          "sabres": "29.8 (15th)",
-          "opp": "28.5 (20th)"
+          "sabres": "26.4 (21st)",
+          "opp": "28.1 (13th)"
         },
         {
           "metric": "Faceoff Win %",
-          "sabres": "48.2% (22nd)",
-          "opp": "49.8% (16th)"
+          "sabres": "47.8% (24th)",
+          "opp": "46.4% (27th)"
         }
       ],
       "injuries": [
@@ -676,35 +662,91 @@
           "player": "Ukko-Pekka Luukkonen",
           "pos": "G",
           "status": "Probable",
-          "injury": "Expected Starter (2.78 GAA, .912 SV%)",
+          "injury": "Expected Starter (3.56 GAA, .866 SV%)",
           "team": "Sabres"
         },
         {
           "player": "Yaroslav Askarov",
           "pos": "G",
           "status": "Probable",
-          "injury": "Expected Starter (2.89 GAA, .907 SV%)",
+          "injury": "Expected Starter (3.43 GAA, .883 SV%)",
           "team": "San Jose"
         },
         {
-          "player": "Zach Benson",
-          "pos": "LW",
-          "status": "Questionable",
-          "injury": "Lower Body",
+          "player": "Justin Danforth",
+          "pos": "RW",
+          "status": "Day-To-Day",
+          "injury": "Upper Body",
           "team": "Sabres"
         },
         {
-          "player": "Mattias Samuelsson",
+          "player": "Jiri Kulich",
+          "pos": "C",
+          "status": "Out",
+          "injury": "Face",
+          "team": "Sabres"
+        },
+        {
+          "player": "Sam Carrick",
+          "pos": "C",
+          "status": "Injured Reserve",
+          "injury": "Upper Body",
+          "team": "Sabres"
+        },
+        {
+          "player": "Alex Lyon",
+          "pos": "G",
+          "status": "Injured Reserve",
+          "injury": "Upper Body",
+          "team": "Sabres"
+        },
+        {
+          "player": "Matt Grzelcyk",
           "pos": "D",
           "status": "Injured Reserve",
           "injury": "Lower Body",
           "team": "Sabres"
         },
         {
-          "player": "Roster Reserve",
-          "pos": "F",
-          "status": "Questionable",
-          "injury": "Day-to-Day",
+          "player": "Conor Timmins",
+          "pos": "D",
+          "status": "Injured Reserve",
+          "injury": "Lower Body",
+          "team": "Sabres"
+        },
+        {
+          "player": "Jack Rathbone",
+          "pos": "D",
+          "status": "Injured Reserve",
+          "injury": "Undisclosed",
+          "team": "Sabres"
+        },
+        {
+          "player": "Igor Chernyshov",
+          "pos": "LW",
+          "status": "Out",
+          "injury": "Upper Body",
+          "team": "San Jose"
+        },
+        {
+          "player": "Alexander Wennberg",
+          "pos": "C",
+          "status": "Out",
+          "injury": "Upper Body",
+          "team": "San Jose"
+        },
+        {
+          "player": "Quentin Musty",
+          "pos": "LW",
+          "status": "Injured Reserve",
+          "injury": "Upper Body",
+          "team": "San Jose"
+        },
+        {
+          "player": "Kyle Keyser",
+          "pos": "G",
+          "status": "Injured Reserve",
+          "injury": "Upper Body",
           "team": "San Jose"
         }
       ]
@@ -751,34 +793,24 @@
     ],
     "opponents": [
       {
-        "team": "Florida Panthers",
-        "pct": 24
+        "team": "Boston Bruins",
+        "pct": 6
       },
       {
         "team": "Tampa Bay Lightning",
-        "pct": 18
+        "pct": 4
       },
       {
-        "team": "Toronto Maple Leafs",
-        "pct": 14
-      }
-    ],
-    "rootingGuide": [
-      {
-        "target": "Regulation Losses for Atlantic Rivals",
-        "why": "Ensure games involving BOS, TBL, and FLA do not go to 3-point overtimes."
-      },
-      {
-        "target": "Western Conference Wins vs. Metro",
-        "why": "Protects Eastern Conference Wild Card slot thresholds."
+        "team": "Ottawa Senators",
+        "pct": 4
       }
     ],
     "outOfTownGames": [
       {
         "isoTime": "2026-10-24T17:00:00Z",
         "slot": "Sat, Oct 24 • 1:00 PM ET",
-        "broadcast": "FOXLA+",
-        "announcers": "Philadelphia Flyers Regional Broadcast Crew",
+        "broadcast": "NHL Net",
+        "announcers": "E.J. Hradek, Kevin Weekes",
         "venue": "Xfinity Mobile Arena, Philadelphia, PA",
         "window": "SAT",
         "windowLabel": "Hockey Night in Canada & Saturday National",
@@ -801,8 +833,8 @@
       {
         "isoTime": "2026-10-24T19:30:00Z",
         "slot": "Sat, Oct 24 • 3:30 PM ET",
-        "broadcast": "ABTV",
-        "announcers": "New Jersey Devils Regional Broadcast Crew",
+        "broadcast": "Sportsnet",
+        "announcers": "Rick Ball, Kelly Hrudey",
         "venue": "Prudential Center, Newark, NJ",
         "window": "SAT",
         "windowLabel": "Hockey Night in Canada & Saturday National",
@@ -825,8 +857,8 @@
       {
         "isoTime": "2026-10-24T23:00:00Z",
         "slot": "Sat, Oct 24 • 7:00 PM ET",
-        "broadcast": "NBCSCA",
-        "announcers": "Boston Bruins Regional Broadcast Crew",
+        "broadcast": "Sportsnet",
+        "announcers": "Chris Cuthbert, Craig Simpson",
         "venue": "TD Garden, Boston, MA",
         "window": "SAT",
         "windowLabel": "Hockey Night in Canada & Saturday National",
@@ -849,8 +881,8 @@
       {
         "isoTime": "2026-10-24T23:00:00Z",
         "slot": "Sat, Oct 24 • 7:00 PM ET",
-        "broadcast": "Sportsnet",
-        "announcers": "Rick Ball, Kelly Hrudey",
+        "broadcast": "NHL Net",
+        "announcers": "E.J. Hradek, Kevin Weekes",
         "venue": "Canadian Tire Centre, Ottawa, ON",
         "window": "SAT",
         "windowLabel": "Hockey Night in Canada & Saturday National",
@@ -874,7 +906,7 @@
         "isoTime": "2026-10-24T23:00:00Z",
         "slot": "Sat, Oct 24 • 7:00 PM ET",
         "broadcast": "Sportsnet",
-        "announcers": "John Bartlett, Garry Galley",
+        "announcers": "Chris Cuthbert, Craig Simpson",
         "venue": "PPG Paints Arena, Pittsburgh, PA",
         "window": "SAT",
         "windowLabel": "Hockey Night in Canada & Saturday National",
@@ -897,8 +929,8 @@
       {
         "isoTime": "2026-10-24T23:00:00Z",
         "slot": "Sat, Oct 24 • 7:00 PM ET",
-        "broadcast": "CBJNHL",
-        "announcers": "Columbus Blue Jackets Regional Broadcast Crew",
+        "broadcast": "FDSN Ohio",
+        "announcers": "Steve Mears, Jody Shelley",
         "venue": "Nationwide Arena, Columbus, OH",
         "window": "SAT",
         "windowLabel": "Hockey Night in Canada & Saturday National",
@@ -921,8 +953,8 @@
       {
         "isoTime": "2026-10-24T23:00:00Z",
         "slot": "Sat, Oct 24 • 7:00 PM ET",
-        "broadcast": "CARNHL",
-        "announcers": "St. Louis Blues Regional Broadcast Crew",
+        "broadcast": "FDSN Midwest",
+        "announcers": "John Kelly, Jamie Rivers",
         "venue": "Enterprise Center, St. Louis, MO",
         "window": "SAT",
         "windowLabel": "Hockey Night in Canada & Saturday National",
@@ -969,8 +1001,8 @@
       {
         "isoTime": "2026-10-25T01:00:00Z",
         "slot": "Sat, Oct 24 • 9:00 PM ET",
-        "broadcast": "Mammoth+",
-        "announcers": "Utah Mammoth Regional Broadcast Crew",
+        "broadcast": "Utah16 / Mammoth+",
+        "announcers": "Matt McConnell, Dominic Moore",
         "venue": "Delta Center, Salt Lake City, UT",
         "window": "SAT",
         "windowLabel": "Hockey Night in Canada & Saturday National",
@@ -1017,8 +1049,8 @@
       {
         "isoTime": "2026-10-25T19:00:00Z",
         "slot": "Sun, Oct 25 • 3:00 PM ET",
-        "broadcast": "ESPN+",
-        "announcers": "Regional RSN / ESPN+ Out-of-Market Feed",
+        "broadcast": "Sportsnet",
+        "announcers": "John Bartlett, Garry Galley",
         "venue": "United Center, Chicago, IL",
         "window": "SUN",
         "windowLabel": "Sunday NHL Showcase Slate",
@@ -1041,8 +1073,8 @@
       {
         "isoTime": "2026-10-25T22:00:00Z",
         "slot": "Sun, Oct 25 • 6:00 PM ET",
-        "broadcast": "ESPN+",
-        "announcers": "Mike Monaco,  A.J. Mleczko",
+        "broadcast": "Prime Video",
+        "announcers": "John Forslund, Jody Shelley, Thomas Hickey",
         "venue": "American Airlines Center, Dallas, TX",
         "window": "SUN",
         "windowLabel": "Sunday NHL Showcase Slate",
@@ -1089,22 +1121,22 @@
       {
         "isoTime": "2026-10-26T23:00:00Z",
         "slot": "Mon, Oct 26 • 7:00 PM ET",
-        "broadcast": "ABTV",
-        "announcers": "New York Rangers Regional Broadcast Crew",
+        "broadcast": "NHL Net",
+        "announcers": "E.J. Hradek, Kevin Weekes",
         "venue": "Madison Square Garden, New York, NY",
         "window": "MON",
         "windowLabel": "Monday Night NHL Action",
         "windowBadge": "Early Week Matchups",
         "statusState": "pre",
-        "statusDetail": "Scheduled",
+        "statusDetail": "10/26 - 7:00 PM EDT",
         "awayName": "Los Angeles Kings",
         "awayRecord": "2-5-2, L1",
-        "awayScore": "",
+        "awayScore": "0",
         "homeName": "New York Rangers",
         "homeRecord": "7-5-1, L2",
-        "homeScore": "",
-        "homeWinChance": 77,
-        "awayWinChance": 23,
+        "homeScore": "0",
+        "homeWinChance": 55,
+        "awayWinChance": 45,
         "verdict": "WILD CARD WATCH",
         "impactClass": "neutral",
         "target": "Root for Los Angeles Kings in Regulation",
@@ -1114,21 +1146,21 @@
         "isoTime": "2026-10-27T00:30:00Z",
         "slot": "Mon, Oct 26 • 8:30 PM ET",
         "broadcast": "Sportsnet",
-        "announcers": "John Bartlett, Garry Galley",
+        "announcers": "Chris Cuthbert, Craig Simpson",
         "venue": "Scotiabank Saddledome, Calgary, AB",
         "window": "MON",
         "windowLabel": "Monday Night NHL Action",
         "windowBadge": "Early Week Matchups",
         "statusState": "pre",
-        "statusDetail": "Scheduled",
+        "statusDetail": "10/26 - 8:30 PM EDT",
         "awayName": "Toronto Maple Leafs",
         "awayRecord": "7-4-2, W4",
-        "awayScore": "",
+        "awayScore": "0",
         "homeName": "Calgary Flames",
         "homeRecord": "4-6-0, W3",
-        "homeScore": "",
-        "homeWinChance": 33,
-        "awayWinChance": 67,
+        "homeScore": "0",
+        "homeWinChance": 45,
+        "awayWinChance": 55,
         "verdict": "ATLANTIC WATCH",
         "impactClass": "warning",
         "target": "Root for Calgary Flames in Regulation",
@@ -1138,21 +1170,21 @@
         "isoTime": "2026-10-27T01:30:00Z",
         "slot": "Mon, Oct 26 • 9:30 PM ET",
         "broadcast": "Sportsnet",
-        "announcers": "Rick Ball, Kelly Hrudey",
+        "announcers": "Harnarayan Singh, Louie DeBrusk",
         "venue": "Rogers Place, Edmonton, AB",
         "window": "MON",
         "windowLabel": "Monday Night NHL Action",
         "windowBadge": "Early Week Matchups",
         "statusState": "pre",
-        "statusDetail": "Scheduled",
+        "statusDetail": "10/26 - 9:30 PM EDT",
         "awayName": "Detroit Red Wings",
         "awayRecord": "4-4-3, L1",
-        "awayScore": "",
+        "awayScore": "0",
         "homeName": "Edmonton Oilers",
         "homeRecord": "8-2-1, L1",
-        "homeScore": "",
-        "homeWinChance": 81,
-        "awayWinChance": 19,
+        "homeScore": "0",
+        "homeWinChance": 62,
+        "awayWinChance": 38,
         "verdict": "ATLANTIC WATCH",
         "impactClass": "warning",
         "target": "Root for Edmonton Oilers in Regulation",
@@ -1161,8 +1193,8 @@
       {
         "isoTime": "2026-10-27T23:00:00Z",
         "slot": "Tue, Oct 27 • 7:00 PM ET",
-        "broadcast": "CBJNHL",
-        "announcers": "Philadelphia Flyers Regional Broadcast Crew",
+        "broadcast": "Sportsnet",
+        "announcers": "Rick Ball, Kelly Hrudey",
         "venue": "Xfinity Mobile Arena, Philadelphia, PA",
         "window": "TUE",
         "windowLabel": "Tuesday Night NHL Slate",
@@ -1186,7 +1218,7 @@
         "isoTime": "2026-10-28T00:00:00Z",
         "slot": "Tue, Oct 27 • 8:00 PM ET",
         "broadcast": "ESPN",
-        "announcers": "Steve Levy, Ray Ferraro",
+        "announcers": "Bob Wischusen, Ray Ferraro",
         "venue": "Lenovo Center, Raleigh, NC",
         "window": "TUE",
         "windowLabel": "Tuesday Night NHL Slate",
@@ -1209,8 +1241,8 @@
       {
         "isoTime": "2026-10-28T00:00:00Z",
         "slot": "Tue, Oct 27 • 8:00 PM ET",
-        "broadcast": "STLNHL",
-        "announcers": "St. Louis Blues Regional Broadcast Crew",
+        "broadcast": "FDSN Midwest",
+        "announcers": "John Kelly, Jamie Rivers",
         "venue": "Enterprise Center, St. Louis, MO",
         "window": "TUE",
         "windowLabel": "Tuesday Night NHL Slate",
@@ -1258,7 +1290,7 @@
         "isoTime": "2026-10-28T00:00:00Z",
         "slot": "Tue, Oct 27 • 8:00 PM ET",
         "broadcast": "Prime Video",
-        "announcers": "Dallas Stars Regional Broadcast Crew",
+        "announcers": "John Forslund, Jody Shelley, Thomas Hickey",
         "venue": "American Airlines Center, Dallas, TX",
         "window": "TUE",
         "windowLabel": "Tuesday Night NHL Slate",
@@ -1281,8 +1313,8 @@
       {
         "isoTime": "2026-10-28T00:00:00Z",
         "slot": "Tue, Oct 27 • 8:00 PM ET",
-        "broadcast": "SCRIPPS",
-        "announcers": "Winnipeg Jets Regional Broadcast Crew",
+        "broadcast": "Sportsnet",
+        "announcers": "Rick Ball, Kelly Hrudey",
         "venue": "Canada Life Centre, Winnipeg, MB",
         "window": "TUE",
         "windowLabel": "Tuesday Night NHL Slate",
@@ -1305,8 +1337,8 @@
       {
         "isoTime": "2026-10-28T02:00:00Z",
         "slot": "Tue, Oct 27 • 10:00 PM ET",
-        "broadcast": "SCRIPPS",
-        "announcers": "Vegas Golden Knights Regional Broadcast Crew",
+        "broadcast": "Scripps Sports",
+        "announcers": "Steve Goldstein, Randy Moller",
         "venue": "T-Mobile Arena, Las Vegas, NV",
         "window": "TUE",
         "windowLabel": "Tuesday Night NHL Slate",
@@ -1353,8 +1385,8 @@
       {
         "isoTime": "2026-10-29T01:00:00Z",
         "slot": "Wed, Oct 28 • 9:00 PM ET",
-        "broadcast": "ALT",
-        "announcers": "Colorado Avalanche Regional Broadcast Crew",
+        "broadcast": "Altitude",
+        "announcers": "Marc Moser, Mark Rycroft",
         "venue": "Ball Arena, Denver, CO",
         "window": "WED",
         "windowLabel": "Wednesday Night Hockey Showcase",
@@ -1378,7 +1410,7 @@
         "isoTime": "2026-10-29T02:00:00Z",
         "slot": "Wed, Oct 28 • 10:00 PM ET",
         "broadcast": "Prime Video",
-        "announcers": "Seattle Kraken Regional Broadcast Crew",
+        "announcers": "John Forslund, Jody Shelley, Thomas Hickey",
         "venue": "Climate Pledge Arena, Seattle, WA",
         "window": "WED",
         "windowLabel": "Wednesday Night Hockey Showcase",
@@ -1401,8 +1433,8 @@
       {
         "isoTime": "2026-10-29T23:00:00Z",
         "slot": "Thu, Oct 29 • 7:00 PM ET",
-        "broadcast": "The Spot",
-        "announcers": "Tampa Bay Lightning Regional Broadcast Crew",
+        "broadcast": "The Spot (WXPX)",
+        "announcers": "Dave Randorf, Brian Engblom",
         "venue": "Benchmark International Arena, Tampa, FL",
         "window": "THU",
         "windowLabel": "Thursday Prime NHL Slate",
@@ -1425,8 +1457,8 @@
       {
         "isoTime": "2026-10-29T23:00:00Z",
         "slot": "Thu, Oct 29 • 7:00 PM ET",
-        "broadcast": "Mammoth+",
-        "announcers": "Pittsburgh Penguins Regional Broadcast Crew",
+        "broadcast": "Sportsnet",
+        "announcers": "John Bartlett, Garry Galley",
         "venue": "PPG Paints Arena, Pittsburgh, PA",
         "window": "THU",
         "windowLabel": "Thursday Prime NHL Slate",
@@ -1449,8 +1481,8 @@
       {
         "isoTime": "2026-10-29T23:00:00Z",
         "slot": "Thu, Oct 29 • 7:00 PM ET",
-        "broadcast": "CARNHL",
-        "announcers": "Carolina Hurricanes Regional Broadcast Crew",
+        "broadcast": "FDSN South",
+        "announcers": "Mike Maniscalco, Tripp Tracy",
         "venue": "Lenovo Center, Raleigh, NC",
         "window": "THU",
         "windowLabel": "Thursday Prime NHL Slate",
@@ -1474,7 +1506,7 @@
         "isoTime": "2026-10-29T23:30:00Z",
         "slot": "Thu, Oct 29 • 7:30 PM ET",
         "broadcast": "ESPN+",
-        "announcers": "John Buccigross,  Ryan Callahan",
+        "announcers": "John Buccigross, Ryan Callahan",
         "venue": "Little Caesars Arena, Detroit, MI",
         "window": "THU",
         "windowLabel": "Thursday Prime NHL Slate",
@@ -1497,8 +1529,8 @@
       {
         "isoTime": "2026-10-30T00:00:00Z",
         "slot": "Thu, Oct 29 • 8:00 PM ET",
-        "broadcast": "STLNHL",
-        "announcers": "St. Louis Blues Regional Broadcast Crew",
+        "broadcast": "FDSN Midwest",
+        "announcers": "John Kelly, Jamie Rivers",
         "venue": "Enterprise Center, St. Louis, MO",
         "window": "THU",
         "windowLabel": "Thursday Prime NHL Slate",
@@ -1521,8 +1553,8 @@
       {
         "isoTime": "2026-10-30T00:00:00Z",
         "slot": "Thu, Oct 29 • 8:00 PM ET",
-        "broadcast": "MNMT",
-        "announcers": "Nashville Predators Regional Broadcast Crew",
+        "broadcast": "Scripps Sports",
+        "announcers": "Steve Goldstein, Randy Moller",
         "venue": "Bridgestone Arena, Nashville, TN",
         "window": "THU",
         "windowLabel": "Thursday Prime NHL Slate",
@@ -1546,7 +1578,7 @@
         "isoTime": "2026-10-30T00:00:00Z",
         "slot": "Thu, Oct 29 • 8:00 PM ET",
         "broadcast": "Prime Video",
-        "announcers": "Dallas Stars Regional Broadcast Crew",
+        "announcers": "John Forslund, Jody Shelley, Thomas Hickey",
         "venue": "American Airlines Center, Dallas, TX",
         "window": "THU",
         "windowLabel": "Thursday Prime NHL Slate",
@@ -1593,8 +1625,8 @@
       {
         "isoTime": "2026-10-30T02:00:00Z",
         "slot": "Thu, Oct 29 • 10:00 PM ET",
-        "broadcast": "ABTV",
-        "announcers": "Los Angeles Kings Regional Broadcast Crew",
+        "broadcast": "Altitude",
+        "announcers": "Marc Moser, Mark Rycroft",
         "venue": "Crypto.com Arena, Los Angeles, CA",
         "window": "THU",
         "windowLabel": "Thursday Prime NHL Slate",
@@ -1617,8 +1649,8 @@
       {
         "isoTime": "2026-10-30T22:00:00Z",
         "slot": "Fri, Oct 30 • 6:00 PM ET",
-        "broadcast": "NHLN",
-        "announcers": "Vegas Golden Knights Regional Broadcast Crew",
+        "broadcast": "NHL Net",
+        "announcers": "E.J. Hradek, Kevin Weekes",
         "venue": "T-Mobile Arena, Las Vegas, NV",
         "window": "FRI",
         "windowLabel": "Friday Night NHL Matchups",
@@ -1641,8 +1673,8 @@
       {
         "isoTime": "2026-10-30T23:00:00Z",
         "slot": "Fri, Oct 30 • 7:00 PM ET",
-        "broadcast": "TVAS",
-        "announcers": "Florida Panthers Regional Broadcast Crew",
+        "broadcast": "Scripps Sports",
+        "announcers": "Steve Goldstein, Randy Moller",
         "venue": "Amerant Bank Arena, Sunrise, FL",
         "window": "FRI",
         "windowLabel": "Friday Night NHL Matchups",
@@ -1666,7 +1698,7 @@
         "isoTime": "2026-10-31T17:00:00Z",
         "slot": "Sat, Oct 31 • 1:00 PM ET",
         "broadcast": "Sportsnet",
-        "announcers": "John Bartlett, Garry Galley",
+        "announcers": "Harnarayan Singh, Louie DeBrusk",
         "venue": "TD Garden, Boston, MA",
         "window": "SAT",
         "windowLabel": "Hockey Night in Canada & Saturday National",
@@ -1690,7 +1722,7 @@
         "isoTime": "2026-10-31T17:00:00Z",
         "slot": "Sat, Oct 31 • 1:00 PM ET",
         "broadcast": "Sportsnet",
-        "announcers": "John Bartlett, Garry Galley",
+        "announcers": "Rick Ball, Kelly Hrudey",
         "venue": "Little Caesars Arena, Detroit, MI",
         "window": "SAT",
         "windowLabel": "Hockey Night in Canada & Saturday National",
@@ -1713,8 +1745,8 @@
       {
         "isoTime": "2026-10-31T18:00:00Z",
         "slot": "Sat, Oct 31 • 2:00 PM ET",
-        "broadcast": "The Spot",
-        "announcers": "Nashville Predators Regional Broadcast Crew",
+        "broadcast": "Scripps Sports",
+        "announcers": "Steve Goldstein, Randy Moller",
         "venue": "Bridgestone Arena, Nashville, TN",
         "window": "SAT",
         "windowLabel": "Hockey Night in Canada & Saturday National",
@@ -1738,7 +1770,7 @@
         "isoTime": "2026-10-31T18:00:00Z",
         "slot": "Sat, Oct 31 • 2:00 PM ET",
         "broadcast": "Sportsnet",
-        "announcers": "Chris Cuthbert, Craig Simpson",
+        "announcers": "Harnarayan Singh, Louie DeBrusk",
         "venue": "UBS Arena, Elmont, NY",
         "window": "SAT",
         "windowLabel": "Hockey Night in Canada & Saturday National",
@@ -1761,8 +1793,8 @@
       {
         "isoTime": "2026-10-31T20:00:00Z",
         "slot": "Sat, Oct 31 • 4:00 PM ET",
-        "broadcast": "NBCSCA",
-        "announcers": "San Jose Sharks Regional Broadcast Crew",
+        "broadcast": "NBCS California",
+        "announcers": "Randy Hahn, Bret Hedican",
         "venue": "SAP Center at San Jose, San Jose, CA",
         "window": "SAT",
         "windowLabel": "Hockey Night in Canada & Saturday National",
@@ -1786,7 +1818,7 @@
         "isoTime": "2026-10-31T23:00:00Z",
         "slot": "Sat, Oct 31 • 7:00 PM ET",
         "broadcast": "Sportsnet",
-        "announcers": "Chris Cuthbert, Craig Simpson",
+        "announcers": "Rick Ball, Kelly Hrudey",
         "venue": "Centre Bell, Montreal, QC",
         "window": "SAT",
         "windowLabel": "Hockey Night in Canada & Saturday National",
@@ -1810,7 +1842,7 @@
         "isoTime": "2026-10-31T23:00:00Z",
         "slot": "Sat, Oct 31 • 7:00 PM ET",
         "broadcast": "Sportsnet",
-        "announcers": "Rick Ball, Kelly Hrudey",
+        "announcers": "Chris Cuthbert, Craig Simpson",
         "venue": "Rogers Arena, Vancouver, BC",
         "window": "SAT",
         "windowLabel": "Hockey Night in Canada & Saturday National",
@@ -1833,8 +1865,8 @@
       {
         "isoTime": "2026-11-01T00:00:00Z",
         "slot": "Sat, Oct 31 • 8:00 PM ET",
-        "broadcast": "CBJNHL",
-        "announcers": "Dallas Stars Regional Broadcast Crew",
+        "broadcast": "Prime Video",
+        "announcers": "John Forslund, Jody Shelley, Thomas Hickey",
         "venue": "American Airlines Center, Dallas, TX",
         "window": "SAT",
         "windowLabel": "Hockey Night in Canada & Saturday National",
@@ -1853,7 +1885,128 @@
         "impactClass": "neutral",
         "target": "Root for Dallas Stars in Regulation",
         "why": "Suppresses Eastern Conference Wild Card contenders from stacking points."
+      },
+      {
+        "isoTime": "2026-11-01T18:00:00Z",
+        "slot": "Sun, Nov 1 • 1:00 PM ET",
+        "broadcast": "NHL Net",
+        "announcers": "E.J. Hradek, Kevin Weekes",
+        "venue": "Lenovo Center, Raleigh, NC",
+        "window": "SUN",
+        "windowLabel": "Sunday NHL Showcase Slate",
+        "windowBadge": "National & Matinee Window",
+        "statusState": "pre",
+        "statusDetail": "Scheduled",
+        "awayName": "Winnipeg Jets",
+        "awayRecord": "4-4-3, L1",
+        "awayScore": "",
+        "homeName": "Carolina Hurricanes",
+        "homeRecord": "9-2-2, W1",
+        "homeScore": "",
+        "homeWinChance": 80,
+        "awayWinChance": 20,
+        "verdict": "WILD CARD WATCH",
+        "impactClass": "neutral",
+        "target": "Root for Winnipeg Jets in Regulation",
+        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points."
+      },
+      {
+        "isoTime": "2026-11-01T20:30:00Z",
+        "slot": "Sun, Nov 1 • 3:30 PM ET",
+        "broadcast": "Sportsnet",
+        "announcers": "Rick Ball, Kelly Hrudey",
+        "venue": "Capital One Arena, Washington, DC",
+        "window": "SUN",
+        "windowLabel": "Sunday NHL Showcase Slate",
+        "windowBadge": "National & Matinee Window",
+        "statusState": "pre",
+        "statusDetail": "Scheduled",
+        "awayName": "Minnesota Wild",
+        "awayRecord": "8-3-2, W2",
+        "awayScore": "",
+        "homeName": "Washington Capitals",
+        "homeRecord": "6-4-0, W1",
+        "homeScore": "",
+        "homeWinChance": 43,
+        "awayWinChance": 57,
+        "verdict": "WILD CARD WATCH",
+        "impactClass": "neutral",
+        "target": "Root for Minnesota Wild in Regulation",
+        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points."
+      },
+      {
+        "isoTime": "2026-11-01T21:00:00Z",
+        "slot": "Sun, Nov 1 • 4:00 PM ET",
+        "broadcast": "Sportsnet",
+        "announcers": "John Bartlett, Garry Galley",
+        "venue": "Xfinity Mobile Arena, Philadelphia, PA",
+        "window": "SUN",
+        "windowLabel": "Sunday NHL Showcase Slate",
+        "windowBadge": "National & Matinee Window",
+        "statusState": "pre",
+        "statusDetail": "Scheduled",
+        "awayName": "Utah Mammoth",
+        "awayRecord": "8-4-0, W1",
+        "awayScore": "",
+        "homeName": "Philadelphia Flyers",
+        "homeRecord": "3-7-3, L1",
+        "homeScore": "",
+        "homeWinChance": 24,
+        "awayWinChance": 76,
+        "verdict": "WILD CARD WATCH",
+        "impactClass": "neutral",
+        "target": "Root for Utah Mammoth in Regulation",
+        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points."
+      },
+      {
+        "isoTime": "2026-11-01T23:00:00Z",
+        "slot": "Sun, Nov 1 • 6:00 PM ET",
+        "broadcast": "NHL Net",
+        "announcers": "E.J. Hradek, Kevin Weekes",
+        "venue": "Madison Square Garden, New York, NY",
+        "window": "SUN",
+        "windowLabel": "Sunday NHL Showcase Slate",
+        "windowBadge": "National & Matinee Window",
+        "statusState": "pre",
+        "statusDetail": "Scheduled",
+        "awayName": "Edmonton Oilers",
+        "awayRecord": "8-2-1, L1",
+        "awayScore": "",
+        "homeName": "New York Rangers",
+        "homeRecord": "7-5-1, L2",
+        "homeScore": "",
+        "homeWinChance": 32,
+        "awayWinChance": 68,
+        "verdict": "WILD CARD WATCH",
+        "impactClass": "neutral",
+        "target": "Root for Edmonton Oilers in Regulation",
+        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points."
+      },
+      {
+        "isoTime": "2026-11-02T01:00:00Z",
+        "slot": "Sun, Nov 1 • 8:00 PM ET",
+        "broadcast": "Prime Video",
+        "announcers": "John Forslund, Jody Shelley, Thomas Hickey",
+        "venue": "Honda Center, Anaheim, CA",
+        "window": "SUN",
+        "windowLabel": "Sunday NHL Showcase Slate",
+        "windowBadge": "National & Matinee Window",
+        "statusState": "pre",
+        "statusDetail": "Scheduled",
+        "awayName": "Ottawa Senators",
+        "awayRecord": "8-4-0, W1",
+        "awayScore": "",
+        "homeName": "Anaheim Ducks",
+        "homeRecord": "5-6-0, W1",
+        "homeScore": "",
+        "homeWinChance": 33,
+        "awayWinChance": 67,
+        "verdict": "ATLANTIC WATCH",
+        "impactClass": "warning",
+        "target": "Root for Anaheim Ducks in Regulation",
+        "why": "A regulation loss leaves Ottawa Senators with 0 standings points in the Atlantic Division."
       }
-    ]
+    ],
+    "cutlinePoints": 95
   }
 }

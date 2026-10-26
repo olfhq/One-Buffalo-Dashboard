@@ -3,8 +3,8 @@ import zipfile
 import html
 import os
 
-DOCX_PATH = "One-Buffalo-AI-Mastery-Guide.docx"
-HTML_PATH = "One-Buffalo-AI-Mastery-Guide.html"
+DOCX_PATH = "docs/One-Buffalo-AI-Mastery-Guide.docx"
+HTML_PATH = "docs/One-Buffalo-AI-Mastery-Guide.html"
 
 # Content definition
 content_data = [

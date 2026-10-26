@@ -53,31 +53,9 @@
   </script>
 
   <title>Buffalo Sabres Hub | One Buffalo Tracker</title>
+  <link rel="stylesheet" href="./assets/shared.css">
+  <script src="./assets/shared.js"></script>
   <style>
-    :root {
-      --sabres-blue: #002654;
-      --sabres-gold: #FCB514;
-      --bg-dark: #090d16;
-      --card-bg: #141c2c;
-      --card-inner: #0d1422;
-      --card-border: #1f2c44;
-      --text-main: #f3f4f6;
-      --text-muted: #94a3b8;
-      --accent-green: #10b981;
-      --accent-blue: #38bdf8;
-      --accent-gold: #FCB514;
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background-color: var(--bg-dark);
-      color: var(--text-main);
-      padding: 1.5rem;
-      line-height: 1.5;
-      -webkit-font-smoothing: antialiased;
-    }
-
     header {
       text-align: center;
       margin-bottom: 1.25rem;
@@ -1474,7 +1452,7 @@
     .game-status-upcoming { color: #fbbf24; font-weight: 800; }
   </style>
 </head>
-<body>
+<body class="sabres-theme">
 
   <header>
     <div class="nav-switch-row">
@@ -1486,15 +1464,15 @@
     </div>
     <h1>BUFFALO SABRES HUB</h1>
     <div class="meta-bar">
-      <span id="update-status">Loading data...</span>
+      <span id="update-status" aria-live="polite">Loading data...</span>
     </div>
   </header>
 
   <!-- SEGMENTED TABS -->
   <nav class="tab-bar" role="tablist" aria-label="Sabres Hub Sections">
-    <button class="tab-btn active" id="tab-btn-intel" role="tab" aria-selected="true" aria-controls="tab-intel" onclick="switchTab('intel')">Matchup Intel</button>
-    <button class="tab-btn" id="tab-btn-rooting" role="tab" aria-selected="false" aria-controls="tab-rooting" onclick="switchTab('rooting')">Weekly Slate & TV Guide</button>
-    <button class="tab-btn" id="tab-btn-radar" role="tab" aria-selected="false" aria-controls="tab-radar" onclick="switchTab('radar')">Postseason Radar</button>
+    <button class="tab-btn active" id="tab-btn-intel" role="tab" aria-selected="true" tabindex="0" aria-controls="tab-intel" onclick="switchTab('intel')">Matchup Intel</button>
+    <button class="tab-btn" id="tab-btn-rooting" role="tab" aria-selected="false" tabindex="-1" aria-controls="tab-rooting" onclick="switchTab('rooting')">Weekly Slate & TV Guide</button>
+    <button class="tab-btn" id="tab-btn-radar" role="tab" aria-selected="false" tabindex="-1" aria-controls="tab-radar" onclick="switchTab('radar')">Postseason Radar</button>
   </nav>
 
   <main class="container">
@@ -1514,7 +1492,7 @@
             </div>
 
             <div class="countdown-box">
-              <div class="countdown-val" id="sabres-countdown">--:--:--</div>
+              <div class="countdown-val" id="sabres-countdown" aria-live="polite">--:--:--</div>
               <div class="countdown-label" id="sabres-countdown-label">Puck Drop In</div>
             </div>
           </div>
@@ -1592,16 +1570,16 @@
         </div>
 
         <!-- SLATE FILTER BAR: ALL / UPCOMING / RESULTS -->
-        <div class="slate-filter-bar">
-          <button class="slate-filter-btn active" id="filter-btn-all" onclick="setSlateFilter('all')">
+        <div class="slate-filter-bar" role="group" aria-label="Filter Weekly Slate">
+          <button class="slate-filter-btn active" id="filter-btn-all" aria-pressed="true" onclick="setSlateFilter('all')">
             <span>All Matchups</span>
             <span class="filter-count-badge" id="count-all">--</span>
           </button>
-          <button class="slate-filter-btn" id="filter-btn-upcoming" onclick="setSlateFilter('upcoming')">
+          <button class="slate-filter-btn" id="filter-btn-upcoming" aria-pressed="false" onclick="setSlateFilter('upcoming')">
             <span>🕒 Upcoming Slate</span>
             <span class="filter-count-badge" id="count-upcoming">--</span>
           </button>
-          <button class="slate-filter-btn" id="filter-btn-results" onclick="setSlateFilter('results')">
+          <button class="slate-filter-btn" id="filter-btn-results" aria-pressed="false" onclick="setSlateFilter('results')">
             <span>✅ Week Results</span>
             <span class="filter-count-badge" id="count-results">--</span>
           </button>
@@ -1619,7 +1597,7 @@
     <section id="tab-radar" class="tab-content" role="tabpanel" aria-labelledby="tab-btn-radar">
       <div class="card">
         <!-- LIVE GAME BANNER (Visible on Radar when Sabres are live) -->
-        <div id="sabres-radar-live-banner" class="live-radar-banner" style="display: none;">
+        <div id="sabres-radar-live-banner" class="live-radar-banner" aria-live="polite" style="display: none;">
           <div class="live-radar-left">
             <span class="live-pulse-badge"><span class="live-dot"></span> LIVE NOW</span>
             <span class="live-radar-clock" id="sabres-radar-live-clock">--</span>
@@ -1634,7 +1612,7 @@
           </div>
         </div>
 
-        <div class="clinch-alert-box" id="sabres-clinch-box">
+        <div class="clinch-alert-box" id="sabres-clinch-box" aria-live="polite">
           <span>🔒</span>
           <span id="sabres-clinch-text">Checking clinching status...</span>
         </div>
@@ -1682,173 +1660,10 @@
   </footer>
 
   <script>
-    function switchTab(tabId) {
-      const targetBtn = document.getElementById(`tab-btn-${tabId}`);
-      if (!targetBtn || targetBtn.classList.contains('active')) return;
-
-      // 1. Instant visual response for tab button (< 16ms)
-      document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.classList.remove('active');
-        btn.setAttribute('aria-selected', 'false');
-      });
-      targetBtn.classList.add('active');
-      targetBtn.setAttribute('aria-selected', 'true');
-
-      // 2. Yield before activating heavy tab content
-      requestAnimationFrame(() => {
-        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-        const targetTab = document.getElementById(`tab-${tabId}`);
-        if (targetTab) targetTab.classList.add('active');
-      });
-    }
-
-    const activeCountdowns = new Map();
-    let globalCountdownInterval = null;
-
-    function updateAllCountdowns() {
-      if (document.hidden) return;
-      const now = Date.now();
-      for (const [id, targetIso] of activeCountdowns.entries()) {
-        const el = document.getElementById(id);
-        if (!el) {
-          activeCountdowns.delete(id);
-          continue;
-        }
-        const diff = new Date(targetIso).getTime() - now;
-        if (isNaN(diff)) {
-          activeCountdowns.delete(id);
-          continue;
-        }
-        if (diff <= 0) {
-          if (el.innerHTML !== '<span class="live-dot"></span> LIVE NOW') {
-            el.innerHTML = '<span class="live-dot"></span> LIVE NOW';
-            el.style.color = "#10b981";
-          }
-          activeCountdowns.delete(id);
-          continue;
-        }
-
-        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-        const mins = Math.floor((diff / 1000 / 60) % 60);
-        const secs = Math.floor((diff / 1000) % 60);
-
-        const txt = days > 0
-          ? `${days}d ${hours}h ${mins}m`
-          : `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-        
-        if (el.textContent !== txt) {
-          el.textContent = txt;
-        }
-      }
-    }
-
-    function startCountdown(elementId, targetIso) {
-      if (!elementId || !targetIso) return;
-      activeCountdowns.set(elementId, targetIso);
-      updateAllCountdowns();
-      if (!globalCountdownInterval) {
-        globalCountdownInterval = setInterval(updateAllCountdowns, 1000);
-      }
-    }
-
-    function stopCountdown(elementId) {
-      activeCountdowns.delete(elementId);
-    }
-
-    function getEasternOffset(datePart, year) {
-      try {
-        const probe = new Date(`${datePart}, ${year} 12:00:00 UTC`);
-        if (!isNaN(probe.getTime())) {
-          const tzPart = new Intl.DateTimeFormat('en-US', {
-            timeZone: 'America/New_York',
-            timeZoneName: 'shortOffset'
-          }).formatToParts(probe).find(p => p.type === 'timeZoneName');
-          if (tzPart && tzPart.value) {
-            const m = tzPart.value.match(/GMT([+-]\d+)/);
-            if (m) {
-              const hrs = parseInt(m[1], 10);
-              const sign = hrs < 0 ? '-' : '+';
-              return `GMT${sign}${String(Math.abs(hrs)).padStart(2, '0')}00`;
-            }
-          }
-        }
-      } catch (e) {}
-      return 'GMT-0500';
-    }
-
-    function resolveGameIso(game) {
-      if (!game) return null;
-      if (game.isoTime) {
-        const t = new Date(game.isoTime).getTime();
-        if (!isNaN(t)) return game.isoTime;
-      }
-      if (game.gameTime) {
-        try {
-          const clean = game.gameTime.replace(/^[A-Za-z]+,\s*/, '');
-          const parts = clean.split('•').map(s => s.trim());
-          if (parts.length === 2) {
-            const curYear = new Date().getFullYear();
-            const timePart = parts[1].replace(/\s*ET$/, '');
-            const offset = getEasternOffset(parts[0], curYear);
-            const candidateStr = `${parts[0]}, ${curYear} ${timePart} ${offset}`;
-            const candidate = new Date(candidateStr);
-            if (!isNaN(candidate.getTime())) {
-              return candidate.toISOString();
-            }
-          }
-        } catch (e) {}
-      }
-      return null;
-    }
-
     let liveSabresPollTimer = null;
     let liveSabresGameData = null;
     let currentSabresOutOfTownGames = [];
     let currentSabresNextGame = null;
-    let currentSlateFilter = 'all';
-
-    function calculateLiveNhlWinChance(bufScore, oppScore, statusDetail, preGameProb = 52) {
-      const buf = parseInt(bufScore) || 0;
-      const opp = parseInt(oppScore) || 0;
-      const diff = buf - opp;
-      const detail = (statusDetail || '').toLowerCase();
-
-      if (detail.includes('final')) {
-        if (diff > 0) return 100;
-        if (diff < 0) return 0;
-        return 50;
-      }
-
-      let minsRemaining = 60;
-      if (detail.includes('ot') || detail.includes('overtime') || detail.includes('so') || detail.includes('shootout')) {
-        minsRemaining = 2.0;
-      } else if (detail.includes('end of 2') || detail.includes('end of the 2')) {
-        minsRemaining = 20.0;
-      } else if (detail.includes('end of 1') || detail.includes('end of the 1')) {
-        minsRemaining = 40.0;
-      } else if (detail.includes('3') || detail.includes('3rd')) {
-        const match = detail.match(/(\d+):(\d+)/);
-        minsRemaining = match ? Math.max(0.1, parseInt(match[1]) + parseInt(match[2]) / 60) : 10;
-      } else if (detail.includes('2') || detail.includes('2nd')) {
-        const match = detail.match(/(\d+):(\d+)/);
-        minsRemaining = match ? Math.max(20.1, 20 + parseInt(match[1]) + parseInt(match[2]) / 60) : 30;
-      } else if (detail.includes('1') || detail.includes('1st')) {
-        const match = detail.match(/(\d+):(\d+)/);
-        minsRemaining = match ? Math.max(40.1, 40 + parseInt(match[1]) + parseInt(match[2]) / 60) : 50;
-      }
-
-      if (diff === 0 && minsRemaining <= 1.0) return 50;
-
-      const frac = Math.max(0.005, minsRemaining / 60);
-      const p0 = Math.min(0.95, Math.max(0.05, (preGameProb || 52) / 100));
-      const baselineLogit = Math.log(p0 / (1 - p0));
-      const sigma = Math.sqrt(0.12 * minsRemaining + 0.25);
-      const z = (baselineLogit * frac * 0.5) + (diff * 1.55 / sigma);
-      const prob = 1 / (1 + Math.exp(-z));
-
-      return Math.min(99, Math.max(1, Math.round(prob * 100)));
-    }
 
     function updateSabresLiveUI(liveData) {
       if (!liveData) return;
@@ -1990,19 +1805,6 @@
       }
     }
 
-    function setSlateFilter(filter) {
-      if (currentSlateFilter === filter) return;
-      currentSlateFilter = filter;
-      document.querySelectorAll('.slate-filter-btn').forEach(btn => btn.classList.remove('active'));
-      const activeBtn = document.getElementById(`filter-btn-${filter}`);
-      if (activeBtn) activeBtn.classList.add('active');
-
-      const grid = document.getElementById('sabres-scoreboard-grid');
-      if (grid) {
-        grid.setAttribute('data-filter', filter);
-      }
-    }
-
     const CLIENT_NHL_ARENA_DATABASE = [
       { aliases: ['Sabres', 'Buffalo', 'BUF', 'Buffalo Sabres'], venue: 'KeyBank Center', city: 'Buffalo, NY' },
       { aliases: ['Panthers', 'Florida', 'FLA', 'Florida Panthers'], venue: 'Amerant Bank Arena', city: 'Sunrise, FL' },
@@ -2082,14 +1884,24 @@
       let crew = 'Regional Crew';
       let cleanNet = g.broadcast || 'ESPN+';
 
-      if (net.includes('TNT') || net.includes('MAX')) { cleanNet = 'TNT'; crew = 'Kenny Albert, Eddie Olczyk, Brian Boucher'; }
-      else if (net.includes('MSG')) { cleanNet = 'MSG-B'; crew = 'Dan Dunleavy, Rob Ray'; }
+      if (net.includes('TNT') || net.includes('MAX') || net.includes('TRUTV')) { cleanNet = 'TNT / Max'; crew = 'Kenny Albert, Eddie Olczyk, Brian Boucher'; }
+      else if (net.includes('MSG-B') || (net.includes('MSG') && lower.includes('sabres'))) { cleanNet = 'MSG-B'; crew = 'Dan Dunleavy, Rob Ray'; }
+      else if (net.includes('MSGSN')) { cleanNet = 'MSGSN'; crew = 'Brendan Burke, Butch Goring'; }
+      else if (net.includes('MSG')) { cleanNet = 'MSG'; crew = 'Kenny Albert, Dave Maloney'; }
       else if (net.includes('ABC')) { cleanNet = 'ABC'; crew = 'Sean McDonough, Ray Ferraro'; }
       else if (net.includes('ESPN+')) { cleanNet = 'ESPN+'; crew = 'Bob Wischusen, Kevin Weekes'; }
-      else if (net.includes('ESPN')) { cleanNet = 'ESPN'; crew = 'Steve Levy, Ray Ferraro'; }
-      else if (net.includes('SN') || net.includes('SPORTSNET')) { cleanNet = 'Sportsnet'; crew = 'Chris Cuthbert, Craig Simpson'; }
-      else if (net.includes('TSN')) { cleanNet = 'TSN4'; crew = 'Gord Miller, Mike Johnson'; }
+      else if (net.includes('ESPN')) { cleanNet = 'ESPN'; crew = 'Bob Wischusen, Ray Ferraro'; }
+      else if (net.includes('NHL NET') || net.includes('NHLN')) { cleanNet = 'NHL Net'; crew = 'E.J. Hradek, Kevin Weekes'; }
+      else if (net.includes('PRIME')) { cleanNet = 'Prime Video'; crew = 'John Forslund, Jody Shelley, Thomas Hickey'; }
+      else if (net.includes('CBC') || net.includes('SN') || net.includes('SPORTSNET')) { cleanNet = net.includes('CBC') ? 'CBC / SN' : 'Sportsnet'; crew = 'Chris Cuthbert, Craig Simpson'; }
+      else if (net.includes('TSN')) { cleanNet = 'TSN'; crew = 'Gord Miller, Mike Johnson'; }
       else if (net.includes('NESN')) { cleanNet = 'NESN'; crew = 'Judd Sirott, Andy Brickley'; }
+      else if (net.includes('SCRIPPS') || net.includes('WSFL')) { cleanNet = 'Scripps Sports'; crew = 'Steve Goldstein, Randy Moller'; }
+      else if (net.includes('FDSN') || net.includes('BALLY')) { cleanNet = cleanNet.replace(/Bally/i, 'FDSN'); crew = 'FanDuel Sports Network Broadcast Crew'; }
+      else if (net.includes('VICTORY')) { cleanNet = 'Victory+'; crew = 'Josh Bogorad, Daryl Reaugh'; }
+      else if (net.includes('ALTITUDE')) { cleanNet = 'Altitude'; crew = 'Marc Moser, Mark Rycroft'; }
+      else if (net.includes('MONUMENTAL') || net.includes('MNMT')) { cleanNet = 'Monumental'; crew = 'Joe Beninati, Craig Laughlin'; }
+      else if (net.includes('CHSN')) { cleanNet = 'CHSN'; crew = 'Rick Ball, Darren Pang'; }
 
       const dt = new Date(g.isoTime || Date.now());
       const day = dt.toLocaleDateString('en-US', { timeZone: 'America/New_York', weekday: 'short' });
@@ -2678,12 +2490,16 @@
           }
 
           if (state === 'in' || state === 'post') {
+            const isHome = buf ? buf.homeAway === 'home' : !(currentSabresNextGame?.opponent || '').startsWith('@');
+            const liveWinProb = calculateLiveNhlWinChance(buf?.score || 0, opp?.score || 0, detail, currentSabresNextGame?.winChance || 52);
             liveSabresGameData = {
               state,
               detail,
               bufScore: buf?.score || 0,
               oppScore: opp?.score || 0,
               oppName,
+              isHome,
+              winChance: liveWinProb,
               records: currentSabresNextGame?.matchupRecords || ''
             };
             if (currentSabresNextGame) {
@@ -2691,7 +2507,10 @@
               currentSabresNextGame.statusDetail = detail;
               currentSabresNextGame.bufScore = buf?.score || 0;
               currentSabresNextGame.oppScore = opp?.score || 0;
-              currentSabresNextGame.liveScore = `Sabres ${buf?.score || 0} - ${opp?.score || 0} ${oppName}`;
+              currentSabresNextGame.winChance = liveWinProb;
+              currentSabresNextGame.liveScore = isHome
+                ? `Sabres ${buf?.score || 0} - ${opp?.score || 0} ${oppName}`
+                : `${oppName} ${opp?.score || 0} - ${buf?.score || 0} Sabres`;
             }
             updateSabresLiveUI(liveSabresGameData);
           }
@@ -2842,85 +2661,6 @@
       }
     }
 
-    function updateSabresProjectionTile(s) {
-      const valEl = document.getElementById('sabres-tragic-num');
-      const labelEl = document.getElementById('sabres-pace-label');
-      const sublabelEl = document.getElementById('sabres-pace-sublabel');
-      const cardEl = document.getElementById('sabres-projection-card');
-      if (!valEl) return;
-
-      const magicNum = s.magicNumber;
-      const rawTragic = s.tragicNumber || '91 PTS';
-      const clinchScenario = (s.clinchAlert && s.clinchAlert.scenario) ? s.clinchAlert.scenario.toLowerCase() : '';
-      const isClinched = s.clinched || clinchScenario.includes('clinched');
-      const isEliminated = s.eliminated || clinchScenario.includes('eliminated');
-
-      // 1. Clinched postseason
-      if (isClinched) {
-        valEl.textContent = 'IN';
-        valEl.style.color = '#34d399';
-        if (labelEl) labelEl.textContent = 'Playoffs';
-        if (sublabelEl) sublabelEl.textContent = 'Clinched';
-        if (cardEl) cardEl.title = 'Buffalo has clinched an NHL playoff berth!';
-        return;
-      }
-
-      // 2. Eliminated from contention
-      if (isEliminated) {
-        valEl.textContent = 'OUT';
-        valEl.style.color = '#f87171';
-        if (labelEl) labelEl.textContent = 'Playoffs';
-        if (sublabelEl) sublabelEl.textContent = 'Eliminated';
-        if (cardEl) cardEl.title = 'Buffalo is mathematically eliminated from playoff contention.';
-        return;
-      }
-
-      // 3. Late-season Clinching Hunt (Magic Number active)
-      const hasValidMagic = magicNum !== undefined && magicNum !== null && magicNum !== '' && !String(magicNum).includes('PTS');
-      if (hasValidMagic) {
-        const cleanMagic = String(magicNum).replace(/[^0-9]/g, '') || magicNum;
-        valEl.textContent = cleanMagic;
-        valEl.style.color = '#34d399';
-        if (labelEl) labelEl.textContent = 'Magic #';
-        if (sublabelEl) sublabelEl.textContent = 'To Clinch';
-        if (cardEl) cardEl.title = 'Combined Sabres wins and chaser losses required to mathematically clinch a playoff berth.';
-        return;
-      }
-
-      // 4. Late-season Elimination Danger (Tragic / Elimination Number)
-      const isTragicNumber = !rawTragic.includes('PTS') && !rawTragic.includes('Pace') && (rawTragic.startsWith('E#') || (!isNaN(parseInt(rawTragic, 10)) && parseInt(rawTragic, 10) <= 16));
-      if (isTragicNumber) {
-        valEl.textContent = rawTragic.startsWith('E#') ? rawTragic : `E# ${rawTragic}`;
-        valEl.style.color = '#f87171';
-        if (labelEl) labelEl.textContent = 'Tragic #';
-        if (sublabelEl) sublabelEl.textContent = 'To Elim.';
-        if (cardEl) cardEl.title = 'Combined Sabres dropped points and competitor points gained before mathematical elimination.';
-        return;
-      }
-
-      // 5. Early & Mid-Season Default: Projected Finish (82-Game Pace)
-      const paceMatch = rawTragic.match(/\d+/);
-      const pacePts = paceMatch ? parseInt(paceMatch[0], 10) : 91;
-      valEl.textContent = `${pacePts} PTS`;
-
-      if (pacePts >= 95) {
-        valEl.style.color = '#34d399';
-      } else if (pacePts >= 91) {
-        valEl.style.color = '#FCB514';
-      } else {
-        valEl.style.color = '#f87171';
-      }
-
-      if (labelEl) labelEl.textContent = 'Proj. Finish';
-      if (sublabelEl) {
-        const diff = pacePts - 95;
-        sublabelEl.textContent = diff >= 0 ? `Cut: ~95 (+${diff})` : `Cut: ~95 (${diff})`;
-      }
-      if (cardEl) {
-        cardEl.title = 'Projected 82-game regular season finish based on current points pace. Eastern Conference playoff cutline is typically ~95 pts.';
-      }
-    }
-
     let isDataLoading = false;
     async function loadData() {
       if (isDataLoading) return;
@@ -2929,7 +2669,7 @@
       let data = null;
 
       const FALLBACK_DATA = {
-  "updatedAt": "2026-10-26T12:28:58.693Z",
+  "updatedAt": "2026-10-26T19:20:54.814Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
   "bills": {
     "team": "Buffalo Bills",
@@ -2954,7 +2694,7 @@
       "oppShortName": "San Jose",
       "gameTime": "Tue, Oct 27 • 10:30 PM ET",
       "isoTime": "2026-10-28T02:30:00Z",
-      "winChance": 46,
+      "winChance": 42,
       "matchupRecords": "Sabres (4-4-3, 11 pts, OT1) vs. San Jose (6-5-1, 13 pts, L1)",
       "broadcast": "ESPN",
       "venue": "SAP Center, San Jose, CA",
@@ -2972,40 +2712,40 @@
         "summary": "Even Rest (Both on 2 Days Rest)"
       },
       "specialTeams": {
-        "sabres": "PP: 19.5% (17th) | PK: 81.2% (11th)",
-        "opp": "PP: 15.6% (26th) | PK: 78.9% (19th)",
-        "advantage": "Sabres Special Teams Edge (+6.2% Net Margin)"
+        "sabres": "PP: 10.5% (31st) | PK: 69.2% (27th)",
+        "opp": "PP: 26.8% (6th) | PK: 80.5% (15th)",
+        "advantage": "San Jose Special Teams Edge (+27.6% Net Margin)"
       },
       "efficiency": [
         {
           "metric": "Goals / Game",
           "sabres": "2.82 (25th)",
-          "opp": "3.08 (18th)"
+          "opp": "3.00 (18th)"
         },
         {
           "metric": "Goals Against / Game",
-          "sabres": "3.73 (29th)",
-          "opp": "3.58 (28th)"
+          "sabres": "3.64 (29th)",
+          "opp": "3.50 (25th)"
         },
         {
           "metric": "Power Play %",
-          "sabres": "19.5% (17th)",
-          "opp": "15.6% (26th)"
+          "sabres": "10.5% (31st)",
+          "opp": "26.8% (6th)"
         },
         {
           "metric": "Penalty Kill %",
-          "sabres": "81.2% (11th)",
-          "opp": "78.9% (19th)"
+          "sabres": "69.2% (27th)",
+          "opp": "80.5% (15th)"
         },
         {
           "metric": "Shots / Game",
-          "sabres": "29.8 (15th)",
-          "opp": "28.5 (20th)"
+          "sabres": "26.4 (21st)",
+          "opp": "28.1 (13th)"
         },
         {
           "metric": "Faceoff Win %",
-          "sabres": "48.2% (22nd)",
-          "opp": "49.8% (16th)"
+          "sabres": "47.8% (24th)",
+          "opp": "46.4% (27th)"
         }
       ],
       "injuries": [
@@ -3013,35 +2753,91 @@
           "player": "Ukko-Pekka Luukkonen",
           "pos": "G",
           "status": "Probable",
-          "injury": "Expected Starter (2.78 GAA, .912 SV%)",
+          "injury": "Expected Starter (3.56 GAA, .866 SV%)",
           "team": "Sabres"
         },
         {
           "player": "Yaroslav Askarov",
           "pos": "G",
           "status": "Probable",
-          "injury": "Expected Starter (2.89 GAA, .907 SV%)",
+          "injury": "Expected Starter (3.43 GAA, .883 SV%)",
           "team": "San Jose"
         },
         {
-          "player": "Zach Benson",
-          "pos": "LW",
-          "status": "Questionable",
-          "injury": "Lower Body",
+          "player": "Justin Danforth",
+          "pos": "RW",
+          "status": "Day-To-Day",
+          "injury": "Upper Body",
           "team": "Sabres"
         },
         {
-          "player": "Mattias Samuelsson",
+          "player": "Jiri Kulich",
+          "pos": "C",
+          "status": "Out",
+          "injury": "Face",
+          "team": "Sabres"
+        },
+        {
+          "player": "Sam Carrick",
+          "pos": "C",
+          "status": "Injured Reserve",
+          "injury": "Upper Body",
+          "team": "Sabres"
+        },
+        {
+          "player": "Alex Lyon",
+          "pos": "G",
+          "status": "Injured Reserve",
+          "injury": "Upper Body",
+          "team": "Sabres"
+        },
+        {
+          "player": "Matt Grzelcyk",
           "pos": "D",
           "status": "Injured Reserve",
           "injury": "Lower Body",
           "team": "Sabres"
         },
         {
-          "player": "Roster Reserve",
-          "pos": "F",
-          "status": "Questionable",
-          "injury": "Day-to-Day",
+          "player": "Conor Timmins",
+          "pos": "D",
+          "status": "Injured Reserve",
+          "injury": "Lower Body",
+          "team": "Sabres"
+        },
+        {
+          "player": "Jack Rathbone",
+          "pos": "D",
+          "status": "Injured Reserve",
+          "injury": "Undisclosed",
+          "team": "Sabres"
+        },
+        {
+          "player": "Igor Chernyshov",
+          "pos": "LW",
+          "status": "Out",
+          "injury": "Upper Body",
+          "team": "San Jose"
+        },
+        {
+          "player": "Alexander Wennberg",
+          "pos": "C",
+          "status": "Out",
+          "injury": "Upper Body",
+          "team": "San Jose"
+        },
+        {
+          "player": "Quentin Musty",
+          "pos": "LW",
+          "status": "Injured Reserve",
+          "injury": "Upper Body",
+          "team": "San Jose"
+        },
+        {
+          "player": "Kyle Keyser",
+          "pos": "G",
+          "status": "Injured Reserve",
+          "injury": "Upper Body",
           "team": "San Jose"
         }
       ]
@@ -3088,34 +2884,24 @@
     ],
     "opponents": [
       {
-        "team": "Florida Panthers",
-        "pct": 24
+        "team": "Boston Bruins",
+        "pct": 6
       },
       {
         "team": "Tampa Bay Lightning",
-        "pct": 18
+        "pct": 4
       },
       {
-        "team": "Toronto Maple Leafs",
-        "pct": 14
-      }
-    ],
-    "rootingGuide": [
-      {
-        "target": "Regulation Losses for Atlantic Rivals",
-        "why": "Ensure games involving BOS, TBL, and FLA do not go to 3-point overtimes."
-      },
-      {
-        "target": "Western Conference Wins vs. Metro",
-        "why": "Protects Eastern Conference Wild Card slot thresholds."
+        "team": "Ottawa Senators",
+        "pct": 4
       }
     ],
     "outOfTownGames": [
       {
         "isoTime": "2026-10-24T17:00:00Z",
         "slot": "Sat, Oct 24 • 1:00 PM ET",
-        "broadcast": "FOXLA+",
-        "announcers": "Philadelphia Flyers Regional Broadcast Crew",
+        "broadcast": "NHL Net",
+        "announcers": "E.J. Hradek, Kevin Weekes",
         "venue": "Xfinity Mobile Arena, Philadelphia, PA",
         "window": "SAT",
         "windowLabel": "Hockey Night in Canada & Saturday National",
@@ -3138,8 +2924,8 @@
       {
         "isoTime": "2026-10-24T19:30:00Z",
         "slot": "Sat, Oct 24 • 3:30 PM ET",
-        "broadcast": "ABTV",
-        "announcers": "New Jersey Devils Regional Broadcast Crew",
+        "broadcast": "Sportsnet",
+        "announcers": "Rick Ball, Kelly Hrudey",
         "venue": "Prudential Center, Newark, NJ",
         "window": "SAT",
         "windowLabel": "Hockey Night in Canada & Saturday National",
@@ -3162,8 +2948,8 @@
       {
         "isoTime": "2026-10-24T23:00:00Z",
         "slot": "Sat, Oct 24 • 7:00 PM ET",
-        "broadcast": "NBCSCA",
-        "announcers": "Boston Bruins Regional Broadcast Crew",
+        "broadcast": "Sportsnet",
+        "announcers": "Chris Cuthbert, Craig Simpson",
         "venue": "TD Garden, Boston, MA",
         "window": "SAT",
         "windowLabel": "Hockey Night in Canada & Saturday National",
@@ -3186,8 +2972,8 @@
       {
         "isoTime": "2026-10-24T23:00:00Z",
         "slot": "Sat, Oct 24 • 7:00 PM ET",
-        "broadcast": "Sportsnet",
-        "announcers": "Rick Ball, Kelly Hrudey",
+        "broadcast": "NHL Net",
+        "announcers": "E.J. Hradek, Kevin Weekes",
         "venue": "Canadian Tire Centre, Ottawa, ON",
         "window": "SAT",
         "windowLabel": "Hockey Night in Canada & Saturday National",
@@ -3211,7 +2997,7 @@
         "isoTime": "2026-10-24T23:00:00Z",
         "slot": "Sat, Oct 24 • 7:00 PM ET",
         "broadcast": "Sportsnet",
-        "announcers": "John Bartlett, Garry Galley",
+        "announcers": "Chris Cuthbert, Craig Simpson",
         "venue": "PPG Paints Arena, Pittsburgh, PA",
         "window": "SAT",
         "windowLabel": "Hockey Night in Canada & Saturday National",
@@ -3234,8 +3020,8 @@
       {
         "isoTime": "2026-10-24T23:00:00Z",
         "slot": "Sat, Oct 24 • 7:00 PM ET",
-        "broadcast": "CBJNHL",
-        "announcers": "Columbus Blue Jackets Regional Broadcast Crew",
+        "broadcast": "FDSN Ohio",
+        "announcers": "Steve Mears, Jody Shelley",
         "venue": "Nationwide Arena, Columbus, OH",
         "window": "SAT",
         "windowLabel": "Hockey Night in Canada & Saturday National",
@@ -3258,8 +3044,8 @@
       {
         "isoTime": "2026-10-24T23:00:00Z",
         "slot": "Sat, Oct 24 • 7:00 PM ET",
-        "broadcast": "CARNHL",
-        "announcers": "St. Louis Blues Regional Broadcast Crew",
+        "broadcast": "FDSN Midwest",
+        "announcers": "John Kelly, Jamie Rivers",
         "venue": "Enterprise Center, St. Louis, MO",
         "window": "SAT",
         "windowLabel": "Hockey Night in Canada & Saturday National",
@@ -3306,8 +3092,8 @@
       {
         "isoTime": "2026-10-25T01:00:00Z",
         "slot": "Sat, Oct 24 • 9:00 PM ET",
-        "broadcast": "Mammoth+",
-        "announcers": "Utah Mammoth Regional Broadcast Crew",
+        "broadcast": "Utah16 / Mammoth+",
+        "announcers": "Matt McConnell, Dominic Moore",
         "venue": "Delta Center, Salt Lake City, UT",
         "window": "SAT",
         "windowLabel": "Hockey Night in Canada & Saturday National",
@@ -3354,8 +3140,8 @@
       {
         "isoTime": "2026-10-25T19:00:00Z",
         "slot": "Sun, Oct 25 • 3:00 PM ET",
-        "broadcast": "ESPN+",
-        "announcers": "Regional RSN / ESPN+ Out-of-Market Feed",
+        "broadcast": "Sportsnet",
+        "announcers": "John Bartlett, Garry Galley",
         "venue": "United Center, Chicago, IL",
         "window": "SUN",
         "windowLabel": "Sunday NHL Showcase Slate",
@@ -3378,8 +3164,8 @@
       {
         "isoTime": "2026-10-25T22:00:00Z",
         "slot": "Sun, Oct 25 • 6:00 PM ET",
-        "broadcast": "ESPN+",
-        "announcers": "Mike Monaco,  A.J. Mleczko",
+        "broadcast": "Prime Video",
+        "announcers": "John Forslund, Jody Shelley, Thomas Hickey",
         "venue": "American Airlines Center, Dallas, TX",
         "window": "SUN",
         "windowLabel": "Sunday NHL Showcase Slate",
@@ -3426,22 +3212,22 @@
       {
         "isoTime": "2026-10-26T23:00:00Z",
         "slot": "Mon, Oct 26 • 7:00 PM ET",
-        "broadcast": "ABTV",
-        "announcers": "New York Rangers Regional Broadcast Crew",
+        "broadcast": "NHL Net",
+        "announcers": "E.J. Hradek, Kevin Weekes",
         "venue": "Madison Square Garden, New York, NY",
         "window": "MON",
         "windowLabel": "Monday Night NHL Action",
         "windowBadge": "Early Week Matchups",
         "statusState": "pre",
-        "statusDetail": "Scheduled",
+        "statusDetail": "10/26 - 7:00 PM EDT",
         "awayName": "Los Angeles Kings",
         "awayRecord": "2-5-2, L1",
-        "awayScore": "",
+        "awayScore": "0",
         "homeName": "New York Rangers",
         "homeRecord": "7-5-1, L2",
-        "homeScore": "",
-        "homeWinChance": 77,
-        "awayWinChance": 23,
+        "homeScore": "0",
+        "homeWinChance": 55,
+        "awayWinChance": 45,
         "verdict": "WILD CARD WATCH",
         "impactClass": "neutral",
         "target": "Root for Los Angeles Kings in Regulation",
@@ -3451,21 +3237,21 @@
         "isoTime": "2026-10-27T00:30:00Z",
         "slot": "Mon, Oct 26 • 8:30 PM ET",
         "broadcast": "Sportsnet",
-        "announcers": "John Bartlett, Garry Galley",
+        "announcers": "Chris Cuthbert, Craig Simpson",
         "venue": "Scotiabank Saddledome, Calgary, AB",
         "window": "MON",
         "windowLabel": "Monday Night NHL Action",
         "windowBadge": "Early Week Matchups",
         "statusState": "pre",
-        "statusDetail": "Scheduled",
+        "statusDetail": "10/26 - 8:30 PM EDT",
         "awayName": "Toronto Maple Leafs",
         "awayRecord": "7-4-2, W4",
-        "awayScore": "",
+        "awayScore": "0",
         "homeName": "Calgary Flames",
         "homeRecord": "4-6-0, W3",
-        "homeScore": "",
-        "homeWinChance": 33,
-        "awayWinChance": 67,
+        "homeScore": "0",
+        "homeWinChance": 45,
+        "awayWinChance": 55,
         "verdict": "ATLANTIC WATCH",
         "impactClass": "warning",
         "target": "Root for Calgary Flames in Regulation",
@@ -3475,21 +3261,21 @@
         "isoTime": "2026-10-27T01:30:00Z",
         "slot": "Mon, Oct 26 • 9:30 PM ET",
         "broadcast": "Sportsnet",
-        "announcers": "Rick Ball, Kelly Hrudey",
+        "announcers": "Harnarayan Singh, Louie DeBrusk",
         "venue": "Rogers Place, Edmonton, AB",
         "window": "MON",
         "windowLabel": "Monday Night NHL Action",
         "windowBadge": "Early Week Matchups",
         "statusState": "pre",
-        "statusDetail": "Scheduled",
+        "statusDetail": "10/26 - 9:30 PM EDT",
         "awayName": "Detroit Red Wings",
         "awayRecord": "4-4-3, L1",
-        "awayScore": "",
+        "awayScore": "0",
         "homeName": "Edmonton Oilers",
         "homeRecord": "8-2-1, L1",
-        "homeScore": "",
-        "homeWinChance": 81,
-        "awayWinChance": 19,
+        "homeScore": "0",
+        "homeWinChance": 62,
+        "awayWinChance": 38,
         "verdict": "ATLANTIC WATCH",
         "impactClass": "warning",
         "target": "Root for Edmonton Oilers in Regulation",
@@ -3498,8 +3284,8 @@
       {
         "isoTime": "2026-10-27T23:00:00Z",
         "slot": "Tue, Oct 27 • 7:00 PM ET",
-        "broadcast": "CBJNHL",
-        "announcers": "Philadelphia Flyers Regional Broadcast Crew",
+        "broadcast": "Sportsnet",
+        "announcers": "Rick Ball, Kelly Hrudey",
         "venue": "Xfinity Mobile Arena, Philadelphia, PA",
         "window": "TUE",
         "windowLabel": "Tuesday Night NHL Slate",
@@ -3523,7 +3309,7 @@
         "isoTime": "2026-10-28T00:00:00Z",
         "slot": "Tue, Oct 27 • 8:00 PM ET",
         "broadcast": "ESPN",
-        "announcers": "Steve Levy, Ray Ferraro",
+        "announcers": "Bob Wischusen, Ray Ferraro",
         "venue": "Lenovo Center, Raleigh, NC",
         "window": "TUE",
         "windowLabel": "Tuesday Night NHL Slate",
@@ -3546,8 +3332,8 @@
       {
         "isoTime": "2026-10-28T00:00:00Z",
         "slot": "Tue, Oct 27 • 8:00 PM ET",
-        "broadcast": "STLNHL",
-        "announcers": "St. Louis Blues Regional Broadcast Crew",
+        "broadcast": "FDSN Midwest",
+        "announcers": "John Kelly, Jamie Rivers",
         "venue": "Enterprise Center, St. Louis, MO",
         "window": "TUE",
         "windowLabel": "Tuesday Night NHL Slate",
@@ -3595,7 +3381,7 @@
         "isoTime": "2026-10-28T00:00:00Z",
         "slot": "Tue, Oct 27 • 8:00 PM ET",
         "broadcast": "Prime Video",
-        "announcers": "Dallas Stars Regional Broadcast Crew",
+        "announcers": "John Forslund, Jody Shelley, Thomas Hickey",
         "venue": "American Airlines Center, Dallas, TX",
         "window": "TUE",
         "windowLabel": "Tuesday Night NHL Slate",
@@ -3618,8 +3404,8 @@
       {
         "isoTime": "2026-10-28T00:00:00Z",
         "slot": "Tue, Oct 27 • 8:00 PM ET",
-        "broadcast": "SCRIPPS",
-        "announcers": "Winnipeg Jets Regional Broadcast Crew",
+        "broadcast": "Sportsnet",
+        "announcers": "Rick Ball, Kelly Hrudey",
         "venue": "Canada Life Centre, Winnipeg, MB",
         "window": "TUE",
         "windowLabel": "Tuesday Night NHL Slate",
@@ -3642,8 +3428,8 @@
       {
         "isoTime": "2026-10-28T02:00:00Z",
         "slot": "Tue, Oct 27 • 10:00 PM ET",
-        "broadcast": "SCRIPPS",
-        "announcers": "Vegas Golden Knights Regional Broadcast Crew",
+        "broadcast": "Scripps Sports",
+        "announcers": "Steve Goldstein, Randy Moller",
         "venue": "T-Mobile Arena, Las Vegas, NV",
         "window": "TUE",
         "windowLabel": "Tuesday Night NHL Slate",
@@ -3690,8 +3476,8 @@
       {
         "isoTime": "2026-10-29T01:00:00Z",
         "slot": "Wed, Oct 28 • 9:00 PM ET",
-        "broadcast": "ALT",
-        "announcers": "Colorado Avalanche Regional Broadcast Crew",
+        "broadcast": "Altitude",
+        "announcers": "Marc Moser, Mark Rycroft",
         "venue": "Ball Arena, Denver, CO",
         "window": "WED",
         "windowLabel": "Wednesday Night Hockey Showcase",
@@ -3715,7 +3501,7 @@
         "isoTime": "2026-10-29T02:00:00Z",
         "slot": "Wed, Oct 28 • 10:00 PM ET",
         "broadcast": "Prime Video",
-        "announcers": "Seattle Kraken Regional Broadcast Crew",
+        "announcers": "John Forslund, Jody Shelley, Thomas Hickey",
         "venue": "Climate Pledge Arena, Seattle, WA",
         "window": "WED",
         "windowLabel": "Wednesday Night Hockey Showcase",
@@ -3738,8 +3524,8 @@
       {
         "isoTime": "2026-10-29T23:00:00Z",
         "slot": "Thu, Oct 29 • 7:00 PM ET",
-        "broadcast": "The Spot",
-        "announcers": "Tampa Bay Lightning Regional Broadcast Crew",
+        "broadcast": "The Spot (WXPX)",
+        "announcers": "Dave Randorf, Brian Engblom",
         "venue": "Benchmark International Arena, Tampa, FL",
         "window": "THU",
         "windowLabel": "Thursday Prime NHL Slate",
@@ -3762,8 +3548,8 @@
       {
         "isoTime": "2026-10-29T23:00:00Z",
         "slot": "Thu, Oct 29 • 7:00 PM ET",
-        "broadcast": "Mammoth+",
-        "announcers": "Pittsburgh Penguins Regional Broadcast Crew",
+        "broadcast": "Sportsnet",
+        "announcers": "John Bartlett, Garry Galley",
         "venue": "PPG Paints Arena, Pittsburgh, PA",
         "window": "THU",
         "windowLabel": "Thursday Prime NHL Slate",
@@ -3786,8 +3572,8 @@
       {
         "isoTime": "2026-10-29T23:00:00Z",
         "slot": "Thu, Oct 29 • 7:00 PM ET",
-        "broadcast": "CARNHL",
-        "announcers": "Carolina Hurricanes Regional Broadcast Crew",
+        "broadcast": "FDSN South",
+        "announcers": "Mike Maniscalco, Tripp Tracy",
         "venue": "Lenovo Center, Raleigh, NC",
         "window": "THU",
         "windowLabel": "Thursday Prime NHL Slate",
@@ -3811,7 +3597,7 @@
         "isoTime": "2026-10-29T23:30:00Z",
         "slot": "Thu, Oct 29 • 7:30 PM ET",
         "broadcast": "ESPN+",
-        "announcers": "John Buccigross,  Ryan Callahan",
+        "announcers": "John Buccigross, Ryan Callahan",
         "venue": "Little Caesars Arena, Detroit, MI",
         "window": "THU",
         "windowLabel": "Thursday Prime NHL Slate",
@@ -3834,8 +3620,8 @@
       {
         "isoTime": "2026-10-30T00:00:00Z",
         "slot": "Thu, Oct 29 • 8:00 PM ET",
-        "broadcast": "STLNHL",
-        "announcers": "St. Louis Blues Regional Broadcast Crew",
+        "broadcast": "FDSN Midwest",
+        "announcers": "John Kelly, Jamie Rivers",
         "venue": "Enterprise Center, St. Louis, MO",
         "window": "THU",
         "windowLabel": "Thursday Prime NHL Slate",
@@ -3858,8 +3644,8 @@
       {
         "isoTime": "2026-10-30T00:00:00Z",
         "slot": "Thu, Oct 29 • 8:00 PM ET",
-        "broadcast": "MNMT",
-        "announcers": "Nashville Predators Regional Broadcast Crew",
+        "broadcast": "Scripps Sports",
+        "announcers": "Steve Goldstein, Randy Moller",
         "venue": "Bridgestone Arena, Nashville, TN",
         "window": "THU",
         "windowLabel": "Thursday Prime NHL Slate",
@@ -3883,7 +3669,7 @@
         "isoTime": "2026-10-30T00:00:00Z",
         "slot": "Thu, Oct 29 • 8:00 PM ET",
         "broadcast": "Prime Video",
-        "announcers": "Dallas Stars Regional Broadcast Crew",
+        "announcers": "John Forslund, Jody Shelley, Thomas Hickey",
         "venue": "American Airlines Center, Dallas, TX",
         "window": "THU",
         "windowLabel": "Thursday Prime NHL Slate",
@@ -3930,8 +3716,8 @@
       {
         "isoTime": "2026-10-30T02:00:00Z",
         "slot": "Thu, Oct 29 • 10:00 PM ET",
-        "broadcast": "ABTV",
-        "announcers": "Los Angeles Kings Regional Broadcast Crew",
+        "broadcast": "Altitude",
+        "announcers": "Marc Moser, Mark Rycroft",
         "venue": "Crypto.com Arena, Los Angeles, CA",
         "window": "THU",
         "windowLabel": "Thursday Prime NHL Slate",
@@ -3954,8 +3740,8 @@
       {
         "isoTime": "2026-10-30T22:00:00Z",
         "slot": "Fri, Oct 30 • 6:00 PM ET",
-        "broadcast": "NHLN",
-        "announcers": "Vegas Golden Knights Regional Broadcast Crew",
+        "broadcast": "NHL Net",
+        "announcers": "E.J. Hradek, Kevin Weekes",
         "venue": "T-Mobile Arena, Las Vegas, NV",
         "window": "FRI",
         "windowLabel": "Friday Night NHL Matchups",
@@ -3978,8 +3764,8 @@
       {
         "isoTime": "2026-10-30T23:00:00Z",
         "slot": "Fri, Oct 30 • 7:00 PM ET",
-        "broadcast": "TVAS",
-        "announcers": "Florida Panthers Regional Broadcast Crew",
+        "broadcast": "Scripps Sports",
+        "announcers": "Steve Goldstein, Randy Moller",
         "venue": "Amerant Bank Arena, Sunrise, FL",
         "window": "FRI",
         "windowLabel": "Friday Night NHL Matchups",
@@ -4003,7 +3789,7 @@
         "isoTime": "2026-10-31T17:00:00Z",
         "slot": "Sat, Oct 31 • 1:00 PM ET",
         "broadcast": "Sportsnet",
-        "announcers": "John Bartlett, Garry Galley",
+        "announcers": "Harnarayan Singh, Louie DeBrusk",
         "venue": "TD Garden, Boston, MA",
         "window": "SAT",
         "windowLabel": "Hockey Night in Canada & Saturday National",
@@ -4027,7 +3813,7 @@
         "isoTime": "2026-10-31T17:00:00Z",
         "slot": "Sat, Oct 31 • 1:00 PM ET",
         "broadcast": "Sportsnet",
-        "announcers": "John Bartlett, Garry Galley",
+        "announcers": "Rick Ball, Kelly Hrudey",
         "venue": "Little Caesars Arena, Detroit, MI",
         "window": "SAT",
         "windowLabel": "Hockey Night in Canada & Saturday National",
@@ -4050,8 +3836,8 @@
       {
         "isoTime": "2026-10-31T18:00:00Z",
         "slot": "Sat, Oct 31 • 2:00 PM ET",
-        "broadcast": "The Spot",
-        "announcers": "Nashville Predators Regional Broadcast Crew",
+        "broadcast": "Scripps Sports",
+        "announcers": "Steve Goldstein, Randy Moller",
         "venue": "Bridgestone Arena, Nashville, TN",
         "window": "SAT",
         "windowLabel": "Hockey Night in Canada & Saturday National",
@@ -4075,7 +3861,7 @@
         "isoTime": "2026-10-31T18:00:00Z",
         "slot": "Sat, Oct 31 • 2:00 PM ET",
         "broadcast": "Sportsnet",
-        "announcers": "Chris Cuthbert, Craig Simpson",
+        "announcers": "Harnarayan Singh, Louie DeBrusk",
         "venue": "UBS Arena, Elmont, NY",
         "window": "SAT",
         "windowLabel": "Hockey Night in Canada & Saturday National",
@@ -4098,8 +3884,8 @@
       {
         "isoTime": "2026-10-31T20:00:00Z",
         "slot": "Sat, Oct 31 • 4:00 PM ET",
-        "broadcast": "NBCSCA",
-        "announcers": "San Jose Sharks Regional Broadcast Crew",
+        "broadcast": "NBCS California",
+        "announcers": "Randy Hahn, Bret Hedican",
         "venue": "SAP Center at San Jose, San Jose, CA",
         "window": "SAT",
         "windowLabel": "Hockey Night in Canada & Saturday National",
@@ -4123,7 +3909,7 @@
         "isoTime": "2026-10-31T23:00:00Z",
         "slot": "Sat, Oct 31 • 7:00 PM ET",
         "broadcast": "Sportsnet",
-        "announcers": "Chris Cuthbert, Craig Simpson",
+        "announcers": "Rick Ball, Kelly Hrudey",
         "venue": "Centre Bell, Montreal, QC",
         "window": "SAT",
         "windowLabel": "Hockey Night in Canada & Saturday National",
@@ -4147,7 +3933,7 @@
         "isoTime": "2026-10-31T23:00:00Z",
         "slot": "Sat, Oct 31 • 7:00 PM ET",
         "broadcast": "Sportsnet",
-        "announcers": "Rick Ball, Kelly Hrudey",
+        "announcers": "Chris Cuthbert, Craig Simpson",
         "venue": "Rogers Arena, Vancouver, BC",
         "window": "SAT",
         "windowLabel": "Hockey Night in Canada & Saturday National",
@@ -4170,8 +3956,8 @@
       {
         "isoTime": "2026-11-01T00:00:00Z",
         "slot": "Sat, Oct 31 • 8:00 PM ET",
-        "broadcast": "CBJNHL",
-        "announcers": "Dallas Stars Regional Broadcast Crew",
+        "broadcast": "Prime Video",
+        "announcers": "John Forslund, Jody Shelley, Thomas Hickey",
         "venue": "American Airlines Center, Dallas, TX",
         "window": "SAT",
         "windowLabel": "Hockey Night in Canada & Saturday National",
@@ -4190,8 +3976,129 @@
         "impactClass": "neutral",
         "target": "Root for Dallas Stars in Regulation",
         "why": "Suppresses Eastern Conference Wild Card contenders from stacking points."
+      },
+      {
+        "isoTime": "2026-11-01T18:00:00Z",
+        "slot": "Sun, Nov 1 • 1:00 PM ET",
+        "broadcast": "NHL Net",
+        "announcers": "E.J. Hradek, Kevin Weekes",
+        "venue": "Lenovo Center, Raleigh, NC",
+        "window": "SUN",
+        "windowLabel": "Sunday NHL Showcase Slate",
+        "windowBadge": "National & Matinee Window",
+        "statusState": "pre",
+        "statusDetail": "Scheduled",
+        "awayName": "Winnipeg Jets",
+        "awayRecord": "4-4-3, L1",
+        "awayScore": "",
+        "homeName": "Carolina Hurricanes",
+        "homeRecord": "9-2-2, W1",
+        "homeScore": "",
+        "homeWinChance": 80,
+        "awayWinChance": 20,
+        "verdict": "WILD CARD WATCH",
+        "impactClass": "neutral",
+        "target": "Root for Winnipeg Jets in Regulation",
+        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points."
+      },
+      {
+        "isoTime": "2026-11-01T20:30:00Z",
+        "slot": "Sun, Nov 1 • 3:30 PM ET",
+        "broadcast": "Sportsnet",
+        "announcers": "Rick Ball, Kelly Hrudey",
+        "venue": "Capital One Arena, Washington, DC",
+        "window": "SUN",
+        "windowLabel": "Sunday NHL Showcase Slate",
+        "windowBadge": "National & Matinee Window",
+        "statusState": "pre",
+        "statusDetail": "Scheduled",
+        "awayName": "Minnesota Wild",
+        "awayRecord": "8-3-2, W2",
+        "awayScore": "",
+        "homeName": "Washington Capitals",
+        "homeRecord": "6-4-0, W1",
+        "homeScore": "",
+        "homeWinChance": 43,
+        "awayWinChance": 57,
+        "verdict": "WILD CARD WATCH",
+        "impactClass": "neutral",
+        "target": "Root for Minnesota Wild in Regulation",
+        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points."
+      },
+      {
+        "isoTime": "2026-11-01T21:00:00Z",
+        "slot": "Sun, Nov 1 • 4:00 PM ET",
+        "broadcast": "Sportsnet",
+        "announcers": "John Bartlett, Garry Galley",
+        "venue": "Xfinity Mobile Arena, Philadelphia, PA",
+        "window": "SUN",
+        "windowLabel": "Sunday NHL Showcase Slate",
+        "windowBadge": "National & Matinee Window",
+        "statusState": "pre",
+        "statusDetail": "Scheduled",
+        "awayName": "Utah Mammoth",
+        "awayRecord": "8-4-0, W1",
+        "awayScore": "",
+        "homeName": "Philadelphia Flyers",
+        "homeRecord": "3-7-3, L1",
+        "homeScore": "",
+        "homeWinChance": 24,
+        "awayWinChance": 76,
+        "verdict": "WILD CARD WATCH",
+        "impactClass": "neutral",
+        "target": "Root for Utah Mammoth in Regulation",
+        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points."
+      },
+      {
+        "isoTime": "2026-11-01T23:00:00Z",
+        "slot": "Sun, Nov 1 • 6:00 PM ET",
+        "broadcast": "NHL Net",
+        "announcers": "E.J. Hradek, Kevin Weekes",
+        "venue": "Madison Square Garden, New York, NY",
+        "window": "SUN",
+        "windowLabel": "Sunday NHL Showcase Slate",
+        "windowBadge": "National & Matinee Window",
+        "statusState": "pre",
+        "statusDetail": "Scheduled",
+        "awayName": "Edmonton Oilers",
+        "awayRecord": "8-2-1, L1",
+        "awayScore": "",
+        "homeName": "New York Rangers",
+        "homeRecord": "7-5-1, L2",
+        "homeScore": "",
+        "homeWinChance": 32,
+        "awayWinChance": 68,
+        "verdict": "WILD CARD WATCH",
+        "impactClass": "neutral",
+        "target": "Root for Edmonton Oilers in Regulation",
+        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points."
+      },
+      {
+        "isoTime": "2026-11-02T01:00:00Z",
+        "slot": "Sun, Nov 1 • 8:00 PM ET",
+        "broadcast": "Prime Video",
+        "announcers": "John Forslund, Jody Shelley, Thomas Hickey",
+        "venue": "Honda Center, Anaheim, CA",
+        "window": "SUN",
+        "windowLabel": "Sunday NHL Showcase Slate",
+        "windowBadge": "National & Matinee Window",
+        "statusState": "pre",
+        "statusDetail": "Scheduled",
+        "awayName": "Ottawa Senators",
+        "awayRecord": "8-4-0, W1",
+        "awayScore": "",
+        "homeName": "Anaheim Ducks",
+        "homeRecord": "5-6-0, W1",
+        "homeScore": "",
+        "homeWinChance": 33,
+        "awayWinChance": 67,
+        "verdict": "ATLANTIC WATCH",
+        "impactClass": "warning",
+        "target": "Root for Anaheim Ducks in Regulation",
+        "why": "A regulation loss leaves Ottawa Senators with 0 standings points in the Atlantic Division."
       }
-    ]
+    ],
+    "cutlinePoints": 95
   }
 };
 
@@ -4225,13 +4132,12 @@
         sClinchBox.classList.remove('clinch-alert-active');
         const statusDetail = s.magicNumber 
           ? `Magic #: ${s.magicNumber}` 
-          : `Projected: ${s.tragicNumber || '91 PTS'} • Target: ~95`;
+          : `Projected: ${s.tragicNumber || '91 PTS'} • Target: ~${s.cutlinePoints || 95}`;
         sClinchText.textContent = `No clinching scenarios available this week (${statusDetail})`;
       }
 
       document.getElementById('sabres-game-time').textContent = s.nextGame.gameTime || '';
       document.getElementById('sabres-broadcast').textContent = s.nextGame.broadcast || 'MSG-B';
-      document.getElementById('sabres-win-chance').textContent = `${s.nextGame.winChance || 50}%`;
       document.getElementById('sabres-if-win').textContent = `Win: ${s.nextGame.ifWin}%`;
       document.getElementById('sabres-if-loss').textContent = `Loss: ${s.nextGame.ifLoss}%`;
 
@@ -4249,9 +4155,18 @@
           winChance: s.nextGame.winChance
         };
         updateSabresLiveUI(liveSabresGameData);
-      } else if (liveSabresGameData) {
+      } else if (liveSabresGameData && (liveSabresGameData.state === 'in' || liveSabresGameData.state === 'post')) {
+        if (currentSabresNextGame) {
+          currentSabresNextGame.statusState = liveSabresGameData.state;
+          currentSabresNextGame.statusDetail = liveSabresGameData.detail;
+          currentSabresNextGame.bufScore = liveSabresGameData.bufScore;
+          currentSabresNextGame.oppScore = liveSabresGameData.oppScore;
+          currentSabresNextGame.winChance = liveSabresGameData.winChance;
+        }
         updateSabresLiveUI(liveSabresGameData);
       } else {
+        document.getElementById('sabres-win-chance').textContent = `${s.nextGame.winChance || 52}%`;
+        document.getElementById('sabres-matchup-prefix').textContent = 'Next Matchup:';
         document.getElementById('sabres-next-opp').textContent = s.nextGame.opponent;
         document.getElementById('sabres-records').textContent = s.nextGame.matchupRecords || '';
         const sabresIso = resolveGameIso(s.nextGame);
@@ -4277,15 +4192,7 @@
       }
 
       if (Array.isArray(s.seedDistribution)) {
-        document.getElementById('sabres-distribution').innerHTML = s.seedDistribution.map(item => `
-          <div class="dist-row">
-            <span class="dist-name">${item.seed}</span>
-            <div class="dist-track">
-              <div class="dist-fill-sabres" style="width: ${item.pct}%"></div>
-            </div>
-            <span class="dist-pct">${item.pct}%</span>
-          </div>
-        `).join('');
+        document.getElementById('sabres-distribution').innerHTML = renderSeedDistribution(s.seedDistribution, 'dist-fill-sabres');
       }
 
       if (Array.isArray(s.opponents)) {
@@ -4316,13 +4223,7 @@
         : (FALLBACK_DATA.sabres.nextGame.efficiency || []);
 
       if (tbody && efficiencyData.length > 0) {
-        tbody.innerHTML = efficiencyData.map(row => `
-          <tr>
-            <td class="intel-col-metric">${row.metric}</td>
-            <td class="intel-col-buf">${row.sabres}</td>
-            <td class="intel-col-opp">${row.opp}</td>
-          </tr>
-        `).join('');
+        tbody.innerHTML = renderEfficiencyRows(efficiencyData, 'sabres');
       }
 
       // Populate Full Dynamic Injury / Goaltender Wire (Split: Sabres on left, Opponent on right)

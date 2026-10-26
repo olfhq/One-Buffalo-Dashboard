@@ -204,55 +204,120 @@ async function fetchSabresLeverage(oppShortName, sabresCurrentPlayoffPct) {
 
 // NFL Stadium, Broadcast, and Window Metadata Helpers
 const NFL_STADIUMS = {
-  'Bills': { venue: 'Highmark Stadium', city: 'Orchard Park, NY', roof: 'Open-Air Stadium', surface: 'Natural Grass', weather: '46°F, 18mph Wind, 20% PoP' },
-  'Dolphins': { venue: 'Hard Rock Stadium', city: 'Miami Gardens, FL', roof: 'Open-Air Stadium', surface: 'Natural Bermuda Grass', weather: '82°F, 9mph Wind, 15% PoP' },
-  'Patriots': { venue: 'Gillette Stadium', city: 'Foxborough, MA', roof: 'Open-Air Stadium', surface: 'FieldTurf CORE', weather: '51°F, 11mph Wind, 15% PoP' },
-  'Jets': { venue: 'MetLife Stadium', city: 'East Rutherford, NJ', roof: 'Open-Air Stadium', surface: 'FieldTurf CORE', weather: '54°F, 8mph Wind, 10% PoP' },
-  'Ravens': { venue: 'M&T Bank Stadium', city: 'Baltimore, MD', roof: 'Open-Air Stadium', surface: 'Natural Bermuda Grass', weather: '58°F, 8mph Wind, 10% PoP' },
-  'Bengals': { venue: 'Paycor Stadium', city: 'Cincinnati, OH', roof: 'Open-Air Stadium', surface: 'FieldTurf CORE', weather: '55°F, 10mph Wind, 15% PoP' },
-  'Browns': { venue: 'Huntington Bank Field', city: 'Cleveland, OH', roof: 'Open-Air Stadium', surface: 'Natural Kentucky Bluegrass', weather: '48°F, 14mph Wind, 25% PoP' },
-  'Steelers': { venue: 'Acrisure Stadium', city: 'Pittsburgh, PA', roof: 'Open-Air Stadium', surface: 'Natural Kentucky Bluegrass', weather: '52°F, 11mph Wind, 20% PoP' },
-  'Texans': { venue: 'NRG Stadium', city: 'Houston, TX', roof: 'Retractable Roof (Closed)', surface: 'Hellas Matrix Turf', weather: 'Controlled 72°F Climate' },
-  'Colts': { venue: 'Lucas Oil Stadium', city: 'Indianapolis, IN', roof: 'Retractable Roof (Closed)', surface: 'Shaw Momentum Turf', weather: 'Controlled 72°F Climate' },
-  'Jaguars': { venue: 'EverBank Stadium', city: 'Jacksonville, FL', roof: 'Open-Air Stadium', surface: 'Natural Bermuda Grass', weather: '74°F, 7mph Wind, 10% PoP' },
-  'Titans': { venue: 'Nissan Stadium', city: 'Nashville, TN', roof: 'Open-Air Stadium', surface: 'Matrix Helix Turf', weather: '62°F, 9mph Wind, 10% PoP' },
-  'Broncos': { venue: 'Empower Field at Mile High', city: 'Denver, CO', roof: 'Open-Air Stadium', surface: 'Natural Kentucky Bluegrass', weather: '52°F, 9mph Wind, 0% PoP' },
-  'Chiefs': { venue: 'GEHA Field at Arrowhead', city: 'Kansas City, MO', roof: 'Open-Air Stadium', surface: 'Natural Bermuda Grass', weather: '59°F, 12mph Wind, 5% PoP' },
-  'Raiders': { venue: 'Allegiant Stadium', city: 'Las Vegas, NV', roof: 'Domed Stadium', surface: 'Natural Bermuda Grass Tray', weather: 'Controlled 72°F Climate' },
-  'Chargers': { venue: 'SoFi Stadium', city: 'Inglewood, CA', roof: 'Indoor Canopy Stadium', surface: 'Matrix Turf', weather: 'Controlled 70°F Climate' },
-  'Cowboys': { venue: 'AT&T Stadium', city: 'Arlington, TX', roof: 'Retractable Roof (Closed)', surface: 'Matrix Turf', weather: 'Controlled 72°F Climate' },
-  'Giants': { venue: 'MetLife Stadium', city: 'East Rutherford, NJ', roof: 'Open-Air Stadium', surface: 'FieldTurf CORE', weather: '54°F, 8mph Wind, 10% PoP' },
-  'Eagles': { venue: 'Lincoln Financial Field', city: 'Philadelphia, PA', roof: 'Open-Air Stadium', surface: 'Natural Grass (Desso)', weather: '56°F, 10mph Wind, 10% PoP' },
-  'Commanders': { venue: 'Northwest Stadium', city: 'Landover, MD', roof: 'Open-Air Stadium', surface: 'Natural Bermuda Grass', weather: '57°F, 9mph Wind, 10% PoP' },
-  'Bears': { venue: 'Soldier Field', city: 'Chicago, IL', roof: 'Open-Air Stadium', surface: 'Natural Bermuda Grass', weather: '49°F, 15mph Wind, 20% PoP' },
-  'Lions': { venue: 'Ford Field', city: 'Detroit, MI', roof: 'Domed Stadium', surface: 'FieldTurf CORE', weather: 'Controlled 72°F Climate' },
-  'Packers': { venue: 'Lambeau Field', city: 'Green Bay, WI', roof: 'Open-Air Stadium', surface: 'Natural Grass (SISGrass)', weather: '41°F, 16mph Wind, 30% PoP' },
-  'Vikings': { venue: 'U.S. Bank Stadium', city: 'Minneapolis, MN', roof: 'Domed Stadium', surface: 'Act Global Turf', weather: 'Controlled 72°F Climate' },
-  'Falcons': { venue: 'Mercedes-Benz Stadium', city: 'Atlanta, GA', roof: 'Retractable Roof (Closed)', surface: 'FieldTurf CORE', weather: 'Controlled 72°F Climate' },
-  'Panthers': { venue: 'Bank of America Stadium', city: 'Charlotte, NC', roof: 'Open-Air Stadium', surface: 'FieldTurf', weather: '66°F, 6mph Wind, 10% PoP' },
-  'Saints': { venue: 'Caesars Superdome', city: 'New Orleans, LA', roof: 'Domed Stadium', surface: 'Turf Nation', weather: 'Controlled 72°F Climate' },
-  'Buccaneers': { venue: 'Raymond James Stadium', city: 'Tampa, FL', roof: 'Open-Air Stadium', surface: 'Natural Bermuda Grass', weather: '78°F, 6mph Wind, 15% PoP' },
-  'Cardinals': { venue: 'State Farm Stadium', city: 'Glendale, AZ', roof: 'Retractable Roof (Closed)', surface: 'Natural Bermuda Grass Tray', weather: 'Controlled 72°F Climate' },
-  'Rams': { venue: 'SoFi Stadium', city: 'Inglewood, CA', roof: 'Indoor Canopy Stadium', surface: 'Matrix Turf', weather: 'Controlled 70°F Climate' },
-  '49ers': { venue: "Levi's Stadium", city: 'Santa Clara, CA', roof: 'Open-Air Stadium', surface: 'Natural Bermuda Grass', weather: '68°F, 7mph Wind, 0% PoP' },
-  'Seahawks': { venue: 'Lumen Field', city: 'Seattle, WA', roof: 'Open-Air Stadium', surface: 'FieldTurf Revolution', weather: '53°F, 12mph Wind, 40% Rain' }
+  'Bills': { venue: 'Highmark Stadium', city: 'Orchard Park, NY', lat: 42.7738, lon: -78.7870, roof: 'Open-Air Stadium', surface: 'Natural Grass', weather: '46°F, 18mph Wind, 20% PoP' },
+  'Dolphins': { venue: 'Hard Rock Stadium', city: 'Miami Gardens, FL', lat: 25.9580, lon: -80.2389, roof: 'Open-Air Stadium', surface: 'Natural Bermuda Grass', weather: '82°F, 9mph Wind, 15% PoP' },
+  'Patriots': { venue: 'Gillette Stadium', city: 'Foxborough, MA', lat: 42.0909, lon: -71.2643, roof: 'Open-Air Stadium', surface: 'FieldTurf CORE', weather: '51°F, 11mph Wind, 15% PoP' },
+  'Jets': { venue: 'MetLife Stadium', city: 'East Rutherford, NJ', lat: 40.8128, lon: -74.0742, roof: 'Open-Air Stadium', surface: 'FieldTurf CORE', weather: '54°F, 8mph Wind, 10% PoP' },
+  'Ravens': { venue: 'M&T Bank Stadium', city: 'Baltimore, MD', lat: 39.2780, lon: -76.6227, roof: 'Open-Air Stadium', surface: 'Natural Bermuda Grass', weather: '58°F, 8mph Wind, 10% PoP' },
+  'Bengals': { venue: 'Paycor Stadium', city: 'Cincinnati, OH', lat: 39.0955, lon: -84.5161, roof: 'Open-Air Stadium', surface: 'FieldTurf CORE', weather: '55°F, 10mph Wind, 15% PoP' },
+  'Browns': { venue: 'Huntington Bank Field', city: 'Cleveland, OH', lat: 41.5061, lon: -81.6995, roof: 'Open-Air Stadium', surface: 'Natural Kentucky Bluegrass', weather: '48°F, 14mph Wind, 25% PoP' },
+  'Steelers': { venue: 'Acrisure Stadium', city: 'Pittsburgh, PA', lat: 40.4468, lon: -80.0158, roof: 'Open-Air Stadium', surface: 'Natural Kentucky Bluegrass', weather: '52°F, 11mph Wind, 20% PoP' },
+  'Texans': { venue: 'NRG Stadium', city: 'Houston, TX', lat: 29.6847, lon: -95.4107, roof: 'Retractable Roof (Closed)', surface: 'Hellas Matrix Turf', weather: 'Controlled 72°F Climate' },
+  'Colts': { venue: 'Lucas Oil Stadium', city: 'Indianapolis, IN', lat: 39.7601, lon: -86.1639, roof: 'Retractable Roof (Closed)', surface: 'Shaw Momentum Turf', weather: 'Controlled 72°F Climate' },
+  'Jaguars': { venue: 'EverBank Stadium', city: 'Jacksonville, FL', lat: 30.3239, lon: -81.6373, roof: 'Open-Air Stadium', surface: 'Natural Bermuda Grass', weather: '74°F, 7mph Wind, 10% PoP' },
+  'Titans': { venue: 'Nissan Stadium', city: 'Nashville, TN', lat: 36.1665, lon: -86.7713, roof: 'Open-Air Stadium', surface: 'Matrix Helix Turf', weather: '62°F, 9mph Wind, 10% PoP' },
+  'Broncos': { venue: 'Empower Field at Mile High', city: 'Denver, CO', lat: 39.7439, lon: -105.0201, roof: 'Open-Air Stadium', surface: 'Natural Kentucky Bluegrass', weather: '52°F, 9mph Wind, 0% PoP' },
+  'Chiefs': { venue: 'GEHA Field at Arrowhead', city: 'Kansas City, MO', lat: 39.0489, lon: -94.4839, roof: 'Open-Air Stadium', surface: 'Natural Bermuda Grass', weather: '59°F, 12mph Wind, 5% PoP' },
+  'Raiders': { venue: 'Allegiant Stadium', city: 'Las Vegas, NV', lat: 36.0909, lon: -115.1833, roof: 'Domed Stadium', surface: 'Natural Bermuda Grass Tray', weather: 'Controlled 72°F Climate' },
+  'Chargers': { venue: 'SoFi Stadium', city: 'Inglewood, CA', lat: 33.9535, lon: -118.3390, roof: 'Indoor Canopy Stadium', surface: 'Matrix Turf', weather: 'Controlled 70°F Climate' },
+  'Cowboys': { venue: 'AT&T Stadium', city: 'Arlington, TX', lat: 32.7480, lon: -97.0930, roof: 'Retractable Roof (Closed)', surface: 'Matrix Turf', weather: 'Controlled 72°F Climate' },
+  'Giants': { venue: 'MetLife Stadium', city: 'East Rutherford, NJ', lat: 40.8128, lon: -74.0742, roof: 'Open-Air Stadium', surface: 'FieldTurf CORE', weather: '54°F, 8mph Wind, 10% PoP' },
+  'Eagles': { venue: 'Lincoln Financial Field', city: 'Philadelphia, PA', lat: 39.9008, lon: -75.1675, roof: 'Open-Air Stadium', surface: 'Natural Grass (Desso)', weather: '56°F, 10mph Wind, 10% PoP' },
+  'Commanders': { venue: 'Northwest Stadium', city: 'Landover, MD', lat: 38.9076, lon: -76.8645, roof: 'Open-Air Stadium', surface: 'Natural Bermuda Grass', weather: '57°F, 9mph Wind, 10% PoP' },
+  'Bears': { venue: 'Soldier Field', city: 'Chicago, IL', lat: 41.8623, lon: -87.6167, roof: 'Open-Air Stadium', surface: 'Natural Bermuda Grass', weather: '49°F, 15mph Wind, 20% PoP' },
+  'Lions': { venue: 'Ford Field', city: 'Detroit, MI', lat: 42.3400, lon: -83.0456, roof: 'Domed Stadium', surface: 'FieldTurf CORE', weather: 'Controlled 72°F Climate' },
+  'Packers': { venue: 'Lambeau Field', city: 'Green Bay, WI', lat: 44.5013, lon: -88.0622, roof: 'Open-Air Stadium', surface: 'Natural Grass (SISGrass)', weather: '41°F, 16mph Wind, 30% PoP' },
+  'Vikings': { venue: 'U.S. Bank Stadium', city: 'Minneapolis, MN', lat: 44.9736, lon: -93.2575, roof: 'Domed Stadium', surface: 'Act Global Turf', weather: 'Controlled 72°F Climate' },
+  'Falcons': { venue: 'Mercedes-Benz Stadium', city: 'Atlanta, GA', lat: 33.7553, lon: -84.4006, roof: 'Retractable Roof (Closed)', surface: 'FieldTurf CORE', weather: 'Controlled 72°F Climate' },
+  'Panthers': { venue: 'Bank of America Stadium', city: 'Charlotte, NC', lat: 35.2258, lon: -80.8528, roof: 'Open-Air Stadium', surface: 'FieldTurf', weather: '66°F, 6mph Wind, 10% PoP' },
+  'Saints': { venue: 'Caesars Superdome', city: 'New Orleans, LA', lat: 29.9511, lon: -90.0812, roof: 'Domed Stadium', surface: 'Turf Nation', weather: 'Controlled 72°F Climate' },
+  'Buccaneers': { venue: 'Raymond James Stadium', city: 'Tampa, FL', lat: 27.9759, lon: -82.5033, roof: 'Open-Air Stadium', surface: 'Natural Bermuda Grass', weather: '78°F, 6mph Wind, 15% PoP' },
+  'Cardinals': { venue: 'State Farm Stadium', city: 'Glendale, AZ', lat: 33.5276, lon: -112.2626, roof: 'Retractable Roof (Closed)', surface: 'Natural Bermuda Grass Tray', weather: 'Controlled 72°F Climate' },
+  'Rams': { venue: 'SoFi Stadium', city: 'Inglewood, CA', lat: 33.9535, lon: -118.3390, roof: 'Indoor Canopy Stadium', surface: 'Matrix Turf', weather: 'Controlled 70°F Climate' },
+  '49ers': { venue: "Levi's Stadium", city: 'Santa Clara, CA', lat: 37.4033, lon: -121.9694, roof: 'Open-Air Stadium', surface: 'Natural Bermuda Grass', weather: '68°F, 7mph Wind, 0% PoP' },
+  'Seahawks': { venue: 'Lumen Field', city: 'Seattle, WA', lat: 47.5952, lon: -122.3316, roof: 'Open-Air Stadium', surface: 'FieldTurf Revolution', weather: '53°F, 12mph Wind, 40% Rain' }
 };
 
-function getNflStadium(teamName, compVenue, compWeather) {
+const NEUTRAL_STADIUM_COORDS = {
+  'Wembley': { lat: 51.5560, lon: -0.2795 },
+  'Tottenham': { lat: 51.6042, lon: -0.0662 },
+  'Allianz': { lat: 48.2188, lon: 11.6247 },
+  'Frankfurt': { lat: 50.0686, lon: 8.6455 },
+  'Olympiastadion': { lat: 52.5147, lon: 13.2395 },
+  'Bernab': { lat: 40.4531, lon: -3.6883 },
+  'Croke': { lat: 53.3607, lon: -6.2512 },
+  'Corinthians': { lat: -23.5453, lon: -46.4742 }
+};
+
+const OPEN_METEO_CACHE = new Map();
+
+async function fetchOpenMeteoWeather(lat, lon, isoTime) {
+  if (lat === undefined || lon === undefined || !isoTime) return null;
+  const cacheKey = `${Number(lat).toFixed(2)},${Number(lon).toFixed(2)}`;
+  try {
+    let data = OPEN_METEO_CACHE.get(cacheKey);
+    if (!data) {
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,precipitation_probability,wind_speed_10m&temperature_unit=fahrenheit&wind_speed_unit=mph&timezone=GMT&past_days=5&forecast_days=10`;
+      const res = await fetch(url);
+      if (!res.ok) return null;
+      data = await res.json();
+      OPEN_METEO_CACHE.set(cacheKey, data);
+    }
+    const times = data?.hourly?.time;
+    if (!Array.isArray(times) || times.length === 0) return null;
+    const targetPrefix = new Date(isoTime).toISOString().slice(0, 13);
+    let idx = times.findIndex(t => t.startsWith(targetPrefix));
+    if (idx === -1) {
+      const targetMs = new Date(isoTime).getTime();
+      let bestDiff = Infinity;
+      times.forEach((t, i) => {
+        const diff = Math.abs(new Date(t + 'Z').getTime() - targetMs);
+        if (diff < bestDiff) { bestDiff = diff; idx = i; }
+      });
+    }
+    if (idx === -1) return null;
+    const temp = data.hourly.temperature_2m?.[idx];
+    const wind = data.hourly.wind_speed_10m?.[idx];
+    const pop = data.hourly.precipitation_probability?.[idx];
+    if (temp === undefined || temp === null) return null;
+    return `${Math.round(temp)}°F, ${Math.round(wind || 0)}mph Wind, ${Math.round(pop || 0)}% PoP`;
+  } catch {
+    return null;
+  }
+}
+
+async function getNflStadium(teamName, compVenue, compWeather, isoTime) {
   const key = Object.keys(NFL_STADIUMS).find(k => (teamName || '').includes(k));
   const base = key ? NFL_STADIUMS[key] : { venue: compVenue?.fullName || 'NFL Stadium', city: compVenue?.address?.city || '', roof: compVenue?.indoor ? 'Indoor Dome' : 'Open-Air Stadium', surface: 'Natural Grass', weather: '55°F, 10mph Wind, 10% PoP' };
 
   const venueName = (compVenue?.fullName || base.venue).trim();
-  const isNeutralVenue = Boolean(compVenue?.fullName && key && !venueName.toLowerCase().includes(base.venue.split(' ')[0].toLowerCase()));
+  const baseCity = (base.city || '').split(',')[0].trim().toLowerCase();
+  const compCity = (compVenue?.address?.city || '').trim().toLowerCase();
+  const isSameCity = Boolean(baseCity && compCity && baseCity === compCity);
+  const isNeutralVenue = Boolean(compVenue?.fullName && key && !isSameCity && !venueName.toLowerCase().includes(base.venue.split(' ')[0].toLowerCase()));
 
   let roof = isNeutralVenue ? (compVenue?.indoor ? 'Indoor Stadium' : 'Open-Air Stadium') : base.roof;
   let surface = isNeutralVenue ? 'Natural Grass' : base.surface;
   let weather = isNeutralVenue ? (compVenue?.indoor ? 'Controlled 70°F Climate' : '58°F, 9mph Wind, 15% PoP') : base.weather;
 
   if (compWeather && compWeather.temperature) {
-    const gust = compWeather.gust ? `${compWeather.gust} Wind` : '10mph Wind';
-    const pop = compWeather.precipitation ? `${compWeather.precipitation} PoP` : '10% PoP';
+    const gust = compWeather.gust ? `${compWeather.gust}mph Wind` : '10mph Wind';
+    const pop = compWeather.precipitation !== undefined ? `${compWeather.precipitation}% PoP` : '10% PoP';
     weather = `${compWeather.temperature}°F, ${gust}, ${pop}`;
+  } else if (roof.includes('Open-Air') && isoTime) {
+    let lat = isNeutralVenue ? null : base.lat;
+    let lon = isNeutralVenue ? null : base.lon;
+    if (isNeutralVenue) {
+      const neutralKey = Object.keys(NEUTRAL_STADIUM_COORDS).find(nk => venueName.toLowerCase().includes(nk.toLowerCase()));
+      if (neutralKey) {
+        lat = NEUTRAL_STADIUM_COORDS[neutralKey].lat;
+        lon = NEUTRAL_STADIUM_COORDS[neutralKey].lon;
+      }
+    }
+    if (lat !== null && lon !== null) {
+      const liveWeather = await fetchOpenMeteoWeather(lat, lon, isoTime);
+      if (liveWeather) weather = liveWeather;
+    }
   }
   const cityParts = [compVenue?.address?.city, compVenue?.address?.state || compVenue?.address?.country].map(s => (s || '').trim()).filter(Boolean);
   const cityName = cityParts.length > 0 ? cityParts.join(', ') : base.city;
@@ -273,7 +338,9 @@ function getNflBroadcast(rawNet, homeName, awayName, isoTime, isBillsGame = fals
   const matchHash = ((homeName || '').length * 7 + (awayName || '').length * 13 + (homeName || '').charCodeAt(0) || 0);
 
   if (net.includes('PRIME')) return { network: 'Prime Video', crew: 'Al Michaels, Kirk Herbstreit', tag: 'tv-prime' };
+  if (net === 'PEACOCK') return { network: 'Peacock', crew: 'Noah Eagle, Todd Blackledge', tag: 'tv-nbc' };
   if (net.includes('NBC') || net.includes('PEACOCK')) return { network: 'NBC', crew: 'Mike Tirico, Cris Collinsworth', tag: 'tv-nbc' };
+  if (net.includes('NETFLIX')) return { network: 'Netflix', crew: 'Ian Eagle, Nate Burleson, J.J. Watt', tag: 'tv-nfln' };
   if (net.includes('ESPN') || net.includes('ABC')) return { network: net.includes('ABC') ? 'ABC/ESPN' : 'ESPN', crew: 'Joe Buck, Troy Aikman', tag: 'tv-espn' };
   if (net.includes('NFL')) return { network: 'NFL Net', crew: 'Rich Eisen, Kurt Warner', tag: 'tv-nfln' };
 
@@ -284,7 +351,7 @@ function getNflBroadcast(rawNet, homeName, awayName, isoTime, isBillsGame = fals
     const foxCrews = [
       'Joe Davis, Greg Olsen',
       'Kenny Albert, Jonathan Vilma',
-      'Adam Amin, Mark Sanchez',
+      'Adam Amin, Drew Brees',
       'Kevin Kugler, Daryl Johnston',
       'Chris Myers, Mark Schlereth',
       'Kevin Burkhardt, Tom Brady'
@@ -297,11 +364,11 @@ function getNflBroadcast(rawNet, homeName, awayName, isoTime, isBillsGame = fals
       return { network: 'CBS', crew: 'Jim Nantz, Tony Romo', tag: 'tv-cbs' };
     }
     const cbsCrews = [
-      'Ian Eagle, Charles Davis',
+      'Ian Eagle, J.J. Watt',
       'Kevin Harlan, Trent Green',
-      'Andrew Catalon, Tiki Barber',
+      'Andrew Catalon, Tiki Barber, Jason McCourty',
       'Spero Dedes, Adam Archuleta',
-      'Tom McCarthy, Jay Feely'
+      'Tom McCarthy, Ross Tucker'
     ];
     return { network: 'CBS', crew: cbsCrews[matchHash % cbsCrews.length], tag: 'tv-cbs' };
   }
@@ -685,7 +752,7 @@ async function fetchNflScoreboard() {
         }
       }
 
-      const stadium = getNflStadium(homeName, comp.venue, comp.weather);
+      const stadium = await getNflStadium(homeName, comp.venue, comp.weather, ev.date);
       const broadcastDetails = getNflBroadcast(broadcast, homeName, awayName, ev.date);
       const windowInfo = getNflWindow(ev.date);
 
@@ -967,17 +1034,19 @@ function getNhlArena(homeName) {
   return found ? { venue: found.venue, city: found.city } : { venue: 'NHL Arena', city: '' };
 }
 
-function getNhlBroadcast(rawNet, homeName, awayName, isSabresGame = false) {
+function getNhlBroadcast(rawNet, homeName, awayName, isSabresGame = false, market = 'H') {
   const cleanRaw = (rawNet || 'ESPN+').trim();
   const net = cleanRaw.toUpperCase();
   const matchHash = ((homeName || '').length * 7 + (awayName || '').length * 13 + ((homeName || '').charCodeAt(0) || 0));
+  const rsnTeam = market === 'A' ? (awayName || homeName || 'Away') : (homeName || awayName || 'Home');
 
   if (isSabresGame) {
-    if (net.includes('TNT')) return { network: 'TNT', crew: 'Kenny Albert, Eddie Olczyk, Brian Boucher', tag: 'tv-tnt' };
+    if (net.includes('TNT') || net.includes('TBS') || net.includes('TRU')) return { network: 'TNT', crew: 'Kenny Albert, Eddie Olczyk, Brian Boucher', tag: 'tv-tnt' };
     if (net.includes('ABC') || (net.includes('ESPN') && !net.includes('ESPN+'))) return { network: net.includes('ABC') ? 'ABC' : 'ESPN', crew: 'Sean McDonough, Ray Ferraro', tag: 'tv-espn' };
+    if ((net.includes('ESPN+') || net.includes('HULU')) && market === 'N') return { network: 'ESPN+ / Hulu', crew: 'Bob Wischusen, Ryan Callahan', tag: 'tv-espn' };
     return { network: 'MSG-B', crew: 'Dan Dunleavy, Rob Ray', tag: 'tv-msg' };
   }
-  if (net.includes('TNT') || net.includes('MAX')) {
+  if (net.includes('TNT') || net.includes('MAX') || net.includes('TBS') || net.includes('TRU')) {
     const tntCrews = [
       'Kenny Albert, Eddie Olczyk, Brian Boucher',
       'Brendan Burke, Darren Pang, Jackie Redmond'
@@ -985,27 +1054,29 @@ function getNhlBroadcast(rawNet, homeName, awayName, isSabresGame = false) {
     return { network: 'TNT', crew: tntCrews[matchHash % tntCrews.length], tag: 'tv-tnt' };
   }
   if (net.includes('ABC')) return { network: 'ABC', crew: 'Sean McDonough, Ray Ferraro', tag: 'tv-espn' };
-  if (net.includes('ESPN+')) {
+  if (net.includes('NHLN') || net.includes('NHL NET')) return { network: 'NHL Net', crew: 'E.J. Hradek, Kevin Weekes', tag: 'tv-nhln' };
+  if (net.includes('ESPN+') || net.includes('HULU')) {
     const espnPlusCrews = [
       'Bob Wischusen, Kevin Weekes',
       'John Buccigross, Ryan Callahan',
       'Mike Monaco, A.J. Mleczko',
       'Roxy Bernstein, Cassie Campbell-Pascall',
-      'Leah Hextall,Dominic Moore',
-      'Regional RSN / ESPN+ Out-of-Market Feed'
+      'Leah Hextall, Dominic Moore'
     ];
-    return { network: 'ESPN+', crew: espnPlusCrews[matchHash % espnPlusCrews.length].replace(',', ', '), tag: 'tv-espn' };
+    return { network: 'ESPN+', crew: espnPlusCrews[matchHash % espnPlusCrews.length], tag: 'tv-espn' };
   }
-  if (net.includes('ESPN')) return { network: 'ESPN', crew: 'Steve Levy, Ray Ferraro', tag: 'tv-espn' };
-  if (net.includes('SN') || net.includes('SPORTSNET')) {
+  if (net.includes('ESPN')) return { network: 'ESPN', crew: 'Bob Wischusen, Ray Ferraro', tag: 'tv-espn' };
+  if (net.includes('PRIME')) return { network: 'Prime Video', crew: 'John Forslund, Jody Shelley, Thomas Hickey', tag: 'tv-prime' };
+  if (net.includes('SN') || net.includes('SPORTSNET') || net.includes('CBC') || net.includes('CITY')) {
     const snCrews = [
       'Chris Cuthbert, Craig Simpson',
       'John Bartlett, Garry Galley',
-      'Rick Ball, Kelly Hrudey'
+      'Rick Ball, Kelly Hrudey',
+      'Harnarayan Singh, Louie DeBrusk'
     ];
     return { network: 'Sportsnet', crew: snCrews[matchHash % snCrews.length], tag: 'tv-sn' };
   }
-  if (net.includes('TSN')) {
+  if (net.includes('TSN') || net.includes('RDS') || net.includes('TVAS')) {
     const tsnCrews = [
       'Gord Miller, Mike Johnson',
       'Bryan Mudryk, Frankie Corrado'
@@ -1013,8 +1084,49 @@ function getNhlBroadcast(rawNet, homeName, awayName, isSabresGame = false) {
     return { network: cleanRaw.includes('TSN') ? cleanRaw : 'TSN', crew: tsnCrews[matchHash % tsnCrews.length], tag: 'tv-tsn' };
   }
   if (net.includes('NESN')) return { network: 'NESN', crew: 'Judd Sirott, Andy Brickley', tag: 'tv-nesn' };
-  if (net.includes('MSG')) return { network: cleanRaw, crew: 'Sam Rosen, Joe Micheletti', tag: 'tv-msg' };
-  return { network: cleanRaw || 'TV', crew: `${homeName || 'Home'} Regional Broadcast Crew`, tag: 'tv-rsn' };
+  if (net.includes('MSG')) {
+    if (rsnTeam.includes('Islanders')) return { network: 'MSGSN', crew: 'Brendan Burke, Butch Goring', tag: 'tv-msg' };
+    if (rsnTeam.includes('Devils')) return { network: 'MSGSN', crew: 'Bill Spaulding, Ken Daneyko', tag: 'tv-msg' };
+    if (rsnTeam.includes('Sabres')) return { network: 'MSG-B', crew: 'Dan Dunleavy, Rob Ray', tag: 'tv-msg' };
+    return { network: cleanRaw, crew: 'Kenny Albert, Dave Maloney', tag: 'tv-msg' };
+  }
+
+  const rsnMap = {
+    'ALT': { network: 'Altitude', crew: 'Marc Moser, Mark Rycroft' },
+    'ABTV': { network: 'Altitude', crew: 'Marc Moser, Mark Rycroft' },
+    'CHSN': { network: 'CHSN', crew: 'Rick Ball, Darren Pang' },
+    'MNMT': { network: 'Monumental', crew: 'Joe Beninati, Craig Laughlin' },
+    'CARNHL': { network: 'FDSN South', crew: 'Mike Maniscalco, Tripp Tracy' },
+    'CBJNHL': { network: 'FDSN Ohio', crew: 'Steve Mears, Jody Shelley' },
+    'FDSNOH': { network: 'FDSN Ohio', crew: 'Steve Mears, Jody Shelley' },
+    'FDSNSW': { network: 'FDSN Southwest', crew: 'Josh Bogorad, Daryl Reaugh' },
+    'FDSNDET': { network: 'FDSN Detroit', crew: 'Ken Daniels, Mickey Redmond' },
+    'FDSNWI': { network: 'FDSN North', crew: 'Anthony LaPanta, Ryan Carter' },
+    'FDSNNO': { network: 'FDSN North', crew: 'Anthony LaPanta, Ryan Carter' },
+    'FDSNSO': { network: 'FDSN South', crew: 'Willy Daunic, Chris Mason' },
+    'FDSNFL': { network: 'FDSN Sun', crew: 'Dave Randorf, Brian Engblom' },
+    'FDSNSUN': { network: 'FDSN Sun', crew: 'Dave Randorf, Brian Engblom' },
+    'THE SPOT': { network: 'The Spot (WXPX)', crew: 'Dave Randorf, Brian Engblom' },
+    'STLNHL': { network: 'FDSN Midwest', crew: 'John Kelly, Jamie Rivers' },
+    'FDSBMW': { network: 'FDSN Midwest', crew: 'John Kelly, Jamie Rivers' },
+    'FDSNMW': { network: 'FDSN Midwest', crew: 'John Kelly, Jamie Rivers' },
+    'FDSNW': { network: 'FDSN West', crew: 'Nick Nickson, Jim Fox' },
+    'NBCSCA': { network: 'NBCS California', crew: 'Randy Hahn, Bret Hedican' },
+    'NBCSP': { network: 'NBCS Philadelphia', crew: 'Jim Jackson, Keith Jones' },
+    'SNP': { network: 'SportsNet Pittsburgh', crew: 'Josh Getzoff, Colby Armstrong' },
+    'VICTORY+': { network: 'Victory+', crew: 'Josh Bogorad, Daryl Reaugh' },
+    'KCOP': { network: 'Victory+ / KCOP', crew: 'John Ahlers, Brian Hayward' },
+    'FOXLA+': { network: 'Victory+ / KCOP', crew: 'John Ahlers, Brian Hayward' },
+    'SCRIPPS': { network: 'Scripps Sports', crew: 'Steve Goldstein, Randy Moller' },
+    'KHN': { network: 'KHN / KONG', crew: 'John Forslund, JT Brown, Eddie Olczyk' },
+    'KONG': { network: 'KHN / KONG', crew: 'John Forslund, JT Brown, Eddie Olczyk' },
+    'MAMMOTH+': { network: 'Utah16 / Mammoth+', crew: 'Matt McConnell, Dominic Moore' },
+    'SEG+': { network: 'Utah16 / SEG+', crew: 'Matt McConnell, Dominic Moore' }
+  };
+  if (rsnMap[net]) {
+    return { network: rsnMap[net].network, crew: rsnMap[net].crew, tag: 'tv-rsn' };
+  }
+  return { network: cleanRaw || 'TV', crew: `${rsnTeam} Regional Broadcast Crew`, tag: 'tv-rsn' };
 }
 
 function getNhlWindow(isoTime) {
@@ -1124,8 +1236,14 @@ async function fetchNhlScoreboard() {
             statusDetail = `Period ${g.periodDescriptor?.number || 1}`;
           }
 
-          const tvNet = g.tvBroadcasts?.find(b => b.market === 'N' || b.countryCode === 'US')?.network ||
-                        g.tvBroadcasts?.[0]?.network || 'ESPN+';
+          const broadcasts = Array.isArray(g.tvBroadcasts) ? g.tvBroadcasts : [];
+          const usNat = broadcasts.find(b => b.market === 'N' && b.countryCode === 'US');
+          const caNat = broadcasts.find(b => b.market === 'N' && b.countryCode === 'CA' && !String(b.network || '').toUpperCase().includes('TVAS'));
+          const homeBc = broadcasts.find(b => b.market === 'H');
+          const awayBc = broadcasts.find(b => b.market === 'A');
+          const chosenBc = usNat || caNat || homeBc || awayBc || broadcasts[0];
+          const tvNet = chosenBc?.network || 'ESPN+';
+          const tvMarket = chosenBc?.market || 'H';
 
           const d = new Date(g.startTimeUTC);
           const slot = d.toLocaleDateString('en-US', { timeZone: 'America/New_York', weekday: 'short', month: 'short', day: 'numeric' }) +
@@ -1142,6 +1260,7 @@ async function fetchNhlScoreboard() {
             statusState,
             statusDetail,
             broadcast: tvNet,
+            broadcastMarket: tvMarket,
             venue: g.venue?.default || ''
           });
         }
@@ -1188,7 +1307,12 @@ async function fetchNhlScoreboard() {
             found.espnComp = comp;
             if (h.score !== undefined) found.homeScore = String(h.score);
             if (a.score !== undefined) found.awayScore = String(a.score);
-            if (espnBroadcast) found.broadcast = espnBroadcast;
+            const upperEspnBc = String(espnBroadcast || '').toUpperCase();
+            const isEspnUsNational = ['ABC', 'ESPN', 'TNT', 'TBS', 'TRU', 'NHLN', 'NHL NET'].some(n => upperEspnBc === n || upperEspnBc.startsWith(n + ' '));
+            if (espnBroadcast && (!found.broadcast || found.broadcast === 'ESPN+' || isEspnUsNational)) {
+              found.broadcast = espnBroadcast;
+              if (isEspnUsNational) found.broadcastMarket = 'N';
+            }
           } else {
             const d = new Date(ev.date);
             const slot = d.toLocaleDateString('en-US', { timeZone: 'America/New_York', weekday: 'short', month: 'short', day: 'numeric' }) +
@@ -1380,7 +1504,7 @@ async function fetchNhlScoreboard() {
       }
 
       const arena = getNhlArena(homeName);
-      const broadcastDetails = getNhlBroadcast(g.broadcast, homeName, awayName, false);
+      const broadcastDetails = getNhlBroadcast(g.broadcast, homeName, awayName, false, g.broadcastMarket || 'H');
       const windowInfo = getNhlWindow(g.isoTime);
 
       const nhlOdds = calculateNhlOddsProb(homeName, awayName, standingsMap, g.espnComp);
@@ -1647,94 +1771,121 @@ async function fetchNhlGameInjuries(oppName, oppAbbrev) {
   const injuries = [];
   const cleanOpp = oppName || 'Opponent';
   const oppKey = Object.keys(NHL_STARTING_GOALIES).find(k => cleanOpp.includes(k) || (oppAbbrev && oppAbbrev.includes(k)));
-  const oppGoalie = oppKey ? NHL_STARTING_GOALIES[oppKey] : { name: `${cleanOpp} Starter`, gaa: 'Expected Starter' };
-
-  // Starting Goaltenders Wire
-  injuries.push(
-    {
-      player: 'Ukko-Pekka Luukkonen',
-      pos: 'G',
-      status: 'Probable',
-      injury: 'Expected Starter (2.78 GAA, .912 SV%)',
-      team: 'Sabres'
-    },
-    {
-      player: oppGoalie.name,
-      pos: 'G',
-      status: 'Probable',
-      injury: oppGoalie.gaa.includes('GAA') ? `Expected Starter (${oppGoalie.gaa})` : oppGoalie.gaa,
-      team: cleanOpp
-    }
-  );
-
+  const fallbackOppGoalie = oppKey ? NHL_STARTING_GOALIES[oppKey] : { name: `${cleanOpp} Starter`, gaa: 'Expected Starter' };
+  const fallbackBufGoalie = NHL_STARTING_GOALIES['Sabres'];
   const oppId = oppAbbrev ? ESPN_NHL_TEAM_IDS[oppAbbrev] : null;
 
+  let bInj = [];
+  let oInj = [];
+  let bufGoalieData = null;
+  let oppGoalieData = null;
+
   try {
-    async function fetchNhlTeamInjuries(id, label) {
-      if (!id) return [];
-      try {
-        const res = await fetch(`https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/teams/${id}/injuries`);
-        if (!res.ok) return [];
-        const data = await res.json();
-        const list = data.injuries || data.items || [];
-        return list.map(item => ({
+    const [injRes, bufStatsRes, oppStatsRes] = await Promise.allSettled([
+      fetch('https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/injuries'),
+      fetch('https://api-web.nhle.com/v1/club-stats/BUF/now'),
+      oppAbbrev ? fetch(`https://api-web.nhle.com/v1/club-stats/${oppAbbrev}/now`) : Promise.resolve(null)
+    ]);
+
+    if (injRes.status === 'fulfilled' && injRes.value && injRes.value.ok) {
+      const data = await injRes.value.json();
+      const teamBlocks = data.injuries || [];
+      const mapTeamBlock = (block, label) => {
+        if (!block || !Array.isArray(block.injuries)) return [];
+        return block.injuries.map(item => ({
           player: item.athlete?.displayName || item.displayName || 'Player',
           pos: item.athlete?.position?.abbreviation || item.position || '',
           status: item.status || item.type || 'Questionable',
           injury: item.details?.type || item.injury || 'Undisclosed',
           team: label
         }));
-      } catch {
-        return [];
-      }
+      };
+      const bufBlock = teamBlocks.find(t => String(t.id) === '2' || (t.displayName || '').includes('Sabres'));
+      const oppBlock = teamBlocks.find(t => (oppId && String(t.id) === String(oppId)) || (t.displayName || '').toLowerCase().includes(cleanOpp.toLowerCase()));
+      bInj = mapTeamBlock(bufBlock, 'Sabres');
+      oInj = mapTeamBlock(oppBlock, cleanOpp);
     }
 
-    const [bInj, oInj] = await Promise.all([
-      fetchNhlTeamInjuries('2', 'Sabres'),
-      fetchNhlTeamInjuries(oppId, cleanOpp)
-    ]);
-
-    if (bInj.length > 0 || oInj.length > 0) {
-      injuries.push(...bInj, ...oInj);
-      return injuries;
+    if (bufStatsRes.status === 'fulfilled' && bufStatsRes.value && bufStatsRes.value.ok) {
+      bufGoalieData = await bufStatsRes.value.json();
+    }
+    if (oppStatsRes.status === 'fulfilled' && oppStatsRes.value && oppStatsRes.value.ok) {
+      oppGoalieData = await oppStatsRes.value.json();
     }
   } catch (err) {
-    console.warn('NHL dynamic injury fetch fallback:', err.message);
+    console.warn('NHL dynamic injury/goalie fetch fallback:', err.message);
   }
 
-  // Baseline team injuries
+  function resolveExpectedStarter(clubStats, teamInjuries, fallbackObj) {
+    const goalies = Array.isArray(clubStats?.goalies) ? clubStats.goalies : [];
+    if (goalies.length > 0) {
+      const unavailable = new Set(
+        (teamInjuries || [])
+          .filter(i => /out|injured reserve|ir/i.test(i.status || ''))
+          .map(i => (i.player || '').toLowerCase().trim())
+      );
+      const activePool = goalies.filter(g => {
+        const fullName = `${g.firstName?.default || ''} ${g.lastName?.default || ''}`.trim().toLowerCase();
+        return !unavailable.has(fullName);
+      });
+      const pool = activePool.length > 0 ? activePool : goalies;
+      const sorted = [...pool].sort((a, b) =>
+        ((b.gamesStarted || 0) - (a.gamesStarted || 0)) ||
+        ((b.gamesPlayed || 0) - (a.gamesPlayed || 0)) ||
+        ((b.timeOnIce || 0) - (a.timeOnIce || 0))
+      );
+      const top = sorted[0];
+      if (top && (top.gamesPlayed || 0) > 0) {
+        const fullName = `${top.firstName?.default || ''} ${top.lastName?.default || ''}`.trim();
+        const gaa = Number(top.goalsAgainstAverage || 0).toFixed(2);
+        const svp = Number(top.savePercentage || 0).toFixed(3).replace(/^0/, '');
+        return {
+          name: fullName,
+          injury: `Expected Starter (${gaa} GAA, ${svp} SV%)`
+        };
+      }
+    }
+    return {
+      name: fallbackObj.name,
+      injury: fallbackObj.gaa.includes('GAA') ? `Expected Starter (${fallbackObj.gaa})` : fallbackObj.gaa
+    };
+  }
+
+  const bufStarter = resolveExpectedStarter(bufGoalieData, bInj, fallbackBufGoalie);
+  const oppStarter = resolveExpectedStarter(oppGoalieData, oInj, fallbackOppGoalie);
+
+  injuries.push(
+    {
+      player: bufStarter.name,
+      pos: 'G',
+      status: 'Probable',
+      injury: bufStarter.injury,
+      team: 'Sabres'
+    },
+    {
+      player: oppStarter.name,
+      pos: 'G',
+      status: 'Probable',
+      injury: oppStarter.injury,
+      team: cleanOpp
+    }
+  );
+
+  if (bInj.length > 0 || oInj.length > 0) {
+    injuries.push(...bInj, ...oInj);
+    return injuries;
+  }
+
+  // Baseline team injuries only if live API is unreachable
   injuries.push(
     { player: 'Zach Benson', pos: 'LW', status: 'Questionable', injury: 'Lower Body', team: 'Sabres' },
     { player: 'Mattias Samuelsson', pos: 'D', status: 'Injured Reserve', injury: 'Lower Body', team: 'Sabres' }
   );
 
-  if (cleanOpp.includes('Washington') || oppAbbrev === 'WSH') {
-    injuries.push(
-      { player: 'Sonny Milano', pos: 'LW', status: 'Injured Reserve', injury: 'Upper Body', team: cleanOpp },
-      { player: 'Jakob Chychrun', pos: 'D', status: 'Questionable', injury: 'Upper Body', team: cleanOpp }
-    );
-  } else if (cleanOpp.includes('Flyers') || oppAbbrev === 'PHI') {
-    injuries.push(
-      { player: 'Cam York', pos: 'D', status: 'Injured Reserve', injury: 'Upper Body', team: cleanOpp }
-    );
-  } else if (cleanOpp.includes('Boston') || oppAbbrev === 'BOS') {
-    injuries.push(
-      { player: 'Matthew Poitras', pos: 'C', status: 'Questionable', injury: 'Undisclosed', team: cleanOpp }
-    );
-  } else if (cleanOpp.includes('Florida') || oppAbbrev === 'FLA') {
-    injuries.push(
-      { player: 'Aleksander Barkov', pos: 'C', status: 'Questionable', injury: 'Lower Body', team: cleanOpp }
-    );
-  } else {
-    injuries.push(
-      { player: 'Roster Reserve', pos: 'F', status: 'Questionable', injury: 'Day-to-Day', team: cleanOpp }
-    );
-  }
-
   return injuries;
 }
 
-// Fetch complete official injuries & inactives from Game Summary or Team feeds
+// Fetch complete official injuries & inactives from Game Summary or League Injury Wire
 async function fetchGameInjuries(eventId, oppName, oppId) {
   const injuries = [];
 
@@ -1768,29 +1919,28 @@ async function fetchGameInjuries(eventId, oppName, oppId) {
   }
 
   if (injuries.length === 0) {
-    async function fetchFromTeam(id, label) {
-      try {
-        const res = await fetch(`https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/${id}/injuries`);
-        if (!res.ok) return [];
+    try {
+      const res = await fetch('https://site.api.espn.com/apis/site/v2/sports/football/nfl/injuries');
+      if (res.ok) {
         const data = await res.json();
-        const list = data.injuries || data.items || [];
-        return list.map(item => ({
-          player: item.athlete?.displayName || item.displayName || 'Player',
-          pos: item.athlete?.position?.abbreviation || item.position || '',
-          status: item.status || item.type || 'Questionable',
-          injury: item.details?.type || item.injury || 'Undisclosed',
-          team: label
-        }));
-      } catch {
-        return [];
+        const teamBlocks = data.injuries || [];
+        const mapTeamBlock = (block, label) => {
+          if (!block || !Array.isArray(block.injuries)) return [];
+          return block.injuries.map(item => ({
+            player: item.athlete?.displayName || item.displayName || 'Player',
+            pos: item.athlete?.position?.abbreviation || item.position || '',
+            status: item.status || item.type || 'Questionable',
+            injury: item.details?.type || item.injury || 'Undisclosed',
+            team: label
+          }));
+        };
+        const bufBlock = teamBlocks.find(t => String(t.id) === '2' || (t.displayName || '').includes('Bills'));
+        const oppBlock = teamBlocks.find(t => (oppId && String(t.id) === String(oppId)) || (t.displayName || '').toLowerCase().includes((oppName || '').toLowerCase()));
+        injuries.push(...mapTeamBlock(bufBlock, 'Bills'), ...mapTeamBlock(oppBlock, oppName || 'Opponent'));
       }
+    } catch (e) {
+      console.warn('League NFL injury fetch fallback:', e.message);
     }
-
-    const [bInj, oInj] = await Promise.all([
-      fetchFromTeam('2', 'Bills'),
-      fetchFromTeam(oppId || '33', oppName)
-    ]);
-    injuries.push(...bInj, ...oInj);
   }
 
   if (injuries.length === 0) {
@@ -1807,6 +1957,186 @@ async function fetchGameInjuries(eventId, oppName, oppId) {
   }
 
   return injuries;
+}
+
+function formatOrdinal(n) {
+  const num = parseInt(n, 10);
+  if (isNaN(num) || num <= 0) return '';
+  const s = ['th', 'st', 'nd', 'rd'];
+  const v = num % 100;
+  return num + (s[(v - 20) % 10] || s[v] || s[0]);
+}
+
+async function fetchNflTeamEfficiency(oppId, oppName, seasonYear = 2026) {
+  try {
+    const [bufRes, oppRes] = await Promise.all([
+      fetch(`https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/seasons/${seasonYear}/types/2/teams/2/statistics`),
+      fetch(`https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/seasons/${seasonYear}/types/2/teams/${oppId}/statistics`)
+    ]);
+    if (!bufRes.ok || !oppRes.ok) return null;
+    const [bufData, oppData] = await Promise.all([bufRes.json(), oppRes.json()]);
+
+    const findStat = (data, statName, prefCat = null) => {
+      const cats = data?.splits?.categories || [];
+      if (prefCat) {
+        const c = cats.find(cat => cat.name === prefCat);
+        const s = (c?.stats || []).find(st => st.name === statName);
+        if (s) return s;
+      }
+      for (const c of cats) {
+        const s = (c.stats || []).find(st => st.name === statName);
+        if (s) return s;
+      }
+      return null;
+    };
+
+    const fmtStat = (data, statName, prefCat, isPct = false) => {
+      const st = findStat(data, statName, prefCat);
+      if (!st || st.value === undefined) return null;
+      const valStr = `${Number(st.value).toFixed(1)}${isPct ? '%' : ''}`;
+      const rankStr = st.rank ? formatOrdinal(st.rank) : (st.rankDisplayValue || '');
+      return rankStr ? `${valStr} (${rankStr})` : valStr;
+    };
+
+    const specs = [
+      { metric: 'Points / Game', name: 'totalPointsPerGame', cat: 'scoring', pct: false },
+      { metric: 'Total Yards / Game', name: 'yardsPerGame', cat: 'passing', pct: false },
+      { metric: 'Passing Yards / Game', name: 'netPassingYardsPerGame', cat: 'passing', pct: false },
+      { metric: 'Rushing Yards / Game', name: 'rushingYardsPerGame', cat: 'rushing', pct: false },
+      { metric: '3rd Down Conversion %', name: 'thirdDownConvPct', cat: 'miscellaneous', pct: true },
+      { metric: 'Red Zone TD %', name: 'redzoneTouchdownPct', cat: 'miscellaneous', pct: true }
+    ];
+
+    const efficiency = specs.map(sp => {
+      const bVal = fmtStat(bufData, sp.name, sp.cat, sp.pct);
+      const oVal = fmtStat(oppData, sp.name, sp.cat, sp.pct);
+      return bVal && oVal ? { metric: sp.metric, bills: bVal, opp: oVal } : null;
+    }).filter(Boolean);
+
+    let turnoverRatio = null;
+    const bToDiff = findStat(bufData, 'turnOverDifferential', 'miscellaneous');
+    const oToDiff = findStat(oppData, 'turnOverDifferential', 'miscellaneous');
+    const bTake = findStat(bufData, 'totalTakeaways', 'miscellaneous');
+    const oTake = findStat(oppData, 'totalTakeaways', 'miscellaneous');
+    const bGive = findStat(bufData, 'totalGiveaways', 'miscellaneous');
+    const oGive = findStat(oppData, 'totalGiveaways', 'miscellaneous');
+
+    if (bToDiff && oToDiff) {
+      const bDiffVal = Math.round(Number(bToDiff.value || 0));
+      const oDiffVal = Math.round(Number(oToDiff.value || 0));
+      const bSign = bDiffVal > 0 ? '+' : '';
+      const oSign = oDiffVal > 0 ? '+' : '';
+      const bTakeVal = Math.round(Number(bTake?.value || 0));
+      const bGiveVal = Math.round(Number(bGive?.value || 0));
+      const oTakeVal = Math.round(Number(oTake?.value || 0));
+      const oGiveVal = Math.round(Number(oGive?.value || 0));
+      const netMargin = bDiffVal - oDiffVal;
+
+      let advantage = `Even Turnover Margin (${bSign}${bDiffVal} Each)`;
+      if (netMargin > 0) {
+        advantage = `Bills (+${netMargin} Differential Margin)`;
+      } else if (netMargin < 0) {
+        advantage = `${oppName} (+${Math.abs(netMargin)} Differential Margin)`;
+      }
+
+      turnoverRatio = {
+        bills: `${bSign}${bDiffVal} (${bTakeVal} Takeaways / ${bGiveVal} Giveaways)`,
+        opp: `${oSign}${oDiffVal} (${oTakeVal} Takeaways / ${oGiveVal} Giveaways)`,
+        advantage
+      };
+    }
+
+    return {
+      efficiency: efficiency.length === 6 ? efficiency : null,
+      turnoverRatio
+    };
+  } catch (err) {
+    console.warn('NFL team efficiency fetch fallback:', err.message);
+    return null;
+  }
+}
+
+async function fetchNhlTeamEfficiency(oppAbbrev, oppName, allStandings = [], seasonId = 20262027) {
+  try {
+    const url = `https://api.nhle.com/stats/rest/en/team/summary?isAggregate=false&isGame=false&cayenneExp=seasonId=${seasonId}%20and%20gameTypeId=2`;
+    const res = await fetch(url);
+    if (!res.ok) return null;
+    const json = await res.json();
+    const rows = Array.isArray(json?.data) ? json.data : [];
+    if (rows.length < 16) return null;
+
+    const norm = (str) => String(str || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+    const findTeamRow = (abbrev, fallbackName) => {
+      const standEntry = (allStandings || []).find(s => s.teamAbbrev?.default === abbrev);
+      const targetFull = norm(standEntry?.teamName?.default || fallbackName);
+      const targetCommon = norm(standEntry?.teamCommonName?.default || fallbackName);
+      return rows.find(r => {
+        const rn = norm(r.teamFullName);
+        return rn === targetFull || (targetFull && rn.includes(targetFull)) || (targetCommon && rn.includes(targetCommon));
+      });
+    };
+
+    const bufRow = findTeamRow('BUF', 'Buffalo Sabres');
+    const oppRow = findTeamRow(oppAbbrev, oppName);
+    if (!bufRow || !oppRow) return null;
+
+    const rankStat = (field, ascending = false) => {
+      const sorted = [...rows].sort((a, b) => ascending
+        ? (Number(a[field] || 0) - Number(b[field] || 0))
+        : (Number(b[field] || 0) - Number(a[field] || 0))
+      );
+      const bIdx = sorted.findIndex(r => r.teamId === bufRow.teamId);
+      const oIdx = sorted.findIndex(r => r.teamId === oppRow.teamId);
+      return {
+        bVal: Number(bufRow[field] || 0),
+        bRank: formatOrdinal(bIdx + 1),
+        oVal: Number(oppRow[field] || 0),
+        oRank: formatOrdinal(oIdx + 1)
+      };
+    };
+
+    const gf = rankStat('goalsForPerGame', false);
+    const ga = rankStat('goalsAgainstPerGame', true);
+    const pp = rankStat('powerPlayPct', false);
+    const pk = rankStat('penaltyKillPct', false);
+    const sf = rankStat('shotsForPerGame', false);
+    const fo = rankStat('faceoffWinPct', false);
+
+    const bPP = pp.bVal * 100;
+    const oPP = pp.oVal * 100;
+    const bPK = pk.bVal * 100;
+    const oPK = pk.oVal * 100;
+    const bFO = fo.bVal * 100;
+    const oFO = fo.oVal * 100;
+
+    const efficiency = [
+      { metric: 'Goals / Game', sabres: `${gf.bVal.toFixed(2)} (${gf.bRank})`, opp: `${gf.oVal.toFixed(2)} (${gf.oRank})` },
+      { metric: 'Goals Against / Game', sabres: `${ga.bVal.toFixed(2)} (${ga.bRank})`, opp: `${ga.oVal.toFixed(2)} (${ga.oRank})` },
+      { metric: 'Power Play %', sabres: `${bPP.toFixed(1)}% (${pp.bRank})`, opp: `${oPP.toFixed(1)}% (${pp.oRank})` },
+      { metric: 'Penalty Kill %', sabres: `${bPK.toFixed(1)}% (${pk.bRank})`, opp: `${oPK.toFixed(1)}% (${pk.oRank})` },
+      { metric: 'Shots / Game', sabres: `${sf.bVal.toFixed(1)} (${sf.bRank})`, opp: `${sf.oVal.toFixed(1)} (${sf.oRank})` },
+      { metric: 'Faceoff Win %', sabres: `${bFO.toFixed(1)}% (${fo.bRank})`, opp: `${oFO.toFixed(1)}% (${fo.oRank})` }
+    ];
+
+    const netMargin = (bPP + bPK) - (oPP + oPK);
+    let advantage = 'Even Special Teams Matchup';
+    if (netMargin >= 0.1) {
+      advantage = `Sabres Special Teams Edge (+${netMargin.toFixed(1)}% Net Margin)`;
+    } else if (netMargin <= -0.1) {
+      advantage = `${oppName} Special Teams Edge (+${Math.abs(netMargin).toFixed(1)}% Net Margin)`;
+    }
+
+    const specialTeams = {
+      sabres: `PP: ${bPP.toFixed(1)}% (${pp.bRank}) | PK: ${bPK.toFixed(1)}% (${pk.bRank})`,
+      opp: `PP: ${oPP.toFixed(1)}% (${pp.oRank}) | PK: ${oPK.toFixed(1)}% (${pk.oRank})`,
+      advantage
+    };
+
+    return { efficiency, specialTeams };
+  } catch (err) {
+    console.warn('NHL team efficiency fetch fallback:', err.message);
+    return null;
+  }
 }
 
 // Fetch live game schedules, game win chance, ISO timestamps, team records, broadcast networks, and matchup intel
@@ -2060,7 +2390,11 @@ async function fetchNextGameSchedule() {
         if (billsBufScore !== '' && billsOppScore !== '') {
           billsSchedule.liveScore = isHome ? `Bills ${billsBufScore} - ${billsOppScore} ${oppName}` : `${oppName} ${billsOppScore} - ${billsBufScore} Bills`;
         }
-        const billsStadium = getNflStadium(isHome ? 'Buffalo Bills' : oppName, comp.venue, comp.weather);
+        const [billsStadium, matchupInjuries, nflEff] = await Promise.all([
+          getNflStadium(isHome ? 'Buffalo Bills' : oppName, comp.venue, comp.weather, nextGame.date),
+          fetchGameInjuries(nextGame.id, oppName, oppId),
+          fetchNflTeamEfficiency(oppId, oppName, data.season?.year || 2026)
+        ]);
         const billsBroadcast = getNflBroadcast(tvNetwork, isHome ? 'Buffalo Bills' : oppName, isHome ? oppName : 'Buffalo Bills', nextGame.date, true);
         const billsWindow = getNflWindow(nextGame.date);
 
@@ -2074,7 +2408,12 @@ async function fetchNextGameSchedule() {
         billsSchedule.windowLabel = billsWindow.label;
         billsSchedule.windowBadge = billsWindow.badge;
 
-        const matchupInjuries = await fetchGameInjuries(nextGame.id, oppName, oppId);
+        if (nflEff?.efficiency) {
+          billsSchedule.efficiency = nflEff.efficiency;
+        }
+        if (nflEff?.turnoverRatio) {
+          billsSchedule.turnoverRatio = nflEff.turnoverRatio;
+        }
         if (matchupInjuries.length > 0) {
           billsSchedule.injuries = matchupInjuries;
         }
@@ -2150,10 +2489,19 @@ async function fetchNextGameSchedule() {
         let oppRecord = '';
         let sabresStreak = '';
         let oppStreak = '';
+        let allStandings = [];
+        const nhlStandingsProbMap = new Map();
 
         if (standingsRes.ok) {
           const standingsData = await standingsRes.json();
-          const allStandings = standingsData.standings || [];
+          allStandings = standingsData.standings || [];
+          allStandings.forEach(t => {
+            const ptPct = t.pointPctg || (t.points && t.gamesPlayed ? t.points / (t.gamesPlayed * 2) : 0.50);
+            if (t.teamName?.default) nhlStandingsProbMap.set(t.teamName.default, ptPct);
+            if (t.teamCommonName?.default) nhlStandingsProbMap.set(t.teamCommonName.default, ptPct);
+            if (t.placeName?.default) nhlStandingsProbMap.set(t.placeName.default, ptPct);
+            if (t.teamAbbrev?.default) nhlStandingsProbMap.set(t.teamAbbrev.default, ptPct);
+          });
           const bufStand = allStandings.find(s => s.teamAbbrev?.default === 'BUF');
           const oppStand = allStandings.find(s => s.teamAbbrev?.default === oppAbbrev);
 
@@ -2202,6 +2550,41 @@ async function fetchNextGameSchedule() {
               sabresSchedule.projectedPoints = projPace;
               sabresSchedule.tragicNumber = `${projPace} PTS`;
             }
+
+            // Compute live Eastern Conference Wild Card 2 cutline pace & late-season Magic / Elimination numbers
+            const eastTeams = allStandings.filter(s => s.conferenceAbbrev === 'E' && s.gamesPlayed > 0);
+            const wc2Team = eastTeams.find(s => s.wildcardSequence === 2) ||
+              [...eastTeams].sort((a, b) => (b.pointPctg || 0) - (a.pointPctg || 0))[7];
+            const wc3Team = eastTeams.find(s => s.wildcardSequence === 3) ||
+              [...eastTeams].sort((a, b) => (b.pointPctg || 0) - (a.pointPctg || 0))[8];
+
+            if (wc2Team && wc2Team.gamesPlayed >= 10) {
+              const rawCutline = Math.round((wc2Team.points / wc2Team.gamesPlayed) * 82);
+              sabresSchedule.cutlinePoints = Math.max(88, Math.min(102, rawCutline));
+            } else {
+              sabresSchedule.cutlinePoints = 95;
+            }
+
+            if (bufStand.gamesPlayed >= 62 && wc2Team && wc3Team) {
+              const inPlayoffSpot = (bufStand.divisionSequence >= 1 && bufStand.divisionSequence <= 3) ||
+                (bufStand.wildcardSequence === 1 || bufStand.wildcardSequence === 2);
+              if (inPlayoffSpot) {
+                const chaserMaxPts = wc3Team.points + 2 * (82 - wc3Team.gamesPlayed);
+                const ptsNeeded = Math.max(0, chaserMaxPts + 1 - sabresPoints);
+                if (ptsNeeded > 0 && ptsNeeded <= 24) {
+                  sabresSchedule.magicNumber = String(ptsNeeded);
+                }
+              } else {
+                const bufMaxPts = sabresPoints + 2 * (82 - bufStand.gamesPlayed);
+                const elimMargin = bufMaxPts - wc2Team.points;
+                if (elimMargin <= 0) {
+                  sabresSchedule.eliminated = true;
+                } else if (elimMargin <= 16) {
+                  sabresSchedule.tragicNumber = `E# ${elimMargin}`;
+                }
+              }
+            }
+
             if (bufStand.clinchIndicator) {
               const ind = String(bufStand.clinchIndicator).toLowerCase();
               if (['x', 'y', 'p', 'z'].includes(ind)) {
@@ -2236,12 +2619,28 @@ async function fetchNextGameSchedule() {
         const periodType = nextGame.periodDescriptor?.periodType || 'REG';
         const statusDetail = isLive ? (periodType === 'OT' ? 'Overtime' : `Period ${periodNum}`) : (isPost ? (periodType === 'OT' ? 'Final/OT' : 'Final') : `${dateStr} • ${timeStr} ET`);
 
-        let sabresWinProb = isHome ? 52 : 46;
+        const preGameOdds = calculateNhlOddsProb(
+          isHome ? 'Buffalo Sabres' : oppName,
+          isHome ? oppName : 'Buffalo Sabres',
+          nhlStandingsProbMap,
+          null
+        );
+        let sabresWinProb = isHome ? preGameOdds.homeWinChance : preGameOdds.awayWinChance;
         if (isLive || isPost) {
-          sabresWinProb = calculateLiveNhlWinChance(bufScore, oppScore, statusDetail, isHome ? 52 : 46);
+          sabresWinProb = calculateLiveNhlWinChance(bufScore, oppScore, statusDetail, sabresWinProb);
         }
 
-        const sInjuries = await fetchNhlGameInjuries(oppName, oppAbbrev);
+        const seasonId = allStandings[0]?.seasonId || nextGame.season || 20262027;
+        const [sInjuries, nhlEff] = await Promise.all([
+          fetchNhlGameInjuries(oppName, oppAbbrev),
+          fetchNhlTeamEfficiency(oppAbbrev, oppName, allStandings, seasonId)
+        ]);
+        if (nhlEff?.efficiency) {
+          sabresSchedule.efficiency = nhlEff.efficiency;
+        }
+        if (nhlEff?.specialTeams) {
+          sabresSchedule.specialTeams = nhlEff.specialTeams;
+        }
 
         sabresSchedule = {
           ...sabresSchedule,
@@ -2342,11 +2741,6 @@ async function scrapePlayoffStatus() {
       { team: 'Denver Broncos', pct: 7 },
       { team: 'Cleveland Browns', pct: 7 }
     ],
-    rootingGuide: [
-      { target: "Root for Chargers Win", why: "Maximizes odds for Buffalo's AFC #1 overall seed & bye week." },
-      { target: "Root for Jets Win", why: "Suppresses division chasers in the AFC East standings." },
-      { target: "Root for Texans Win", why: "Creates favorable seeding tiebreaker positioning." }
-    ],
     outOfTownGames: outOfTownGames
   };
 
@@ -2357,6 +2751,7 @@ async function scrapePlayoffStatus() {
     wildcard: 14,
     tragicNumber: sabresSchedule.tragicNumber || '91 PTS',
     projectedPoints: sabresSchedule.projectedPoints || 91,
+    cutlinePoints: sabresSchedule.cutlinePoints || 95,
     magicNumber: sabresSchedule.magicNumber || null,
     clinchAlert: sabresSchedule.clinchAlert || { active: false, scenario: 'No clinching scenarios available this week.' },
     nextGame: {
@@ -2421,10 +2816,6 @@ async function scrapePlayoffStatus() {
       { team: 'Tampa Bay Lightning', pct: 18 },
       { team: 'Toronto Maple Leafs', pct: 14 }
     ],
-    rootingGuide: [
-      { target: "Regulation Losses for Atlantic Rivals", why: "Ensure games involving BOS, TBL, and FLA do not go to 3-point overtimes." },
-      { target: "Western Conference Wins vs. Metro", why: "Protects Eastern Conference Wild Card slot thresholds." }
-    ],
     outOfTownGames: nhlOutOfTownGames
   };
 
@@ -2476,18 +2867,28 @@ async function scrapePlayoffStatus() {
     }
 
     // 2. Scrape Table (2) Bills 1st Round Playoff Matchup Probabilities
+    const NFL_FULL_NAMES = {
+      'Bills': 'Buffalo Bills', 'Dolphins': 'Miami Dolphins', 'Patriots': 'New England Patriots', 'Jets': 'New York Jets',
+      'Ravens': 'Baltimore Ravens', 'Bengals': 'Cincinnati Bengals', 'Browns': 'Cleveland Browns', 'Steelers': 'Pittsburgh Steelers',
+      'Texans': 'Houston Texans', 'Colts': 'Indianapolis Colts', 'Jaguars': 'Jacksonville Jaguars', 'Titans': 'Tennessee Titans',
+      'Broncos': 'Denver Broncos', 'Chiefs': 'Kansas City Chiefs', 'Raiders': 'Las Vegas Raiders', 'Chargers': 'Los Angeles Chargers',
+      'Cowboys': 'Dallas Cowboys', 'Giants': 'New York Giants', 'Eagles': 'Philadelphia Eagles', 'Commanders': 'Washington Commanders',
+      'Bears': 'Chicago Bears', 'Lions': 'Detroit Lions', 'Packers': 'Green Bay Packers', 'Vikings': 'Minnesota Vikings',
+      'Falcons': 'Atlanta Falcons', 'Panthers': 'Carolina Panthers', 'Saints': 'New Orleans Saints', 'Buccaneers': 'Tampa Bay Buccaneers',
+      'Cardinals': 'Arizona Cardinals', 'Rams': 'Los Angeles Rams', '49ers': 'San Francisco 49ers', 'Seahawks': 'Seattle Seahawks'
+    };
     const scrapedOpponents = [];
     $('tr').each((_, el) => {
       const firstTd = $(el).find('td').first().text().trim();
-      const match = firstTd.match(/^\((\d+)\)\s+([A-Za-z\s]+)$/);
+      const match = firstTd.match(/^\((\d+)\)\s*([A-Za-z0-9.\s]+)$/);
       if (match && !firstTd.includes('Bye') && !firstTd.includes('Elimination')) {
         const rawOpp = match[2].trim();
+        const fullOpp = NFL_FULL_NAMES[rawOpp] || rawOpp;
         const cells = $(el).find('td').map((_, td) => $(td).text().trim()).get();
-        // Skip cells[0] so the seed number in "(2) Team" is not parsed as 2%
-        const pcts = cells.slice(1).map(parseCellPct).filter(n => n > 0 && n <= 100);
-        if (pcts.length > 0) {
-          const totalPct = pcts[0];
-          scrapedOpponents.push({ team: rawOpp, pct: totalPct });
+        const pctCell = cells.slice(1).find(c => c.includes('%'));
+        const totalPct = pctCell ? parseCellPct(pctCell) : 0;
+        if (totalPct > 0 && totalPct <= 100) {
+          scrapedOpponents.push({ team: fullOpp, pct: totalPct });
         }
       }
     });
@@ -2600,6 +3001,37 @@ async function scrapePlayoffStatus() {
       }
       sabresRadar.sort((a, b) => (b.pct || 0) - (a.pct || 0));
       sabresData.divisionRadar = sabresRadar;
+    }
+
+    const NHL_FULL_NAMES = {
+      'Sabres': 'Buffalo Sabres', 'Panthers': 'Florida Panthers', 'Lightning': 'Tampa Bay Lightning', 'Bruins': 'Boston Bruins',
+      'Maple Leafs': 'Toronto Maple Leafs', 'Canadiens': 'Montreal Canadiens', 'Senators': 'Ottawa Senators', 'Red Wings': 'Detroit Red Wings',
+      'Rangers': 'New York Rangers', 'Islanders': 'New York Islanders', 'Devils': 'New Jersey Devils', 'Flyers': 'Philadelphia Flyers',
+      'Penguins': 'Pittsburgh Penguins', 'Capitals': 'Washington Capitals', 'Hurricanes': 'Carolina Hurricanes', 'Blue Jackets': 'Columbus Blue Jackets',
+      'Blackhawks': 'Chicago Blackhawks', 'Avalanche': 'Colorado Avalanche', 'Stars': 'Dallas Stars', 'Wild': 'Minnesota Wild',
+      'Predators': 'Nashville Predators', 'Blues': 'St. Louis Blues', 'Jets': 'Winnipeg Jets', 'Mammoth': 'Utah Mammoth',
+      'Ducks': 'Anaheim Ducks', 'Flames': 'Calgary Flames', 'Oilers': 'Edmonton Oilers', 'Kings': 'Los Angeles Kings',
+      'Sharks': 'San Jose Sharks', 'Kraken': 'Seattle Kraken', 'Canucks': 'Vancouver Canucks', 'Golden Knights': 'Vegas Golden Knights'
+    };
+    const scrapedSabresOpponents = [];
+    $('tr').each((_, el) => {
+      const firstTd = $(el).find('td').first().text().trim();
+      const match = firstTd.match(/^\((\d+)\)\s*([A-Za-z0-9.\s]+)$/);
+      if (match && !firstTd.includes('Bye') && !firstTd.includes('Elimination')) {
+        const rawOpp = match[2].trim();
+        const fullOpp = NHL_FULL_NAMES[rawOpp] || rawOpp;
+        const cells = $(el).find('td').map((_, td) => $(td).text().trim()).get();
+        const pctCell = cells.slice(1).find(c => c.includes('%'));
+        const totalPct = pctCell ? parseCellPct(pctCell) : 0;
+        if (totalPct > 0 && totalPct <= 100) {
+          scrapedSabresOpponents.push({ team: fullOpp, pct: totalPct });
+        }
+      }
+    });
+
+    if (scrapedSabresOpponents.length >= 3) {
+      scrapedSabresOpponents.sort((a, b) => b.pct - a.pct);
+      sabresData.opponents = scrapedSabresOpponents.slice(0, 3);
     }
   } catch (err) {
     console.warn('Sabres standings fallback:', err.message);

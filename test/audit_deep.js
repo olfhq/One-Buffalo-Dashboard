@@ -50,6 +50,33 @@ if (!data.bills.nextGame.injuries || data.bills.nextGame.injuries.length === 0) 
 if (!data.sabres.nextGame.injuries || data.sabres.nextGame.injuries.length === 0) {
   console.error('FAIL: Sabres injuries list is empty');
   errors++;
+} else if (data.sabres.nextGame.injuries.some(i => i.player === 'Roster Reserve')) {
+  console.error('FAIL: Sabres injuries contains hardcoded placeholder "Roster Reserve"');
+  errors++;
+}
+
+console.log('\n=== CHECKING 1ST ROUND PLAYOFF OPPONENTS & SPECIAL TEAMS / TURNOVER RATIO ===');
+if (!Array.isArray(data.bills.opponents) || data.bills.opponents.length < 3) {
+  console.error('FAIL: Bills 1st-round opponents list is missing or < 3');
+  errors++;
+} else {
+  console.log('Bills 1st-round opponents:', data.bills.opponents.map(o => `${o.team} (${o.pct}%)`).join(', '));
+}
+
+if (!Array.isArray(data.sabres.opponents) || data.sabres.opponents.length < 3) {
+  console.error('FAIL: Sabres 1st-round opponents list is missing or < 3');
+  errors++;
+} else {
+  console.log('Sabres 1st-round opponents:', data.sabres.opponents.map(o => `${o.team} (${o.pct}%)`).join(', '));
+}
+
+if (!data.bills.nextGame.turnoverRatio?.bills || !data.bills.nextGame.turnoverRatio?.opp) {
+  console.error('FAIL: Bills turnoverRatio missing');
+  errors++;
+}
+if (!data.sabres.nextGame.specialTeams?.sabres || !data.sabres.nextGame.specialTeams?.opp) {
+  console.error('FAIL: Sabres specialTeams missing');
+  errors++;
 }
 
 console.log('\n=== CHECKING ROOTING GUIDE VS OUT OF TOWN GAMES ===');

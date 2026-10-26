@@ -1,11 +1,13 @@
 // Service Worker for One Buffalo Tracker
-const CACHE_NAME = 'one-buffalo-v5';
+const CACHE_NAME = 'one-buffalo-v6';
 
 const PRECACHE_ASSETS = [
   './',
   './index.html',
   './bills.html',
   './sabres.html',
+  './assets/shared.css',
+  './assets/shared.js',
   './manifest.json',
   './icon-192.png',
   './icon-512.png',

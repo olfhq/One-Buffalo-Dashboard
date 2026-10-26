@@ -12,7 +12,8 @@ function assert(condition, message) {
 }
 
 function testCards(file, html, sport) {
-  const scriptMatch = html.match(/<script>([\s\S]*?)<\/script>/i)[1];
+  const sharedJs = fs.existsSync('assets/shared.js') ? fs.readFileSync('assets/shared.js', 'utf8') : '';
+  const scriptMatch = sharedJs + '\n' + html.match(/<script>([\s\S]*?)<\/script>/i)[1];
   const fnCalc = scriptMatch.match(new RegExp(`function calculateLive${sport}WinChance\\([\\s\\S]*?^    \\}`, 'm'))[0];
   const fnWinChance = scriptMatch.match(new RegExp(`function get${sport}GameWinChance\\([\\s\\S]*?^    \\}`, 'm'))[0];
   const fnRender = scriptMatch.match(/function renderGameCardHtml\([\s\S]*?^    \}/m)[0];

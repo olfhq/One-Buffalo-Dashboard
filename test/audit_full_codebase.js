@@ -88,6 +88,109 @@ pages.forEach(page => {
 
 console.log('Static text audit complete. Issues so far:', issues.length);
 
+// 4. Shared Architecture, Service Worker & WAI-ARIA Accessibility Audit
+if (!fs.existsSync('assets/shared.css')) {
+  issues.push('Missing shared stylesheet: assets/shared.css');
+}
+if (!fs.existsSync('assets/shared.js')) {
+  issues.push('Missing shared script: assets/shared.js');
+}
+
+const swContent = fs.readFileSync('sw.js', 'utf8');
+if (!swContent.includes('./assets/shared.css') || !swContent.includes('./assets/shared.js')) {
+  issues.push('sw.js PRECACHE_ASSETS must include ./assets/shared.css and ./assets/shared.js');
+}
+
+const workflowContent = fs.readFileSync('.github/workflows/update.yml', 'utf8');
+if (!workflowContent.includes('npm ci') || !workflowContent.includes("cache: 'npm'")) {
+  issues.push('.github/workflows/update.yml must use npm ci and npm caching');
+}
+
+const gitignoreContent = fs.readFileSync('.gitignore', 'utf8');
+if (gitignoreContent.includes('package-lock.json')) {
+  issues.push('.gitignore should not ignore package-lock.json');
+}
+
+const dataJson = JSON.parse(fs.readFileSync('data.json', 'utf8'));
+if (dataJson.bills?.rootingGuide || dataJson.sabres?.rootingGuide) {
+  issues.push('data.json still contains deprecated rootingGuide arrays');
+}
+if (!dataJson.sabres?.cutlinePoints) {
+  issues.push('data.json sabres object is missing cutlinePoints');
+}
+
+pages.forEach(page => {
+  const content = fs.readFileSync(page, 'utf8');
+  const $ = cheerio.load(content);
+
+  if ($('link[href="./assets/shared.css"]').length === 0) {
+    issues.push(`${page} is missing <link rel="stylesheet" href="./assets/shared.css">`);
+  }
+  if ($('script[src="./assets/shared.js"]').length === 0) {
+    issues.push(`${page} is missing <script src="./assets/shared.js">`);
+  }
+  if ($('#update-status').attr('aria-live') !== 'polite') {
+    issues.push(`${page} #update-status is missing aria-live="polite"`);
+  }
+
+  if (page === 'bills.html' || page === 'sabres.html') {
+    const tablist = $('[role="tablist"]');
+    if (tablist.length === 0) {
+      issues.push(`${page} is missing [role="tablist"] navigation`);
+    }
+    const tabs = $('[role="tab"]');
+    if (tabs.length !== 3) {
+      issues.push(`${page} should have 3 [role="tab"] buttons, found ${tabs.length}`);
+    }
+    const activeTab = $('[role="tab"][aria-selected="true"]');
+    if (activeTab.attr('tabindex') !== '0') {
+      issues.push(`${page} active tab must have tabindex="0"`);
+    }
+    $('[role="tab"][aria-selected="false"]').each((_, el) => {
+      if ($(el).attr('tabindex') !== '-1') {
+        issues.push(`${page} inactive tab ${$(el).attr('id')} must have tabindex="-1"`);
+      }
+    });
+    $('.slate-filter-btn').each((_, el) => {
+      const pressed = $(el).attr('aria-pressed');
+      if (pressed !== 'true' && pressed !== 'false') {
+        issues.push(`${page} .slate-filter-btn ${$(el).attr('id')} is missing aria-pressed attribute`);
+      }
+    });
+  }
+});
+
+// 5. Verify Tale of the Tape & Proportional Seed Distribution Helpers in assets/shared.js
+try {
+  const sharedJs = fs.readFileSync('assets/shared.js', 'utf8');
+  const fnCompare = sharedJs.match(/function compareEfficiencyRow\([\s\S]*?^    \}/m)[0];
+  const fnRenderEff = sharedJs.match(/function renderEfficiencyRows\([\s\S]*?^    \}/m)[0];
+  const fnRenderDist = sharedJs.match(/function renderSeedDistribution\([\s\S]*?^    \}/m)[0];
+  eval(fnCompare);
+  eval(fnRenderEff);
+  eval(fnRenderDist);
+
+  const effHtml = renderEfficiencyRows([
+    { metric: 'Points Per Game', bills: '26.9 PPG (6th)', opp: '23.8 PPG (14th)' },
+    { metric: 'Points Allowed', bills: '21.5 PPG (12th)', opp: '17.9 PPG (2nd)' }
+  ], 'bills');
+  if (!effHtml.includes('intel-col-buf intel-edge-win') || !effHtml.includes('intel-col-opp intel-edge-win')) {
+    issues.push('renderEfficiencyRows failed to highlight statistical leader on each row');
+  }
+
+  const distHtml = renderSeedDistribution([
+    { seed: 'Seed #1', pct: 3 },
+    { seed: 'Seed #2', pct: 10 }
+  ], 'dist-fill-sabres');
+  if (!distHtml.includes('width: 40%') || !distHtml.includes('dist-row-leader')) {
+    issues.push('renderSeedDistribution failed to proportionally scale low-percentage bars');
+  }
+} catch (err) {
+  issues.push(`Failed evaluating shared.js helpers: ${err.message}`);
+}
+
+console.log('Accessibility & Shared Architecture Audit complete. Issues so far:', issues.length);
+
 if (issues.length > 0) {
   console.error('\nIssues found:');
   issues.forEach(i => console.error('  [!] ' + i));

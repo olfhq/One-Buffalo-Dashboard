@@ -1,0 +1,154 @@
+/* ==========================================================================
+   ONE BUFFALO DASHBOARD — SHARED DESIGN SYSTEM & ACCESSIBILITY STYLES
+   Shared across index.html, bills.html, and sabres.html
+   ========================================================================== */
+
+:root {
+  --bills-blue: #00338D;
+  --bills-red: #C60C30;
+  --sabres-blue: #002654;
+  --sabres-gold: #FCB514;
+  --bg-dark: #090d16;
+  --card-bg: #141c2c;
+  --card-inner: #0d1422;
+  --card-border: #1f2c44;
+  --text-main: #f3f4f6;
+  --text-muted: #94a3b8;
+  --accent-green: #10b981;
+  --accent-blue: #38bdf8;
+  --accent-gold: #FCB514;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  padding: 1.5rem;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* KEYBOARD FOCUS & WAI-ARIA ACCESSIBILITY */
+.tab-btn:focus-visible,
+.slate-filter-btn:focus-visible,
+.slate-toolbar-btn:focus-visible,
+.slate-accordion-header:focus-visible,
+.hub-link-btn:focus-visible,
+.back-nav-btn:focus-visible,
+.hub-pill:focus-visible,
+.live-radar-link:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
+}
+
+/* LIVE GAME INDICATOR PULSES */
+.live-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #10b981;
+  box-shadow: 0 0 8px #10b981;
+  animation: liveDotPulse 1.2s infinite ease-in-out;
+  vertical-align: middle;
+  margin-right: 4px;
+}
+
+@keyframes liveDotPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.35);
+    opacity: 0.55;
+  }
+}
+
+.live-pulse-badge {
+  background: rgba(16, 185, 129, 0.18) !important;
+  color: #34d399 !important;
+  border: 1px solid rgba(16, 185, 129, 0.45) !important;
+  font-weight: 800 !important;
+}
+
+.card-live-border {
+  border-color: rgba(16, 185, 129, 0.65) !important;
+  box-shadow: 0 10px 28px -5px rgba(16, 185, 129, 0.25) !important;
+}
+
+/* TALE OF THE TAPE — STATISTICAL ADVANTAGE HIGHLIGHTING */
+.intel-table td.intel-edge-win {
+  font-weight: 800;
+  color: #f8fafc !important;
+  background: rgba(56, 189, 248, 0.08);
+}
+
+.intel-table td.intel-col-buf.intel-edge-win {
+  color: #38bdf8 !important;
+  background: rgba(56, 189, 248, 0.1);
+}
+
+.sabres-theme .intel-table td.intel-col-buf.intel-edge-win {
+  color: var(--sabres-gold) !important;
+  background: rgba(252, 181, 20, 0.1);
+}
+
+.intel-table td.intel-col-opp.intel-edge-win {
+  color: #34d399 !important;
+  background: rgba(16, 185, 129, 0.09);
+}
+
+.intel-table td.intel-col-trailing {
+  color: #94a3b8 !important;
+  font-weight: 600;
+}
+
+.intel-edge-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.62rem;
+  font-weight: 800;
+  line-height: 1;
+  padding: 0.12rem 0.32rem;
+  margin-left: 0.35rem;
+  border-radius: 4px;
+  background: rgba(56, 189, 248, 0.18);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  vertical-align: middle;
+  letter-spacing: 0.3px;
+}
+
+.sabres-theme .intel-col-buf .intel-edge-badge {
+  background: rgba(252, 181, 20, 0.18);
+  color: var(--sabres-gold);
+  border-color: rgba(252, 181, 20, 0.4);
+}
+
+.intel-col-opp .intel-edge-badge {
+  background: rgba(16, 185, 129, 0.18);
+  color: #34d399;
+  border-color: rgba(16, 185, 129, 0.38);
+}
+
+/* PROPORTIONAL SEEDING DISTRIBUTION BARS */
+.dist-row.dist-row-leader .dist-name {
+  color: #f8fafc;
+  font-weight: 800;
+}
+
+.dist-row.dist-row-leader .dist-pct {
+  color: #38bdf8;
+}
+
+.sabres-theme .dist-row.dist-row-leader .dist-pct {
+  color: var(--sabres-gold);
+}
