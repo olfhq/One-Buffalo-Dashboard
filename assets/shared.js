@@ -380,6 +380,12 @@
         metaTheme.setAttribute('content', THEME_COLORS[activeThemeForMeta] || '#080a0f');
       }
 
+      try {
+        if (typeof window !== 'undefined' && window.umami && typeof window.umami.track === 'function' && targetGlobal !== 'regular') {
+          window.umami.track('theme_view', { theme: targetGlobal, bills: effectiveBills, sabres: effectiveSabres });
+        }
+      } catch (e) {}
+
       return {
         globalTheme: targetGlobal,
         billsTheme: effectiveBills,
@@ -423,11 +429,17 @@
       }
 
       try {
-        if (window.history && window.history.replaceState) {
+        if (typeof window !== 'undefined' && window.history && window.history.replaceState) {
           const targetHash = `#${tabId}`;
           if (window.location.hash !== targetHash) {
             window.history.replaceState(null, '', targetHash);
           }
+        }
+      } catch (e) {}
+
+      try {
+        if (typeof window !== 'undefined' && window.umami && typeof window.umami.track === 'function') {
+          window.umami.track('tab_switch', { tab: tabId });
         }
       } catch (e) {}
     }

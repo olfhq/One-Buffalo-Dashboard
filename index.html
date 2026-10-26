@@ -17,15 +17,36 @@
   <meta name="theme-color" content="#090d16">
 
   <!-- OpenGraph & Twitter Social Cards -->
-  <meta property="og:title" content="One Buffalo Tracker">
-  <meta property="og:description" content="Live postseason odds, matchup intelligence, and rooting guides for Buffalo sports.">
+  <meta property="og:title" content="One Buffalo Tracker | Live Bills & Sabres Companion">
+  <meta property="og:description" content="Live postseason odds, matchup intelligence, division cutlines, and rooting guides for Buffalo sports.">
   <meta property="og:url" content="https://onebuffalotracker.fyi/">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="https://onebuffalotracker.fyi/icon-512.png">
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="One Buffalo Tracker">
-  <meta name="twitter:description" content="Live postseason odds, matchup intelligence, and rooting guides for Buffalo sports.">
-  <meta name="twitter:image" content="https://onebuffalotracker.fyi/icon-512.png">
+  <meta property="og:image" content="https://onebuffalotracker.fyi/og-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="One Buffalo Tracker dashboard preview">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="One Buffalo Tracker | Live Bills & Sabres Companion">
+  <meta name="twitter:description" content="Live postseason odds, matchup intelligence, division cutlines, and rooting guides for Buffalo sports.">
+  <meta name="twitter:image" content="https://onebuffalotracker.fyi/og-card.png">
+
+  <!-- Structured Data: WebApplication / SportsOrganization -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "One Buffalo Tracker",
+    "url": "https://onebuffalotracker.fyi/",
+    "description": "Live postseason odds, matchup intelligence, and rooting guides for Buffalo Bills and Buffalo Sabres fans.",
+    "applicationCategory": "SportsApplication",
+    "operatingSystem": "All",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
 
   <!-- App Icons & PWA -->
   <link rel="apple-touch-icon" href="./icon-512.png">
@@ -457,7 +478,7 @@
       </div>
 
       <!-- Doorway to Dedicated Hub -->
-      <a href="./bills.html" class="hub-link-btn">
+      <a href="./bills.html" class="hub-link-btn" data-umami-event="open-bills-hub">
         Open Bills Command Center →
       </a>
     </article>
@@ -525,7 +546,7 @@
       </div>
 
       <!-- Doorway to Dedicated Hub -->
-      <a href="./sabres.html" class="hub-link-btn hub-link-btn-sabres">
+      <a href="./sabres.html" class="hub-link-btn hub-link-btn-sabres" data-umami-event="open-sabres-hub">
         Open Sabres Command Center →
       </a>
     </article>

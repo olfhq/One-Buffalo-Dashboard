@@ -18,14 +18,35 @@
 
   <!-- OpenGraph & Twitter Social Cards -->
   <meta property="og:title" content="Buffalo Bills Hub | One Buffalo Tracker">
-  <meta property="og:description" content="Live postseason odds, matchup intelligence, and rooting guides for Buffalo Bills fans.">
+  <meta property="og:description" content="Live postseason odds, AFC East division radar, matchup intelligence, and weekly NFL rooting guide for Buffalo Bills fans.">
   <meta property="og:url" content="https://onebuffalotracker.fyi/bills.html">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="https://onebuffalotracker.fyi/icon-512.png">
-  <meta name="twitter:card" content="summary">
+  <meta property="og:image" content="https://onebuffalotracker.fyi/og-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Buffalo Bills Hub command center preview">
+  <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Buffalo Bills Hub | One Buffalo Tracker">
-  <meta name="twitter:description" content="Live postseason odds, matchup intelligence, and rooting guides for Buffalo Bills fans.">
-  <meta name="twitter:image" content="https://onebuffalotracker.fyi/icon-512.png">
+  <meta name="twitter:description" content="Live postseason odds, AFC East division radar, matchup intelligence, and weekly NFL rooting guide for Buffalo Bills fans.">
+  <meta name="twitter:image" content="https://onebuffalotracker.fyi/og-card.png">
+
+  <!-- Structured Data: SportsApplication -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Buffalo Bills Hub | One Buffalo Tracker",
+    "url": "https://onebuffalotracker.fyi/bills.html",
+    "description": "Live Buffalo Bills playoff odds, AFC East division radar, matchup intelligence, injury wire, and weekly NFL rooting guide.",
+    "applicationCategory": "SportsApplication",
+    "operatingSystem": "All",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
 
   <!-- App Icons -->
   <link rel="apple-touch-icon" href="./icon-512.png">
@@ -1343,10 +1364,10 @@
 
   <header>
     <div class="nav-switch-row">
-      <a href="./index.html" class="back-nav-btn">‹ Portal</a>
+      <a href="./index.html" class="back-nav-btn" data-umami-event="nav-portal-from-bills">‹ Portal</a>
       <div class="hub-switcher">
         <span class="hub-pill active">🦬 Bills Hub</span>
-        <a href="./sabres.html" class="hub-pill">⚔️ Sabres Hub</a>
+        <a href="./sabres.html" class="hub-pill" data-umami-event="nav-sabres-from-bills">⚔️ Sabres Hub</a>
       </div>
     </div>
     <h1>BUFFALO BILLS HUB</h1>
@@ -1357,9 +1378,9 @@
 
   <!-- SEGMENTED TABS -->
   <nav class="tab-bar" role="tablist" aria-label="Bills Hub Sections">
-    <button class="tab-btn active" id="tab-btn-intel" role="tab" aria-selected="true" tabindex="0" aria-controls="tab-intel" onclick="switchTab('intel')">Matchup Intel</button>
-    <button class="tab-btn" id="tab-btn-rooting" role="tab" aria-selected="false" tabindex="-1" aria-controls="tab-rooting" onclick="switchTab('rooting')">Weekly Slate & TV Guide</button>
-    <button class="tab-btn" id="tab-btn-radar" role="tab" aria-selected="false" tabindex="-1" aria-controls="tab-radar" onclick="switchTab('radar')">Postseason Radar</button>
+    <button class="tab-btn active" id="tab-btn-intel" role="tab" aria-selected="true" tabindex="0" aria-controls="tab-intel" onclick="switchTab('intel')" data-umami-event="tab-intel-bills">Matchup Intel</button>
+    <button class="tab-btn" id="tab-btn-rooting" role="tab" aria-selected="false" tabindex="-1" aria-controls="tab-rooting" onclick="switchTab('rooting')" data-umami-event="tab-rooting-bills">Weekly Slate & TV Guide</button>
+    <button class="tab-btn" id="tab-btn-radar" role="tab" aria-selected="false" tabindex="-1" aria-controls="tab-radar" onclick="switchTab('radar')" data-umami-event="tab-radar-bills">Postseason Radar</button>
   </nav>
 
   <main class="container">
