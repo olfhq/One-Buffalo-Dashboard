@@ -3046,17 +3046,23 @@ async function scrapePlayoffStatus() {
   const rootDir = path.resolve(__dirname, '..');
   const dataJsonPath = path.join(rootDir, 'data.json');
   let currentTheme = 'regular';
+  let currentBillsTheme = null;
+  let currentSabresTheme = null;
   let currentThemeUntil = null;
   if (fs.existsSync(dataJsonPath)) {
     try {
       const existingData = JSON.parse(fs.readFileSync(dataJsonPath, 'utf8'));
       if (existingData.theme) {
         currentTheme = existingData.theme;
+        currentBillsTheme = existingData.billsTheme || null;
+        currentSabresTheme = existingData.sabresTheme || null;
         currentThemeUntil = existingData.themeUntil || null;
         if (currentThemeUntil && !isNaN(Date.parse(currentThemeUntil))) {
           if (Date.now() > Date.parse(currentThemeUntil)) {
             console.log(`Theme "${currentTheme}" expired at ${currentThemeUntil}. Reverting to "regular".`);
             currentTheme = 'regular';
+            currentBillsTheme = null;
+            currentSabresTheme = null;
             currentThemeUntil = null;
           }
         }
@@ -3070,6 +3076,8 @@ async function scrapePlayoffStatus() {
     updatedAt: new Date().toISOString(),
     source: 'http://www.playoffstatus.com and ESPN NFL API',
     theme: currentTheme,
+    billsTheme: currentBillsTheme,
+    sabresTheme: currentSabresTheme,
     themeUntil: currentThemeUntil,
     bills: billsData,
     sabres: sabresData
@@ -3087,6 +3095,8 @@ function buildTrimmedFallbackForFile(fileName, fullPayload) {
     updatedAt: fullPayload.updatedAt,
     source: fullPayload.source,
     theme: fullPayload.theme || 'regular',
+    billsTheme: fullPayload.billsTheme || null,
+    sabresTheme: fullPayload.sabresTheme || null,
     themeUntil: fullPayload.themeUntil || null
   };
 
@@ -3152,14 +3162,49 @@ function syncHtmlFallbacks(fullPayload) {
         const newFallback = `const FALLBACK_DATA = ${dataStr};\n\n      `;
         let updatedContent = content.slice(0, startIdx) + newFallback + content.slice(endIdx);
 
+        // Compute effective themes
+        const globalTheme = trimmedPayload.theme || 'regular';
+        const effectiveBills = trimmedPayload.billsTheme || (
+          globalTheme === '90s-nostalgia' ? 'red-helmet' :
+          globalTheme === 'the-aud-era' ? 'standing-buffalo' :
+          globalTheme
+        );
+        const effectiveSabres = trimmedPayload.sabresTheme || (
+          globalTheme === '90s-nostalgia' ? 'goathead' :
+          globalTheme === 'the-aud-era' ? 'french-connection' :
+          globalTheme
+        );
+
+        let activeHtmlTheme = globalTheme;
+        if (baseName === 'bills.html') {
+          activeHtmlTheme = effectiveBills;
+        } else if (baseName === 'sabres.html') {
+          activeHtmlTheme = effectiveSabres;
+        }
+
         // Keep root data-theme attribute in sync with payload theme
-        const activeTheme = trimmedPayload.theme || 'regular';
         updatedContent = updatedContent.replace(/<html([^>]*)>/i, (match, attrs) => {
           if (/data-theme="[^"]*"/.test(attrs)) {
-            return `<html${attrs.replace(/data-theme="[^"]*"/, `data-theme="${activeTheme}"`)}>`;
+            return `<html${attrs.replace(/data-theme="[^"]*"/, `data-theme="${activeHtmlTheme}"`)}>`;
           }
-          return `<html${attrs} data-theme="${activeTheme}">`;
+          return `<html${attrs} data-theme="${activeHtmlTheme}">`;
         });
+
+        // For index.html, also stamp data-team-theme onto bills-card and sabres-card
+        if (baseName === 'index.html') {
+          updatedContent = updatedContent.replace(/(<article[^>]*class="[^"]*card-bills[^"]*"[^>]*)>/i, (match, before) => {
+            if (/data-team-theme="[^"]*"/.test(before)) {
+              return before.replace(/data-team-theme="[^"]*"/, `data-team-theme="${effectiveBills}"`) + '>';
+            }
+            return `${before} data-team-theme="${effectiveBills}">`;
+          });
+          updatedContent = updatedContent.replace(/(<article[^>]*class="[^"]*card-sabres[^"]*"[^>]*)>/i, (match, before) => {
+            if (/data-team-theme="[^"]*"/.test(before)) {
+              return before.replace(/data-team-theme="[^"]*"/, `data-team-theme="${effectiveSabres}"`) + '>';
+            }
+            return `${before} data-team-theme="${effectiveSabres}">`;
+          });
+        }
 
         fs.writeFileSync(filePath, updatedContent, 'utf8');
         console.log(`Synced FALLBACK_DATA and data-theme in ${baseName}`);

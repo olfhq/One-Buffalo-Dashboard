@@ -40,14 +40,16 @@ html[data-theme="regular"],
   --sabres-gold: var(--sabres-accent);
 }
 
-/* 2. GOATHEAD (Tribute to 90s Sabres Black & Red Era) */
+/* 2. 90s-NOSTALGIA & GOATHEAD (Paired 90s Kelly Red Helmet + Sabres Goathead + Full CRT) */
+html[data-theme="90s-nostalgia"],
 html[data-theme="goathead"],
+[data-theme="90s-nostalgia"],
 [data-theme="goathead"] {
   --bg-canvas: #060606;
   --surface-card: #121212;
   --surface-inset: #0a0a0a;
   --border-subtle: #2a2a2a;
-  --radius-card: 3px;
+  --radius-card: 6px;
   --font-display: 'Barlow Condensed', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-data: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   --bills-accent: #C60C30;
@@ -64,13 +66,45 @@ html[data-theme="goathead"],
   --card-bg: var(--surface-card);
   --card-inner: var(--surface-inset);
   --card-border: var(--border-subtle);
-  --bills-blue: var(--bills-accent);
+  --bills-blue: #00338D;
   --bills-red: #C60C30;
   --sabres-blue: #1c1c1c;
   --sabres-gold: #C60C30;
 }
 
-/* 3. SNOW-GAME (Lake Effect / Winter Classic Blizzard) */
+/* 3. THE-AUD-ERA & HERITAGE (Paired 1970s Electric Blue Bills + French Connection Aud Gold) */
+html[data-theme="the-aud-era"],
+html[data-theme="heritage"],
+[data-theme="the-aud-era"],
+[data-theme="heritage"] {
+  --bg-canvas: #051329;
+  --surface-card: #0c234b;
+  --surface-inset: #071835;
+  --border-subtle: #1d3d75;
+  --radius-card: 14px;
+  --font-display: 'Barlow Condensed', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-data: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --bills-accent: #00539B;
+  --sabres-accent: #facc15;
+  --accent-blue: #60a5fa;
+  --accent-gold: #fde047;
+  --accent-green: #10b981;
+  --text-main: #fefce8;
+  --text-muted: #93c5fd;
+  --focus-ring: #facc15;
+  --theme-color: #051329;
+
+  --bg-dark: var(--bg-canvas);
+  --card-bg: var(--surface-card);
+  --card-inner: var(--surface-inset);
+  --card-border: var(--border-subtle);
+  --bills-blue: #00539B;
+  --bills-red: #b91c1c;
+  --sabres-blue: #071c3d;
+  --sabres-gold: #facc15;
+}
+
+/* 4. SNOW-GAME (Lake Effect / Winter Classic Blizzard) */
 html[data-theme="snow-game"],
 [data-theme="snow-game"] {
   --bg-canvas: #060f1c;
@@ -98,36 +132,6 @@ html[data-theme="snow-game"],
   --bills-red: #38bdf8;
   --sabres-blue: #091a33;
   --sabres-gold: #7dd3fc;
-}
-
-/* 4. HERITAGE (Vintage 1970s Aud Blue & Gold Classic) */
-html[data-theme="heritage"],
-[data-theme="heritage"] {
-  --bg-canvas: #051329;
-  --surface-card: #0c234b;
-  --surface-inset: #071835;
-  --border-subtle: #1d3d75;
-  --radius-card: 14px;
-  --font-display: 'Barlow Condensed', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-data: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  --bills-accent: #1d4ed8;
-  --sabres-accent: #facc15;
-  --accent-blue: #60a5fa;
-  --accent-gold: #fde047;
-  --accent-green: #10b981;
-  --text-main: #fefce8;
-  --text-muted: #93c5fd;
-  --focus-ring: #facc15;
-  --theme-color: #051329;
-
-  --bg-dark: var(--bg-canvas);
-  --card-bg: var(--surface-card);
-  --card-inner: var(--surface-inset);
-  --card-border: var(--border-subtle);
-  --bills-blue: var(--bills-accent);
-  --bills-red: #b91c1c;
-  --sabres-blue: #071c3d;
-  --sabres-gold: #facc15;
 }
 
 /* 5. GAMEDAY (Bills Mafia High-Voltage Stadium Night) */
@@ -248,6 +252,131 @@ html[data-theme="new-years"],
   --bills-red: #b45309;
   --sabres-blue: #1c1810;
   --sabres-gold: #fef08a;
+}
+
+/* --------------------------------------------------------------------------
+   INDEPENDENT TEAM OVERRIDES & DEDICATED HUB PAGE THEMES
+   Applied via [data-team-theme="..."] on index.html cards
+   and html[data-theme="..."] on bills.html / sabres.html
+   -------------------------------------------------------------------------- */
+
+/* BILLS: RED-HELMET (1990s AFC Championship Era) */
+[data-team-theme="red-helmet"],
+html[data-theme="red-helmet"] {
+  --bills-accent: #C60C30;
+  --bills-blue: #00338D;
+  --focus-ring: #C60C30;
+  --card-border: #7f1d1d;
+  --border-subtle: #7f1d1d;
+  --surface-card: #0f172a;
+  --surface-inset: #090e1a;
+}
+html[data-theme="red-helmet"] {
+  --bg-canvas: #060b14;
+  --theme-color: #060b14;
+}
+[data-team-theme="red-helmet"].card:hover,
+html[data-theme="red-helmet"] .card:hover {
+  border-color: #C60C30 !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 16px rgba(198, 12, 48, 0.45) !important;
+}
+
+/* BILLS: STANDING-BUFFALO (1970s AFL / Throwback Electric Blue) */
+[data-team-theme="standing-buffalo"],
+html[data-theme="standing-buffalo"] {
+  --bills-accent: #00539B;
+  --bills-blue: #00539B;
+  --focus-ring: #38bdf8;
+  --card-border: #1e3a8a;
+  --border-subtle: #1e3a8a;
+  --surface-card: #0c1f38;
+  --surface-inset: #071324;
+}
+html[data-theme="standing-buffalo"] {
+  --bg-canvas: #05101f;
+  --theme-color: #05101f;
+}
+[data-team-theme="standing-buffalo"].card:hover,
+html[data-theme="standing-buffalo"] .card:hover {
+  border-color: #38bdf8 !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 16px rgba(0, 83, 155, 0.35) !important;
+}
+
+/* SABRES: GOATHEAD (1990s Black & Red Era) */
+[data-team-theme="goathead"],
+html[data-theme="goathead"] {
+  --sabres-accent: #C60C30;
+  --sabres-blue: #1c1c1c;
+  --focus-ring: #C60C30;
+  --card-border: #2a2a2a;
+  --border-subtle: #2a2a2a;
+  --surface-card: #121212;
+  --surface-inset: #0a0a0a;
+  --radius-card: 3px;
+}
+html[data-theme="goathead"] {
+  --bg-canvas: #060606;
+  --theme-color: #060606;
+}
+[data-team-theme="goathead"].card:hover,
+html[data-theme="goathead"] .card:hover {
+  border-color: #C60C30 !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 16px rgba(198, 12, 48, 0.45) !important;
+}
+
+/* SABRES: FRENCH-CONNECTION (1970s Aud Gold & Vintage Royal) */
+[data-team-theme="french-connection"],
+html[data-theme="french-connection"] {
+  --sabres-accent: #FCB514;
+  --sabres-blue: #00205B;
+  --focus-ring: #FCB514;
+  --card-border: #1d3d75;
+  --border-subtle: #1d3d75;
+  --surface-card: #0c234b;
+  --surface-inset: #071835;
+  --radius-card: 14px;
+}
+html[data-theme="french-connection"] {
+  --bg-canvas: #051329;
+  --theme-color: #051329;
+}
+[data-team-theme="french-connection"].card:hover,
+html[data-theme="french-connection"] .card:hover {
+  border-color: #FCB514 !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 16px rgba(252, 181, 20, 0.3) !important;
+}
+
+/* TEAM OVERRIDE: GAMEDAY */
+[data-team-theme="gameday"].card-bills {
+  --bills-accent: #ef4444;
+  --card-border: #991b1b;
+  --focus-ring: #ef4444;
+}
+[data-team-theme="gameday"].card-bills:hover {
+  border-color: #ef4444 !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 16px rgba(239, 68, 68, 0.35) !important;
+}
+
+[data-team-theme="gameday"].card-sabres {
+  --sabres-accent: #38bdf8;
+  --card-border: #0369a1;
+  --focus-ring: #38bdf8;
+}
+[data-team-theme="gameday"].card-sabres:hover {
+  border-color: #38bdf8 !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 16px rgba(56, 189, 248, 0.35) !important;
+}
+
+/* TEAM OVERRIDE: REGULAR */
+[data-team-theme="regular"].card-bills {
+  --bills-accent: #00338D;
+  --card-border: #1f2c44;
+  --focus-ring: #38bdf8;
+}
+[data-team-theme="regular"].card-sabres {
+  --sabres-accent: #FCB514;
+  --card-border: #1f2c44;
+  --focus-ring: #38bdf8;
 }
 
 /* --------------------------------------------------------------------------
@@ -522,7 +651,8 @@ html[data-theme="regular"] .card:hover {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35), 0 0 14px rgba(56, 189, 248, 0.15) !important;
 }
 
-/* 2. GOATHEAD (Authentic 90s Broadcast CRT Scanlines & Cathode Sweep) */
+/* 2. 90s-NOSTALGIA & GOATHEAD (Authentic 90s Broadcast CRT Scanlines & Cathode Sweep) */
+html[data-theme="90s-nostalgia"] body::before,
 html[data-theme="goathead"] body::before {
   content: "";
   position: fixed;
@@ -539,6 +669,7 @@ html[data-theme="goathead"] body::before {
   opacity: 0.85;
 }
 
+html[data-theme="90s-nostalgia"] body::after,
 html[data-theme="goathead"] body::after {
   content: "";
   position: fixed;
@@ -563,6 +694,7 @@ html[data-theme="goathead"] body::after {
   100% { transform: translateY(600%); }
 }
 
+html[data-theme="90s-nostalgia"] .card:hover,
 html[data-theme="goathead"] .card:hover {
   border-color: #C60C30 !important;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 16px rgba(198, 12, 48, 0.45) !important;
@@ -600,7 +732,8 @@ html[data-theme="snow-game"] .card:hover {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45), 0 0 16px rgba(103, 232, 249, 0.25) !important;
 }
 
-/* 4. HERITAGE (Vintage 1970s Aud Royal Ambient Glow) */
+/* 4. THE-AUD-ERA & HERITAGE (Vintage 1970s Aud Royal Ambient Glow) */
+html[data-theme="the-aud-era"] body::before,
 html[data-theme="heritage"] body::before {
   content: "";
   position: fixed;
@@ -613,6 +746,7 @@ html[data-theme="heritage"] body::before {
   background: radial-gradient(ellipse at 50% 0%, rgba(250, 204, 21, 0.12), rgba(12, 35, 75, 0.2) 55%, transparent 75%);
 }
 
+html[data-theme="the-aud-era"] .card:hover,
 html[data-theme="heritage"] .card:hover {
   border-color: #facc15 !important;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 16px rgba(250, 204, 21, 0.25) !important;

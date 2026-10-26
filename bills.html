@@ -2454,6 +2454,8 @@
   "updatedAt": "2026-10-26T21:29:16.885Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
   "theme": "regular",
+  "billsTheme": null,
+  "sabresTheme": null,
   "themeUntil": null,
   "bills": {
     "team": "Buffalo Bills",
@@ -3058,7 +3060,7 @@
       }
 
       if (data && data.theme && typeof applyTheme === 'function') {
-        applyTheme(data.theme, data.themeUntil);
+        applyTheme(data.theme, data.billsTheme, data.sabresTheme, data.themeUntil);
       }
 
       const dateStr = new Date(data.updatedAt).toLocaleDateString(undefined, {

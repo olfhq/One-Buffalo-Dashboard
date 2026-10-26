@@ -393,7 +393,7 @@
 
   <main class="container">
     <!-- BUFFALO BILLS CARD -->
-    <article class="card card-bills">
+    <article class="card card-bills" id="bills-card" data-team-theme="regular">
       <div class="card-header">
         <h2>Buffalo Bills</h2>
         <span class="badge badge-bills">AFC</span>
@@ -463,7 +463,7 @@
     </article>
 
     <!-- BUFFALO SABRES CARD -->
-    <article class="card card-sabres">
+    <article class="card card-sabres" id="sabres-card" data-team-theme="regular">
       <div class="card-header">
         <h2>Buffalo Sabres</h2>
         <span class="badge badge-sabres">NHL</span>
@@ -750,6 +750,8 @@
   "updatedAt": "2026-10-26T21:29:16.885Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
   "theme": "regular",
+  "billsTheme": null,
+  "sabresTheme": null,
   "themeUntil": null,
   "bills": {
     "team": "Buffalo Bills",
@@ -960,7 +962,7 @@
       }
 
       if (data && data.theme && typeof applyTheme === 'function') {
-        applyTheme(data.theme, data.themeUntil);
+        applyTheme(data.theme, data.billsTheme, data.sabresTheme, data.themeUntil);
       }
 
       const dateStr = new Date(data.updatedAt).toLocaleDateString(undefined, {

@@ -2,6 +2,8 @@
   "updatedAt": "2026-10-26T21:29:16.885Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
   "theme": "regular",
+  "billsTheme": null,
+  "sabresTheme": null,
   "themeUntil": null,
   "bills": {
     "team": "Buffalo Bills",

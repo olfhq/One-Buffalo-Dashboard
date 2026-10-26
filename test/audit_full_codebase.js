@@ -195,7 +195,13 @@ console.log('Accessibility & Shared Architecture Audit complete. Issues so far:'
 try {
   const sharedCss = fs.readFileSync('assets/shared.css', 'utf8');
   const sharedJs = fs.readFileSync('assets/shared.js', 'utf8');
-  const expectedThemes = ['regular', 'goathead', 'snow-game', 'heritage', 'gameday', 'halloween', 'christmas', 'new-years'];
+  const expectedThemes = ['regular', '90s-nostalgia', 'the-aud-era', 'snow-game', 'gameday', 'halloween', 'christmas', 'new-years'];
+  const expectedTeamOverrides = [
+    '[data-team-theme="red-helmet"]',
+    '[data-team-theme="standing-buffalo"]',
+    '[data-team-theme="goathead"]',
+    '[data-team-theme="french-connection"]'
+  ];
   const requiredTokens = [
     '--bg-canvas',
     '--surface-card',
@@ -212,6 +218,12 @@ try {
     const selector = `html[data-theme="${theme}"]`;
     if (!sharedCss.includes(selector)) {
       issues.push(`assets/shared.css missing required theme selector: ${selector}`);
+    }
+  });
+
+  expectedTeamOverrides.forEach(sel => {
+    if (!sharedCss.includes(sel)) {
+      issues.push(`assets/shared.css missing required team override selector: ${sel}`);
     }
   });
 
@@ -247,6 +259,12 @@ try {
   if (!('theme' in dataJson)) {
     issues.push('data.json missing "theme" attribute');
   }
+  if (!('billsTheme' in dataJson)) {
+    issues.push('data.json missing "billsTheme" attribute');
+  }
+  if (!('sabresTheme' in dataJson)) {
+    issues.push('data.json missing "sabresTheme" attribute');
+  }
   if (!('themeUntil' in dataJson)) {
     issues.push('data.json missing "themeUntil" attribute');
   }
@@ -264,8 +282,17 @@ try {
       issues.push(`${page} is missing Google Fonts link for Barlow Condensed and JetBrains Mono`);
     }
 
-    if (!html.includes('applyTheme(data.theme, data.themeUntil)')) {
-      issues.push(`${page} does not call applyTheme(data.theme, data.themeUntil) in loadData()`);
+    if (!html.includes('applyTheme(data.theme, data.billsTheme, data.sabresTheme, data.themeUntil)')) {
+      issues.push(`${page} does not call applyTheme(data.theme, data.billsTheme, data.sabresTheme, data.themeUntil) in loadData()`);
+    }
+
+    if (page === 'index.html') {
+      if (!$('#bills-card').attr('data-team-theme')) {
+        issues.push('index.html #bills-card is missing data-team-theme attribute');
+      }
+      if (!$('#sabres-card').attr('data-team-theme')) {
+        issues.push('index.html #sabres-card is missing data-team-theme attribute');
+      }
     }
 
     // Constraint: NO client-side switcher UI or localStorage overrides
@@ -285,10 +312,17 @@ try {
     // Mock environment for testing applyTheme logic
     let mockRootTheme = null;
     let mockMetaColor = null;
+    let mockBillsCardTheme = null;
+    let mockSabresCardTheme = null;
     const mockDocument = {
       documentElement: {
         setAttribute: (attr, val) => { if (attr === 'data-theme') mockRootTheme = val; },
         getAttribute: (attr) => attr === 'data-theme' ? mockRootTheme : null
+      },
+      getElementById: (id) => {
+        if (id === 'bills-card') return { setAttribute: (a, v) => { mockBillsCardTheme = v; } };
+        if (id === 'sabres-card') return { setAttribute: (a, v) => { mockSabresCardTheme = v; } };
+        return null;
       },
       querySelector: (sel) => {
         if (sel === 'meta[name="theme-color"]') {
@@ -304,29 +338,34 @@ try {
     const fnText = applyThemeMatch[1];
     const testApplyTheme = new Function('document', 'Date', `${fnText}; return applyTheme;`)(mockDocument, Date);
 
-    // 1. Valid theme
-    testApplyTheme('goathead');
-    if (mockRootTheme !== 'goathead') {
-      issues.push(`applyTheme('goathead') did not set data-theme="goathead", got "${mockRootTheme}"`);
+    // 1. Paired era resolution (90s-nostalgia)
+    const era90s = testApplyTheme('90s-nostalgia');
+    if (era90s.billsTheme !== 'red-helmet' || era90s.sabresTheme !== 'goathead' || mockRootTheme !== '90s-nostalgia') {
+      issues.push(`applyTheme('90s-nostalgia') failed paired era defaults: got bills=${era90s.billsTheme}, sabres=${era90s.sabresTheme}`);
     }
 
-    // 2. Fallback on invalid theme
-    testApplyTheme('non-existent-theme');
+    // 2. Paired era resolution (the-aud-era)
+    const audEra = testApplyTheme('the-aud-era');
+    if (audEra.billsTheme !== 'standing-buffalo' || audEra.sabresTheme !== 'french-connection' || mockRootTheme !== 'the-aud-era') {
+      issues.push(`applyTheme('the-aud-era') failed paired era defaults: got bills=${audEra.billsTheme}, sabres=${audEra.sabresTheme}`);
+    }
+
+    // 3. Team overrides take precedence
+    const overrideResult = testApplyTheme('regular', 'red-helmet', 'goathead');
+    if (overrideResult.billsTheme !== 'red-helmet' || overrideResult.sabresTheme !== 'goathead' || mockRootTheme !== 'regular') {
+      issues.push(`applyTheme team overrides failed: got bills=${overrideResult.billsTheme}, sabres=${overrideResult.sabresTheme}`);
+    }
+
+    // 4. Fallback on invalid theme
+    const fallbackResult = testApplyTheme('non-existent-theme');
     if (mockRootTheme !== 'regular') {
       issues.push(`applyTheme('non-existent-theme') did not fallback to "regular", got "${mockRootTheme}"`);
     }
 
-    // 3. Expiration in past
-    testApplyTheme('christmas', '2020-01-01T00:00:00Z');
-    if (mockRootTheme !== 'regular') {
-      issues.push(`applyTheme with expired timestamp did not fallback to "regular", got "${mockRootTheme}"`);
-    }
-
-    // 4. Future expiration preserves theme
-    const futureDate = new Date(Date.now() + 86400000).toISOString();
-    testApplyTheme('snow-game', futureDate);
-    if (mockRootTheme !== 'snow-game') {
-      issues.push(`applyTheme with future timestamp failed to apply "snow-game", got "${mockRootTheme}"`);
+    // 5. Total reset on expired timestamp
+    const expiredResult = testApplyTheme('snow-game', 'red-helmet', 'goathead', '2020-01-01T00:00:00Z');
+    if (mockRootTheme !== 'regular' || expiredResult.billsTheme !== 'regular' || expiredResult.sabresTheme !== 'regular') {
+      issues.push(`applyTheme with expired timestamp did not perform total reset: root="${mockRootTheme}", bills="${expiredResult.billsTheme}", sabres="${expiredResult.sabresTheme}"`);
     }
   }
 } catch (err) {

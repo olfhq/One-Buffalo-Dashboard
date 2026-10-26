@@ -7,19 +7,41 @@ on:
   workflow_dispatch:
     inputs:
       theme:
-        description: 'Site-wide canned theme'
+        description: 'Global site-wide theme'
         required: false
         default: 'regular'
         type: choice
         options:
           - regular
-          - goathead
+          - 90s-nostalgia
+          - the-aud-era
           - snow-game
-          - heritage
           - gameday
           - halloween
           - christmas
           - new-years
+      billsTheme:
+        description: 'Bills team override (optional)'
+        required: false
+        default: 'follow-global'
+        type: choice
+        options:
+          - follow-global
+          - regular
+          - red-helmet
+          - standing-buffalo
+          - gameday
+      sabresTheme:
+        description: 'Sabres team override (optional)'
+        required: false
+        default: 'follow-global'
+        type: choice
+        options:
+          - follow-global
+          - regular
+          - goathead
+          - french-connection
+          - gameday
       themeUntil:
         description: 'Auto-revert ISO expiration (e.g. 2026-11-01T23:59:59Z, or empty for indefinite)'
         required: false
@@ -53,16 +75,22 @@ jobs:
         run: npm ci --no-audit --no-fund
 
       - name: Apply Theme Selection
-        if: "${{ github.event_name == 'workflow_dispatch' && github.event.inputs.theme != '' }}"
+        if: "${{ github.event_name == 'workflow_dispatch' }}"
         run: |
           node -e '
             const fs = require("fs");
             const p = "./data.json";
             const data = JSON.parse(fs.readFileSync(p, "utf8"));
-            data.theme = "${{ github.event.inputs.theme }}";
+            if ("${{ github.event.inputs.theme }}") {
+              data.theme = "${{ github.event.inputs.theme }}";
+            }
+            const bTheme = "${{ github.event.inputs.billsTheme }}";
+            data.billsTheme = (bTheme && bTheme !== "follow-global") ? bTheme : null;
+            const sTheme = "${{ github.event.inputs.sabresTheme }}";
+            data.sabresTheme = (sTheme && sTheme !== "follow-global") ? sTheme : null;
             data.themeUntil = "${{ github.event.inputs.themeUntil }}".trim() || null;
             fs.writeFileSync(p, JSON.stringify(data, null, 2), "utf8");
-            console.log("Central theme set to: " + data.theme + " (until: " + data.themeUntil + ")");
+            console.log("Themes updated -> Global:", data.theme, "| Bills:", data.billsTheme, "| Sabres:", data.sabresTheme, "| Until:", data.themeUntil);
           '
 
       - name: Run Scraper

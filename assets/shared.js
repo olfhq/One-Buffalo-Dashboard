@@ -272,39 +272,117 @@
       }
     }
 
-    // Centralized Canned Theme Engine (Controlled via data.json or <html data-theme="...">)
-    const VALID_THEMES = ['regular', 'goathead', 'snow-game', 'heritage', 'gameday', 'halloween', 'christmas', 'new-years'];
+    // Centralized Multi-Tier Canned Theme Engine (Global Atmosphere + Independent Team Overrides)
+    const VALID_THEMES = [
+      'regular',
+      '90s-nostalgia',
+      'the-aud-era',
+      'snow-game',
+      'gameday',
+      'halloween',
+      'christmas',
+      'new-years',
+      // Backward-compatibility aliases
+      'goathead',
+      'heritage'
+    ];
+
+    const VALID_BILLS_OVERRIDES = ['regular', 'red-helmet', 'standing-buffalo', 'gameday'];
+    const VALID_SABRES_OVERRIDES = ['regular', 'goathead', 'french-connection', 'gameday'];
+
     const THEME_COLORS = {
       'regular': '#080a0f',
-      'goathead': '#060606',
+      '90s-nostalgia': '#060606',
+      'the-aud-era': '#051329',
       'snow-game': '#060f1c',
-      'heritage': '#051329',
       'gameday': '#020617',
       'halloween': '#09050e',
       'christmas': '#030e07',
-      'new-years': '#0a0907'
+      'new-years': '#0a0907',
+      'goathead': '#060606',
+      'heritage': '#051329',
+      'red-helmet': '#060b14',
+      'standing-buffalo': '#05101f',
+      'french-connection': '#051329'
     };
 
-    function applyTheme(themeName, themeUntil) {
-      if (typeof document === 'undefined') return 'regular';
-      let target = (themeName || '').toLowerCase().trim();
+    function applyTheme(globalTheme, billsOverride, sabresOverride, themeUntil) {
+      if (typeof document === 'undefined') return { globalTheme: 'regular' };
+
+      let targetGlobal = (globalTheme || '').toLowerCase().trim();
+      let targetBills = billsOverride ? (billsOverride || '').toLowerCase().trim() : null;
+      let targetSabres = sabresOverride ? (sabresOverride || '').toLowerCase().trim() : null;
+
+      // Auto-revert check: Total reset if expired
       if (themeUntil) {
         const exp = new Date(themeUntil).getTime();
         if (!isNaN(exp) && Date.now() > exp) {
-          target = 'regular';
+          targetGlobal = 'regular';
+          targetBills = null;
+          targetSabres = null;
         }
       }
-      if (!VALID_THEMES.includes(target)) {
-        target = 'regular';
+
+      if (!VALID_THEMES.includes(targetGlobal)) {
+        targetGlobal = 'regular';
       }
 
-      document.documentElement.setAttribute('data-theme', target);
+      if (targetBills && !VALID_BILLS_OVERRIDES.includes(targetBills)) {
+        targetBills = null;
+      }
 
+      if (targetSabres && !VALID_SABRES_OVERRIDES.includes(targetSabres)) {
+        targetSabres = null;
+      }
+
+      // Resolve effective team themes (paired era defaults if override is null)
+      const effectiveBills = targetBills || (
+        targetGlobal === '90s-nostalgia' ? 'red-helmet' :
+        targetGlobal === 'the-aud-era' ? 'standing-buffalo' :
+        targetGlobal
+      );
+
+      const effectiveSabres = targetSabres || (
+        targetGlobal === '90s-nostalgia' ? 'goathead' :
+        targetGlobal === 'the-aud-era' ? 'french-connection' :
+        targetGlobal
+      );
+
+      // Detect current page context
+      const path = (typeof window !== 'undefined' && window.location) ? window.location.pathname : '';
+      const isBillsHub = path.includes('bills.html') || document.body?.classList.contains('bills-theme');
+      const isSabresHub = path.includes('sabres.html') || document.body?.classList.contains('sabres-theme');
+
+      if (isBillsHub) {
+        // Full page adoption for bills.html
+        document.documentElement.setAttribute('data-theme', effectiveBills);
+      } else if (isSabresHub) {
+        // Full page adoption for sabres.html
+        document.documentElement.setAttribute('data-theme', effectiveSabres);
+      } else {
+        // index.html: Canvas runs globalTheme, cards run team-specific themes
+        document.documentElement.setAttribute('data-theme', targetGlobal);
+        const billsCard = document.getElementById('bills-card') || document.querySelector('.card-bills');
+        if (billsCard) {
+          billsCard.setAttribute('data-team-theme', effectiveBills);
+        }
+        const sabresCard = document.getElementById('sabres-card') || document.querySelector('.card-sabres');
+        if (sabresCard) {
+          sabresCard.setAttribute('data-team-theme', effectiveSabres);
+        }
+      }
+
+      const activeThemeForMeta = isBillsHub ? effectiveBills : isSabresHub ? effectiveSabres : targetGlobal;
       const metaTheme = document.querySelector('meta[name="theme-color"]');
       if (metaTheme) {
-        metaTheme.setAttribute('content', THEME_COLORS[target] || '#080a0f');
+        metaTheme.setAttribute('content', THEME_COLORS[activeThemeForMeta] || '#080a0f');
       }
-      return target;
+
+      return {
+        globalTheme: targetGlobal,
+        billsTheme: effectiveBills,
+        sabresTheme: effectiveSabres
+      };
     }
 
     if (typeof document !== 'undefined') {
