@@ -221,6 +221,25 @@ try {
     }
   });
 
+  // Verify atmospheric and telemetry animations
+  const requiredKeyframes = [
+    'live-radar-ping',
+    'snow-drift',
+    'stadium-lights-sway',
+    'spooky-flicker',
+    'holiday-twinkle',
+    'gold-shimmer-sweep'
+  ];
+  requiredKeyframes.forEach(kf => {
+    if (!sharedCss.includes(`@keyframes ${kf}`)) {
+      issues.push(`assets/shared.css missing required animation @keyframes: ${kf}`);
+    }
+  });
+
+  if (!sharedCss.includes('prefers-reduced-motion: reduce')) {
+    issues.push('assets/shared.css missing prefers-reduced-motion accessibility media query');
+  }
+
   const dataJson = JSON.parse(fs.readFileSync('data.json', 'utf8'));
   if (!('theme' in dataJson)) {
     issues.push('data.json missing "theme" attribute');

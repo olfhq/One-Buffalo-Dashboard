@@ -261,13 +261,21 @@ html[data-theme="new-years"],
 }
 
 body {
+  position: relative;
+  min-height: 100vh;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   background-color: var(--bg-canvas);
   color: var(--text-main);
   padding: 1.5rem;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
-  transition: background-color 0.25s ease, color 0.25s ease;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Ensure content sits cleanly above atmospheric ambient layers */
+.card, header, nav, .tab-content, .slate-toolbar, .hub-pills, .meta-bar {
+  position: relative;
+  z-index: 1;
 }
 
 h1, h2, h3, .section-subtitle, .matchup-opp, .pinned-matchup-title {
@@ -277,14 +285,25 @@ h1, h2, h3, .section-subtitle, .matchup-opp, .pinned-matchup-title {
 
 .countdown-val {
   font-family: var(--font-data) !important;
+  font-variant-numeric: tabular-nums;
 }
 
-/* CARD ARCHITECTURE WITH THEMED CORNERS & SURFACES */
+/* CARD ARCHITECTURE WITH THEMED CORNERS, ELEVATION & MICRO-INTERACTION */
 .card {
   border-radius: var(--radius-card) !important;
   background: var(--surface-card) !important;
   border-color: var(--border-subtle) !important;
-  transition: border-radius 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.22s ease,
+              border-color 0.22s ease,
+              background 0.3s ease,
+              border-radius 0.2s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .card:hover {
+    transform: translateY(-2px);
+  }
 }
 
 /* KEYBOARD FOCUS & WAI-ARIA ACCESSIBILITY */
@@ -404,4 +423,260 @@ h1, h2, h3, .section-subtitle, .matchup-opp, .pinned-matchup-title {
 
 .sabres-theme .dist-row.dist-row-leader .dist-pct {
   color: var(--sabres-gold);
+}
+
+/* --------------------------------------------------------------------------
+   TELEMETRY MICRO-ANIMATIONS & LIVE GAME BEACONS
+   -------------------------------------------------------------------------- */
+
+@keyframes live-radar-ping {
+  0% {
+    transform: scale(0.9);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.75);
+  }
+  70% {
+    transform: scale(1.15);
+    box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
+  }
+  100% {
+    transform: scale(0.9);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+  }
+}
+
+.live-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background-color: #10b981;
+  border-radius: 50%;
+  animation: live-radar-ping 1.75s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  vertical-align: middle;
+}
+
+.live-pulse-badge {
+  animation: live-badge-glow 2.5s ease-in-out infinite;
+}
+
+@keyframes live-badge-glow {
+  0%, 100% {
+    box-shadow: 0 0 4px rgba(16, 185, 129, 0.2);
+    border-color: rgba(16, 185, 129, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+    border-color: rgba(52, 211, 153, 0.85);
+  }
+}
+
+.card-live-border {
+  animation: live-card-pulse 2.5s infinite ease-in-out;
+}
+
+@keyframes live-card-pulse {
+  0%, 100% {
+    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.18);
+  }
+  50% {
+    box-shadow: 0 4px 28px rgba(16, 185, 129, 0.38), 0 0 12px rgba(16, 185, 129, 0.25);
+  }
+}
+
+/* Smooth Progress Bar & Radar Meter Fills */
+.dist-bar-fill,
+.dist-row .dist-fill,
+.win-meter-fill-away,
+.win-meter-fill-home,
+.opp-pct {
+  transition: width 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s ease;
+}
+
+/* --------------------------------------------------------------------------
+   THEME ATMOSPHERIC ANIMATIONS & AMBIENT EFFECTS
+   -------------------------------------------------------------------------- */
+
+/* 1. REGULAR (Command Center Crisp Focus) */
+html[data-theme="regular"] .card:hover {
+  border-color: #38bdf8 !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35), 0 0 14px rgba(56, 189, 248, 0.15) !important;
+}
+
+/* 2. GOATHEAD (90s CRT Rasterline & Crimson Edge Glow) */
+html[data-theme="goathead"] body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.18),
+    rgba(0, 0, 0, 0.18) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  opacity: 0.5;
+}
+
+html[data-theme="goathead"] .card:hover {
+  border-color: #C60C30 !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 16px rgba(198, 12, 48, 0.35) !important;
+}
+
+/* 3. SNOW-GAME (Lake Effect Blizzard Drift) */
+html[data-theme="snow-game"] body::before {
+  content: "";
+  position: fixed;
+  top: -300px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    radial-gradient(2px 2px at 20px 30px, rgba(255, 255, 255, 0.8), transparent),
+    radial-gradient(3px 3px at 75px 90px, rgba(125, 211, 252, 0.65), transparent),
+    radial-gradient(1.5px 1.5px at 140px 50px, rgba(255, 255, 255, 0.75), transparent),
+    radial-gradient(2.5px 2.5px at 210px 160px, rgba(200, 240, 255, 0.7), transparent),
+    radial-gradient(2px 2px at 270px 220px, rgba(255, 255, 255, 0.8), transparent);
+  background-size: 300px 300px;
+  opacity: 0.7;
+  animation: snow-drift 14s linear infinite;
+}
+
+@keyframes snow-drift {
+  0% { transform: translateY(0) translateX(0); }
+  50% { transform: translateY(150px) translateX(12px); }
+  100% { transform: translateY(300px) translateX(0); }
+}
+
+html[data-theme="snow-game"] .card:hover {
+  border-color: #67e8f9 !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45), 0 0 16px rgba(103, 232, 249, 0.25) !important;
+}
+
+/* 4. HERITAGE (Vintage 1970s Aud Royal Ambient Glow) */
+html[data-theme="heritage"] body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 320px;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(250, 204, 21, 0.08), rgba(12, 35, 75, 0.15) 55%, transparent 75%);
+}
+
+html[data-theme="heritage"] .card:hover {
+  border-color: #facc15 !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 16px rgba(250, 204, 21, 0.25) !important;
+}
+
+/* 5. GAMEDAY (Stadium Floodlight Ambient Sway) */
+html[data-theme="gameday"] body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 5%;
+  right: 5%;
+  height: 300px;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(239, 68, 68, 0.1), rgba(0, 51, 141, 0.12) 50%, transparent 80%);
+  animation: stadium-lights-sway 8s ease-in-out infinite alternate;
+}
+
+@keyframes stadium-lights-sway {
+  0% { opacity: 0.7; transform: scaleX(0.96); }
+  100% { opacity: 1; transform: scaleX(1.04); }
+}
+
+html[data-theme="gameday"] .card:hover {
+  border-color: #ef4444 !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 16px rgba(239, 68, 68, 0.3) !important;
+}
+
+/* 6. HALLOWEEN (Jack-o'-Lantern Amber & Purple Ember Flicker) */
+html[data-theme="halloween"] body::before {
+  content: "";
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 340px;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(ellipse at 50% 100%, rgba(234, 88, 12, 0.1), rgba(192, 132, 252, 0.08) 50%, transparent 75%);
+  animation: spooky-flicker 6s ease-in-out infinite alternate;
+}
+
+@keyframes spooky-flicker {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+  75% { opacity: 0.8; }
+}
+
+html[data-theme="halloween"] .card:hover {
+  border-color: #ea580c !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 16px rgba(234, 88, 12, 0.3) !important;
+}
+
+/* 7. CHRISTMAS (Evergreen & Holiday Twinkle) */
+html[data-theme="christmas"] body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    radial-gradient(2px 2px at 15% 25%, rgba(234, 179, 8, 0.6), transparent),
+    radial-gradient(2px 2px at 80% 20%, rgba(220, 38, 38, 0.55), transparent),
+    radial-gradient(2px 2px at 45% 65%, rgba(234, 179, 8, 0.5), transparent),
+    radial-gradient(2px 2px at 70% 80%, rgba(52, 211, 153, 0.55), transparent);
+  background-size: 280px 280px;
+  animation: holiday-twinkle 4s ease-in-out infinite alternate;
+}
+
+@keyframes holiday-twinkle {
+  0% { opacity: 0.35; transform: scale(0.99); }
+  100% { opacity: 0.85; transform: scale(1.01); }
+}
+
+html[data-theme="christmas"] .card:hover {
+  border-color: #dc2626 !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 16px rgba(220, 38, 38, 0.25) !important;
+}
+
+/* 8. NEW-YEARS (Champagne Gold Foil Shimmer Sweep) */
+@keyframes gold-shimmer-sweep {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+html[data-theme="new-years"] h1,
+html[data-theme="new-years"] .header h1,
+html[data-theme="new-years"] .countdown-val {
+  background: linear-gradient(90deg, #d4af37 0%, #fffbeb 50%, #d4af37 100%);
+  background-size: 200% auto;
+  color: transparent !important;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: gold-shimmer-sweep 7s linear infinite;
+}
+
+html[data-theme="new-years"] .card:hover {
+  border-color: #d4af37 !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 18px rgba(212, 175, 55, 0.3) !important;
+}
+
+/* --------------------------------------------------------------------------
+   ACCESSIBILITY: PREFERS-REDUCED-MOTION
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
 }
