@@ -269,7 +269,6 @@ body {
   padding: 1.5rem;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
-  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Ensure content sits cleanly above atmospheric ambient layers */
@@ -288,15 +287,26 @@ h1, h2, h3, .section-subtitle, .matchup-opp, .pinned-matchup-title {
   font-variant-numeric: tabular-nums;
 }
 
-/* CARD ARCHITECTURE WITH THEMED CORNERS, ELEVATION & MICRO-INTERACTION */
+/* CARD ARCHITECTURE WITH THEMED CORNERS, ELEVATION & MICRO-INTERACTIONS */
+@keyframes card-bootup {
+  from {
+    opacity: 0.8;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .card {
   border-radius: var(--radius-card) !important;
   background: var(--surface-card) !important;
   border-color: var(--border-subtle) !important;
+  animation: card-bootup 0.35s cubic-bezier(0.16, 1, 0.3, 1) backwards;
   transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
               box-shadow 0.22s ease,
               border-color 0.22s ease,
-              background 0.3s ease,
               border-radius 0.2s ease;
 }
 
@@ -482,12 +492,23 @@ h1, h2, h3, .section-subtitle, .matchup-opp, .pinned-matchup-title {
   }
 }
 
-/* Smooth Progress Bar & Radar Meter Fills */
-.dist-bar-fill,
-.dist-row .dist-fill,
+/* Smooth Progress Bar & Radar Meter Entrance Sweep */
+@keyframes meter-sweep-in {
+  from {
+    width: 0% !important;
+    opacity: 0.35;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.dist-track > div,
+.dist-fill-bills,
+.dist-fill-sabres,
 .win-meter-fill-away,
-.win-meter-fill-home,
-.opp-pct {
+.win-meter-fill-home {
+  animation: meter-sweep-in 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   transition: width 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s ease;
 }
 

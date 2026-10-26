@@ -228,7 +228,9 @@ try {
     'stadium-lights-sway',
     'spooky-flicker',
     'holiday-twinkle',
-    'gold-shimmer-sweep'
+    'gold-shimmer-sweep',
+    'meter-sweep-in',
+    'card-bootup'
   ];
   requiredKeyframes.forEach(kf => {
     if (!sharedCss.includes(`@keyframes ${kf}`)) {
