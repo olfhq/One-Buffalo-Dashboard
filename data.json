@@ -1,7 +1,7 @@
 {
-  "updatedAt": "2026-10-26T20:33:58.193Z",
+  "updatedAt": "2026-10-26T20:37:13.203Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
-  "theme": "snow-game",
+  "theme": "heritage",
   "themeUntil": null,
   "bills": {
     "team": "Buffalo Bills",
@@ -579,8 +579,8 @@
         "homeName": "Philadelphia Eagles",
         "homeRecord": "2-4, L4",
         "homeScore": "0",
-        "homeWinChance": 36,
-        "awayWinChance": 64,
+        "homeWinChance": 34,
+        "awayWinChance": 66,
         "verdict": "NFC MATCHUP",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
