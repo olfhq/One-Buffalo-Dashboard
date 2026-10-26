@@ -280,6 +280,7 @@
       'snow-game',
       'gameday',
       'halloween',
+      'thanksgiving',
       'christmas',
       'new-years',
       // Backward-compatibility aliases
@@ -297,6 +298,7 @@
       'snow-game': '#060f1c',
       'gameday': '#020617',
       'halloween': '#09050e',
+      'thanksgiving': '#0c0704',
       'christmas': '#030e07',
       'new-years': '#0a0907',
       'goathead': '#060606',

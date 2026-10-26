@@ -18,6 +18,7 @@ on:
           - snow-game
           - gameday
           - halloween
+          - thanksgiving
           - christmas
           - new-years
       billsTheme:

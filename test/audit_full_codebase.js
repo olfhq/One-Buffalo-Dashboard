@@ -195,7 +195,7 @@ console.log('Accessibility & Shared Architecture Audit complete. Issues so far:'
 try {
   const sharedCss = fs.readFileSync('assets/shared.css', 'utf8');
   const sharedJs = fs.readFileSync('assets/shared.js', 'utf8');
-  const expectedThemes = ['regular', '90s-nostalgia', 'the-aud-era', 'snow-game', 'gameday', 'halloween', 'christmas', 'new-years'];
+  const expectedThemes = ['regular', '90s-nostalgia', 'the-aud-era', 'snow-game', 'gameday', 'halloween', 'thanksgiving', 'christmas', 'new-years'];
   const expectedTeamOverrides = [
     '[data-team-theme="red-helmet"]',
     '[data-team-theme="standing-buffalo"]',
@@ -240,6 +240,7 @@ try {
     'stadium-lights-sway',
     'crt-beam-sweep',
     'spooky-flicker',
+    'harvest-glow',
     'holiday-twinkle',
     'gold-shimmer-sweep',
     'meter-sweep-in',
