@@ -1,7 +1,7 @@
 {
-  "updatedAt": "2026-10-26T21:20:31.905Z",
+  "updatedAt": "2026-10-26T21:29:16.885Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
-  "theme": "snow-game",
+  "theme": "regular",
   "themeUntil": null,
   "bills": {
     "team": "Buffalo Bills",
