@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-29T22:22:05.917Z",
+  "updatedAt": "2026-10-29T22:33:41.009Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
   "theme": "halloween",
   "billsTheme": null,
@@ -596,7 +596,7 @@
         "venue": "Lambeau Field, Green Bay, WI",
         "roof": "Open-Air Stadium",
         "surface": "Natural Grass (SISGrass)",
-        "weather": "52°F, 7mph Wind, 0% PoP",
+        "weather": "52°F, 6mph Wind, 0% PoP",
         "window": "TNF",
         "windowLabel": "Thursday Night Football",
         "windowBadge": "Prime Video Exclusive",
