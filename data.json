@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-30T17:20:00.651Z",
+  "updatedAt": "2026-10-30T22:02:04.834Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
   "theme": "halloween",
   "billsTheme": null,
@@ -46,7 +46,7 @@
         {
           "metric": "Total Yards / Game",
           "bills": "399.5 (4th)",
-          "opp": "383.7 (7th)"
+          "opp": "383.7 (6th)"
         },
         {
           "metric": "Passing Yards / Game",
@@ -83,6 +83,13 @@
           "team": "Bills"
         },
         {
+          "player": "Greg Gaines",
+          "pos": "DT",
+          "status": "Questionable",
+          "injury": "Calf",
+          "team": "Bills"
+        },
+        {
           "player": "Dalton Kincaid",
           "pos": "TE",
           "status": "Questionable",
@@ -97,23 +104,16 @@
           "team": "Bills"
         },
         {
-          "player": "Joe Andreessen",
-          "pos": "LB",
-          "status": "Questionable",
-          "injury": "Knee",
-          "team": "Bills"
-        },
-        {
-          "player": "Ray Davis",
-          "pos": "RB",
-          "status": "Questionable",
-          "injury": "Illness",
+          "player": "Tyrell Shavers",
+          "pos": "WR",
+          "status": "Out",
+          "injury": "Knee - ACL",
           "team": "Bills"
         },
         {
           "player": "Olaivavega Ioane",
           "pos": "G",
-          "status": "Questionable",
+          "status": "Out",
           "injury": "Knee - MCL",
           "team": "Ravens"
         },
@@ -125,24 +125,24 @@
           "team": "Ravens"
         },
         {
-          "player": "Roquan Smith",
-          "pos": "LB",
-          "status": "Questionable",
-          "injury": "Knee",
-          "team": "Ravens"
-        },
-        {
-          "player": "Kyle Hamilton",
+          "player": "Jaylinn Hawkins",
           "pos": "S",
-          "status": "Questionable",
+          "status": "Out",
           "injury": "Knee",
           "team": "Ravens"
         },
         {
-          "player": "Lamar Jackson",
-          "pos": "QB",
-          "status": "Questionable",
-          "injury": "Ankle",
+          "player": "Adam Randall",
+          "pos": "RB",
+          "status": "Injured Reserve",
+          "injury": "Neck",
+          "team": "Ravens"
+        },
+        {
+          "player": "Tavius Robinson",
+          "pos": "LB",
+          "status": "Injured Reserve",
+          "injury": "Pectoral",
           "team": "Ravens"
         }
       ]
@@ -245,7 +245,7 @@
         "venue": "Paycor Stadium, Cincinnati, OH",
         "roof": "Open-Air Stadium",
         "surface": "FieldTurf CORE",
-        "weather": "65°F, 1mph Wind, 19% PoP",
+        "weather": "65°F, 7mph Wind, 8% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -257,8 +257,8 @@
         "homeName": "Cincinnati Bengals",
         "homeRecord": "4-2, W2",
         "homeScore": "0",
-        "homeWinChance": 83,
-        "awayWinChance": 17,
+        "homeWinChance": 84,
+        "awayWinChance": 16,
         "verdict": "SEEDING WATCH",
         "impactClass": "good",
         "target": "Root for Tennessee Titans",
@@ -284,8 +284,8 @@
         "homeName": "Dallas Cowboys",
         "homeRecord": "3-4, W1",
         "homeScore": "0",
-        "homeWinChance": 73,
-        "awayWinChance": 27,
+        "homeWinChance": 72,
+        "awayWinChance": 28,
         "verdict": "NFC MATCHUP",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
@@ -353,7 +353,7 @@
         "venue": "Acrisure Stadium, Pittsburgh, PA",
         "roof": "Open-Air Stadium",
         "surface": "Natural Kentucky Bluegrass",
-        "weather": "66°F, 5mph Wind, 0% PoP",
+        "weather": "64°F, 5mph Wind, 1% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -380,7 +380,7 @@
         "venue": "Raymond James Stadium, Tampa, FL",
         "roof": "Open-Air Stadium",
         "surface": "Natural Bermuda Grass",
-        "weather": "83°F, 17mph Wind, 42% PoP",
+        "weather": "79°F, 12mph Wind, 45% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -407,7 +407,7 @@
         "venue": "EverBank Stadium, Jacksonville, FL",
         "roof": "Open-Air Stadium",
         "surface": "Natural Bermuda Grass",
-        "weather": "79°F, 15mph Wind, 27% PoP",
+        "weather": "77°F, 12mph Wind, 39% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -461,7 +461,7 @@
         "venue": "Empower Field at Mile High, Denver, CO",
         "roof": "Open-Air Stadium",
         "surface": "Natural Kentucky Bluegrass",
-        "weather": "62°F, 7mph Wind, 0% PoP",
+        "weather": "65°F, 6mph Wind, 0% PoP",
         "window": "LATE",
         "windowLabel": "Sunday 4:25 PM ET National Window",
         "windowBadge": "America's Game of the Week",
@@ -488,7 +488,7 @@
         "venue": "Hard Rock Stadium, Miami Gardens, FL",
         "roof": "Open-Air Stadium",
         "surface": "Natural Bermuda Grass",
-        "weather": "82°F, 17mph Wind, 78% PoP",
+        "weather": "82°F, 18mph Wind, 80% PoP",
         "window": "LATE",
         "windowLabel": "Sunday 4:25 PM ET National Window",
         "windowBadge": "America's Game of the Week",
@@ -542,7 +542,7 @@
         "venue": "Lumen Field, Seattle, WA",
         "roof": "Open-Air Stadium",
         "surface": "FieldTurf Revolution",
-        "weather": "49°F, 3mph Wind, 3% PoP",
+        "weather": "49°F, 1mph Wind, 1% PoP",
         "window": "MNF",
         "windowLabel": "Monday Night Football",
         "windowBadge": "ESPN / ABC Prime Time",
@@ -1089,8 +1089,8 @@
       {
         "isoTime": "2026-10-30T22:00:00Z",
         "slot": "Fri, Oct 30 • 6:00 PM ET",
-        "broadcast": "NHL Net",
-        "announcers": "E.J. Hradek, Kevin Weekes",
+        "broadcast": "Sportsnet",
+        "announcers": "Harnarayan Singh, Louie DeBrusk",
         "venue": "T-Mobile Arena, Las Vegas, NV",
         "window": "FRI",
         "windowLabel": "Friday Night NHL Matchups",
