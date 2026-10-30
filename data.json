@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-30T04:53:54.775Z",
+  "updatedAt": "2026-10-30T10:00:28.019Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
   "theme": "regular",
   "billsTheme": null,
@@ -245,7 +245,7 @@
         "venue": "Paycor Stadium, Cincinnati, OH",
         "roof": "Open-Air Stadium",
         "surface": "FieldTurf CORE",
-        "weather": "57°F, 6mph Wind, 15% PoP",
+        "weather": "63°F, 2mph Wind, 9% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -326,7 +326,7 @@
         "venue": "MetLife Stadium, East Rutherford, NJ",
         "roof": "Open-Air Stadium",
         "surface": "FieldTurf CORE",
-        "weather": "59°F, 6mph Wind, 0% PoP",
+        "weather": "59°F, 4mph Wind, 0% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -353,7 +353,7 @@
         "venue": "Acrisure Stadium, Pittsburgh, PA",
         "roof": "Open-Air Stadium",
         "surface": "Natural Kentucky Bluegrass",
-        "weather": "65°F, 4mph Wind, 1% PoP",
+        "weather": "67°F, 5mph Wind, 0% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -380,7 +380,7 @@
         "venue": "Raymond James Stadium, Tampa, FL",
         "roof": "Open-Air Stadium",
         "surface": "Natural Bermuda Grass",
-        "weather": "82°F, 14mph Wind, 51% PoP",
+        "weather": "82°F, 16mph Wind, 55% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -407,7 +407,7 @@
         "venue": "EverBank Stadium, Jacksonville, FL",
         "roof": "Open-Air Stadium",
         "surface": "Natural Bermuda Grass",
-        "weather": "79°F, 13mph Wind, 33% PoP",
+        "weather": "80°F, 15mph Wind, 14% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -461,7 +461,7 @@
         "venue": "Empower Field at Mile High, Denver, CO",
         "roof": "Open-Air Stadium",
         "surface": "Natural Kentucky Bluegrass",
-        "weather": "61°F, 5mph Wind, 2% PoP",
+        "weather": "63°F, 6mph Wind, 1% PoP",
         "window": "LATE",
         "windowLabel": "Sunday 4:25 PM ET National Window",
         "windowBadge": "America's Game of the Week",
@@ -488,7 +488,7 @@
         "venue": "Hard Rock Stadium, Miami Gardens, FL",
         "roof": "Open-Air Stadium",
         "surface": "Natural Bermuda Grass",
-        "weather": "84°F, 14mph Wind, 83% PoP",
+        "weather": "82°F, 18mph Wind, 77% PoP",
         "window": "LATE",
         "windowLabel": "Sunday 4:25 PM ET National Window",
         "windowBadge": "America's Game of the Week",
@@ -515,7 +515,7 @@
         "venue": "Northwest Stadium, Landover, MD",
         "roof": "Open-Air Stadium",
         "surface": "Natural Bermuda Grass",
-        "weather": "54°F, 5mph Wind, 0% PoP",
+        "weather": "54°F, 4mph Wind, 0% PoP",
         "window": "SNF",
         "windowLabel": "Sunday Night Football",
         "windowBadge": "NBC / Peacock Marquee",
@@ -542,7 +542,7 @@
         "venue": "Lumen Field, Seattle, WA",
         "roof": "Open-Air Stadium",
         "surface": "FieldTurf Revolution",
-        "weather": "48°F, 4mph Wind, 3% PoP",
+        "weather": "48°F, 1mph Wind, 5% PoP",
         "window": "MNF",
         "windowLabel": "Monday Night Football",
         "windowBadge": "ESPN / ABC Prime Time",
@@ -565,9 +565,9 @@
   },
   "sabres": {
     "team": "Buffalo Sabres",
-    "makePlayoffs": 39,
-    "winDivision": 25,
-    "wildcard": 14,
+    "makePlayoffs": 42,
+    "winDivision": 27,
+    "wildcard": 15,
     "tragicNumber": "95 PTS",
     "projectedPoints": 95,
     "cutlinePoints": 101,
@@ -581,8 +581,8 @@
       "oppShortName": "Los Angeles",
       "gameTime": "Sat, Oct 31 • 4:00 PM ET",
       "isoTime": "2026-10-31T20:00:00Z",
-      "winChance": 67,
-      "matchupRecords": "Sabres (6-4-3, 15 pts, W2) vs. Los Angeles (3-6-2, 8 pts, L1)",
+      "winChance": 62,
+      "matchupRecords": "Sabres (6-4-3, 15 pts, W2) vs. Los Angeles (4-6-2, 10 pts, W1)",
       "broadcast": "MSG-B",
       "venue": "Crypto.com Arena, Los Angeles, CA",
       "statusState": "pre",
@@ -590,8 +590,8 @@
       "bufScore": "",
       "oppScore": "",
       "liveScore": null,
-      "ifWin": 45,
-      "ifLoss": 34,
+      "ifWin": 48,
+      "ifLoss": 37,
       "leverage": 11,
       "restAdvantage": {
         "sabresDays": 2,
@@ -599,40 +599,40 @@
         "summary": "Even Rest (Both on 2 Days Rest)"
       },
       "specialTeams": {
-        "sabres": "PP: 9.8% (32nd) | PK: 71.4% (25th)",
-        "opp": "PP: 15.2% (27th) | PK: 63.6% (32nd)",
-        "advantage": "Sabres Special Teams Edge (+2.4% Net Margin)"
+        "sabres": "PP: 13.6% (28th) | PK: 67.4% (29th)",
+        "opp": "PP: 17.5% (24th) | PK: 64.9% (32nd)",
+        "advantage": "Los Angeles Special Teams Edge (+1.3% Net Margin)"
       },
       "efficiency": [
         {
           "metric": "Goals / Game",
-          "sabres": "2.75 (24th)",
-          "opp": "2.55 (27th)"
+          "sabres": "3.08 (17th)",
+          "opp": "2.83 (24th)"
         },
         {
           "metric": "Goals Against / Game",
-          "sabres": "3.33 (23rd)",
-          "opp": "3.36 (26th)"
+          "sabres": "3.54 (28th)",
+          "opp": "3.50 (26th)"
         },
         {
           "metric": "Power Play %",
-          "sabres": "9.8% (32nd)",
-          "opp": "15.2% (27th)"
+          "sabres": "13.6% (28th)",
+          "opp": "17.5% (24th)"
         },
         {
           "metric": "Penalty Kill %",
-          "sabres": "71.4% (25th)",
-          "opp": "63.6% (32nd)"
+          "sabres": "67.4% (29th)",
+          "opp": "64.9% (32nd)"
         },
         {
           "metric": "Shots / Game",
-          "sabres": "27.6 (15th)",
-          "opp": "27.0 (18th)"
+          "sabres": "27.8 (14th)",
+          "opp": "27.9 (13th)"
         },
         {
           "metric": "Faceoff Win %",
-          "sabres": "47.6% (23rd)",
-          "opp": "50.6% (13th)"
+          "sabres": "46.9% (28th)",
+          "opp": "50.7% (14th)"
         }
       ],
       "injuries": [
@@ -647,7 +647,7 @@
           "player": "Darcy Kuemper",
           "pos": "G",
           "status": "Probable",
-          "injury": "Expected Starter (3.47 GAA, .889 SV%)",
+          "injury": "Expected Starter (3.65 GAA, .878 SV%)",
           "team": "Los Angeles"
         },
         {
@@ -745,30 +745,30 @@
     },
     "divisionRadar": [
       {
-        "team": "Bruins",
-        "pct": 69
+        "team": "Lightning",
+        "pct": 66
       },
       {
-        "team": "Senators",
-        "pct": 55
+        "team": "Bruins",
+        "pct": 63
       },
       {
         "team": "Canadiens",
-        "pct": 54
+        "pct": 59
       },
       {
         "team": "Sabres",
-        "pct": 39
+        "pct": 42
       }
     ],
     "seedDistribution": [
       {
         "seed": "Div 1",
-        "pct": 5
+        "pct": 6
       },
       {
         "seed": "Div 2",
-        "pct": 9
+        "pct": 10
       },
       {
         "seed": "Div 3",
@@ -776,7 +776,7 @@
       },
       {
         "seed": "Wildcard 1",
-        "pct": 7
+        "pct": 8
       },
       {
         "seed": "Wildcard 2",
@@ -785,16 +785,16 @@
     ],
     "opponents": [
       {
+        "team": "Tampa Bay Lightning",
+        "pct": 6
+      },
+      {
         "team": "Boston Bruins",
         "pct": 6
       },
       {
-        "team": "Tampa Bay Lightning",
+        "team": "Montreal Canadiens",
         "pct": 5
-      },
-      {
-        "team": "Ottawa Senators",
-        "pct": 4
       }
     ],
     "outOfTownGames": [
@@ -1071,20 +1071,20 @@
         "window": "THU",
         "windowLabel": "Thursday Prime NHL Slate",
         "windowBadge": "ESPN+ / RSN Lineups",
-        "statusState": "in",
-        "statusDetail": "3:14 - OT",
+        "statusState": "post",
+        "statusDetail": "Final/OT",
         "awayName": "Ottawa Senators",
-        "awayRecord": "8-5-0, L1",
+        "awayRecord": "8-5-1, OT1",
         "awayScore": "5",
         "homeName": "Los Angeles Kings",
-        "homeRecord": "3-6-2, L1",
-        "homeScore": "5",
-        "homeWinChance": 30,
-        "awayWinChance": 70,
-        "verdict": "ATLANTIC WATCH",
+        "homeRecord": "4-6-2, W1",
+        "homeScore": "6",
+        "homeWinChance": 35,
+        "awayWinChance": 65,
+        "verdict": "RIVAL STOLE OT POINT",
         "impactClass": "warning",
         "target": "Root for Los Angeles Kings in Regulation",
-        "why": "A regulation loss leaves Ottawa Senators with 0 standings points in the Atlantic Division."
+        "why": "Los Angeles Kings won in overtime, but Ottawa Senators salvaged a loser point."
       },
       {
         "isoTime": "2026-10-30T22:00:00Z",
@@ -1242,13 +1242,13 @@
         "statusState": "pre",
         "statusDetail": "Scheduled",
         "awayName": "Ottawa Senators",
-        "awayRecord": "8-5-0, L1",
+        "awayRecord": "8-5-1, OT1",
         "awayScore": "",
         "homeName": "San Jose Sharks",
         "homeRecord": "7-6-1, W1",
         "homeScore": "",
-        "homeWinChance": 45,
-        "awayWinChance": 55,
+        "homeWinChance": 46,
+        "awayWinChance": 54,
         "verdict": "ATLANTIC WATCH",
         "impactClass": "warning",
         "target": "Root for San Jose Sharks in Regulation",
@@ -1434,13 +1434,13 @@
         "statusState": "pre",
         "statusDetail": "Scheduled",
         "awayName": "Ottawa Senators",
-        "awayRecord": "8-5-0, L1",
+        "awayRecord": "8-5-1, OT1",
         "awayScore": "",
         "homeName": "Anaheim Ducks",
         "homeRecord": "5-7-1, L1",
         "homeScore": "",
-        "homeWinChance": 35,
-        "awayWinChance": 65,
+        "homeWinChance": 36,
+        "awayWinChance": 64,
         "verdict": "ATLANTIC WATCH",
         "impactClass": "warning",
         "target": "Root for Anaheim Ducks in Regulation",
