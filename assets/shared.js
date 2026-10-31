@@ -405,11 +405,43 @@
         }
       } catch (e) {}
 
+      try {
+        if (typeof syncWitchElement === 'function') {
+          syncWitchElement(targetGlobal);
+        }
+      } catch (e) {}
+
       return {
         globalTheme: targetGlobal,
         billsTheme: effectiveBills,
         sabresTheme: effectiveSabres
       };
+    }
+
+    function syncWitchElement(theme) {
+      if (typeof document === 'undefined') return;
+      const mount = () => {
+        if (!document.body) return;
+        let witch = document.getElementById('halloween-witch');
+        if (theme === 'halloween') {
+          if (!witch) {
+            witch = document.createElement('div');
+            witch.id = 'halloween-witch';
+            witch.setAttribute('aria-hidden', 'true');
+            witch.className = 'halloween-witch';
+            witch.innerHTML = '<div class="witch-sprite"></div><div class="broom-trail"><span class="spark sp1"></span><span class="spark sp2"></span><span class="spark sp3"></span><span class="smoke sm1"></span><span class="smoke sm2"></span></div>';
+            document.body.appendChild(witch);
+          }
+        } else if (witch) {
+          witch.remove();
+        }
+      };
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', mount, { once: true });
+      } else {
+        mount();
+      }
     }
 
     if (typeof document !== 'undefined') {
