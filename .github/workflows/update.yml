@@ -9,9 +9,10 @@ on:
       theme:
         description: 'Global site-wide theme'
         required: false
-        default: 'regular'
+        default: 'keep-current'
         type: choice
         options:
+          - keep-current
           - regular
           - 90s-nostalgia
           - the-aud-era
@@ -24,9 +25,10 @@ on:
       billsTheme:
         description: 'Bills team override (optional)'
         required: false
-        default: 'follow-global'
+        default: 'keep-current'
         type: choice
         options:
+          - keep-current
           - follow-global
           - regular
           - red-helmet
@@ -35,16 +37,17 @@ on:
       sabresTheme:
         description: 'Sabres team override (optional)'
         required: false
-        default: 'follow-global'
+        default: 'keep-current'
         type: choice
         options:
+          - keep-current
           - follow-global
           - regular
           - goathead
           - french-connection
           - gameday
       themeUntil:
-        description: 'Auto-revert ISO expiration (e.g. 2026-11-01T23:59:59Z, or empty for indefinite)'
+        description: 'Auto-revert ISO expiration (e.g. 2026-11-01T23:59:59Z, "clear" to remove, or blank to keep current)'
         required: false
         default: ''
         type: string
@@ -82,14 +85,26 @@ jobs:
             const fs = require("fs");
             const p = "./data.json";
             const data = JSON.parse(fs.readFileSync(p, "utf8"));
-            if ("${{ github.event.inputs.theme }}") {
-              data.theme = "${{ github.event.inputs.theme }}";
+            const inputTheme = "${{ github.event.inputs.theme }}".trim();
+            if (inputTheme && inputTheme !== "keep-current") {
+              data.theme = inputTheme;
             }
-            const bTheme = "${{ github.event.inputs.billsTheme }}";
-            data.billsTheme = (bTheme && bTheme !== "follow-global") ? bTheme : null;
-            const sTheme = "${{ github.event.inputs.sabresTheme }}";
-            data.sabresTheme = (sTheme && sTheme !== "follow-global") ? sTheme : null;
-            data.themeUntil = "${{ github.event.inputs.themeUntil }}".trim() || null;
+            const bTheme = "${{ github.event.inputs.billsTheme }}".trim();
+            if (bTheme && bTheme !== "keep-current") {
+              data.billsTheme = (bTheme !== "follow-global") ? bTheme : null;
+            }
+            const sTheme = "${{ github.event.inputs.sabresTheme }}".trim();
+            if (sTheme && sTheme !== "keep-current") {
+              data.sabresTheme = (sTheme !== "follow-global") ? sTheme : null;
+            }
+            const untilInput = "${{ github.event.inputs.themeUntil }}".trim();
+            if (untilInput === "clear") {
+              data.themeUntil = null;
+            } else if (untilInput) {
+              data.themeUntil = untilInput;
+            } else if (inputTheme && inputTheme !== "keep-current") {
+              data.themeUntil = null;
+            }
             fs.writeFileSync(p, JSON.stringify(data, null, 2), "utf8");
             console.log("Themes updated -> Global:", data.theme, "| Bills:", data.billsTheme, "| Sabres:", data.sabresTheme, "| Until:", data.themeUntil);
           '

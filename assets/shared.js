@@ -325,6 +325,25 @@
         }
       }
 
+      // Respect URL query parameter overrides (?theme=..., ?billsTheme=..., ?sabresTheme=...) so dev/preview and shared links do not reset during auto updates
+      if (typeof window !== 'undefined' && window.location && window.location.search) {
+        try {
+          const urlParams = new URLSearchParams(window.location.search);
+          const qTheme = urlParams.get('theme');
+          const qBills = urlParams.get('billsTheme');
+          const qSabres = urlParams.get('sabresTheme');
+          if (qTheme && VALID_THEMES.includes(qTheme.toLowerCase().trim())) {
+            targetGlobal = qTheme.toLowerCase().trim();
+          }
+          if (qBills && VALID_BILLS_OVERRIDES.includes(qBills.toLowerCase().trim())) {
+            targetBills = qBills.toLowerCase().trim();
+          }
+          if (qSabres && VALID_SABRES_OVERRIDES.includes(qSabres.toLowerCase().trim())) {
+            targetSabres = qSabres.toLowerCase().trim();
+          }
+        } catch (e) {}
+      }
+
       if (!VALID_THEMES.includes(targetGlobal)) {
         targetGlobal = 'regular';
       }

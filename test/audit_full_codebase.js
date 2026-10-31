@@ -368,6 +368,28 @@ try {
     if (mockRootTheme !== 'regular' || expiredResult.billsTheme !== 'regular' || expiredResult.sabresTheme !== 'regular') {
       issues.push(`applyTheme with expired timestamp did not perform total reset: root="${mockRootTheme}", bills="${expiredResult.billsTheme}", sabres="${expiredResult.sabresTheme}"`);
     }
+
+    // 6. Dev / preview URL query parameters override data.json and survive updates
+    const mockWindow = {
+      location: {
+        pathname: '/',
+        search: '?theme=thanksgiving&billsTheme=standing-buffalo'
+      }
+    };
+    const urlOverrideApplyTheme = new Function('document', 'Date', 'window', `${fnText}; return applyTheme;`)(mockDocument, Date, mockWindow);
+    const urlResult = urlOverrideApplyTheme('regular', null, null, null);
+    if (urlResult.globalTheme !== 'thanksgiving' || urlResult.billsTheme !== 'standing-buffalo' || mockRootTheme !== 'thanksgiving') {
+      issues.push(`applyTheme failed to respect URL search params during auto-update: got global=${urlResult.globalTheme}, bills=${urlResult.billsTheme}`);
+    }
+  }
+
+  // 7. Verify GitHub Actions workflow defaults to keep-current so auto-updates never reset themes
+  const updateYml = fs.readFileSync('.github/workflows/update.yml', 'utf8');
+  if (!updateYml.includes("default: 'keep-current'")) {
+    issues.push('.github/workflows/update.yml theme input must default to "keep-current" to prevent auto-updates from resetting themes');
+  }
+  if (!updateYml.includes('inputTheme !== "keep-current"')) {
+    issues.push('.github/workflows/update.yml Apply Theme Selection step must check for "keep-current"');
   }
 } catch (err) {
   issues.push(`Theme architecture test failed: ${err.message}`);
