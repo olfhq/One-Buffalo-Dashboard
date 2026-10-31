@@ -240,6 +240,7 @@ try {
     'stadium-lights-sway',
     'crt-beam-sweep',
     'spooky-flicker',
+    'witch-patrol',
     'harvest-glow',
     'holiday-twinkle',
     'gold-shimmer-sweep',
