@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-31T10:00:29.109Z",
+  "updatedAt": "2026-10-31T11:52:31.323Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
   "theme": "regular",
   "billsTheme": null,
@@ -353,7 +353,7 @@
         "venue": "Acrisure Stadium, Pittsburgh, PA",
         "roof": "Open-Air Stadium",
         "surface": "Natural Kentucky Bluegrass",
-        "weather": "68°F, 4mph Wind, 9% PoP",
+        "weather": "68°F, 4mph Wind, 10% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -407,7 +407,7 @@
         "venue": "EverBank Stadium, Jacksonville, FL",
         "roof": "Open-Air Stadium",
         "surface": "Natural Bermuda Grass",
-        "weather": "77°F, 7mph Wind, 16% PoP",
+        "weather": "77°F, 7mph Wind, 9% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -461,7 +461,7 @@
         "venue": "Empower Field at Mile High, Denver, CO",
         "roof": "Open-Air Stadium",
         "surface": "Natural Kentucky Bluegrass",
-        "weather": "66°F, 10mph Wind, 0% PoP",
+        "weather": "66°F, 10mph Wind, 2% PoP",
         "window": "LATE",
         "windowLabel": "Sunday 4:25 PM ET National Window",
         "windowBadge": "America's Game of the Week",
@@ -488,7 +488,7 @@
         "venue": "Hard Rock Stadium, Miami Gardens, FL",
         "roof": "Open-Air Stadium",
         "surface": "Natural Bermuda Grass",
-        "weather": "81°F, 11mph Wind, 87% PoP",
+        "weather": "81°F, 11mph Wind, 38% PoP",
         "window": "LATE",
         "windowLabel": "Sunday 4:25 PM ET National Window",
         "windowBadge": "America's Game of the Week",
@@ -542,7 +542,7 @@
         "venue": "Lumen Field, Seattle, WA",
         "roof": "Open-Air Stadium",
         "surface": "FieldTurf Revolution",
-        "weather": "49°F, 2mph Wind, 2% PoP",
+        "weather": "51°F, 1mph Wind, 2% PoP",
         "window": "MNF",
         "windowLabel": "Monday Night Football",
         "windowBadge": "ESPN / ABC Prime Time",
@@ -566,8 +566,8 @@
   "sabres": {
     "team": "Buffalo Sabres",
     "makePlayoffs": 42,
-    "winDivision": 27,
-    "wildcard": 15,
+    "winDivision": 28,
+    "wildcard": 14,
     "tragicNumber": "95 PTS",
     "projectedPoints": 95,
     "cutlinePoints": 100,
@@ -745,16 +745,16 @@
     },
     "divisionRadar": [
       {
-        "team": "Lightning",
-        "pct": 66
-      },
-      {
         "team": "Bruins",
-        "pct": 63
+        "pct": 62
       },
       {
         "team": "Canadiens",
-        "pct": 59
+        "pct": 58
+      },
+      {
+        "team": "Panthers",
+        "pct": 52
       },
       {
         "team": "Sabres",
@@ -772,11 +772,11 @@
       },
       {
         "seed": "Div 3",
-        "pct": 11
+        "pct": 12
       },
       {
         "seed": "Wildcard 1",
-        "pct": 8
+        "pct": 7
       },
       {
         "seed": "Wildcard 2",
