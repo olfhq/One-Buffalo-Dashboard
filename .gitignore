@@ -10,3 +10,7 @@ Thumbs.db
 *.log
 .vscode/
 .idea/
+
+# Antigravity CLI local state
+.agents/
+skills-lock.json
