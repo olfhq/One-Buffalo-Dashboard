@@ -807,7 +807,7 @@ function GameCenter(p: GameTelemetryProps) {
                 <div style={{ paddingRight: 10 }}>
                   <div style={{ fontSize: 11, color: C.dim, fontFamily: "Barlow, sans-serif", fontWeight: 600 }}>CURRENT STANDING</div>
                   <div style={{ fontSize: 13, fontWeight: 600, marginTop: 2 }}>1st in AFC East • 6-1</div>
-                  <div style={{ fontSize: 11, color: C.dim, fontFamily: "Barlow, sans-serif" }}>(AFC #2 Seed • +2.5 GA buffer)</div>
+                  <div style={{ fontSize: 11, color: C.dim, fontFamily: "Barlow, sans-serif" }}>(AFC #2 Seed • 2.5 game division lead)</div>
                 </div>
                 <div style={{ borderLeft: `1px solid ${C.soft}`, padding: "0 10px" }}>
                   <div style={{ fontSize: 11, color: "#4ADE80", fontFamily: "Barlow, sans-serif", fontWeight: 600 }}>WITH A WIN</div>
@@ -1360,7 +1360,11 @@ function PlayoffPicture(p: PlayoffPictureProps) {
   ];
   if (p.projectedPoints !== undefined) stats.push({ l: "Projected points", v: String(p.projectedPoints) });
   if (p.cutlinePoints !== undefined) stats.push({ l: "Cutline points", v: String(p.cutlinePoints) });
-  if (p.leverage !== undefined) stats.push({ l: "Leverage", v: `${p.leverage} pts` });
+  if (p.seed1 !== undefined) {
+    stats.push({ l: "Games Ahead", v: "+2.5" });
+  } else {
+    stats.push({ l: "Cutline Gap", v: "-2 PTS" });
+  }
   return (
     <div style={{ minWidth: 0 }}>
       <h3 className="disp" style={{ margin: "0 0 6px", fontSize: 22 }}>{p.team}</h3>
@@ -1477,7 +1481,7 @@ export default function Prompt_Test_Mockup() {
 
       <section aria-label="Playoff picture" className="sect">
         <div className="wrap">
-          <SectionHead title="Playoff picture" meta={`Source: ${META.source}`} />
+          <SectionHead title="Playoff picture" />
           <div className={two ? "grid2" : undefined} style={splitStyle}>
             {showBills && <div style={{ paddingRight: two ? 20 : 0 }}><PlayoffPicture {...BILLS_PICTURE} /></div>}
             {showSabres && <div style={{ paddingLeft: two ? 20 : 0 }}><PlayoffPicture {...SABRES_PICTURE} /></div>}
