@@ -7,16 +7,43 @@
     const activeCountdowns = new Map();
     let globalCountdownInterval = null;
 
+    // Schedule heavy DOM work after the browser paints visual button feedback (INP optimization)
+    function runAfterNextPaint(callback) {
+      if (typeof requestAnimationFrame === 'function') {
+        requestAnimationFrame(() => {
+          setTimeout(callback, 0);
+        });
+      } else {
+        setTimeout(callback, 0);
+      }
+    }
+
+    // Defer non-critical background fetches/tasks until main thread is idle
+    function scheduleWhenIdle(callback, timeoutMs = 1500) {
+      if (typeof window !== 'undefined' && typeof window.requestIdleCallback === 'function') {
+        window.requestIdleCallback(callback, { timeout: timeoutMs });
+      } else {
+        setTimeout(callback, 250);
+      }
+    }
+
     function updateAllCountdowns() {
       if (typeof document !== 'undefined' && document.hidden) return;
+      if (activeCountdowns.size === 0) {
+        if (globalCountdownInterval) {
+          clearInterval(globalCountdownInterval);
+          globalCountdownInterval = null;
+        }
+        return;
+      }
       const now = Date.now();
-      for (const [id, targetIso] of activeCountdowns.entries()) {
+      for (const [id, targetMs] of activeCountdowns.entries()) {
         const el = document.getElementById(id);
         if (!el) {
           activeCountdowns.delete(id);
           continue;
         }
-        const diff = new Date(targetIso).getTime() - now;
+        const diff = targetMs - now;
         if (isNaN(diff)) {
           activeCountdowns.delete(id);
           continue;
@@ -43,19 +70,29 @@
           el.textContent = txt;
         }
       }
+      if (activeCountdowns.size === 0 && globalCountdownInterval) {
+        clearInterval(globalCountdownInterval);
+        globalCountdownInterval = null;
+      }
     }
 
     function startCountdown(elementId, targetIso) {
       if (!elementId || !targetIso) return;
-      activeCountdowns.set(elementId, targetIso);
+      const targetMs = new Date(targetIso).getTime();
+      if (isNaN(targetMs)) return;
+      activeCountdowns.set(elementId, targetMs);
       updateAllCountdowns();
-      if (!globalCountdownInterval) {
+      if (!globalCountdownInterval && activeCountdowns.size > 0) {
         globalCountdownInterval = setInterval(updateAllCountdowns, 1000);
       }
     }
 
     function stopCountdown(elementId) {
       activeCountdowns.delete(elementId);
+      if (activeCountdowns.size === 0 && globalCountdownInterval) {
+        clearInterval(globalCountdownInterval);
+        globalCountdownInterval = null;
+      }
     }
 
     // Dynamic US Eastern DST Offset Helper (returns "GMT-0400" in EDT or "GMT-0500" in EST)
@@ -467,32 +504,26 @@
       targetBtn.setAttribute('tabindex', '0');
       if (focusTab) targetBtn.focus();
 
-      const activatePanel = () => {
+      runAfterNextPaint(() => {
         document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
         const targetTab = document.getElementById(`tab-${tabId}`);
         if (targetTab) targetTab.classList.add('active');
-      };
 
-      if (typeof requestAnimationFrame === 'function') {
-        requestAnimationFrame(activatePanel);
-      } else {
-        activatePanel();
-      }
-
-      try {
-        if (typeof window !== 'undefined' && window.history && window.history.replaceState) {
-          const targetHash = `#${tabId}`;
-          if (window.location.hash !== targetHash) {
-            window.history.replaceState(null, '', targetHash);
+        try {
+          if (typeof window !== 'undefined' && window.history && window.history.replaceState) {
+            const targetHash = `#${tabId}`;
+            if (window.location.hash !== targetHash) {
+              window.history.replaceState(null, '', targetHash);
+            }
           }
-        }
-      } catch (e) {}
+        } catch (e) {}
 
-      try {
-        if (typeof window !== 'undefined' && window.umami && typeof window.umami.track === 'function') {
-          window.umami.track('tab_switch', { tab: tabId });
-        }
-      } catch (e) {}
+        try {
+          if (typeof window !== 'undefined' && window.umami && typeof window.umami.track === 'function') {
+            window.umami.track('tab_switch', { tab: tabId });
+          }
+        } catch (e) {}
+      });
     }
 
     function initAccessibleTabs() {
@@ -554,10 +585,12 @@
         activeBtn.classList.add('active');
         activeBtn.setAttribute('aria-pressed', 'true');
       }
-      const grid = gridId
-        ? document.getElementById(gridId)
-        : (document.getElementById('bills-scoreboard-grid') || document.getElementById('sabres-scoreboard-grid'));
-      if (grid) grid.setAttribute('data-filter', filter);
+      runAfterNextPaint(() => {
+        const grid = gridId
+          ? document.getElementById(gridId)
+          : (document.getElementById('bills-scoreboard-grid') || document.getElementById('sabres-scoreboard-grid'));
+        if (grid) grid.setAttribute('data-filter', filter);
+      });
     }
 
     // Tale of the Tape: Parse rank or numeric metric value and highlight the statistical leader

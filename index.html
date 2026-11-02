@@ -59,8 +59,12 @@
   <script type="text/javascript">
     (function(c,l,a,r,i,t,y){
         c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        var loadClarity=function(){
+          t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+          y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        };
+        if(c.requestIdleCallback){c.addEventListener("load",function(){c.requestIdleCallback(loadClarity,{timeout:2000})},{once:true})}
+        else{c.addEventListener("load",function(){setTimeout(loadClarity,500)},{once:true})}
     })(window, document, "clarity", "script", "z1eofksq8i");
   </script>
 
@@ -1227,8 +1231,12 @@
         }
       }
 
-      // Check real-time live game feeds immediately
-      checkLiveScores();
+      // Defer real-time live game feeds until main thread is idle (INP optimization)
+      if (typeof scheduleWhenIdle === 'function') {
+        scheduleWhenIdle(checkLiveScores, 1800);
+      } else {
+        setTimeout(checkLiveScores, 300);
+      }
       isDataLoading = false;
     }
 

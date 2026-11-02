@@ -59,8 +59,12 @@
   <script type="text/javascript">
     (function(c,l,a,r,i,t,y){
         c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        var loadClarity=function(){
+          t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+          y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        };
+        if(c.requestIdleCallback){c.addEventListener("load",function(){c.requestIdleCallback(loadClarity,{timeout:2000})},{once:true})}
+        else{c.addEventListener("load",function(){setTimeout(loadClarity,500)},{once:true})}
     })(window, document, "clarity", "script", "z1eofksq8i");
   </script>
 
@@ -2460,41 +2464,55 @@
       if (dateKey) {
         openAccordionDates.set(dateKey, isActive);
       }
-      const content = btn.nextElementSibling;
-      if (content) {
-        if (isActive) {
-          content.classList.add('open');
-          content.style.display = 'flex';
-        } else {
-          content.classList.remove('open');
-          content.style.display = 'none';
-        }
-      }
-    }
-
-    function toggleAllSlateAccordions(expand) {
-      document.querySelectorAll('.slate-accordion-header').forEach(btn => {
+      const applyAccordionContent = () => {
         const content = btn.nextElementSibling;
-        const dateKey = btn.getAttribute('data-date-key');
-        if (dateKey) {
-          openAccordionDates.set(dateKey, Boolean(expand));
-        }
-        if (expand) {
-          btn.classList.add('active');
-          btn.setAttribute('aria-expanded', 'true');
-          if (content) {
+        if (content) {
+          if (isActive) {
             content.classList.add('open');
             content.style.display = 'flex';
-          }
-        } else {
-          btn.classList.remove('active');
-          btn.setAttribute('aria-expanded', 'false');
-          if (content) {
+          } else {
             content.classList.remove('open');
             content.style.display = 'none';
           }
         }
-      });
+      };
+      if (typeof runAfterNextPaint === 'function') {
+        runAfterNextPaint(applyAccordionContent);
+      } else {
+        applyAccordionContent();
+      }
+    }
+
+    function toggleAllSlateAccordions(expand) {
+      const applyAllAccordions = () => {
+        document.querySelectorAll('.slate-accordion-header').forEach(btn => {
+          const content = btn.nextElementSibling;
+          const dateKey = btn.getAttribute('data-date-key');
+          if (dateKey) {
+            openAccordionDates.set(dateKey, Boolean(expand));
+          }
+          if (expand) {
+            btn.classList.add('active');
+            btn.setAttribute('aria-expanded', 'true');
+            if (content) {
+              content.classList.add('open');
+              content.style.display = 'flex';
+            }
+          } else {
+            btn.classList.remove('active');
+            btn.setAttribute('aria-expanded', 'false');
+            if (content) {
+              content.classList.remove('open');
+              content.style.display = 'none';
+            }
+          }
+        });
+      };
+      if (typeof runAfterNextPaint === 'function') {
+        runAfterNextPaint(applyAllAccordions);
+      } else {
+        applyAllAccordions();
+      }
     }
 
     function renderWindowGroups(gamesList, sectionType = 'upcoming') {
@@ -2973,7 +2991,18 @@
 
     function filterSabresMonth(monthKey) {
       currentSabresActiveMonth = monthKey;
-      renderSabresSeasonSchedule(currentSabresSeasonSchedule, currentSabresActiveMonth);
+      document.querySelectorAll('#sabres-month-pills .month-pill').forEach(pill => {
+        const isAct = pill.getAttribute('data-month') === monthKey;
+        pill.classList.toggle('active', isAct);
+        pill.setAttribute('aria-pressed', isAct ? 'true' : 'false');
+      });
+      if (typeof runAfterNextPaint === 'function') {
+        runAfterNextPaint(() => {
+          renderSabresSeasonSchedule(currentSabresSeasonSchedule, currentSabresActiveMonth);
+        });
+      } else {
+        renderSabresSeasonSchedule(currentSabresSeasonSchedule, currentSabresActiveMonth);
+      }
     }
 
     function renderSabresSeasonSchedule(schedule, activeMonth) {
@@ -6524,8 +6553,12 @@
       renderSabresScoreboard(currentSabresOutOfTownGames, currentSabresNextGame);
       renderSabresSeasonSchedule(s.seasonSchedule);
 
-      // Check real-time live scores immediately
-      pollLiveSabresScoreboard();
+      // Defer real-time live scores until main thread is idle (INP optimization)
+      if (typeof scheduleWhenIdle === 'function') {
+        scheduleWhenIdle(pollLiveSabresScoreboard, 1800);
+      } else {
+        setTimeout(pollLiveSabresScoreboard, 300);
+      }
       isDataLoading = false;
     }
 

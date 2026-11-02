@@ -513,6 +513,32 @@ h1, h2, h3, .section-subtitle, .matchup-opp, .pinned-matchup-title {
   outline-offset: 2px;
 }
 
+/* INP & MOBILE RESPONSIVENESS OPTIMIZATIONS */
+a,
+button,
+.hub-link-btn,
+.back-nav-btn,
+.hub-pill,
+.tab-btn,
+.month-pill,
+.slate-filter-btn,
+.slate-toolbar-btn,
+.slate-accordion-header,
+.live-radar-link {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.schedule-card {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 76px;
+}
+
+.slate-accordion-section {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 240px;
+}
+
 /* LIVE GAME INDICATOR PULSES */
 .live-dot {
   display: inline-block;
