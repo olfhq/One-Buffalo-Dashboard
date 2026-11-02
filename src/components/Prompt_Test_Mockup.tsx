@@ -1538,9 +1538,31 @@ export default function Prompt_Test_Mockup() {
         </div>
       </section>
 
-      <footer className="wrap num" style={{ borderTop: `1px solid ${C.hair}`, padding: "16px 24px 32px", color: C.dim, fontSize: 12 }}>
-        Updated {META.updatedAt}. Themes: {META.theme} / {META.billsTheme} / {META.sabresTheme}
-        {META.themeUntil ? ` until ${META.themeUntil}` : ""}. Mock data in data.json shape.
+      <footer
+        className="w-full text-center border-t border-slate-800 bg-slate-950/60 py-6 px-4"
+        style={{
+          width: "100%",
+          textAlign: "center",
+          borderTop: "1px solid #1e293b",
+          backgroundColor: "rgba(2, 6, 23, 0.6)",
+          padding: "1.5rem 1rem",
+        }}
+      >
+        <p
+          className="text-xs text-slate-400 font-sans tracking-normal leading-relaxed text-center max-w-4xl mx-auto"
+          style={{
+            fontSize: "0.75rem",
+            color: "#94a3b8",
+            fontFamily: "'Barlow', system-ui, sans-serif",
+            letterSpacing: "0em",
+            lineHeight: 1.625,
+            textAlign: "center",
+            maxWidth: "56rem",
+            margin: "0 auto",
+          }}
+        >
+          One Buffalo Tracker is an independent fan dashboard and is not affiliated with, endorsed by, or sponsored by Pegula Sports &amp; Entertainment, the Buffalo Bills, the Buffalo Sabres, the NFL, or the NHL.
+        </p>
       </footer>
     </div>
   );
