@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-11-02T11:00:28.615Z",
+  "updatedAt": "2026-11-02T14:34:21.826Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
-  "theme": "gameday",
-  "billsTheme": "gameday",
+  "theme": "regular",
+  "billsTheme": "regular",
   "sabresTheme": "regular",
-  "themeUntil": "2026-11-01T23:50.59z",
+  "themeUntil": null,
   "bills": {
     "team": "Buffalo Bills",
     "makePlayoffs": 94,
@@ -542,7 +542,7 @@
         "venue": "Lumen Field, Seattle, WA",
         "roof": "Open-Air Stadium",
         "surface": "FieldTurf Revolution",
-        "weather": "50°F, 3mph Wind, 3% PoP",
+        "weather": "48°F, 2mph Wind, 4% PoP",
         "window": "MNF",
         "windowLabel": "Monday Night Football",
         "windowBadge": "ESPN / ABC Prime Time",
@@ -565,8 +565,8 @@
   },
   "sabres": {
     "team": "Buffalo Sabres",
-    "makePlayoffs": 47,
-    "winDivision": 31,
+    "makePlayoffs": 48,
+    "winDivision": 32,
     "wildcard": 16,
     "tragicNumber": "100 PTS",
     "projectedPoints": 100,
@@ -590,8 +590,8 @@
       "bufScore": "",
       "oppScore": "",
       "liveScore": null,
-      "ifWin": 53,
-      "ifLoss": 42,
+      "ifWin": 54,
+      "ifLoss": 43,
       "leverage": 11,
       "restAdvantage": {
         "sabresDays": 2,
@@ -632,7 +632,7 @@
         {
           "metric": "Faceoff Win %",
           "sabres": "46.2% (29th)",
-          "opp": "52.8% (8th)"
+          "opp": "52.7% (8th)"
         }
       ],
       "injuries": [
@@ -747,11 +747,11 @@
       },
       {
         "team": "Senators",
-        "pct": 56
+        "pct": 52
       },
       {
         "team": "Sabres",
-        "pct": 47
+        "pct": 48
       }
     ],
     "seedDistribution": [
@@ -765,7 +765,7 @@
       },
       {
         "seed": "Div 3",
-        "pct": 12
+        "pct": 13
       },
       {
         "seed": "Wildcard 1",
@@ -778,15 +778,15 @@
     ],
     "opponents": [
       {
-        "team": "Tampa Bay Lightning",
-        "pct": 6
-      },
-      {
         "team": "Boston Bruins",
-        "pct": 6
+        "pct": 7
       },
       {
         "team": "Montreal Canadiens",
+        "pct": 7
+      },
+      {
+        "team": "Tampa Bay Lightning",
         "pct": 6
       }
     ],
