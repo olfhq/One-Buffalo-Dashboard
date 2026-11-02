@@ -804,17 +804,20 @@ function GameCenter(p: GameTelemetryProps) {
               </div>
 
               <div className="num" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", borderTop: `1px solid ${C.hair}`, paddingTop: 10 }}>
-                <div>
-                  <div style={{ fontSize: 11, color: C.dim, fontFamily: "Barlow, sans-serif" }}>Playoffs if win</div>
-                  <div style={{ fontSize: 18, fontWeight: 600, color: C.gold }}>{nextGame.ifWin}%</div>
+                <div style={{ paddingRight: 10 }}>
+                  <div style={{ fontSize: 11, color: C.dim, fontFamily: "Barlow, sans-serif", fontWeight: 600 }}>CURRENT STANDING</div>
+                  <div style={{ fontSize: 13, fontWeight: 600, marginTop: 2 }}>1st in AFC East • 6-1</div>
+                  <div style={{ fontSize: 11, color: C.dim, fontFamily: "Barlow, sans-serif" }}>(AFC #2 Seed • +2.5 GA buffer)</div>
+                </div>
+                <div style={{ borderLeft: `1px solid ${C.soft}`, padding: "0 10px" }}>
+                  <div style={{ fontSize: 11, color: "#4ADE80", fontFamily: "Barlow, sans-serif", fontWeight: 600 }}>WITH A WIN</div>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: "#4ADE80", marginTop: 2 }}>{nextGame.ifWin ?? 99}% Playoff Odds</div>
+                  <div style={{ fontSize: 11, color: C.dim, fontFamily: "Barlow, sans-serif" }}>Moves to 7-1 • Contends for #1 Seed</div>
                 </div>
                 <div style={{ borderLeft: `1px solid ${C.soft}`, paddingLeft: 10 }}>
-                  <div style={{ fontSize: 11, color: C.dim, fontFamily: "Barlow, sans-serif" }}>Playoffs if loss</div>
-                  <div style={{ fontSize: 18, fontWeight: 600 }}>{nextGame.ifLoss}%</div>
-                </div>
-                <div style={{ borderLeft: `1px solid ${C.soft}`, paddingLeft: 10 }}>
-                  <div style={{ fontSize: 11, color: C.dim, fontFamily: "Barlow, sans-serif" }}>Leverage</div>
-                  <div style={{ fontSize: 18, fontWeight: 600 }}>{nextGame.leverage} pts</div>
+                  <div style={{ fontSize: 11, color: "#FF8A9C", fontFamily: "Barlow, sans-serif", fontWeight: 600 }}>WITH A LOSS</div>
+                  <div style={{ fontSize: 13, fontWeight: 600, marginTop: 2 }}>{nextGame.ifLoss ?? 84}% Playoff Odds</div>
+                  <div style={{ fontSize: 11, color: C.dim, fontFamily: "Barlow, sans-serif" }}>Drops to 6-2 • Division buffer tightens</div>
                 </div>
               </div>
             </div>
