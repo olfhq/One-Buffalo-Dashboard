@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-02T05:00:39.022Z",
+  "updatedAt": "2026-11-02T11:00:28.615Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
   "theme": "gameday",
   "billsTheme": "gameday",
@@ -7,8 +7,8 @@
   "themeUntil": "2026-11-01T23:50.59z",
   "bills": {
     "team": "Buffalo Bills",
-    "makePlayoffs": 92,
-    "winDivision": 70,
+    "makePlayoffs": 94,
+    "winDivision": 72,
     "seed1": 28,
     "magicNumber": "9",
     "clinchAlert": {
@@ -29,9 +29,9 @@
       "bufScore": "",
       "oppScore": "",
       "liveScore": null,
-      "ifWin": 98,
-      "ifLoss": 82,
-      "leverage": 16,
+      "ifWin": 99,
+      "ifLoss": 84,
+      "leverage": 15,
       "restAdvantage": {
         "billsDays": 8,
         "oppDays": 8,
@@ -40,39 +40,39 @@
       "efficiency": [
         {
           "metric": "Points / Game",
-          "bills": "32.8 (1st)",
-          "opp": "20.8 (24th)"
+          "bills": "33.3 (1st)",
+          "opp": "20.0 (27th)"
         },
         {
           "metric": "Total Yards / Game",
-          "bills": "399.5 (4th)",
-          "opp": "300.7 (29th)"
+          "bills": "404.6 (3rd)",
+          "opp": "299.3 (29th)"
         },
         {
           "metric": "Passing Yards / Game",
-          "bills": "238.8 (12th)",
-          "opp": "162.3 (29th)"
+          "bills": "244.7 (10th)",
+          "opp": "165.6 (31st)"
         },
         {
           "metric": "Rushing Yards / Game",
-          "bills": "148.8 (2nd)",
-          "opp": "119.3 (12th)"
+          "bills": "148.4 (3rd)",
+          "opp": "113.9 (17th)"
         },
         {
           "metric": "3rd Down Conversion %",
-          "bills": "47.6% (5th)",
-          "opp": "36.7% (27th)"
+          "bills": "44.2% (5th)",
+          "opp": "36.0% (27th)"
         },
         {
           "metric": "Red Zone TD %",
-          "bills": "69.2% (7th)",
-          "opp": "50.0% (23rd)"
+          "bills": "70.0% (6th)",
+          "opp": "56.3% (18th)"
         }
       ],
       "turnoverRatio": {
-        "bills": "-3 (6 Takeaways / 9 Giveaways)",
-        "opp": "+7 (11 Takeaways / 4 Giveaways)",
-        "advantage": "Vikings (+10 Differential Margin)"
+        "bills": "-2 (9 Takeaways / 11 Giveaways)",
+        "opp": "+7 (12 Takeaways / 5 Giveaways)",
+        "advantage": "Vikings (+9 Differential Margin)"
       },
       "injuries": [
         {
@@ -150,11 +150,11 @@
     "divisionRadar": [
       {
         "team": "Bills",
-        "pct": 70
+        "pct": 72
       },
       {
         "team": "Patriots",
-        "pct": 29
+        "pct": 28
       },
       {
         "team": "Jets",
@@ -172,11 +172,11 @@
       },
       {
         "seed": "#2 Seed",
-        "pct": 17
+        "pct": 18
       },
       {
         "seed": "#3 Seed",
-        "pct": 15
+        "pct": 16
       },
       {
         "seed": "#4 Seed",
@@ -542,7 +542,7 @@
         "venue": "Lumen Field, Seattle, WA",
         "roof": "Open-Air Stadium",
         "surface": "FieldTurf Revolution",
-        "weather": "51°F, 4mph Wind, 1% PoP",
+        "weather": "50°F, 3mph Wind, 3% PoP",
         "window": "MNF",
         "windowLabel": "Monday Night Football",
         "windowBadge": "ESPN / ABC Prime Time",
@@ -554,8 +554,8 @@
         "homeName": "Seattle Seahawks",
         "homeRecord": "4-3, W1",
         "homeScore": "0",
-        "homeWinChance": 60,
-        "awayWinChance": 40,
+        "homeWinChance": 61,
+        "awayWinChance": 39,
         "verdict": "NFC MATCHUP",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
