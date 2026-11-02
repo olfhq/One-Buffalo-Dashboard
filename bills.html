@@ -1358,6 +1358,181 @@
     .points-winner { color: #34d399 !important; font-weight: 800; }
     .score-team-upcoming { color: var(--text-muted); font-size: 0.85rem; }
     .game-status-upcoming { color: #38bdf8; font-weight: 800; }
+
+    /* FULL SEASON SCHEDULE STYLING */
+    .schedule-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      margin-top: 0.75rem;
+    }
+    .schedule-card {
+      display: grid;
+      grid-template-columns: 92px 1fr auto;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      background: var(--card-inner);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .schedule-card:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+    .schedule-card.schedule-card-next {
+      border: 1px solid var(--accent-blue);
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.12), var(--card-inner));
+      box-shadow: 0 0 14px rgba(59, 130, 246, 0.2);
+    }
+    .schedule-card.schedule-card-bye {
+      opacity: 0.7;
+      background: rgba(30, 41, 59, 0.4);
+      border-style: dashed;
+    }
+    .schedule-time-col {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+    .schedule-week-badge {
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: var(--accent-blue);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .schedule-date {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #e2e8f0;
+      white-space: nowrap;
+    }
+    .schedule-day {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+    .schedule-matchup-col {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      min-width: 0;
+    }
+    .schedule-opp-line {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .schedule-ha-tag {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    .schedule-meta-line {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+    .schedule-result-col {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 0.5rem;
+      text-align: right;
+    }
+    .result-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+    .result-pill-w {
+      background: rgba(16, 185, 129, 0.2);
+      color: #10b981;
+      border: 1px solid rgba(16, 185, 129, 0.4);
+    }
+    .result-pill-l {
+      background: rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, 0.4);
+    }
+    .result-pill-otl {
+      background: rgba(245, 158, 11, 0.2);
+      color: #f59e0b;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+    }
+    .result-score {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #fff;
+      font-feature-settings: "tnum";
+      white-space: nowrap;
+    }
+    .schedule-tv-badge {
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.2rem 0.5rem;
+      border-radius: 5px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #cbd5e1;
+      border: 1px solid var(--card-border);
+    }
+    .schedule-primetime-badge {
+      font-size: 0.68rem;
+      font-weight: 800;
+      padding: 0.2rem 0.45rem;
+      border-radius: 5px;
+      background: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .schedule-next-badge {
+      display: inline-block;
+      font-size: 0.62rem;
+      font-weight: 800;
+      padding: 0.1rem 0.35rem;
+      border-radius: 4px;
+      background: var(--accent-blue);
+      color: #fff;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    @media (max-width: 580px) {
+      .tab-bar {
+        overflow-x: auto;
+        justify-content: flex-start;
+        -webkit-overflow-scrolling: touch;
+      }
+      .tab-btn {
+        flex: 0 0 auto;
+        padding: 0.5rem 0.65rem;
+        font-size: 0.76rem;
+      }
+      .schedule-card {
+        grid-template-columns: 74px 1fr auto;
+        gap: 0.5rem;
+        padding: 0.65rem 0.75rem;
+      }
+      .schedule-opp-line {
+        font-size: 0.84rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -1381,6 +1556,7 @@
     <button class="tab-btn active" id="tab-btn-intel" role="tab" aria-selected="true" tabindex="0" aria-controls="tab-intel" onclick="switchTab('intel')" data-umami-event="tab-intel-bills">Matchup Intel</button>
     <button class="tab-btn" id="tab-btn-rooting" role="tab" aria-selected="false" tabindex="-1" aria-controls="tab-rooting" onclick="switchTab('rooting')" data-umami-event="tab-rooting-bills">Weekly Slate & TV Guide</button>
     <button class="tab-btn" id="tab-btn-radar" role="tab" aria-selected="false" tabindex="-1" aria-controls="tab-radar" onclick="switchTab('radar')" data-umami-event="tab-radar-bills">Postseason Radar</button>
+    <button class="tab-btn" id="tab-btn-schedule" role="tab" aria-selected="false" tabindex="-1" aria-controls="tab-schedule" onclick="switchTab('schedule')" data-umami-event="tab-schedule-bills">Full Schedule</button>
   </nav>
 
   <main class="container">
@@ -1561,6 +1737,19 @@
         </div>
       </div>
     </section>
+
+    <!-- TAB 4: FULL SEASON SCHEDULE -->
+    <section id="tab-schedule" class="tab-content" role="tabpanel" aria-labelledby="tab-btn-schedule">
+      <div class="card">
+        <div class="section-subtitle">
+          <span>2026 Buffalo Bills Season Schedule</span>
+          <span style="font-size: 0.72rem; color: var(--accent-blue);" id="bills-schedule-summary">All 18 Weeks • Results & Future Matchups</span>
+        </div>
+        <div id="bills-schedule-list" class="schedule-list" role="feed" aria-label="Bills Season Schedule">
+          <!-- Populated dynamically by renderBillsSeasonSchedule -->
+        </div>
+      </div>
+    </section>
   </main>
 
   <footer style="text-align: center; padding: 2.5rem 1.5rem 2rem 1.5rem; max-width: 820px; margin: 0 auto; font-size: 0.72rem; color: var(--text-muted); line-height: 1.6; opacity: 0.75;">
@@ -1574,7 +1763,49 @@
     let currentBillsNextGame = null;
 
     function updateBillsLiveUI(liveData) {
-      if (!liveData) return;
+      if (!liveData) {
+        // Reset to pregame scheduled state
+        const winChanceEl = document.getElementById('bills-win-chance');
+        const baseProb = currentBillsNextGame?.winChance || 60;
+        if (winChanceEl) {
+          winChanceEl.textContent = `${baseProb}%`;
+          winChanceEl.style.color = baseProb >= 60 ? '#34d399' : (baseProb >= 40 ? '#fbbf24' : '#f87171');
+        }
+        const radarBanner = document.getElementById('bills-radar-live-banner');
+        if (radarBanner) radarBanner.style.display = 'none';
+
+        const prefixEl = document.getElementById('bills-matchup-prefix');
+        const nextOppEl = document.getElementById('bills-next-opp');
+        const recordsEl = document.getElementById('bills-records');
+        const countdownEl = document.getElementById('bills-countdown');
+        const countdownLabelEl = document.getElementById('bills-countdown-label');
+
+        if (prefixEl) prefixEl.textContent = 'Next Matchup:';
+        if (nextOppEl) nextOppEl.textContent = currentBillsNextGame?.opponent || 'Next Matchup';
+        if (recordsEl) recordsEl.textContent = currentBillsNextGame?.matchupRecords || '';
+        if (countdownLabelEl) {
+          countdownLabelEl.textContent = 'KICKOFF COUNTDOWN';
+          countdownLabelEl.style.color = 'var(--text-muted)';
+        }
+        const billsIso = resolveGameIso(currentBillsNextGame);
+        if (billsIso && countdownEl) {
+          startCountdown('bills-countdown', billsIso);
+        }
+
+        const pinnedCardEl = document.getElementById('pinned-bills-card-wrap');
+        if (pinnedCardEl) pinnedCardEl.classList.remove('card-live-border');
+        const pinnedTagEl = document.getElementById('pinned-bills-tag');
+        if (pinnedTagEl) pinnedTagEl.textContent = 'WEEKLY SPOTLIGHT';
+        const pinnedTitleEl = document.getElementById('pinned-bills-title');
+        if (pinnedTitleEl) pinnedTitleEl.textContent = `Buffalo Bills ${currentBillsNextGame?.opponent || 'Next Matchup'}`;
+        const pinnedRecordsEl = document.getElementById('pinned-bills-records');
+        if (pinnedRecordsEl) pinnedRecordsEl.textContent = `${currentBillsNextGame?.matchupRecords || ''} • Kickoff: ${currentBillsNextGame?.gameTime || ''}`;
+        const pinnedIso = resolveGameIso(currentBillsNextGame);
+        if (pinnedIso) {
+          startCountdown('pinned-bills-countdown', pinnedIso);
+        }
+        return;
+      }
       const { state, detail, bufScore, oppScore, oppName, records } = liveData;
       const isLive = state === 'in';
       const isPost = state === 'post';
@@ -2115,6 +2346,22 @@
         const isLive = liveInfo?.state === 'in';
         const isPost = liveInfo?.state === 'post';
 
+        const isAway = (bg.opponent || '').startsWith('@');
+        const lookupTeam = isAway ? (bg.oppShortName || '') : 'Bills';
+        let defaultVenue = 'Highmark Stadium, Orchard Park, NY';
+        let defaultRoof = 'Open-Air Stadium';
+        let defaultSurface = 'Natural Grass';
+        let defaultWeather = '46°F, 18mph Wind, 20% PoP';
+
+        const clientStadKey = Object.keys(CLIENT_NFL_STADIUMS).find(k => lookupTeam.includes(k) || k.includes(lookupTeam));
+        if (clientStadKey && CLIENT_NFL_STADIUMS[clientStadKey]) {
+          const cSt = CLIENT_NFL_STADIUMS[clientStadKey];
+          defaultVenue = `${cSt.venue}, ${cSt.city}`;
+          defaultRoof = cSt.roof;
+          defaultSurface = cSt.surface;
+          defaultWeather = cSt.weather;
+        }
+
         const enrichedBills = {
           opponent: bg.opponent || 'Next Matchup',
           oppShortName: bg.oppShortName || 'Opponent',
@@ -2123,10 +2370,10 @@
           isoTime: bg.isoTime,
           broadcast: bg.broadcast || 'CBS',
           announcers: bg.announcers || 'Jim Nantz, Tony Romo',
-          venue: bg.venue || 'Highmark Stadium, Orchard Park, NY',
-          roof: bg.roof || 'Open-Air Stadium',
-          surface: bg.surface || 'Natural Grass',
-          weather: bg.weather || '46°F, 18mph Wind, 20% PoP',
+          venue: bg.venue || defaultVenue,
+          roof: bg.roof || defaultRoof,
+          surface: bg.surface || defaultSurface,
+          weather: bg.weather || defaultWeather,
           winChance: bg.winChance || 60,
           ifWin: bg.ifWin || 85,
           ifLoss: bg.ifLoss || 69,
@@ -2308,7 +2555,9 @@
           return comp?.competitors?.some(c => c.team?.abbreviation === 'BUF' || c.team?.id === '2' || c.team?.displayName === 'Buffalo Bills');
         });
 
-        if (billsEv) {
+        const isMatchingBillsGame = billsEv && isSameTeamGame(billsEv, currentBillsNextGame, 'BUF');
+
+        if (isMatchingBillsGame) {
           const comp = billsEv.competitions[0];
           const state = comp.status?.type?.state;
           const detail = comp.status?.type?.shortDetail || 'LIVE';
@@ -2351,6 +2600,18 @@
               currentBillsNextGame.winChance = winChanceVal;
             }
             updateBillsLiveUI(liveBillsGameData);
+          }
+        } else if (billsEv && !isMatchingBillsGame) {
+          if (liveBillsGameData) {
+            liveBillsGameData = null;
+            if (currentBillsNextGame && currentBillsNextGame.statusState !== 'pre') {
+              currentBillsNextGame.statusState = 'pre';
+              currentBillsNextGame.bufScore = '';
+              currentBillsNextGame.oppScore = '';
+              currentBillsNextGame.liveScore = null;
+            }
+            updateBillsLiveUI(null);
+            renderBillsScoreboard(currentBillsOutOfTownGames, currentBillsNextGame);
           }
         }
 
@@ -2464,6 +2725,124 @@
       }
     }
 
+    function renderBillsSeasonSchedule(schedule) {
+      const container = document.getElementById('bills-schedule-list');
+      const summaryEl = document.getElementById('bills-schedule-summary');
+      if (!container) return;
+
+      const games = Array.isArray(schedule) ? schedule : [];
+      if (games.length === 0) {
+        container.innerHTML = '<div style="color: var(--text-muted); padding: 1.5rem; text-align: center;">Schedule data unavailable.</div>';
+        return;
+      }
+
+      // Count wins, losses, ties from played games
+      let wins = 0;
+      let losses = 0;
+      let ties = 0;
+      games.forEach(g => {
+        if (g.result === 'W') wins++;
+        else if (g.result === 'L') losses++;
+        else if (g.result === 'T') ties++;
+      });
+      const playedCount = wins + losses + ties;
+      if (summaryEl) {
+        summaryEl.textContent = playedCount > 0
+          ? `Record: ${wins}-${losses}${ties > 0 ? `-${ties}` : ''} • All 18 Weeks`
+          : 'All 18 Weeks • Results & Future Matchups';
+      }
+
+      // Find next upcoming game index
+      const nextGameIdx = games.findIndex(g => !g.isBye && (g.statusState === 'pre' || g.statusState === 'in'));
+
+      container.innerHTML = games.map((g, idx) => {
+        const isNext = (idx === nextGameIdx);
+
+        if (g.isBye) {
+          return `
+            <div class="schedule-card schedule-card-bye" role="article" aria-label="Week ${g.week}: Bye Week">
+              <div class="schedule-time-col">
+                <span class="schedule-week-badge">WK ${g.week}</span>
+                <span class="schedule-date" style="color: var(--text-muted);">Bye Week</span>
+              </div>
+              <div class="schedule-matchup-col">
+                <div class="schedule-opp-line" style="color: var(--text-muted);">
+                  <span>BYE WEEK</span>
+                </div>
+                <div class="schedule-meta-line">No game scheduled • Rest & Preparation</div>
+              </div>
+              <div class="schedule-result-col">
+                <span class="schedule-tv-badge" style="opacity: 0.6;">BYE</span>
+              </div>
+            </div>
+          `;
+        }
+
+        const isPost = g.statusState === 'post';
+        const isLive = g.statusState === 'in';
+        const haPrefix = g.isHome ? 'vs.' : '@';
+        const haLabel = g.isHome ? 'Home' : 'Away';
+
+        let rightColHtml = '';
+        if (isPost) {
+          const pillClass = g.result === 'W' ? 'result-pill-w' : (g.result === 'L' ? 'result-pill-l' : 'result-pill-w');
+          rightColHtml = `
+            <span class="result-pill ${pillClass}">${g.result || '-'}</span>
+            <span class="result-score">${g.bufScore !== null ? g.bufScore : ''} - ${g.oppScore !== null ? g.oppScore : ''}</span>
+          `;
+        } else if (isLive) {
+          rightColHtml = `
+            <span class="live-pulse-badge" style="font-size: 0.68rem; padding: 0.2rem 0.5rem;"><span class="live-dot"></span> LIVE</span>
+            <span class="result-score">${g.bufScore || 0} - ${g.oppScore || 0}</span>
+          `;
+        } else {
+          // Future game
+          let badgesHtml = '';
+          if (g.primeTime) {
+            badgesHtml += `<span class="schedule-primetime-badge">${g.primeTime}</span>`;
+          }
+          if (g.broadcast) {
+            badgesHtml += `<span class="schedule-tv-badge">${g.broadcast}</span>`;
+          }
+          rightColHtml = `
+            <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.25rem;">
+              <span style="font-size: 0.82rem; font-weight: 700; color: #fff; white-space: nowrap;">${g.timeFormatted || 'TBD'}</span>
+              <div style="display: flex; align-items: center; gap: 0.35rem; flex-wrap: wrap; justify-content: flex-end;">
+                ${badgesHtml}
+              </div>
+            </div>
+          `;
+        }
+
+        return `
+          <div class="schedule-card ${isNext ? 'schedule-card-next' : ''}" role="article" aria-label="Week ${g.week}: ${haPrefix} ${g.opponent}">
+            <div class="schedule-time-col">
+              <div style="display: flex; align-items: center; gap: 0.3rem;">
+                <span class="schedule-week-badge">WK ${g.week}</span>
+                ${isNext ? '<span class="schedule-next-badge">NEXT</span>' : ''}
+              </div>
+              <span class="schedule-date">${g.dateFormatted}</span>
+              <span class="schedule-day">${g.dayOfWeek}</span>
+            </div>
+            <div class="schedule-matchup-col">
+              <div class="schedule-opp-line">
+                <span class="schedule-ha-tag">${haPrefix}</span>
+                <span>${g.opponent}</span>
+              </div>
+              <div class="schedule-meta-line">
+                <span>${haLabel}</span>
+                ${g.statusDetail && isPost ? `<span>• ${g.statusDetail}</span>` : ''}
+                ${g.broadcast && isPost ? `<span>• TV: ${g.broadcast}</span>` : ''}
+              </div>
+            </div>
+            <div class="schedule-result-col">
+              ${rightColHtml}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
     let isDataLoading = false;
     async function loadData() {
       if (isDataLoading) return;
@@ -2472,7 +2851,7 @@
       let data = null;
 
       const FALLBACK_DATA = {
-  "updatedAt": "2026-10-31T13:00:06.308Z",
+  "updatedAt": "2026-11-02T15:44:00.173Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
   "theme": "halloween",
   "billsTheme": null,
@@ -2480,74 +2859,116 @@
   "themeUntil": null,
   "bills": {
     "team": "Buffalo Bills",
-    "makePlayoffs": 85,
-    "winDivision": 66,
-    "seed1": 21,
-    "magicNumber": "10",
+    "makePlayoffs": 94,
+    "winDivision": 72,
+    "seed1": 28,
+    "magicNumber": "9",
     "clinchAlert": {
       "active": false,
       "scenario": "No clinching scenarios available this week."
     },
     "nextGame": {
-      "opponent": "vs. Ravens",
-      "oppShortName": "Ravens",
-      "gameTime": "Sun, Nov 1 • 1:00 PM ET",
-      "isoTime": "2026-11-01T18:00Z",
-      "winChance": 63,
-      "matchupRecords": "Bills (5-1, W2) vs. Ravens (4-3, L2)",
+      "opponent": "@ Vikings",
+      "oppShortName": "Vikings",
+      "gameTime": "Mon, Nov 9 • 8:15 PM ET",
+      "isoTime": "2026-11-10T01:15Z",
+      "winChance": 46,
+      "matchupRecords": "Bills (6-1, W3) vs. Vikings (6-1, L1)",
       "broadcast": "CBS",
-      "venue": "Highmark Stadium, Orchard Park, NY",
+      "announcers": "Jim Nantz, Tony Romo",
+      "venue": "U.S. Bank Stadium, Minneapolis, MN",
+      "roof": "Domed Stadium",
+      "surface": "Act Global Turf",
+      "weather": "Controlled 72°F Climate",
+      "window": "MNF",
+      "windowLabel": "Monday Night Football",
+      "windowBadge": "ESPN / ABC Prime Time",
       "statusState": "pre",
-      "statusDetail": "11/1 - 1:00 PM EST",
+      "statusDetail": "11/9 - 8:15 PM EST",
       "bufScore": "",
       "oppScore": "",
       "liveScore": null,
-      "ifWin": 91,
-      "ifLoss": 75,
-      "leverage": 16,
+      "ifWin": 99,
+      "ifLoss": 84,
+      "leverage": 15,
       "restAdvantage": {
-        "billsDays": 14,
-        "oppDays": 7,
-        "summary": "Bills +7 (Post-Bye Week)"
+        "billsDays": 8,
+        "oppDays": 8,
+        "summary": "Even Rest (Both on 8 Days Rest)"
       },
       "efficiency": [
         {
           "metric": "Points / Game",
-          "bills": "32.8 (1st)",
-          "opp": "24.1 (12th)"
+          "bills": "33.3 (1st)",
+          "opp": "20.0 (27th)"
         },
         {
           "metric": "Total Yards / Game",
-          "bills": "399.5 (4th)",
-          "opp": "383.7 (6th)"
+          "bills": "404.6 (3rd)",
+          "opp": "299.3 (29th)"
         },
         {
           "metric": "Passing Yards / Game",
-          "bills": "238.8 (12th)",
-          "opp": "224.7 (18th)"
+          "bills": "244.7 (10th)",
+          "opp": "165.6 (31st)"
         },
         {
           "metric": "Rushing Yards / Game",
-          "bills": "148.8 (2nd)",
-          "opp": "141.7 (4th)"
+          "bills": "148.4 (3rd)",
+          "opp": "113.9 (17th)"
         },
         {
           "metric": "3rd Down Conversion %",
-          "bills": "47.6% (5th)",
-          "opp": "41.7% (9th)"
+          "bills": "44.2% (5th)",
+          "opp": "36.0% (27th)"
         },
         {
           "metric": "Red Zone TD %",
-          "bills": "69.2% (7th)",
-          "opp": "62.5% (13th)"
+          "bills": "70.0% (6th)",
+          "opp": "56.3% (18th)"
         }
       ],
       "turnoverRatio": {
-        "bills": "-3 (6 Takeaways / 9 Giveaways)",
-        "opp": "+1 (6 Takeaways / 5 Giveaways)",
-        "advantage": "Ravens (+4 Differential Margin)"
+        "bills": "-2 (9 Takeaways / 11 Giveaways)",
+        "opp": "+7 (12 Takeaways / 5 Giveaways)",
+        "advantage": "Vikings (+9 Differential Margin)"
       },
       "injuries": [
+        {
+          "player": "Kyler Murray",
+          "pos": "QB",
+          "status": "Questionable",
+          "injury": "Hamstring",
+          "team": "Vikings"
+        },
+        {
+          "player": "Theo Jackson",
+          "pos": "S",
+          "status": "Questionable",
+          "injury": "Quadriceps",
+          "team": "Vikings"
+        },
+        {
+          "player": "Max Brosmer",
+          "pos": "QB",
+          "status": "Out",
+          "injury": "Coach's Decision",
+          "team": "Vikings"
+        },
+        {
+          "player": "Jakobe Thomas",
+          "pos": "S",
+          "status": "Out",
+          "injury": "Coach's Decision",
+          "team": "Vikings"
+        },
+        {
+          "player": "Caleb Tiernan",
+          "pos": "OT",
+          "status": "Out",
+          "injury": "Coach's Decision",
+          "team": "Vikings"
+        },
         {
           "player": "C.J. Gardner-Johnson",
           "pos": "S",
@@ -2556,130 +2977,429 @@
           "team": "Bills"
         },
         {
-          "player": "Spencer Brown",
-          "pos": "OT",
+          "player": "DJ Moore",
+          "pos": "WR",
           "status": "Questionable",
-          "injury": "Back",
+          "injury": "Knee",
+          "team": "Bills"
+        },
+        {
+          "player": "Joshua Palmer",
+          "pos": "WR",
+          "status": "Questionable",
+          "injury": "Hamstring",
           "team": "Bills"
         },
         {
           "player": "Dee Alford",
           "pos": "CB",
-          "status": "Questionable",
+          "status": "Out",
           "injury": "Ankle",
           "team": "Bills"
         },
         {
           "player": "Greg Gaines",
           "pos": "DT",
-          "status": "Questionable",
+          "status": "Out",
           "injury": "Calf",
           "team": "Bills"
-        },
-        {
-          "player": "Dalton Kincaid",
-          "pos": "TE",
-          "status": "Questionable",
-          "injury": "Chest",
-          "team": "Bills"
-        },
-        {
-          "player": "Olaivavega Ioane",
-          "pos": "G",
-          "status": "Out",
-          "injury": "Knee - MCL",
-          "team": "Ravens"
-        },
-        {
-          "player": "Adam Randall",
-          "pos": "RB",
-          "status": "Injured Reserve",
-          "injury": "Neck",
-          "team": "Ravens"
-        },
-        {
-          "player": "Jaylinn Hawkins",
-          "pos": "S",
-          "status": "Out",
-          "injury": "Knee",
-          "team": "Ravens"
-        },
-        {
-          "player": "T.J. Tampa",
-          "pos": "CB",
-          "status": "Injured Reserve",
-          "injury": "Knee",
-          "team": "Ravens"
-        },
-        {
-          "player": "Tavius Robinson",
-          "pos": "LB",
-          "status": "Injured Reserve",
-          "injury": "Pectoral",
-          "team": "Ravens"
         }
       ]
     },
     "divisionRadar": [
       {
         "team": "Bills",
-        "pct": 66
+        "pct": 72
       },
       {
         "team": "Patriots",
-        "pct": 31
-      },
-      {
-        "team": "Dolphins",
-        "pct": 4
+        "pct": 28
       },
       {
         "team": "Jets",
-        "pct": 3
+        "pct": 2
+      },
+      {
+        "team": "Dolphins",
+        "pct": 2
       }
     ],
     "seedDistribution": [
       {
         "seed": "#1 Seed",
-        "pct": 21
+        "pct": 28
       },
       {
         "seed": "#2 Seed",
-        "pct": 16
+        "pct": 18
       },
       {
         "seed": "#3 Seed",
-        "pct": 17
+        "pct": 16
       },
       {
         "seed": "#4 Seed",
-        "pct": 12
+        "pct": 10
       },
       {
         "seed": "#5 Seed",
-        "pct": 6
+        "pct": 9
       },
       {
         "seed": "#6 Seed",
-        "pct": 6
+        "pct": 7
       },
       {
         "seed": "#7 Seed",
-        "pct": 7
+        "pct": 6
       }
     ],
     "opponents": [
       {
-        "team": "Denver Broncos",
-        "pct": 9
+        "team": "New England Patriots",
+        "pct": 11
       },
       {
-        "team": "New England Patriots",
+        "team": "Kansas City Chiefs",
         "pct": 9
       },
       {
         "team": "Cleveland Browns",
         "pct": 8
+      }
+    ],
+    "seasonSchedule": [
+      {
+        "week": 1,
+        "isBye": false,
+        "date": "2026-09-13T17:00Z",
+        "dayOfWeek": "Sun",
+        "dateFormatted": "Sep 13",
+        "timeFormatted": "1:00 PM ET",
+        "opponent": "Houston Texans",
+        "oppShortName": "Texans",
+        "oppAbbrev": "HOU",
+        "isHome": false,
+        "statusState": "post",
+        "statusDetail": "Final",
+        "bufScore": 36,
+        "oppScore": 31,
+        "result": "W",
+        "broadcast": "CBS",
+        "primeTime": null
+      },
+      {
+        "week": 2,
+        "isBye": false,
+        "date": "2026-09-18T00:15Z",
+        "dayOfWeek": "Thu",
+        "dateFormatted": "Sep 17",
+        "timeFormatted": "8:15 PM ET",
+        "opponent": "Detroit Lions",
+        "oppShortName": "Lions",
+        "oppAbbrev": "DET",
+        "isHome": true,
+        "statusState": "post",
+        "statusDetail": "Final",
+        "bufScore": 41,
+        "oppScore": 31,
+        "result": "W",
+        "broadcast": "Prime",
+        "primeTime": "TNF"
+      },
+      {
+        "week": 3,
+        "isBye": false,
+        "date": "2026-09-27T17:00Z",
+        "dayOfWeek": "Sun",
+        "dateFormatted": "Sep 27",
+        "timeFormatted": "1:00 PM ET",
+        "opponent": "Los Angeles Chargers",
+        "oppShortName": "Chargers",
+        "oppAbbrev": "LAC",
+        "isHome": true,
+        "statusState": "post",
+        "statusDetail": "Final",
+        "bufScore": 24,
+        "oppScore": 16,
+        "result": "W",
+        "broadcast": "FOX",
+        "primeTime": null
+      },
+      {
+        "week": 4,
+        "isBye": false,
+        "date": "2026-10-04T17:00Z",
+        "dayOfWeek": "Sun",
+        "dateFormatted": "Oct 4",
+        "timeFormatted": "1:00 PM ET",
+        "opponent": "New England Patriots",
+        "oppShortName": "Patriots",
+        "oppAbbrev": "NE",
+        "isHome": true,
+        "statusState": "post",
+        "statusDetail": "Final",
+        "bufScore": 26,
+        "oppScore": 29,
+        "result": "L",
+        "broadcast": "CBS",
+        "primeTime": null
+      },
+      {
+        "week": 5,
+        "isBye": false,
+        "date": "2026-10-13T00:15Z",
+        "dayOfWeek": "Mon",
+        "dateFormatted": "Oct 12",
+        "timeFormatted": "8:15 PM ET",
+        "opponent": "Los Angeles Rams",
+        "oppShortName": "Rams",
+        "oppAbbrev": "LAR",
+        "isHome": false,
+        "statusState": "post",
+        "statusDetail": "Final/OT",
+        "bufScore": 37,
+        "oppScore": 34,
+        "result": "W",
+        "broadcast": "ESPN",
+        "primeTime": "MNF"
+      },
+      {
+        "week": 6,
+        "isBye": false,
+        "date": "2026-10-18T20:25Z",
+        "dayOfWeek": "Sun",
+        "dateFormatted": "Oct 18",
+        "timeFormatted": "4:25 PM ET",
+        "opponent": "Las Vegas Raiders",
+        "oppShortName": "Raiders",
+        "oppAbbrev": "LV",
+        "isHome": false,
+        "statusState": "post",
+        "statusDetail": "Final",
+        "bufScore": 33,
+        "oppScore": 30,
+        "result": "W",
+        "broadcast": "CBS",
+        "primeTime": null
+      },
+      {
+        "week": 7,
+        "isBye": true,
+        "opponent": "BYE WEEK",
+        "oppShortName": "BYE",
+        "oppAbbrev": "BYE",
+        "statusState": "bye",
+        "statusDetail": "Bye Week"
+      },
+      {
+        "week": 8,
+        "isBye": false,
+        "date": "2026-11-01T18:00Z",
+        "dayOfWeek": "Sun",
+        "dateFormatted": "Nov 1",
+        "timeFormatted": "1:00 PM ET",
+        "opponent": "Baltimore Ravens",
+        "oppShortName": "Ravens",
+        "oppAbbrev": "BAL",
+        "isHome": true,
+        "statusState": "post",
+        "statusDetail": "Final",
+        "bufScore": 36,
+        "oppScore": 10,
+        "result": "W",
+        "broadcast": "CBS",
+        "primeTime": null
+      },
+      {
+        "week": 9,
+        "isBye": false,
+        "date": "2026-11-10T01:15Z",
+        "dayOfWeek": "Mon",
+        "dateFormatted": "Nov 9",
+        "timeFormatted": "8:15 PM ET",
+        "opponent": "Minnesota Vikings",
+        "oppShortName": "Vikings",
+        "oppAbbrev": "MIN",
+        "isHome": false,
+        "statusState": "pre",
+        "statusDetail": "11/9 - 8:15 PM EST",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "broadcast": "ESPN",
+        "primeTime": "MNF"
+      },
+      {
+        "week": 10,
+        "isBye": false,
+        "date": "2026-11-15T18:00Z",
+        "dayOfWeek": "Sun",
+        "dateFormatted": "Nov 15",
+        "timeFormatted": "1:00 PM ET",
+        "opponent": "New York Jets",
+        "oppShortName": "Jets",
+        "oppAbbrev": "NYJ",
+        "isHome": false,
+        "statusState": "pre",
+        "statusDetail": "11/15 - 1:00 PM EST",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "broadcast": "CBS",
+        "primeTime": null
+      },
+      {
+        "week": 11,
+        "isBye": false,
+        "date": "2026-11-22T18:00Z",
+        "dayOfWeek": "Sun",
+        "dateFormatted": "Nov 22",
+        "timeFormatted": "1:00 PM ET",
+        "opponent": "Miami Dolphins",
+        "oppShortName": "Dolphins",
+        "oppAbbrev": "MIA",
+        "isHome": true,
+        "statusState": "pre",
+        "statusDetail": "11/22 - 1:00 PM EST",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "broadcast": "FOX",
+        "primeTime": null
+      },
+      {
+        "week": 12,
+        "isBye": false,
+        "date": "2026-11-27T01:20Z",
+        "dayOfWeek": "Thu",
+        "dateFormatted": "Nov 26",
+        "timeFormatted": "8:20 PM ET",
+        "opponent": "Kansas City Chiefs",
+        "oppShortName": "Chiefs",
+        "oppAbbrev": "KC",
+        "isHome": true,
+        "statusState": "pre",
+        "statusDetail": "11/26 - 8:20 PM EST",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "broadcast": "NBC",
+        "primeTime": "TNF"
+      },
+      {
+        "week": 13,
+        "isBye": false,
+        "date": "2026-12-06T21:25Z",
+        "dayOfWeek": "Sun",
+        "dateFormatted": "Dec 6",
+        "timeFormatted": "4:25 PM ET",
+        "opponent": "New England Patriots",
+        "oppShortName": "Patriots",
+        "oppAbbrev": "NE",
+        "isHome": false,
+        "statusState": "pre",
+        "statusDetail": "12/6 - 4:25 PM EST",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "broadcast": "CBS",
+        "primeTime": null
+      },
+      {
+        "week": 14,
+        "isBye": false,
+        "date": "2026-12-14T01:20Z",
+        "dayOfWeek": "Sun",
+        "dateFormatted": "Dec 13",
+        "timeFormatted": "8:20 PM ET",
+        "opponent": "Green Bay Packers",
+        "oppShortName": "Packers",
+        "oppAbbrev": "GB",
+        "isHome": false,
+        "statusState": "pre",
+        "statusDetail": "12/13 - 8:20 PM EST",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "broadcast": "NBC",
+        "primeTime": "SNF"
+      },
+      {
+        "week": 15,
+        "isBye": false,
+        "date": "2026-12-20T01:20Z",
+        "dayOfWeek": "Sat",
+        "dateFormatted": "Dec 19",
+        "timeFormatted": "8:20 PM ET",
+        "opponent": "Chicago Bears",
+        "oppShortName": "Bears",
+        "oppAbbrev": "CHI",
+        "isHome": true,
+        "statusState": "pre",
+        "statusDetail": "12/19 - 8:20 PM EST",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "broadcast": "CBS",
+        "primeTime": null
+      },
+      {
+        "week": 16,
+        "isBye": false,
+        "date": "2026-12-25T21:30Z",
+        "dayOfWeek": "Fri",
+        "dateFormatted": "Dec 25",
+        "timeFormatted": "4:30 PM ET",
+        "opponent": "Denver Broncos",
+        "oppShortName": "Broncos",
+        "oppAbbrev": "DEN",
+        "isHome": false,
+        "statusState": "pre",
+        "statusDetail": "12/25 - 4:30 PM EST",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "broadcast": "Netflix",
+        "primeTime": "Christmas"
+      },
+      {
+        "week": 17,
+        "isBye": false,
+        "date": "2027-01-03T18:00Z",
+        "dayOfWeek": "Sun",
+        "dateFormatted": "Jan 3",
+        "timeFormatted": "1:00 PM ET",
+        "opponent": "Miami Dolphins",
+        "oppShortName": "Dolphins",
+        "oppAbbrev": "MIA",
+        "isHome": false,
+        "statusState": "pre",
+        "statusDetail": "1/3 - 1:00 PM EST",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "broadcast": "CBS",
+        "primeTime": null
+      },
+      {
+        "week": 18,
+        "isBye": false,
+        "date": "2027-01-10T05:00Z",
+        "dayOfWeek": "Sun",
+        "dateFormatted": "Jan 10",
+        "timeFormatted": "12:00 AM ET",
+        "opponent": "New York Jets",
+        "oppShortName": "Jets",
+        "oppAbbrev": "NYJ",
+        "isHome": true,
+        "statusState": "pre",
+        "statusDetail": "TBD",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "broadcast": "CBS",
+        "primeTime": null
       }
     ],
     "outOfTownGames": [
@@ -2718,24 +3438,24 @@
         "venue": "Paycor Stadium, Cincinnati, OH",
         "roof": "Open-Air Stadium",
         "surface": "FieldTurf CORE",
-        "weather": "73°F, 3mph Wind, 4% PoP",
+        "weather": "71°F, 1mph Wind, 3% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
-        "statusState": "pre",
-        "statusDetail": "11/1 - 1:00 PM EST",
+        "statusState": "post",
+        "statusDetail": "Final/OT",
         "awayName": "Tennessee Titans",
-        "awayRecord": "1-6, L1",
-        "awayScore": "0",
+        "awayRecord": "1-7, L2",
+        "awayScore": "36",
         "homeName": "Cincinnati Bengals",
-        "homeRecord": "4-2, W2",
-        "homeScore": "0",
-        "homeWinChance": 84,
-        "awayWinChance": 16,
-        "verdict": "SEEDING WATCH",
-        "impactClass": "good",
+        "homeRecord": "5-2, W3",
+        "homeScore": "43",
+        "homeWinChance": 90,
+        "awayWinChance": 10,
+        "verdict": "RIVAL WIN",
+        "impactClass": "neutral",
         "target": "Root for Tennessee Titans",
-        "why": "A Cincinnati Bengals loss knocks down the higher-seeded AFC contender in conference tiebreakers."
+        "why": "Cincinnati Bengals won, keeping pace in the AFC playoff picture."
       },
       {
         "isoTime": "2026-11-01T18:00Z",
@@ -2749,16 +3469,16 @@
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
-        "statusState": "pre",
-        "statusDetail": "11/1 - 1:00 PM EST",
+        "statusState": "post",
+        "statusDetail": "Final/OT",
         "awayName": "Arizona Cardinals",
-        "awayRecord": "2-5, L1",
-        "awayScore": "0",
+        "awayRecord": "3-5, W1",
+        "awayScore": "33",
         "homeName": "Dallas Cowboys",
-        "homeRecord": "3-4, W1",
-        "homeScore": "0",
-        "homeWinChance": 72,
-        "awayWinChance": 28,
+        "homeRecord": "3-5, L1",
+        "homeScore": "30",
+        "homeWinChance": 54,
+        "awayWinChance": 46,
         "verdict": "NFC MATCHUP",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
@@ -2776,16 +3496,16 @@
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
-        "statusState": "pre",
-        "statusDetail": "11/1 - 1:00 PM EST",
+        "statusState": "post",
+        "statusDetail": "Final",
         "awayName": "Minnesota Vikings",
-        "awayRecord": "6-0, W6",
-        "awayScore": "0",
+        "awayRecord": "6-1, L1",
+        "awayScore": "15",
         "homeName": "Detroit Lions",
-        "homeRecord": "4-2, W2",
-        "homeScore": "0",
-        "homeWinChance": 60,
-        "awayWinChance": 40,
+        "homeRecord": "5-2, W3",
+        "homeScore": "19",
+        "homeWinChance": 40,
+        "awayWinChance": 60,
         "verdict": "NFC MATCHUP",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
@@ -2799,24 +3519,24 @@
         "venue": "MetLife Stadium, East Rutherford, NJ",
         "roof": "Open-Air Stadium",
         "surface": "FieldTurf CORE",
-        "weather": "61°F, 5mph Wind, 0% PoP",
+        "weather": "61°F, 2mph Wind, 0% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
-        "statusState": "pre",
-        "statusDetail": "11/1 - 1:00 PM EST",
+        "statusState": "post",
+        "statusDetail": "Final",
         "awayName": "Las Vegas Raiders",
-        "awayRecord": "3-4, L4",
-        "awayScore": "0",
+        "awayRecord": "4-4, W1",
+        "awayScore": "38",
         "homeName": "New York Jets",
-        "homeRecord": "2-5, L2",
-        "homeScore": "0",
-        "homeWinChance": 53,
-        "awayWinChance": 47,
-        "verdict": "AFC EAST WATCH",
-        "impactClass": "bad",
+        "homeRecord": "2-6, L3",
+        "homeScore": "33",
+        "homeWinChance": 34,
+        "awayWinChance": 66,
+        "verdict": "GOOD FOR BUFFALO",
+        "impactClass": "good",
         "target": "Root for Las Vegas Raiders",
-        "why": "New York Jets loss suppresses division pressure in the AFC East standings."
+        "why": "New York Jets dropped a game, widening Buffalo's division lead."
       },
       {
         "isoTime": "2026-11-01T18:00Z",
@@ -2826,24 +3546,24 @@
         "venue": "Acrisure Stadium, Pittsburgh, PA",
         "roof": "Open-Air Stadium",
         "surface": "Natural Kentucky Bluegrass",
-        "weather": "68°F, 4mph Wind, 10% PoP",
+        "weather": "66°F, 5mph Wind, 5% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
-        "statusState": "pre",
-        "statusDetail": "11/1 - 1:00 PM EST",
+        "statusState": "post",
+        "statusDetail": "Final",
         "awayName": "Cleveland Browns",
-        "awayRecord": "5-2, W2",
-        "awayScore": "0",
+        "awayRecord": "5-3, L1",
+        "awayScore": "6",
         "homeName": "Pittsburgh Steelers",
-        "homeRecord": "5-2, W3",
-        "homeScore": "0",
-        "homeWinChance": 63,
-        "awayWinChance": 37,
-        "verdict": "SEEDING WATCH",
-        "impactClass": "good",
-        "target": "Root for Pittsburgh Steelers",
-        "why": "A Cleveland Browns loss knocks down the higher-seeded AFC contender in conference tiebreakers."
+        "homeRecord": "6-2, W4",
+        "homeScore": "27",
+        "homeWinChance": 65,
+        "awayWinChance": 35,
+        "verdict": "RIVAL WIN",
+        "impactClass": "neutral",
+        "target": "Root for Cleveland Browns",
+        "why": "Pittsburgh Steelers won, keeping pace in the AFC playoff picture."
       },
       {
         "isoTime": "2026-11-01T18:00Z",
@@ -2853,20 +3573,20 @@
         "venue": "Raymond James Stadium, Tampa, FL",
         "roof": "Open-Air Stadium",
         "surface": "Natural Bermuda Grass",
-        "weather": "76°F, 13mph Wind, 26% PoP",
+        "weather": "75°F, 7mph Wind, 52% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
-        "statusState": "pre",
-        "statusDetail": "11/1 - 1:00 PM EST",
+        "statusState": "post",
+        "statusDetail": "Final",
         "awayName": "Atlanta Falcons",
-        "awayRecord": "3-4, W1",
+        "awayRecord": "3-5, L1",
         "awayScore": "0",
         "homeName": "Tampa Bay Buccaneers",
-        "homeRecord": "2-5, W1",
-        "homeScore": "0",
-        "homeWinChance": 55,
-        "awayWinChance": 45,
+        "homeRecord": "3-5, W2",
+        "homeScore": "16",
+        "homeWinChance": 54,
+        "awayWinChance": 46,
         "verdict": "NFC MATCHUP",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
@@ -2880,24 +3600,24 @@
         "venue": "EverBank Stadium, Jacksonville, FL",
         "roof": "Open-Air Stadium",
         "surface": "Natural Bermuda Grass",
-        "weather": "77°F, 7mph Wind, 11% PoP",
+        "weather": "77°F, 11mph Wind, 12% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
-        "statusState": "pre",
-        "statusDetail": "11/1 - 1:00 PM EST",
+        "statusState": "post",
+        "statusDetail": "Final",
         "awayName": "Indianapolis Colts",
-        "awayRecord": "2-5, L3",
-        "awayScore": "0",
+        "awayRecord": "2-6, L4",
+        "awayScore": "7",
         "homeName": "Jacksonville Jaguars",
-        "homeRecord": "4-2, L1",
-        "homeScore": "0",
-        "homeWinChance": 80,
-        "awayWinChance": 20,
-        "verdict": "SEEDING WATCH",
-        "impactClass": "good",
+        "homeRecord": "5-2, W1",
+        "homeScore": "42",
+        "homeWinChance": 86,
+        "awayWinChance": 14,
+        "verdict": "RIVAL WIN",
+        "impactClass": "neutral",
         "target": "Root for Indianapolis Colts",
-        "why": "A Jacksonville Jaguars loss knocks down the higher-seeded AFC contender in conference tiebreakers."
+        "why": "Jacksonville Jaguars won, keeping pace in the AFC playoff picture."
       },
       {
         "isoTime": "2026-11-01T21:05Z",
@@ -2911,20 +3631,20 @@
         "window": "LATE",
         "windowLabel": "Sunday 4:25 PM ET National Window",
         "windowBadge": "America's Game of the Week",
-        "statusState": "pre",
-        "statusDetail": "11/1 - 4:05 PM EST",
+        "statusState": "post",
+        "statusDetail": "Final",
         "awayName": "Los Angeles Chargers",
-        "awayRecord": "0-6, L6",
-        "awayScore": "0",
+        "awayRecord": "0-7, L7",
+        "awayScore": "9",
         "homeName": "Los Angeles Rams",
-        "homeRecord": "3-4, W1",
-        "homeScore": "0",
-        "homeWinChance": 71,
-        "awayWinChance": 29,
-        "verdict": "SEEDING WATCH",
+        "homeRecord": "4-4, W2",
+        "homeScore": "24",
+        "homeWinChance": 90,
+        "awayWinChance": 10,
+        "verdict": "GOOD FOR BUFFALO",
         "impactClass": "good",
         "target": "Root for Los Angeles Rams",
-        "why": "An NFC win over Los Angeles Chargers hands an AFC team a loss without adding a win to the AFC standings pool."
+        "why": "Los Angeles Rams defeated Los Angeles Chargers, knocking an AFC rival down a game in conference standings."
       },
       {
         "isoTime": "2026-11-01T21:25Z",
@@ -2934,24 +3654,24 @@
         "venue": "Empower Field at Mile High, Denver, CO",
         "roof": "Open-Air Stadium",
         "surface": "Natural Kentucky Bluegrass",
-        "weather": "66°F, 10mph Wind, 2% PoP",
+        "weather": "60°F, 13mph Wind, 1% PoP",
         "window": "LATE",
         "windowLabel": "Sunday 4:25 PM ET National Window",
         "windowBadge": "America's Game of the Week",
-        "statusState": "pre",
-        "statusDetail": "11/1 - 4:25 PM EST",
+        "statusState": "post",
+        "statusDetail": "Final",
         "awayName": "Kansas City Chiefs",
-        "awayRecord": "5-1, L1",
-        "awayScore": "0",
+        "awayRecord": "5-2, L2",
+        "awayScore": "24",
         "homeName": "Denver Broncos",
-        "homeRecord": "5-2, W3",
-        "homeScore": "0",
-        "homeWinChance": 48,
-        "awayWinChance": 52,
-        "verdict": "SEEDING WATCH",
-        "impactClass": "good",
-        "target": "Root for Denver Broncos",
-        "why": "A Kansas City Chiefs loss knocks down the higher-seeded AFC contender in conference tiebreakers."
+        "homeRecord": "6-2, W4",
+        "homeScore": "28",
+        "homeWinChance": 58,
+        "awayWinChance": 42,
+        "verdict": "RIVAL WIN",
+        "impactClass": "neutral",
+        "target": "Root for Kansas City Chiefs",
+        "why": "Denver Broncos won, keeping pace in the AFC playoff picture."
       },
       {
         "isoTime": "2026-11-01T21:25Z",
@@ -2961,24 +3681,24 @@
         "venue": "Hard Rock Stadium, Miami Gardens, FL",
         "roof": "Open-Air Stadium",
         "surface": "Natural Bermuda Grass",
-        "weather": "81°F, 11mph Wind, 38% PoP",
+        "weather": "77°F, 9mph Wind, 76% PoP",
         "window": "LATE",
         "windowLabel": "Sunday 4:25 PM ET National Window",
         "windowBadge": "America's Game of the Week",
-        "statusState": "pre",
-        "statusDetail": "11/1 - 4:25 PM EST",
+        "statusState": "post",
+        "statusDetail": "Final",
         "awayName": "New England Patriots",
-        "awayRecord": "4-3, L1",
-        "awayScore": "0",
+        "awayRecord": "5-3, W1",
+        "awayScore": "24",
         "homeName": "Miami Dolphins",
-        "homeRecord": "1-5, W1",
-        "homeScore": "0",
-        "homeWinChance": 27,
-        "awayWinChance": 73,
-        "verdict": "AFC EAST WATCH",
+        "homeRecord": "1-6, L1",
+        "homeScore": "19",
+        "homeWinChance": 20,
+        "awayWinChance": 80,
+        "verdict": "BAD FOR BUFFALO",
         "impactClass": "bad",
         "target": "Root for Miami Dolphins",
-        "why": "A New England Patriots loss knocks down the higher-standing AFC East rival in the division race."
+        "why": "New England Patriots win keeps division pressure on the Bills."
       },
       {
         "isoTime": "2026-11-02T01:20Z",
@@ -2988,20 +3708,20 @@
         "venue": "Northwest Stadium, Landover, MD",
         "roof": "Open-Air Stadium",
         "surface": "Natural Bermuda Grass",
-        "weather": "54°F, 5mph Wind, 0% PoP",
+        "weather": "51°F, 3mph Wind, 0% PoP",
         "window": "SNF",
         "windowLabel": "Sunday Night Football",
         "windowBadge": "NBC / Peacock Marquee",
-        "statusState": "pre",
-        "statusDetail": "11/1 - 8:20 PM EST",
+        "statusState": "post",
+        "statusDetail": "Final",
         "awayName": "Philadelphia Eagles",
-        "awayRecord": "2-5, L5",
-        "awayScore": "0",
+        "awayRecord": "2-6, L6",
+        "awayScore": "10",
         "homeName": "Washington Commanders",
-        "homeRecord": "1-4-1, L1",
-        "homeScore": "0",
-        "homeWinChance": 69,
-        "awayWinChance": 31,
+        "homeRecord": "2-4-1, W1",
+        "homeScore": "27",
+        "homeWinChance": 62,
+        "awayWinChance": 38,
         "verdict": "NFC MATCHUP",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
@@ -3015,7 +3735,7 @@
         "venue": "Lumen Field, Seattle, WA",
         "roof": "Open-Air Stadium",
         "surface": "FieldTurf Revolution",
-        "weather": "51°F, 1mph Wind, 2% PoP",
+        "weather": "48°F, 2mph Wind, 2% PoP",
         "window": "MNF",
         "windowLabel": "Monday Night Football",
         "windowBadge": "ESPN / ABC Prime Time",
@@ -3027,8 +3747,8 @@
         "homeName": "Seattle Seahawks",
         "homeRecord": "4-3, W1",
         "homeScore": "0",
-        "homeWinChance": 60,
-        "awayWinChance": 40,
+        "homeWinChance": 62,
+        "awayWinChance": 38,
         "verdict": "NFC MATCHUP",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
@@ -3038,9 +3758,9 @@
   },
   "sabres": {
     "team": "Buffalo Sabres",
-    "makePlayoffs": 42,
-    "winDivision": 28,
-    "wildcard": 14
+    "makePlayoffs": 48,
+    "winDivision": 32,
+    "wildcard": 16
   }
 };
 
@@ -3099,14 +3819,21 @@
         };
         updateBillsLiveUI(liveBillsGameData);
       } else if (liveBillsGameData && (liveBillsGameData.state === 'in' || liveBillsGameData.state === 'post')) {
-        if (currentBillsNextGame) {
-          currentBillsNextGame.statusState = liveBillsGameData.state;
-          currentBillsNextGame.statusDetail = liveBillsGameData.detail;
-          currentBillsNextGame.bufScore = liveBillsGameData.bufScore;
-          currentBillsNextGame.oppScore = liveBillsGameData.oppScore;
-          currentBillsNextGame.winChance = liveBillsGameData.winChance;
+        const liveOpp = (liveBillsGameData.oppName || '').toLowerCase().trim();
+        const nextOpp = (currentBillsNextGame?.oppShortName || currentBillsNextGame?.opponent || '').toLowerCase().replace(/^(vs\.?|@)\s*/i, '').trim();
+        if (nextOpp && liveOpp && (nextOpp.includes(liveOpp) || liveOpp.includes(nextOpp))) {
+          if (currentBillsNextGame) {
+            currentBillsNextGame.statusState = liveBillsGameData.state;
+            currentBillsNextGame.statusDetail = liveBillsGameData.detail;
+            currentBillsNextGame.bufScore = liveBillsGameData.bufScore;
+            currentBillsNextGame.oppScore = liveBillsGameData.oppScore;
+            currentBillsNextGame.winChance = liveBillsGameData.winChance;
+          }
+          updateBillsLiveUI(liveBillsGameData);
+        } else {
+          liveBillsGameData = null;
+          updateBillsLiveUI(null);
         }
-        updateBillsLiveUI(liveBillsGameData);
       } else {
         document.getElementById('bills-win-chance').textContent = `${b.nextGame.winChance || 68}%`;
         document.getElementById('bills-matchup-prefix').textContent = 'Next Matchup:';
@@ -3331,6 +4058,7 @@
       }
       currentBillsOutOfTownGames = incomingGames;
       renderBillsScoreboard(currentBillsOutOfTownGames, currentBillsNextGame);
+      renderBillsSeasonSchedule(b.seasonSchedule);
 
       // Check real-time live scores immediately
       pollLiveBillsScoreboard();

@@ -138,15 +138,15 @@ pages.forEach(page => {
     if (tablist.length === 0) {
       issues.push(`${page} is missing [role="tablist"] navigation`);
     }
-    const tabs = $('[role="tab"]');
-    if (tabs.length !== 3) {
-      issues.push(`${page} should have 3 [role="tab"] buttons, found ${tabs.length}`);
+    const tabs = $('.tab-bar [role="tab"]');
+    if (tabs.length !== 4) {
+      issues.push(`${page} should have 4 [role="tab"] buttons, found ${tabs.length}`);
     }
-    const activeTab = $('[role="tab"][aria-selected="true"]');
+    const activeTab = $('.tab-bar [role="tab"][aria-selected="true"]');
     if (activeTab.attr('tabindex') !== '0') {
       issues.push(`${page} active tab must have tabindex="0"`);
     }
-    $('[role="tab"][aria-selected="false"]').each((_, el) => {
+    $('.tab-bar [role="tab"][aria-selected="false"]').each((_, el) => {
       if ($(el).attr('tabindex') !== '-1') {
         issues.push(`${page} inactive tab ${$(el).attr('id')} must have tabindex="-1"`);
       }

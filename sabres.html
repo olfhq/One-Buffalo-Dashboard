@@ -1475,6 +1475,205 @@
     .points-winner { color: #34d399 !important; font-weight: 800; }
     .score-team-upcoming { color: var(--text-muted); font-size: 0.85rem; }
     .game-status-upcoming { color: #fbbf24; font-weight: 800; }
+
+    /* FULL SEASON SCHEDULE & MONTH PILLS STYLING */
+    .schedule-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      margin-top: 0.75rem;
+    }
+    .month-pill-bar {
+      display: flex;
+      gap: 0.4rem;
+      overflow-x: auto;
+      padding: 0.3rem 0.1rem 0.6rem 0.1rem;
+      margin-top: 0.5rem;
+      margin-bottom: 0.85rem;
+      scrollbar-width: thin;
+      -webkit-overflow-scrolling: touch;
+    }
+    .month-pill-bar::-webkit-scrollbar {
+      height: 4px;
+    }
+    .month-pill-bar::-webkit-scrollbar-thumb {
+      background: var(--card-border);
+      border-radius: 4px;
+    }
+    .month-pill {
+      padding: 0.4rem 0.75rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      background: var(--card-inner);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      border-radius: 7px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+    .month-pill:hover {
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+    .month-pill.active {
+      background: #fcb514;
+      color: #000;
+      font-weight: 800;
+      border-color: #fcb514;
+      box-shadow: 0 2px 8px rgba(252, 181, 20, 0.35);
+    }
+    .schedule-card {
+      display: grid;
+      grid-template-columns: 92px 1fr auto;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      background: var(--card-inner);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .schedule-card:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+    .schedule-card.schedule-card-next {
+      border: 1px solid #fcb514;
+      background: linear-gradient(135deg, rgba(252, 181, 20, 0.12), var(--card-inner));
+      box-shadow: 0 0 14px rgba(252, 181, 20, 0.2);
+    }
+    .schedule-time-col {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+    .schedule-week-badge {
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: #fcb514;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .schedule-date {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #e2e8f0;
+      white-space: nowrap;
+    }
+    .schedule-day {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+    .schedule-matchup-col {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      min-width: 0;
+    }
+    .schedule-opp-line {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .schedule-ha-tag {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    .schedule-meta-line {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+    .schedule-result-col {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 0.5rem;
+      text-align: right;
+    }
+    .result-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+    .result-pill-w {
+      background: rgba(16, 185, 129, 0.2);
+      color: #10b981;
+      border: 1px solid rgba(16, 185, 129, 0.4);
+    }
+    .result-pill-l {
+      background: rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, 0.4);
+    }
+    .result-pill-otl {
+      background: rgba(245, 158, 11, 0.2);
+      color: #f59e0b;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+    }
+    .result-score {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #fff;
+      font-feature-settings: "tnum";
+      white-space: nowrap;
+    }
+    .schedule-tv-badge {
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.2rem 0.5rem;
+      border-radius: 5px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #cbd5e1;
+      border: 1px solid var(--card-border);
+    }
+    .schedule-next-badge {
+      display: inline-block;
+      font-size: 0.62rem;
+      font-weight: 800;
+      padding: 0.1rem 0.35rem;
+      border-radius: 4px;
+      background: #fcb514;
+      color: #000;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    @media (max-width: 580px) {
+      .tab-bar {
+        overflow-x: auto;
+        justify-content: flex-start;
+        -webkit-overflow-scrolling: touch;
+      }
+      .tab-btn {
+        flex: 0 0 auto;
+        padding: 0.5rem 0.65rem;
+        font-size: 0.76rem;
+      }
+      .schedule-card {
+        grid-template-columns: 74px 1fr auto;
+        gap: 0.5rem;
+        padding: 0.65rem 0.75rem;
+      }
+      .schedule-opp-line {
+        font-size: 0.84rem;
+      }
+    }
   </style>
 </head>
 <body class="sabres-theme">
@@ -1498,6 +1697,7 @@
     <button class="tab-btn active" id="tab-btn-intel" role="tab" aria-selected="true" tabindex="0" aria-controls="tab-intel" onclick="switchTab('intel')" data-umami-event="tab-intel-sabres">Matchup Intel</button>
     <button class="tab-btn" id="tab-btn-rooting" role="tab" aria-selected="false" tabindex="-1" aria-controls="tab-rooting" onclick="switchTab('rooting')" data-umami-event="tab-rooting-sabres">Weekly Slate & TV Guide</button>
     <button class="tab-btn" id="tab-btn-radar" role="tab" aria-selected="false" tabindex="-1" aria-controls="tab-radar" onclick="switchTab('radar')" data-umami-event="tab-radar-sabres">Postseason Radar</button>
+    <button class="tab-btn" id="tab-btn-schedule" role="tab" aria-selected="false" tabindex="-1" aria-controls="tab-schedule" onclick="switchTab('schedule')" data-umami-event="tab-schedule-sabres">Full Schedule</button>
   </nav>
 
   <main class="container">
@@ -1678,6 +1878,32 @@
         </div>
       </div>
     </section>
+
+    <!-- TAB 4: FULL SEASON SCHEDULE -->
+    <section id="tab-schedule" class="tab-content" role="tabpanel" aria-labelledby="tab-btn-schedule">
+      <div class="card">
+        <div class="section-subtitle">
+          <span>2026-27 Buffalo Sabres Season Schedule</span>
+          <span style="font-size: 0.72rem; color: #fcb514;" id="sabres-schedule-summary">82 Games • Results & Upcoming Slate</span>
+        </div>
+
+        <!-- Month Filter Pills -->
+        <div class="month-pill-bar" id="sabres-month-pills" role="toolbar" aria-label="Filter schedule by month">
+          <button type="button" class="month-pill" data-month="ALL" onclick="filterSabresMonth('ALL')" aria-pressed="false">ALL</button>
+          <button type="button" class="month-pill" data-month="OCT" onclick="filterSabresMonth('OCT')" aria-pressed="false">OCT</button>
+          <button type="button" class="month-pill" data-month="NOV" onclick="filterSabresMonth('NOV')" aria-pressed="false">NOV</button>
+          <button type="button" class="month-pill" data-month="DEC" onclick="filterSabresMonth('DEC')" aria-pressed="false">DEC</button>
+          <button type="button" class="month-pill" data-month="JAN" onclick="filterSabresMonth('JAN')" aria-pressed="false">JAN</button>
+          <button type="button" class="month-pill" data-month="FEB" onclick="filterSabresMonth('FEB')" aria-pressed="false">FEB</button>
+          <button type="button" class="month-pill" data-month="MAR" onclick="filterSabresMonth('MAR')" aria-pressed="false">MAR</button>
+          <button type="button" class="month-pill" data-month="APR" onclick="filterSabresMonth('APR')" aria-pressed="false">APR</button>
+        </div>
+
+        <div id="sabres-schedule-list" class="schedule-list" role="feed" aria-label="Sabres Season Schedule">
+          <!-- Populated dynamically by renderSabresSeasonSchedule -->
+        </div>
+      </div>
+    </section>
   </main>
 
   <footer style="text-align: center; padding: 2.5rem 1.5rem 2rem 1.5rem; max-width: 820px; margin: 0 auto; font-size: 0.72rem; color: var(--text-muted); line-height: 1.6; opacity: 0.75;">
@@ -1691,7 +1917,49 @@
     let currentSabresNextGame = null;
 
     function updateSabresLiveUI(liveData) {
-      if (!liveData) return;
+      if (!liveData) {
+        // Reset to pregame scheduled state
+        const winChanceEl = document.getElementById('sabres-win-chance');
+        const baseProb = currentSabresNextGame?.winChance || 52;
+        if (winChanceEl) {
+          winChanceEl.textContent = `${baseProb}%`;
+          winChanceEl.style.color = baseProb >= 60 ? '#34d399' : (baseProb >= 40 ? '#fbbf24' : '#f87171');
+        }
+        const radarBanner = document.getElementById('sabres-radar-live-banner');
+        if (radarBanner) radarBanner.style.display = 'none';
+
+        const prefixEl = document.getElementById('sabres-matchup-prefix');
+        const nextOppEl = document.getElementById('sabres-next-opp');
+        const recordsEl = document.getElementById('sabres-records');
+        const countdownEl = document.getElementById('sabres-countdown');
+        const countdownLabelEl = document.getElementById('sabres-countdown-label');
+
+        if (prefixEl) prefixEl.textContent = 'Next Matchup:';
+        if (nextOppEl) nextOppEl.textContent = currentSabresNextGame?.opponent || 'Next Matchup';
+        if (recordsEl) recordsEl.textContent = currentSabresNextGame?.matchupRecords || '';
+        if (countdownLabelEl) {
+          countdownLabelEl.textContent = 'PUCK DROP COUNTDOWN';
+          countdownLabelEl.style.color = 'var(--text-muted)';
+        }
+        const sabresIso = resolveGameIso(currentSabresNextGame);
+        if (sabresIso && countdownEl) {
+          startCountdown('sabres-countdown', sabresIso);
+        }
+
+        const pinnedCardEl = document.getElementById('pinned-sabres-card-wrap');
+        if (pinnedCardEl) pinnedCardEl.classList.remove('card-live-border');
+        const pinnedTagEl = document.getElementById('pinned-sabres-tag');
+        if (pinnedTagEl) pinnedTagEl.textContent = 'WEEKLY SPOTLIGHT';
+        const pinnedTitleEl = document.getElementById('pinned-sabres-title');
+        if (pinnedTitleEl) pinnedTitleEl.textContent = `Buffalo Sabres ${currentSabresNextGame?.opponent || 'Next Matchup'}`;
+        const pinnedRecordsEl = document.getElementById('pinned-sabres-records');
+        if (pinnedRecordsEl) pinnedRecordsEl.textContent = `${currentSabresNextGame?.matchupRecords || ''} • Puck Drop: ${currentSabresNextGame?.gameTime || ''}`;
+        const pinnedIso = resolveGameIso(currentSabresNextGame);
+        if (pinnedIso) {
+          startCountdown('pinned-sabres-countdown', pinnedIso);
+        }
+        return;
+      }
       const { state, detail, bufScore, oppScore, oppName, records } = liveData;
       const isLive = state === 'in';
       const isPost = state === 'post';
@@ -2502,7 +2770,9 @@
           return comp?.competitors?.some(c => c.team?.abbreviation === 'BUF' || c.team?.id === '2' || c.team?.displayName === 'Buffalo Sabres');
         });
 
-        if (sabresEv) {
+        const isMatchingSabresGame = sabresEv && isSameTeamGame(sabresEv, currentSabresNextGame, 'BUF');
+
+        if (isMatchingSabresGame) {
           const comp = sabresEv.competitions[0];
           const state = comp.status?.type?.state;
           const detail = comp.status?.type?.shortDetail || 'LIVE';
@@ -2538,6 +2808,18 @@
                 : `${oppName} ${opp?.score || 0} - ${buf?.score || 0} Sabres`;
             }
             updateSabresLiveUI(liveSabresGameData);
+          }
+        } else if (sabresEv && !isMatchingSabresGame) {
+          if (liveSabresGameData) {
+            liveSabresGameData = null;
+            if (currentSabresNextGame && currentSabresNextGame.statusState !== 'pre') {
+              currentSabresNextGame.statusState = 'pre';
+              currentSabresNextGame.bufScore = '';
+              currentSabresNextGame.oppScore = '';
+              currentSabresNextGame.liveScore = null;
+            }
+            updateSabresLiveUI(null);
+            renderSabresScoreboard(currentSabresOutOfTownGames, currentSabresNextGame);
           }
         }
 
@@ -2686,6 +2968,129 @@
       }
     }
 
+    let currentSabresSeasonSchedule = [];
+    let currentSabresActiveMonth = null;
+
+    function filterSabresMonth(monthKey) {
+      currentSabresActiveMonth = monthKey;
+      renderSabresSeasonSchedule(currentSabresSeasonSchedule, currentSabresActiveMonth);
+    }
+
+    function renderSabresSeasonSchedule(schedule, activeMonth) {
+      const container = document.getElementById('sabres-schedule-list');
+      const summaryEl = document.getElementById('sabres-schedule-summary');
+      if (!container) return;
+
+      const games = Array.isArray(schedule) ? schedule : [];
+      currentSabresSeasonSchedule = games;
+
+      if (games.length === 0) {
+        container.innerHTML = '<div style="color: var(--text-muted); padding: 1.5rem; text-align: center;">Schedule data unavailable.</div>';
+        return;
+      }
+
+      // Find next upcoming game
+      const nextGameIdx = games.findIndex(g => g.statusState === 'pre' || g.statusState === 'in');
+      const nextGameMonth = nextGameIdx !== -1 ? games[nextGameIdx].monthLabel : 'NOV';
+
+      if (!activeMonth) {
+        activeMonth = currentSabresActiveMonth || nextGameMonth || 'NOV';
+        currentSabresActiveMonth = activeMonth;
+      }
+
+      // Update active month pill UI
+      document.querySelectorAll('#sabres-month-pills .month-pill').forEach(pill => {
+        const isAct = pill.getAttribute('data-month') === activeMonth;
+        pill.classList.toggle('active', isAct);
+        pill.setAttribute('aria-pressed', isAct ? 'true' : 'false');
+      });
+
+      // Filter games by month
+      const filtered = activeMonth === 'ALL'
+        ? games
+        : games.filter(g => g.monthLabel === activeMonth);
+
+      // Compute stats for current filter
+      let w = 0, l = 0, otl = 0;
+      filtered.forEach(g => {
+        if (g.result === 'W') w++;
+        else if (g.result === 'L') l++;
+        else if (g.result === 'OTL') otl++;
+      });
+      const playedInFilter = w + l + otl;
+
+      if (summaryEl) {
+        const filterLabel = activeMonth === 'ALL' ? 'Full Season' : `${activeMonth} Slate`;
+        summaryEl.textContent = playedInFilter > 0
+          ? `${filterLabel} (${filtered.length} Games) • Record: ${w}-${l}-${otl}`
+          : `${filterLabel} (${filtered.length} Games) • Upcoming Matchups`;
+      }
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<div style="color: var(--text-muted); padding: 1.5rem; text-align: center;">No games scheduled for ${activeMonth}.</div>`;
+        return;
+      }
+
+      container.innerHTML = filtered.map(g => {
+        const isNext = (nextGameIdx !== -1 && games[nextGameIdx]?.id === g.id);
+        const isPost = g.statusState === 'post';
+        const isLive = g.statusState === 'in';
+        const haPrefix = g.isHome ? 'vs.' : '@';
+        const haLabel = g.isHome ? 'Home' : 'Away';
+
+        let rightColHtml = '';
+        if (isPost) {
+          const pillClass = g.result === 'W' ? 'result-pill-w' : (g.result === 'OTL' ? 'result-pill-otl' : 'result-pill-l');
+          const otText = g.outcome === 'OT' ? '<span style="font-size: 0.68rem; color: var(--text-muted); margin-left: 2px;">OT</span>' : (g.outcome === 'SO' ? '<span style="font-size: 0.68rem; color: var(--text-muted); margin-left: 2px;">SO</span>' : '');
+          rightColHtml = `
+            <span class="result-pill ${pillClass}">${g.result || '-'}</span>
+            <span class="result-score">${g.bufScore !== null ? g.bufScore : ''} - ${g.oppScore !== null ? g.oppScore : ''}${otText}</span>
+          `;
+        } else if (isLive) {
+          rightColHtml = `
+            <span class="live-pulse-badge" style="font-size: 0.68rem; padding: 0.2rem 0.5rem;"><span class="live-dot"></span> LIVE</span>
+            <span class="result-score">${g.bufScore || 0} - ${g.oppScore || 0}</span>
+          `;
+        } else {
+          rightColHtml = `
+            <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.25rem;">
+              <span style="font-size: 0.82rem; font-weight: 700; color: #fff; white-space: nowrap;">${g.timeFormatted || 'TBD'}</span>
+              <div style="display: flex; align-items: center; gap: 0.35rem;">
+                ${g.broadcast ? `<span class="schedule-tv-badge">${g.broadcast}</span>` : ''}
+              </div>
+            </div>
+          `;
+        }
+
+        return `
+          <div class="schedule-card ${isNext ? 'schedule-card-next' : ''}" role="article" aria-label="Game ${g.gameNumber}: ${haPrefix} ${g.opponent}">
+            <div class="schedule-time-col">
+              <div style="display: flex; align-items: center; gap: 0.3rem;">
+                <span class="schedule-week-badge">GM ${g.gameNumber}</span>
+                ${isNext ? '<span class="schedule-next-badge">NEXT</span>' : ''}
+              </div>
+              <span class="schedule-date">${g.dateFormatted}</span>
+              <span class="schedule-day">${g.dayOfWeek}</span>
+            </div>
+            <div class="schedule-matchup-col">
+              <div class="schedule-opp-line">
+                <span class="schedule-ha-tag">${haPrefix}</span>
+                <span>${g.opponent}</span>
+              </div>
+              <div class="schedule-meta-line">
+                <span>${haLabel}</span>
+                ${g.statusDetail && isPost ? `<span>• ${g.statusDetail}</span>` : ''}
+                ${g.broadcast && isPost ? `<span>• TV: ${g.broadcast}</span>` : ''}
+              </div>
+            </div>
+            <div class="schedule-result-col">
+              ${rightColHtml}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
     let isDataLoading = false;
     async function loadData() {
       if (isDataLoading) return;
@@ -2694,7 +3099,7 @@
       let data = null;
 
       const FALLBACK_DATA = {
-  "updatedAt": "2026-10-31T13:00:06.308Z",
+  "updatedAt": "2026-11-02T15:44:00.173Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
   "theme": "halloween",
   "billsTheme": null,
@@ -2702,80 +3107,81 @@
   "themeUntil": null,
   "bills": {
     "team": "Buffalo Bills",
-    "makePlayoffs": 85,
-    "winDivision": 66,
-    "seed1": 21
+    "makePlayoffs": 94,
+    "winDivision": 72,
+    "seed1": 28
   },
   "sabres": {
     "team": "Buffalo Sabres",
-    "makePlayoffs": 42,
-    "winDivision": 28,
-    "wildcard": 14,
-    "tragicNumber": "95 PTS",
-    "projectedPoints": 95,
-    "cutlinePoints": 100,
+    "makePlayoffs": 48,
+    "winDivision": 32,
+    "wildcard": 16,
+    "tragicNumber": "100 PTS",
+    "projectedPoints": 100,
+    "cutlinePoints": 102,
     "magicNumber": null,
     "clinchAlert": {
       "active": false,
       "scenario": "No clinching scenarios available this week."
     },
     "nextGame": {
-      "opponent": "@ Los Angeles",
-      "oppShortName": "Los Angeles",
-      "gameTime": "Sat, Oct 31 • 4:00 PM ET",
-      "isoTime": "2026-10-31T20:00:00Z",
-      "winChance": 62,
-      "matchupRecords": "Sabres (6-4-3, 15 pts, W2) vs. Los Angeles (4-6-2, 10 pts, W1)",
+      "opponent": "vs. Ottawa",
+      "oppShortName": "Ottawa",
+      "gameTime": "Wed, Nov 4 • 7:30 PM ET",
+      "isoTime": "2026-11-05T00:30:00Z",
+      "winChance": 55,
+      "matchupRecords": "Sabres (7-4-3, 17 pts, W3) vs. Ottawa (9-6-1, 19 pts, L1)",
       "broadcast": "MSG-B",
-      "venue": "Crypto.com Arena, Los Angeles, CA",
+      "announcers": "Dan Dunleavy, Rob Ray",
+      "venue": "KeyBank Center, Buffalo, NY",
       "statusState": "pre",
-      "statusDetail": "Sat, Oct 31 • 4:00 PM ET",
+      "statusDetail": "Wed, Nov 4 • 7:30 PM ET",
       "bufScore": "",
       "oppScore": "",
       "liveScore": null,
-      "ifWin": 48,
-      "ifLoss": 37,
+      "ifWin": 54,
+      "ifLoss": 43,
       "leverage": 11,
       "restAdvantage": {
-        "sabresDays": 2,
-        "oppDays": 2,
-        "summary": "Even Rest (Both on 2 Days Rest)"
+        "sabresDays": 4,
+        "oppDays": 3,
+        "summary": "Sabres +1 (4d vs 3d Rest)"
       },
       "specialTeams": {
-        "sabres": "PP: 13.6% (28th) | PK: 67.4% (28th)",
-        "opp": "PP: 17.5% (24th) | PK: 64.9% (31st)",
-        "advantage": "Los Angeles Special Teams Edge (+1.3% Net Margin)"
+        "sabres": "PP: 17.0% (23rd) | PK: 68.6% (29th)",
+        "opp": "PP: 12.3% (30th) | PK: 73.3% (22nd)",
+        "advantage": "Even Special Teams Matchup"
       },
       "efficiency": [
         {
           "metric": "Goals / Game",
-          "sabres": "3.08 (18th)",
-          "opp": "2.83 (24th)"
+          "sabres": "3.07 (19th)",
+          "opp": "3.13 (18th)"
         },
         {
           "metric": "Goals Against / Game",
-          "sabres": "3.54 (27th)",
-          "opp": "3.50 (26th)"
+          "sabres": "3.43 (24th)",
+          "opp": "3.19 (16th)"
         },
         {
           "metric": "Power Play %",
-          "sabres": "13.6% (28th)",
-          "opp": "17.5% (24th)"
+          "sabres": "17.0% (23rd)",
+          "opp": "12.3% (30th)"
         },
         {
           "metric": "Penalty Kill %",
-          "sabres": "67.4% (28th)",
-          "opp": "64.9% (31st)"
+          "sabres": "68.6% (29th)",
+          "opp": "73.3% (22nd)"
         },
         {
           "metric": "Shots / Game",
-          "sabres": "27.8 (14th)",
-          "opp": "27.9 (13th)"
+          "sabres": "28.1 (13th)",
+          "opp": "25.6 (24th)"
         },
         {
           "metric": "Faceoff Win %",
-          "sabres": "46.9% (28th)",
-          "opp": "50.7% (14th)"
+          "sabres": "46.2% (29th)",
+          "opp": "52.7% (8th)"
         }
       ],
       "injuries": [
@@ -2783,35 +3189,35 @@
           "player": "Ukko-Pekka Luukkonen",
           "pos": "G",
           "status": "Probable",
-          "injury": "Expected Starter (3.56 GAA, .866 SV%)",
+          "injury": "Expected Starter (3.40 GAA, .874 SV%)",
           "team": "Sabres"
         },
         {
-          "player": "Darcy Kuemper",
+          "player": "Samuel Ersson",
           "pos": "G",
           "status": "Probable",
-          "injury": "Expected Starter (3.65 GAA, .878 SV%)",
-          "team": "Los Angeles"
+          "injury": "Expected Starter (3.78 GAA, .866 SV%)",
+          "team": "Ottawa"
+        },
+        {
+          "player": "Jiri Kulich",
+          "pos": "C",
+          "status": "Day-To-Day",
+          "injury": "Concussion",
+          "team": "Sabres"
+        },
+        {
+          "player": "Konsta Helenius",
+          "pos": "C",
+          "status": "Day-To-Day",
+          "injury": "Upper Body",
+          "team": "Sabres"
         },
         {
           "player": "Justin Danforth",
           "pos": "RW",
           "status": "Injured Reserve",
           "injury": "Upper Body",
-          "team": "Sabres"
-        },
-        {
-          "player": "Konsta Helenius",
-          "pos": "C",
-          "status": "Out",
-          "injury": "Upper Body",
-          "team": "Sabres"
-        },
-        {
-          "player": "Jiri Kulich",
-          "pos": "C",
-          "status": "Out",
-          "injury": "Concussion",
           "team": "Sabres"
         },
         {
@@ -2843,368 +3249,1940 @@
           "team": "Sabres"
         },
         {
-          "player": "Brandt Clarke",
-          "pos": "D",
-          "status": "Day-To-Day",
-          "injury": "Upper Body",
-          "team": "Los Angeles"
-        },
-        {
-          "player": "Mats Zuccarello",
-          "pos": "RW",
-          "status": "Injured Reserve",
-          "injury": "Upper Body",
-          "team": "Los Angeles"
-        },
-        {
-          "player": "Kevin Fiala",
+          "player": "Andre Burakovsky",
           "pos": "LW",
           "status": "Injured Reserve",
-          "injury": "Lower Leg",
-          "team": "Los Angeles"
+          "injury": "Lower Body",
+          "team": "Ottawa"
         },
         {
-          "player": "Alex Turcotte",
-          "pos": "C",
+          "player": "Warren Foegele",
+          "pos": "LW",
           "status": "Injured Reserve",
-          "injury": "Undisclosed",
-          "team": "Los Angeles"
+          "injury": "Knee",
+          "team": "Ottawa"
         },
         {
-          "player": "Jakub Dvorak",
-          "pos": "D",
+          "player": "Linus Ullmark",
+          "pos": "G",
           "status": "Injured Reserve",
-          "injury": "Upper Body",
-          "team": "Los Angeles"
+          "injury": "Lower Body",
+          "team": "Ottawa"
         },
         {
-          "player": "Jan Jenik",
-          "pos": "C",
+          "player": "William Eklund",
+          "pos": "LW",
           "status": "Injured Reserve",
-          "injury": "Undisclosed",
-          "team": "Los Angeles"
+          "injury": "Ankle",
+          "team": "Ottawa"
         }
       ]
     },
     "divisionRadar": [
       {
         "team": "Bruins",
-        "pct": 62
+        "pct": 67
       },
       {
         "team": "Canadiens",
-        "pct": 58
+        "pct": 63
       },
       {
-        "team": "Panthers",
+        "team": "Senators",
         "pct": 52
       },
       {
         "team": "Sabres",
-        "pct": 42
+        "pct": 48
       }
     ],
     "seedDistribution": [
       {
         "seed": "Div 1",
-        "pct": 6
+        "pct": 8
       },
       {
         "seed": "Div 2",
-        "pct": 10
+        "pct": 11
       },
       {
         "seed": "Div 3",
-        "pct": 12
+        "pct": 13
       },
       {
         "seed": "Wildcard 1",
-        "pct": 7
+        "pct": 8
       },
       {
         "seed": "Wildcard 2",
-        "pct": 7
+        "pct": 8
       }
     ],
     "opponents": [
       {
-        "team": "Tampa Bay Lightning",
-        "pct": 6
-      },
-      {
         "team": "Boston Bruins",
-        "pct": 6
+        "pct": 7
       },
       {
         "team": "Montreal Canadiens",
-        "pct": 5
+        "pct": 7
+      },
+      {
+        "team": "Tampa Bay Lightning",
+        "pct": 6
+      }
+    ],
+    "seasonSchedule": [
+      {
+        "gameNumber": 1,
+        "id": 2026020011,
+        "date": "2026-10-01",
+        "isoTime": "2026-10-01T23:00:00Z",
+        "monthKey": "2026-10",
+        "monthLabel": "OCT",
+        "dayOfWeek": "Thu",
+        "dateFormatted": "Oct 1",
+        "timeFormatted": "7:00 PM ET",
+        "opponent": "Columbus Blue Jackets",
+        "oppShortName": "Blue Jackets",
+        "oppAbbrev": "CBJ",
+        "isHome": false,
+        "statusState": "post",
+        "statusDetail": "Final",
+        "bufScore": 3,
+        "oppScore": 6,
+        "result": "L",
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 2,
+        "id": 2026020022,
+        "date": "2026-10-03",
+        "isoTime": "2026-10-03T23:00:00Z",
+        "monthKey": "2026-10",
+        "monthLabel": "OCT",
+        "dayOfWeek": "Sat",
+        "dateFormatted": "Oct 3",
+        "timeFormatted": "7:00 PM ET",
+        "opponent": "Chicago Blackhawks",
+        "oppShortName": "Blackhawks",
+        "oppAbbrev": "CHI",
+        "isHome": true,
+        "statusState": "post",
+        "statusDetail": "Final",
+        "bufScore": 4,
+        "oppScore": 3,
+        "result": "W",
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 3,
+        "id": 2026020049,
+        "date": "2026-10-06",
+        "isoTime": "2026-10-06T23:00:00Z",
+        "monthKey": "2026-10",
+        "monthLabel": "OCT",
+        "dayOfWeek": "Tue",
+        "dateFormatted": "Oct 6",
+        "timeFormatted": "7:00 PM ET",
+        "opponent": "Minnesota Wild",
+        "oppShortName": "Wild",
+        "oppAbbrev": "MIN",
+        "isHome": true,
+        "statusState": "post",
+        "statusDetail": "Final/OT",
+        "bufScore": 3,
+        "oppScore": 2,
+        "result": "W",
+        "outcome": "OT",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 4,
+        "id": 2026020057,
+        "date": "2026-10-08",
+        "isoTime": "2026-10-08T23:00:00Z",
+        "monthKey": "2026-10",
+        "monthLabel": "OCT",
+        "dayOfWeek": "Thu",
+        "dateFormatted": "Oct 8",
+        "timeFormatted": "7:00 PM ET",
+        "opponent": "Dallas Stars",
+        "oppShortName": "Stars",
+        "oppAbbrev": "DAL",
+        "isHome": true,
+        "statusState": "post",
+        "statusDetail": "Final",
+        "bufScore": 0,
+        "oppScore": 4,
+        "result": "L",
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 5,
+        "id": 2026020074,
+        "date": "2026-10-10",
+        "isoTime": "2026-10-10T23:00:00Z",
+        "monthKey": "2026-10",
+        "monthLabel": "OCT",
+        "dayOfWeek": "Sat",
+        "dateFormatted": "Oct 10",
+        "timeFormatted": "7:00 PM ET",
+        "opponent": "Utah Mammoth",
+        "oppShortName": "Mammoth",
+        "oppAbbrev": "UTA",
+        "isHome": true,
+        "statusState": "post",
+        "statusDetail": "Final",
+        "bufScore": 1,
+        "oppScore": 4,
+        "result": "L",
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 6,
+        "id": 2026020087,
+        "date": "2026-10-12",
+        "isoTime": "2026-10-12T17:00:00Z",
+        "monthKey": "2026-10",
+        "monthLabel": "OCT",
+        "dayOfWeek": "Mon",
+        "dateFormatted": "Oct 12",
+        "timeFormatted": "1:00 PM ET",
+        "opponent": "Florida Panthers",
+        "oppShortName": "Panthers",
+        "oppAbbrev": "FLA",
+        "isHome": true,
+        "statusState": "post",
+        "statusDetail": "Final",
+        "bufScore": 5,
+        "oppScore": 3,
+        "result": "W",
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 7,
+        "id": 2026020092,
+        "date": "2026-10-13",
+        "isoTime": "2026-10-13T22:30:00Z",
+        "monthKey": "2026-10",
+        "monthLabel": "OCT",
+        "dayOfWeek": "Tue",
+        "dateFormatted": "Oct 13",
+        "timeFormatted": "6:30 PM ET",
+        "opponent": "Montréal Canadiens",
+        "oppShortName": "Canadiens",
+        "oppAbbrev": "MTL",
+        "isHome": false,
+        "statusState": "post",
+        "statusDetail": "Final/SO",
+        "bufScore": 3,
+        "oppScore": 4,
+        "result": "OTL",
+        "outcome": "SO",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 8,
+        "id": 2026020108,
+        "date": "2026-10-15",
+        "isoTime": "2026-10-15T23:00:00Z",
+        "monthKey": "2026-10",
+        "monthLabel": "OCT",
+        "dayOfWeek": "Thu",
+        "dateFormatted": "Oct 15",
+        "timeFormatted": "7:00 PM ET",
+        "opponent": "Toronto Maple Leafs",
+        "oppShortName": "Maple Leafs",
+        "oppAbbrev": "TOR",
+        "isHome": false,
+        "statusState": "post",
+        "statusDetail": "Final/OT",
+        "bufScore": 5,
+        "oppScore": 4,
+        "result": "W",
+        "outcome": "OT",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 9,
+        "id": 2026020126,
+        "date": "2026-10-17",
+        "isoTime": "2026-10-17T23:00:00Z",
+        "monthKey": "2026-10",
+        "monthLabel": "OCT",
+        "dayOfWeek": "Sat",
+        "dateFormatted": "Oct 17",
+        "timeFormatted": "7:00 PM ET",
+        "opponent": "Montréal Canadiens",
+        "oppShortName": "Canadiens",
+        "oppAbbrev": "MTL",
+        "isHome": false,
+        "statusState": "post",
+        "statusDetail": "Final/OT",
+        "bufScore": 3,
+        "oppScore": 4,
+        "result": "OTL",
+        "outcome": "OT",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 10,
+        "id": 2026020152,
+        "date": "2026-10-21",
+        "isoTime": "2026-10-21T23:30:00Z",
+        "monthKey": "2026-10",
+        "monthLabel": "OCT",
+        "dayOfWeek": "Wed",
+        "dateFormatted": "Oct 21",
+        "timeFormatted": "7:30 PM ET",
+        "opponent": "Philadelphia Flyers",
+        "oppShortName": "Flyers",
+        "oppAbbrev": "PHI",
+        "isHome": true,
+        "statusState": "post",
+        "statusDetail": "Final",
+        "bufScore": 1,
+        "oppScore": 3,
+        "result": "L",
+        "outcome": "REG",
+        "broadcast": "TNT"
+      },
+      {
+        "gameNumber": 11,
+        "id": 2026020173,
+        "date": "2026-10-24",
+        "isoTime": "2026-10-24T23:00:00Z",
+        "monthKey": "2026-10",
+        "monthLabel": "OCT",
+        "dayOfWeek": "Sat",
+        "dateFormatted": "Oct 24",
+        "timeFormatted": "7:00 PM ET",
+        "opponent": "Washington Capitals",
+        "oppShortName": "Capitals",
+        "oppAbbrev": "WSH",
+        "isHome": false,
+        "statusState": "post",
+        "statusDetail": "Final/OT",
+        "bufScore": 3,
+        "oppScore": 4,
+        "result": "OTL",
+        "outcome": "OT",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 12,
+        "id": 2026020198,
+        "date": "2026-10-27",
+        "isoTime": "2026-10-28T02:30:00Z",
+        "monthKey": "2026-10",
+        "monthLabel": "OCT",
+        "dayOfWeek": "Tue",
+        "dateFormatted": "Oct 27",
+        "timeFormatted": "10:30 PM ET",
+        "opponent": "San Jose Sharks",
+        "oppShortName": "Sharks",
+        "oppAbbrev": "SJS",
+        "isHome": false,
+        "statusState": "post",
+        "statusDetail": "Final",
+        "bufScore": 2,
+        "oppScore": 0,
+        "result": "W",
+        "outcome": "REG",
+        "broadcast": "ESPN"
+      },
+      {
+        "gameNumber": 13,
+        "id": 2026020211,
+        "date": "2026-10-29",
+        "isoTime": "2026-10-30T02:00:00Z",
+        "monthKey": "2026-10",
+        "monthLabel": "OCT",
+        "dayOfWeek": "Thu",
+        "dateFormatted": "Oct 29",
+        "timeFormatted": "10:00 PM ET",
+        "opponent": "Anaheim Ducks",
+        "oppShortName": "Ducks",
+        "oppAbbrev": "ANA",
+        "isHome": false,
+        "statusState": "post",
+        "statusDetail": "Final",
+        "bufScore": 7,
+        "oppScore": 6,
+        "result": "W",
+        "outcome": "REG",
+        "broadcast": "ESPN+"
+      },
+      {
+        "gameNumber": 14,
+        "id": 2026020221,
+        "date": "2026-10-31",
+        "isoTime": "2026-10-31T20:00:00Z",
+        "monthKey": "2026-10",
+        "monthLabel": "OCT",
+        "dayOfWeek": "Sat",
+        "dateFormatted": "Oct 31",
+        "timeFormatted": "4:00 PM ET",
+        "opponent": "Los Angeles Kings",
+        "oppShortName": "Kings",
+        "oppAbbrev": "LAK",
+        "isHome": false,
+        "statusState": "post",
+        "statusDetail": "Final",
+        "bufScore": 3,
+        "oppScore": 2,
+        "result": "W",
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 15,
+        "id": 2026020247,
+        "date": "2026-11-04",
+        "isoTime": "2026-11-05T00:30:00Z",
+        "monthKey": "2026-11",
+        "monthLabel": "NOV",
+        "dayOfWeek": "Wed",
+        "dateFormatted": "Nov 4",
+        "timeFormatted": "7:30 PM ET",
+        "opponent": "Ottawa Senators",
+        "oppShortName": "Senators",
+        "oppAbbrev": "OTT",
+        "isHome": true,
+        "statusState": "pre",
+        "statusDetail": "Nov 4",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 16,
+        "id": 2026020262,
+        "date": "2026-11-06",
+        "isoTime": "2026-11-07T00:00:00Z",
+        "monthKey": "2026-11",
+        "monthLabel": "NOV",
+        "dayOfWeek": "Fri",
+        "dateFormatted": "Nov 6",
+        "timeFormatted": "7:00 PM ET",
+        "opponent": "Columbus Blue Jackets",
+        "oppShortName": "Blue Jackets",
+        "oppAbbrev": "CBJ",
+        "isHome": true,
+        "statusState": "pre",
+        "statusDetail": "Nov 6",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 17,
+        "id": 2026020278,
+        "date": "2026-11-08",
+        "isoTime": "2026-11-08T20:30:00Z",
+        "monthKey": "2026-11",
+        "monthLabel": "NOV",
+        "dayOfWeek": "Sun",
+        "dateFormatted": "Nov 8",
+        "timeFormatted": "3:30 PM ET",
+        "opponent": "Vegas Golden Knights",
+        "oppShortName": "Golden Knights",
+        "oppAbbrev": "VGK",
+        "isHome": true,
+        "statusState": "pre",
+        "statusDetail": "Nov 8",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 18,
+        "id": 2026020293,
+        "date": "2026-11-11",
+        "isoTime": "2026-11-12T00:00:00Z",
+        "monthKey": "2026-11",
+        "monthLabel": "NOV",
+        "dayOfWeek": "Wed",
+        "dateFormatted": "Nov 11",
+        "timeFormatted": "7:00 PM ET",
+        "opponent": "Tampa Bay Lightning",
+        "oppShortName": "Lightning",
+        "oppAbbrev": "TBL",
+        "isHome": true,
+        "statusState": "pre",
+        "statusDetail": "Nov 11",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "TNT"
+      },
+      {
+        "gameNumber": 19,
+        "id": 2026020305,
+        "date": "2026-11-12",
+        "isoTime": "2026-11-13T01:00:00Z",
+        "monthKey": "2026-11",
+        "monthLabel": "NOV",
+        "dayOfWeek": "Thu",
+        "dateFormatted": "Nov 12",
+        "timeFormatted": "8:00 PM ET",
+        "opponent": "Chicago Blackhawks",
+        "oppShortName": "Blackhawks",
+        "oppAbbrev": "CHI",
+        "isHome": false,
+        "statusState": "pre",
+        "statusDetail": "Nov 12",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 20,
+        "id": 2026020322,
+        "date": "2026-11-14",
+        "isoTime": "2026-11-15T01:00:00Z",
+        "monthKey": "2026-11",
+        "monthLabel": "NOV",
+        "dayOfWeek": "Sat",
+        "dateFormatted": "Nov 14",
+        "timeFormatted": "8:00 PM ET",
+        "opponent": "Dallas Stars",
+        "oppShortName": "Stars",
+        "oppAbbrev": "DAL",
+        "isHome": false,
+        "statusState": "pre",
+        "statusDetail": "Nov 14",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 21,
+        "id": 2026020337,
+        "date": "2026-11-17",
+        "isoTime": "2026-11-18T00:00:00Z",
+        "monthKey": "2026-11",
+        "monthLabel": "NOV",
+        "dayOfWeek": "Tue",
+        "dateFormatted": "Nov 17",
+        "timeFormatted": "7:00 PM ET",
+        "opponent": "Philadelphia Flyers",
+        "oppShortName": "Flyers",
+        "oppAbbrev": "PHI",
+        "isHome": false,
+        "statusState": "pre",
+        "statusDetail": "Nov 17",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 22,
+        "id": 2026020351,
+        "date": "2026-11-19",
+        "isoTime": "2026-11-20T00:00:00Z",
+        "monthKey": "2026-11",
+        "monthLabel": "NOV",
+        "dayOfWeek": "Thu",
+        "dateFormatted": "Nov 19",
+        "timeFormatted": "7:00 PM ET",
+        "opponent": "Washington Capitals",
+        "oppShortName": "Capitals",
+        "oppAbbrev": "WSH",
+        "isHome": false,
+        "statusState": "pre",
+        "statusDetail": "Nov 19",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 23,
+        "id": 2026020361,
+        "date": "2026-11-21",
+        "isoTime": "2026-11-21T23:00:00Z",
+        "monthKey": "2026-11",
+        "monthLabel": "NOV",
+        "dayOfWeek": "Sat",
+        "dateFormatted": "Nov 21",
+        "timeFormatted": "6:00 PM ET",
+        "opponent": "Florida Panthers",
+        "oppShortName": "Panthers",
+        "oppAbbrev": "FLA",
+        "isHome": false,
+        "statusState": "pre",
+        "statusDetail": "Nov 21",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 24,
+        "id": 2026020374,
+        "date": "2026-11-22",
+        "isoTime": "2026-11-22T22:00:00Z",
+        "monthKey": "2026-11",
+        "monthLabel": "NOV",
+        "dayOfWeek": "Sun",
+        "dateFormatted": "Nov 22",
+        "timeFormatted": "5:00 PM ET",
+        "opponent": "Tampa Bay Lightning",
+        "oppShortName": "Lightning",
+        "oppAbbrev": "TBL",
+        "isHome": false,
+        "statusState": "pre",
+        "statusDetail": "Nov 22",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 25,
+        "id": 2026020387,
+        "date": "2026-11-25",
+        "isoTime": "2026-11-26T00:00:00Z",
+        "monthKey": "2026-11",
+        "monthLabel": "NOV",
+        "dayOfWeek": "Wed",
+        "dateFormatted": "Nov 25",
+        "timeFormatted": "7:00 PM ET",
+        "opponent": "New York Rangers",
+        "oppShortName": "Rangers",
+        "oppAbbrev": "NYR",
+        "isHome": true,
+        "statusState": "pre",
+        "statusDetail": "Nov 25",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 26,
+        "id": 2026020413,
+        "date": "2026-11-27",
+        "isoTime": "2026-11-28T01:00:00Z",
+        "monthKey": "2026-11",
+        "monthLabel": "NOV",
+        "dayOfWeek": "Fri",
+        "dateFormatted": "Nov 27",
+        "timeFormatted": "8:00 PM ET",
+        "opponent": "Pittsburgh Penguins",
+        "oppShortName": "Penguins",
+        "oppAbbrev": "PIT",
+        "isHome": true,
+        "statusState": "pre",
+        "statusDetail": "Nov 27",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "TNT"
+      },
+      {
+        "gameNumber": 27,
+        "id": 2026020441,
+        "date": "2026-12-01",
+        "isoTime": "2026-12-02T01:00:00Z",
+        "monthKey": "2026-12",
+        "monthLabel": "DEC",
+        "dayOfWeek": "Tue",
+        "dateFormatted": "Dec 1",
+        "timeFormatted": "8:00 PM ET",
+        "opponent": "Edmonton Oilers",
+        "oppShortName": "Oilers",
+        "oppAbbrev": "EDM",
+        "isHome": false,
+        "statusState": "pre",
+        "statusDetail": "Dec 1",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 28,
+        "id": 2026020455,
+        "date": "2026-12-03",
+        "isoTime": "2026-12-04T01:00:00Z",
+        "monthKey": "2026-12",
+        "monthLabel": "DEC",
+        "dayOfWeek": "Thu",
+        "dateFormatted": "Dec 3",
+        "timeFormatted": "8:00 PM ET",
+        "opponent": "Calgary Flames",
+        "oppShortName": "Flames",
+        "oppAbbrev": "CGY",
+        "isHome": false,
+        "statusState": "pre",
+        "statusDetail": "Dec 3",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 29,
+        "id": 2026020462,
+        "date": "2026-12-04",
+        "isoTime": "2026-12-05T02:00:00Z",
+        "monthKey": "2026-12",
+        "monthLabel": "DEC",
+        "dayOfWeek": "Fri",
+        "dateFormatted": "Dec 4",
+        "timeFormatted": "9:00 PM ET",
+        "opponent": "Vancouver Canucks",
+        "oppShortName": "Canucks",
+        "oppAbbrev": "VAN",
+        "isHome": false,
+        "statusState": "pre",
+        "statusDetail": "Dec 4",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 30,
+        "id": 2026020481,
+        "date": "2026-12-06",
+        "isoTime": "2026-12-07T01:00:00Z",
+        "monthKey": "2026-12",
+        "monthLabel": "DEC",
+        "dayOfWeek": "Sun",
+        "dateFormatted": "Dec 6",
+        "timeFormatted": "8:00 PM ET",
+        "opponent": "Seattle Kraken",
+        "oppShortName": "Kraken",
+        "oppAbbrev": "SEA",
+        "isHome": false,
+        "statusState": "pre",
+        "statusDetail": "Dec 6",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 31,
+        "id": 2026020499,
+        "date": "2026-12-10",
+        "isoTime": "2026-12-11T00:00:00Z",
+        "monthKey": "2026-12",
+        "monthLabel": "DEC",
+        "dayOfWeek": "Thu",
+        "dateFormatted": "Dec 10",
+        "timeFormatted": "7:00 PM ET",
+        "opponent": "Edmonton Oilers",
+        "oppShortName": "Oilers",
+        "oppAbbrev": "EDM",
+        "isHome": true,
+        "statusState": "pre",
+        "statusDetail": "Dec 10",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 32,
+        "id": 2026020518,
+        "date": "2026-12-12",
+        "isoTime": "2026-12-13T00:00:00Z",
+        "monthKey": "2026-12",
+        "monthLabel": "DEC",
+        "dayOfWeek": "Sat",
+        "dateFormatted": "Dec 12",
+        "timeFormatted": "7:00 PM ET",
+        "opponent": "Anaheim Ducks",
+        "oppShortName": "Ducks",
+        "oppAbbrev": "ANA",
+        "isHome": true,
+        "statusState": "pre",
+        "statusDetail": "Dec 12",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 33,
+        "id": 2026020531,
+        "date": "2026-12-14",
+        "isoTime": "2026-12-14T19:00:00Z",
+        "monthKey": "2026-12",
+        "monthLabel": "DEC",
+        "dayOfWeek": "Mon",
+        "dateFormatted": "Dec 14",
+        "timeFormatted": "2:00 PM ET",
+        "opponent": "Ottawa Senators",
+        "oppShortName": "Senators",
+        "oppAbbrev": "OTT",
+        "isHome": false,
+        "statusState": "pre",
+        "statusDetail": "Dec 14",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 34,
+        "id": 2026020537,
+        "date": "2026-12-15",
+        "isoTime": "2026-12-16T00:00:00Z",
+        "monthKey": "2026-12",
+        "monthLabel": "DEC",
+        "dayOfWeek": "Tue",
+        "dateFormatted": "Dec 15",
+        "timeFormatted": "7:00 PM ET",
+        "opponent": "Calgary Flames",
+        "oppShortName": "Flames",
+        "oppAbbrev": "CGY",
+        "isHome": true,
+        "statusState": "pre",
+        "statusDetail": "Dec 15",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 35,
+        "id": 2026020559,
+        "date": "2026-12-18",
+        "isoTime": "2026-12-19T00:30:00Z",
+        "monthKey": "2026-12",
+        "monthLabel": "DEC",
+        "dayOfWeek": "Fri",
+        "dateFormatted": "Dec 18",
+        "timeFormatted": "7:30 PM ET",
+        "opponent": "Montréal Canadiens",
+        "oppShortName": "Canadiens",
+        "oppAbbrev": "MTL",
+        "isHome": true,
+        "statusState": "pre",
+        "statusDetail": "Dec 18",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "ESPN+"
+      },
+      {
+        "gameNumber": 36,
+        "id": 2026020579,
+        "date": "2026-12-20",
+        "isoTime": "2026-12-20T23:00:00Z",
+        "monthKey": "2026-12",
+        "monthLabel": "DEC",
+        "dayOfWeek": "Sun",
+        "dateFormatted": "Dec 20",
+        "timeFormatted": "6:00 PM ET",
+        "opponent": "Los Angeles Kings",
+        "oppShortName": "Kings",
+        "oppAbbrev": "LAK",
+        "isHome": true,
+        "statusState": "pre",
+        "statusDetail": "Dec 20",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 37,
+        "id": 2026020593,
+        "date": "2026-12-22",
+        "isoTime": "2026-12-23T00:00:00Z",
+        "monthKey": "2026-12",
+        "monthLabel": "DEC",
+        "dayOfWeek": "Tue",
+        "dateFormatted": "Dec 22",
+        "timeFormatted": "7:00 PM ET",
+        "opponent": "Pittsburgh Penguins",
+        "oppShortName": "Penguins",
+        "oppAbbrev": "PIT",
+        "isHome": false,
+        "statusState": "pre",
+        "statusDetail": "Dec 22",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 38,
+        "id": 2026020603,
+        "date": "2026-12-26",
+        "isoTime": "2026-12-27T00:00:00Z",
+        "monthKey": "2026-12",
+        "monthLabel": "DEC",
+        "dayOfWeek": "Sat",
+        "dateFormatted": "Dec 26",
+        "timeFormatted": "7:00 PM ET",
+        "opponent": "New Jersey Devils",
+        "oppShortName": "Devils",
+        "oppAbbrev": "NJD",
+        "isHome": true,
+        "statusState": "pre",
+        "statusDetail": "Dec 26",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 39,
+        "id": 2026020620,
+        "date": "2026-12-28",
+        "isoTime": "2026-12-29T00:00:00Z",
+        "monthKey": "2026-12",
+        "monthLabel": "DEC",
+        "dayOfWeek": "Mon",
+        "dateFormatted": "Dec 28",
+        "timeFormatted": "7:00 PM ET",
+        "opponent": "Detroit Red Wings",
+        "oppShortName": "Red Wings",
+        "oppAbbrev": "DET",
+        "isHome": true,
+        "statusState": "pre",
+        "statusDetail": "Dec 28",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 40,
+        "id": 2026020638,
+        "date": "2026-12-30",
+        "isoTime": "2026-12-31T00:00:00Z",
+        "monthKey": "2026-12",
+        "monthLabel": "DEC",
+        "dayOfWeek": "Wed",
+        "dateFormatted": "Dec 30",
+        "timeFormatted": "7:00 PM ET",
+        "opponent": "Florida Panthers",
+        "oppShortName": "Panthers",
+        "oppAbbrev": "FLA",
+        "isHome": false,
+        "statusState": "pre",
+        "statusDetail": "Dec 30",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 41,
+        "id": 2026020657,
+        "date": "2027-01-02",
+        "isoTime": "2027-01-03T00:00:00Z",
+        "monthKey": "2027-01",
+        "monthLabel": "JAN",
+        "dayOfWeek": "Sat",
+        "dateFormatted": "Jan 2",
+        "timeFormatted": "7:00 PM ET",
+        "opponent": "Tampa Bay Lightning",
+        "oppShortName": "Lightning",
+        "oppAbbrev": "TBL",
+        "isHome": false,
+        "statusState": "pre",
+        "statusDetail": "Jan 2",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 42,
+        "id": 2026020674,
+        "date": "2027-01-04",
+        "isoTime": "2027-01-05T00:30:00Z",
+        "monthKey": "2027-01",
+        "monthLabel": "JAN",
+        "dayOfWeek": "Mon",
+        "dateFormatted": "Jan 4",
+        "timeFormatted": "7:30 PM ET",
+        "opponent": "Winnipeg Jets",
+        "oppShortName": "Jets",
+        "oppAbbrev": "WPG",
+        "isHome": true,
+        "statusState": "pre",
+        "statusDetail": "Jan 4",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 43,
+        "id": 2026020683,
+        "date": "2027-01-05",
+        "isoTime": "2027-01-06T00:30:00Z",
+        "monthKey": "2027-01",
+        "monthLabel": "JAN",
+        "dayOfWeek": "Tue",
+        "dateFormatted": "Jan 5",
+        "timeFormatted": "7:30 PM ET",
+        "opponent": "Boston Bruins",
+        "oppShortName": "Bruins",
+        "oppAbbrev": "BOS",
+        "isHome": false,
+        "statusState": "pre",
+        "statusDetail": "Jan 5",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "TNT"
+      },
+      {
+        "gameNumber": 44,
+        "id": 2026020704,
+        "date": "2027-01-08",
+        "isoTime": "2027-01-09T00:00:00Z",
+        "monthKey": "2027-01",
+        "monthLabel": "JAN",
+        "dayOfWeek": "Fri",
+        "dateFormatted": "Jan 8",
+        "timeFormatted": "7:00 PM ET",
+        "opponent": "Columbus Blue Jackets",
+        "oppShortName": "Blue Jackets",
+        "oppAbbrev": "CBJ",
+        "isHome": false,
+        "statusState": "pre",
+        "statusDetail": "Jan 8",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 45,
+        "id": 2026020712,
+        "date": "2027-01-09",
+        "isoTime": "2027-01-10T00:00:00Z",
+        "monthKey": "2027-01",
+        "monthLabel": "JAN",
+        "dayOfWeek": "Sat",
+        "dateFormatted": "Jan 9",
+        "timeFormatted": "7:00 PM ET",
+        "opponent": "Carolina Hurricanes",
+        "oppShortName": "Hurricanes",
+        "oppAbbrev": "CAR",
+        "isHome": true,
+        "statusState": "pre",
+        "statusDetail": "Jan 9",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 46,
+        "id": 2026020729,
+        "date": "2027-01-12",
+        "isoTime": "2027-01-13T00:00:00Z",
+        "monthKey": "2027-01",
+        "monthLabel": "JAN",
+        "dayOfWeek": "Tue",
+        "dateFormatted": "Jan 12",
+        "timeFormatted": "7:00 PM ET",
+        "opponent": "New Jersey Devils",
+        "oppShortName": "Devils",
+        "oppAbbrev": "NJD",
+        "isHome": true,
+        "statusState": "pre",
+        "statusDetail": "Jan 12",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 47,
+        "id": 2026020744,
+        "date": "2027-01-14",
+        "isoTime": "2027-01-15T00:30:00Z",
+        "monthKey": "2027-01",
+        "monthLabel": "JAN",
+        "dayOfWeek": "Thu",
+        "dateFormatted": "Jan 14",
+        "timeFormatted": "7:30 PM ET",
+        "opponent": "Colorado Avalanche",
+        "oppShortName": "Avalanche",
+        "oppAbbrev": "COL",
+        "isHome": true,
+        "statusState": "pre",
+        "statusDetail": "Jan 14",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 48,
+        "id": 2026020761,
+        "date": "2027-01-16",
+        "isoTime": "2027-01-17T00:00:00Z",
+        "monthKey": "2027-01",
+        "monthLabel": "JAN",
+        "dayOfWeek": "Sat",
+        "dateFormatted": "Jan 16",
+        "timeFormatted": "7:00 PM ET",
+        "opponent": "Nashville Predators",
+        "oppShortName": "Predators",
+        "oppAbbrev": "NSH",
+        "isHome": true,
+        "statusState": "pre",
+        "statusDetail": "Jan 16",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 49,
+        "id": 2026020776,
+        "date": "2027-01-18",
+        "isoTime": "2027-01-18T19:00:00Z",
+        "monthKey": "2027-01",
+        "monthLabel": "JAN",
+        "dayOfWeek": "Mon",
+        "dateFormatted": "Jan 18",
+        "timeFormatted": "2:00 PM ET",
+        "opponent": "Montréal Canadiens",
+        "oppShortName": "Canadiens",
+        "oppAbbrev": "MTL",
+        "isHome": true,
+        "statusState": "pre",
+        "statusDetail": "Jan 18",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 50,
+        "id": 2026020793,
+        "date": "2027-01-20",
+        "isoTime": "2027-01-21T00:00:00Z",
+        "monthKey": "2027-01",
+        "monthLabel": "JAN",
+        "dayOfWeek": "Wed",
+        "dateFormatted": "Jan 20",
+        "timeFormatted": "7:00 PM ET",
+        "opponent": "New York Islanders",
+        "oppShortName": "Islanders",
+        "oppAbbrev": "NYI",
+        "isHome": false,
+        "statusState": "pre",
+        "statusDetail": "Jan 20",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 51,
+        "id": 2026020798,
+        "date": "2027-01-21",
+        "isoTime": "2027-01-22T00:00:00Z",
+        "monthKey": "2027-01",
+        "monthLabel": "JAN",
+        "dayOfWeek": "Thu",
+        "dateFormatted": "Jan 21",
+        "timeFormatted": "7:00 PM ET",
+        "opponent": "Seattle Kraken",
+        "oppShortName": "Kraken",
+        "oppAbbrev": "SEA",
+        "isHome": true,
+        "statusState": "pre",
+        "statusDetail": "Jan 21",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 52,
+        "id": 2026020824,
+        "date": "2027-01-24",
+        "isoTime": "2027-01-24T20:00:00Z",
+        "monthKey": "2027-01",
+        "monthLabel": "JAN",
+        "dayOfWeek": "Sun",
+        "dateFormatted": "Jan 24",
+        "timeFormatted": "3:00 PM ET",
+        "opponent": "Winnipeg Jets",
+        "oppShortName": "Jets",
+        "oppAbbrev": "WPG",
+        "isHome": false,
+        "statusState": "pre",
+        "statusDetail": "Jan 24",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 53,
+        "id": 2026020848,
+        "date": "2027-01-27",
+        "isoTime": "2027-01-28T02:00:00Z",
+        "monthKey": "2027-01",
+        "monthLabel": "JAN",
+        "dayOfWeek": "Wed",
+        "dateFormatted": "Jan 27",
+        "timeFormatted": "9:00 PM ET",
+        "opponent": "Utah Mammoth",
+        "oppShortName": "Mammoth",
+        "oppAbbrev": "UTA",
+        "isHome": false,
+        "statusState": "pre",
+        "statusDetail": "Jan 27",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 54,
+        "id": 2026020858,
+        "date": "2027-01-28",
+        "isoTime": "2027-01-29T03:00:00Z",
+        "monthKey": "2027-01",
+        "monthLabel": "JAN",
+        "dayOfWeek": "Thu",
+        "dateFormatted": "Jan 28",
+        "timeFormatted": "10:00 PM ET",
+        "opponent": "Vegas Golden Knights",
+        "oppShortName": "Golden Knights",
+        "oppAbbrev": "VGK",
+        "isHome": false,
+        "statusState": "pre",
+        "statusDetail": "Jan 28",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 55,
+        "id": 2026020868,
+        "date": "2027-01-30",
+        "isoTime": "2027-01-30T22:00:00Z",
+        "monthKey": "2027-01",
+        "monthLabel": "JAN",
+        "dayOfWeek": "Sat",
+        "dateFormatted": "Jan 30",
+        "timeFormatted": "5:00 PM ET",
+        "opponent": "Colorado Avalanche",
+        "oppShortName": "Avalanche",
+        "oppAbbrev": "COL",
+        "isHome": false,
+        "statusState": "pre",
+        "statusDetail": "Jan 30",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 56,
+        "id": 2026020887,
+        "date": "2027-02-03",
+        "isoTime": "2027-02-04T00:00:00Z",
+        "monthKey": "2027-02",
+        "monthLabel": "FEB",
+        "dayOfWeek": "Wed",
+        "dateFormatted": "Feb 3",
+        "timeFormatted": "7:00 PM ET",
+        "opponent": "New York Islanders",
+        "oppShortName": "Islanders",
+        "oppAbbrev": "NYI",
+        "isHome": true,
+        "statusState": "pre",
+        "statusDetail": "Feb 3",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 57,
+        "id": 2026020921,
+        "date": "2027-02-13",
+        "isoTime": "2027-02-14T00:00:00Z",
+        "monthKey": "2027-02",
+        "monthLabel": "FEB",
+        "dayOfWeek": "Sat",
+        "dateFormatted": "Feb 13",
+        "timeFormatted": "7:00 PM ET",
+        "opponent": "Carolina Hurricanes",
+        "oppShortName": "Hurricanes",
+        "oppAbbrev": "CAR",
+        "isHome": false,
+        "statusState": "pre",
+        "statusDetail": "Feb 13",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 58,
+        "id": 2026020931,
+        "date": "2027-02-15",
+        "isoTime": "2027-02-15T23:00:00Z",
+        "monthKey": "2027-02",
+        "monthLabel": "FEB",
+        "dayOfWeek": "Mon",
+        "dateFormatted": "Feb 15",
+        "timeFormatted": "6:00 PM ET",
+        "opponent": "New York Rangers",
+        "oppShortName": "Rangers",
+        "oppAbbrev": "NYR",
+        "isHome": false,
+        "statusState": "pre",
+        "statusDetail": "Feb 15",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 59,
+        "id": 2026020951,
+        "date": "2027-02-18",
+        "isoTime": "2027-02-19T00:00:00Z",
+        "monthKey": "2027-02",
+        "monthLabel": "FEB",
+        "dayOfWeek": "Thu",
+        "dateFormatted": "Feb 18",
+        "timeFormatted": "7:00 PM ET",
+        "opponent": "Carolina Hurricanes",
+        "oppShortName": "Hurricanes",
+        "oppAbbrev": "CAR",
+        "isHome": true,
+        "statusState": "pre",
+        "statusDetail": "Feb 18",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 60,
+        "id": 2026020968,
+        "date": "2027-02-20",
+        "isoTime": "2027-02-20T18:30:00Z",
+        "monthKey": "2027-02",
+        "monthLabel": "FEB",
+        "dayOfWeek": "Sat",
+        "dateFormatted": "Feb 20",
+        "timeFormatted": "1:30 PM ET",
+        "opponent": "New Jersey Devils",
+        "oppShortName": "Devils",
+        "oppAbbrev": "NJD",
+        "isHome": false,
+        "statusState": "pre",
+        "statusDetail": "Feb 20",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 61,
+        "id": 2026020978,
+        "date": "2027-02-21",
+        "isoTime": "2027-02-21T20:30:00Z",
+        "monthKey": "2027-02",
+        "monthLabel": "FEB",
+        "dayOfWeek": "Sun",
+        "dateFormatted": "Feb 21",
+        "timeFormatted": "3:30 PM ET",
+        "opponent": "Detroit Red Wings",
+        "oppShortName": "Red Wings",
+        "oppAbbrev": "DET",
+        "isHome": false,
+        "statusState": "pre",
+        "statusDetail": "Feb 21",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "TNT"
+      },
+      {
+        "gameNumber": 62,
+        "id": 2026020999,
+        "date": "2027-02-24",
+        "isoTime": "2027-02-25T00:00:00Z",
+        "monthKey": "2027-02",
+        "monthLabel": "FEB",
+        "dayOfWeek": "Wed",
+        "dateFormatted": "Feb 24",
+        "timeFormatted": "7:00 PM ET",
+        "opponent": "Philadelphia Flyers",
+        "oppShortName": "Flyers",
+        "oppAbbrev": "PHI",
+        "isHome": false,
+        "statusState": "pre",
+        "statusDetail": "Feb 24",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "TNT"
+      },
+      {
+        "gameNumber": 63,
+        "id": 2026021012,
+        "date": "2027-02-26",
+        "isoTime": "2027-02-27T00:30:00Z",
+        "monthKey": "2027-02",
+        "monthLabel": "FEB",
+        "dayOfWeek": "Fri",
+        "dateFormatted": "Feb 26",
+        "timeFormatted": "7:30 PM ET",
+        "opponent": "Ottawa Senators",
+        "oppShortName": "Senators",
+        "oppAbbrev": "OTT",
+        "isHome": true,
+        "statusState": "pre",
+        "statusDetail": "Feb 26",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 64,
+        "id": 2026021022,
+        "date": "2027-02-27",
+        "isoTime": "2027-02-28T00:00:00Z",
+        "monthKey": "2027-02",
+        "monthLabel": "FEB",
+        "dayOfWeek": "Sat",
+        "dateFormatted": "Feb 27",
+        "timeFormatted": "7:00 PM ET",
+        "opponent": "Toronto Maple Leafs",
+        "oppShortName": "Maple Leafs",
+        "oppAbbrev": "TOR",
+        "isHome": true,
+        "statusState": "pre",
+        "statusDetail": "Feb 27",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 65,
+        "id": 2026021043,
+        "date": "2027-03-02",
+        "isoTime": "2027-03-03T00:00:00Z",
+        "monthKey": "2027-03",
+        "monthLabel": "MAR",
+        "dayOfWeek": "Tue",
+        "dateFormatted": "Mar 2",
+        "timeFormatted": "7:00 PM ET",
+        "opponent": "Pittsburgh Penguins",
+        "oppShortName": "Penguins",
+        "oppAbbrev": "PIT",
+        "isHome": true,
+        "statusState": "pre",
+        "statusDetail": "Mar 2",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 66,
+        "id": 2026021056,
+        "date": "2027-03-04",
+        "isoTime": "2027-03-05T00:00:00Z",
+        "monthKey": "2027-03",
+        "monthLabel": "MAR",
+        "dayOfWeek": "Thu",
+        "dateFormatted": "Mar 4",
+        "timeFormatted": "7:00 PM ET",
+        "opponent": "St. Louis Blues",
+        "oppShortName": "Blues",
+        "oppAbbrev": "STL",
+        "isHome": true,
+        "statusState": "pre",
+        "statusDetail": "Mar 4",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 67,
+        "id": 2026021072,
+        "date": "2027-03-06",
+        "isoTime": "2027-03-06T20:00:00Z",
+        "monthKey": "2027-03",
+        "monthLabel": "MAR",
+        "dayOfWeek": "Sat",
+        "dateFormatted": "Mar 6",
+        "timeFormatted": "3:00 PM ET",
+        "opponent": "New York Rangers",
+        "oppShortName": "Rangers",
+        "oppAbbrev": "NYR",
+        "isHome": true,
+        "statusState": "pre",
+        "statusDetail": "Mar 6",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "ABC"
+      },
+      {
+        "gameNumber": 68,
+        "id": 2026021085,
+        "date": "2027-03-07",
+        "isoTime": "2027-03-07T20:00:00Z",
+        "monthKey": "2027-03",
+        "monthLabel": "MAR",
+        "dayOfWeek": "Sun",
+        "dateFormatted": "Mar 7",
+        "timeFormatted": "3:00 PM ET",
+        "opponent": "Ottawa Senators",
+        "oppShortName": "Senators",
+        "oppAbbrev": "OTT",
+        "isHome": false,
+        "statusState": "pre",
+        "statusDetail": "Mar 7",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 69,
+        "id": 2026021092,
+        "date": "2027-03-09",
+        "isoTime": "2027-03-10T00:00:00Z",
+        "monthKey": "2027-03",
+        "monthLabel": "MAR",
+        "dayOfWeek": "Tue",
+        "dateFormatted": "Mar 9",
+        "timeFormatted": "7:00 PM ET",
+        "opponent": "Vancouver Canucks",
+        "oppShortName": "Canucks",
+        "oppAbbrev": "VAN",
+        "isHome": true,
+        "statusState": "pre",
+        "statusDetail": "Mar 9",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 70,
+        "id": 2026021117,
+        "date": "2027-03-12",
+        "isoTime": "2027-03-13T00:00:00Z",
+        "monthKey": "2027-03",
+        "monthLabel": "MAR",
+        "dayOfWeek": "Fri",
+        "dateFormatted": "Mar 12",
+        "timeFormatted": "7:00 PM ET",
+        "opponent": "Detroit Red Wings",
+        "oppShortName": "Red Wings",
+        "oppAbbrev": "DET",
+        "isHome": false,
+        "statusState": "pre",
+        "statusDetail": "Mar 12",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 71,
+        "id": 2026021137,
+        "date": "2027-03-14",
+        "isoTime": "2027-03-14T23:00:00Z",
+        "monthKey": "2027-03",
+        "monthLabel": "MAR",
+        "dayOfWeek": "Sun",
+        "dateFormatted": "Mar 14",
+        "timeFormatted": "7:00 PM ET",
+        "opponent": "Minnesota Wild",
+        "oppShortName": "Wild",
+        "oppAbbrev": "MIN",
+        "isHome": false,
+        "statusState": "pre",
+        "statusDetail": "Mar 14",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "TNT"
+      },
+      {
+        "gameNumber": 72,
+        "id": 2026021140,
+        "date": "2027-03-15",
+        "isoTime": "2027-03-15T23:00:00Z",
+        "monthKey": "2027-03",
+        "monthLabel": "MAR",
+        "dayOfWeek": "Mon",
+        "dateFormatted": "Mar 15",
+        "timeFormatted": "7:00 PM ET",
+        "opponent": "San Jose Sharks",
+        "oppShortName": "Sharks",
+        "oppAbbrev": "SJS",
+        "isHome": true,
+        "statusState": "pre",
+        "statusDetail": "Mar 15",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 73,
+        "id": 2026021160,
+        "date": "2027-03-18",
+        "isoTime": "2027-03-18T23:30:00Z",
+        "monthKey": "2027-03",
+        "monthLabel": "MAR",
+        "dayOfWeek": "Thu",
+        "dateFormatted": "Mar 18",
+        "timeFormatted": "7:30 PM ET",
+        "opponent": "Washington Capitals",
+        "oppShortName": "Capitals",
+        "oppAbbrev": "WSH",
+        "isHome": true,
+        "statusState": "pre",
+        "statusDetail": "Mar 18",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "ESPN+"
+      },
+      {
+        "gameNumber": 74,
+        "id": 2026021174,
+        "date": "2027-03-20",
+        "isoTime": "2027-03-20T17:00:00Z",
+        "monthKey": "2027-03",
+        "monthLabel": "MAR",
+        "dayOfWeek": "Sat",
+        "dateFormatted": "Mar 20",
+        "timeFormatted": "1:00 PM ET",
+        "opponent": "Florida Panthers",
+        "oppShortName": "Panthers",
+        "oppAbbrev": "FLA",
+        "isHome": true,
+        "statusState": "pre",
+        "statusDetail": "Mar 20",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 75,
+        "id": 2026021187,
+        "date": "2027-03-21",
+        "isoTime": "2027-03-21T19:00:00Z",
+        "monthKey": "2027-03",
+        "monthLabel": "MAR",
+        "dayOfWeek": "Sun",
+        "dateFormatted": "Mar 21",
+        "timeFormatted": "3:00 PM ET",
+        "opponent": "New York Islanders",
+        "oppShortName": "Islanders",
+        "oppAbbrev": "NYI",
+        "isHome": false,
+        "statusState": "pre",
+        "statusDetail": "Mar 21",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 76,
+        "id": 2026021196,
+        "date": "2027-03-23",
+        "isoTime": "2027-03-23T23:00:00Z",
+        "monthKey": "2027-03",
+        "monthLabel": "MAR",
+        "dayOfWeek": "Tue",
+        "dateFormatted": "Mar 23",
+        "timeFormatted": "7:00 PM ET",
+        "opponent": "Boston Bruins",
+        "oppShortName": "Bruins",
+        "oppAbbrev": "BOS",
+        "isHome": false,
+        "statusState": "pre",
+        "statusDetail": "Mar 23",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 77,
+        "id": 2026021212,
+        "date": "2027-03-25",
+        "isoTime": "2027-03-25T23:00:00Z",
+        "monthKey": "2027-03",
+        "monthLabel": "MAR",
+        "dayOfWeek": "Thu",
+        "dateFormatted": "Mar 25",
+        "timeFormatted": "7:00 PM ET",
+        "opponent": "Toronto Maple Leafs",
+        "oppShortName": "Maple Leafs",
+        "oppAbbrev": "TOR",
+        "isHome": true,
+        "statusState": "pre",
+        "statusDetail": "Mar 25",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 78,
+        "id": 2026021243,
+        "date": "2027-03-28",
+        "isoTime": "2027-03-29T00:30:00Z",
+        "monthKey": "2027-03",
+        "monthLabel": "MAR",
+        "dayOfWeek": "Sun",
+        "dateFormatted": "Mar 28",
+        "timeFormatted": "8:30 PM ET",
+        "opponent": "St. Louis Blues",
+        "oppShortName": "Blues",
+        "oppAbbrev": "STL",
+        "isHome": false,
+        "statusState": "pre",
+        "statusDetail": "Mar 28",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "ESPN"
+      },
+      {
+        "gameNumber": 79,
+        "id": 2026021255,
+        "date": "2027-03-30",
+        "isoTime": "2027-03-31T00:00:00Z",
+        "monthKey": "2027-03",
+        "monthLabel": "MAR",
+        "dayOfWeek": "Tue",
+        "dateFormatted": "Mar 30",
+        "timeFormatted": "8:00 PM ET",
+        "opponent": "Nashville Predators",
+        "oppShortName": "Predators",
+        "oppAbbrev": "NSH",
+        "isHome": false,
+        "statusState": "pre",
+        "statusDetail": "Mar 30",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 80,
+        "id": 2026021268,
+        "date": "2027-04-01",
+        "isoTime": "2027-04-01T23:00:00Z",
+        "monthKey": "2027-04",
+        "monthLabel": "APR",
+        "dayOfWeek": "Thu",
+        "dateFormatted": "Apr 1",
+        "timeFormatted": "7:00 PM ET",
+        "opponent": "Boston Bruins",
+        "oppShortName": "Bruins",
+        "oppAbbrev": "BOS",
+        "isHome": true,
+        "statusState": "pre",
+        "statusDetail": "Apr 1",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 81,
+        "id": 2026021283,
+        "date": "2027-04-03",
+        "isoTime": "2027-04-03T23:00:00Z",
+        "monthKey": "2027-04",
+        "monthLabel": "APR",
+        "dayOfWeek": "Sat",
+        "dateFormatted": "Apr 3",
+        "timeFormatted": "7:00 PM ET",
+        "opponent": "Toronto Maple Leafs",
+        "oppShortName": "Maple Leafs",
+        "oppAbbrev": "TOR",
+        "isHome": false,
+        "statusState": "pre",
+        "statusDetail": "Apr 3",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 82,
+        "id": 2026021297,
+        "date": "2027-04-05",
+        "isoTime": "2027-04-05T23:00:00Z",
+        "monthKey": "2027-04",
+        "monthLabel": "APR",
+        "dayOfWeek": "Mon",
+        "dateFormatted": "Apr 5",
+        "timeFormatted": "7:00 PM ET",
+        "opponent": "Tampa Bay Lightning",
+        "oppShortName": "Lightning",
+        "oppAbbrev": "TBL",
+        "isHome": true,
+        "statusState": "pre",
+        "statusDetail": "Apr 5",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
+      },
+      {
+        "gameNumber": 83,
+        "id": 2026021312,
+        "date": "2027-04-07",
+        "isoTime": "2027-04-07T23:30:00Z",
+        "monthKey": "2027-04",
+        "monthLabel": "APR",
+        "dayOfWeek": "Wed",
+        "dateFormatted": "Apr 7",
+        "timeFormatted": "7:30 PM ET",
+        "opponent": "Boston Bruins",
+        "oppShortName": "Bruins",
+        "oppAbbrev": "BOS",
+        "isHome": true,
+        "statusState": "pre",
+        "statusDetail": "Apr 7",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "TNT"
+      },
+      {
+        "gameNumber": 84,
+        "id": 2026021333,
+        "date": "2027-04-10",
+        "isoTime": "2027-04-10T22:00:00Z",
+        "monthKey": "2027-04",
+        "monthLabel": "APR",
+        "dayOfWeek": "Sat",
+        "dateFormatted": "Apr 10",
+        "timeFormatted": "6:00 PM ET",
+        "opponent": "Detroit Red Wings",
+        "oppShortName": "Red Wings",
+        "oppAbbrev": "DET",
+        "isHome": true,
+        "statusState": "pre",
+        "statusDetail": "Apr 10",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "outcome": "REG",
+        "broadcast": "MSG-B"
       }
     ],
     "outOfTownGames": [
-      {
-        "isoTime": "2026-10-29T23:00:00Z",
-        "slot": "Thu, Oct 29 • 7:00 PM ET",
-        "broadcast": "The Spot (WXPX)",
-        "announcers": "Dave Randorf, Brian Engblom",
-        "venue": "Benchmark International Arena, Tampa, FL",
-        "window": "THU",
-        "windowLabel": "Thursday Prime NHL Slate",
-        "windowBadge": "ESPN+ / RSN Lineups",
-        "statusState": "post",
-        "statusDetail": "Final",
-        "awayName": "Winnipeg Jets",
-        "awayRecord": "4-7-3, L4",
-        "awayScore": "4",
-        "homeName": "Tampa Bay Lightning",
-        "homeRecord": "8-3-1, W1",
-        "homeScore": "6",
-        "homeWinChance": 82,
-        "awayWinChance": 18,
-        "verdict": "BAD FOR BUFFALO",
-        "impactClass": "bad",
-        "target": "Root for Winnipeg Jets in Regulation",
-        "why": "Tampa Bay Lightning collected 2 standings points in the Atlantic race."
-      },
-      {
-        "isoTime": "2026-10-29T23:00:00Z",
-        "slot": "Thu, Oct 29 • 7:00 PM ET",
-        "broadcast": "Sportsnet",
-        "announcers": "John Bartlett, Garry Galley",
-        "venue": "PPG Paints Arena, Pittsburgh, PA",
-        "window": "THU",
-        "windowLabel": "Thursday Prime NHL Slate",
-        "windowBadge": "ESPN+ / RSN Lineups",
-        "statusState": "post",
-        "statusDetail": "Final/OT",
-        "awayName": "Utah Mammoth",
-        "awayRecord": "9-5-0, W1",
-        "awayScore": "4",
-        "homeName": "Pittsburgh Penguins",
-        "homeRecord": "5-6-2, OT1",
-        "homeScore": "3",
-        "homeWinChance": 36,
-        "awayWinChance": 64,
-        "verdict": "WILDCARD OT POINT",
-        "impactClass": "warning",
-        "target": "Root for Utah Mammoth in Regulation",
-        "why": "Utah Mammoth won in overtime, but Wild Card contender Pittsburgh Penguins salvaged a point."
-      },
-      {
-        "isoTime": "2026-10-29T23:00:00Z",
-        "slot": "Thu, Oct 29 • 7:00 PM ET",
-        "broadcast": "FDSN South",
-        "announcers": "Mike Maniscalco, Tripp Tracy",
-        "venue": "Lenovo Center, Raleigh, NC",
-        "window": "THU",
-        "windowLabel": "Thursday Prime NHL Slate",
-        "windowBadge": "ESPN+ / RSN Lineups",
-        "statusState": "post",
-        "statusDetail": "Final",
-        "awayName": "Columbus Blue Jackets",
-        "awayRecord": "5-6-0, L1",
-        "awayScore": "2",
-        "homeName": "Carolina Hurricanes",
-        "homeRecord": "11-2-2, W3",
-        "homeScore": "3",
-        "homeWinChance": 86,
-        "awayWinChance": 14,
-        "verdict": "RIVAL WIN",
-        "impactClass": "neutral",
-        "target": "Root for Columbus Blue Jackets in Regulation",
-        "why": "Carolina Hurricanes picked up 2 points in the Eastern playoff race."
-      },
-      {
-        "isoTime": "2026-10-29T23:30:00Z",
-        "slot": "Thu, Oct 29 • 7:30 PM ET",
-        "broadcast": "ESPN+",
-        "announcers": "John Buccigross, Ryan Callahan",
-        "venue": "Little Caesars Arena, Detroit, MI",
-        "window": "THU",
-        "windowLabel": "Thursday Prime NHL Slate",
-        "windowBadge": "ESPN+ / RSN Lineups",
-        "statusState": "post",
-        "statusDetail": "Final",
-        "awayName": "Chicago Blackhawks",
-        "awayRecord": "4-9-0, L1",
-        "awayScore": "1",
-        "homeName": "Detroit Red Wings",
-        "homeRecord": "6-4-3, W2",
-        "homeScore": "4",
-        "homeWinChance": 79,
-        "awayWinChance": 21,
-        "verdict": "BAD FOR BUFFALO",
-        "impactClass": "bad",
-        "target": "Root for Chicago Blackhawks in Regulation",
-        "why": "Detroit Red Wings collected 2 standings points in the Atlantic race."
-      },
-      {
-        "isoTime": "2026-10-30T00:00:00Z",
-        "slot": "Thu, Oct 29 • 8:00 PM ET",
-        "broadcast": "FDSN Midwest",
-        "announcers": "John Kelly, Jamie Rivers",
-        "venue": "Enterprise Center, St. Louis, MO",
-        "window": "THU",
-        "windowLabel": "Thursday Prime NHL Slate",
-        "windowBadge": "ESPN+ / RSN Lineups",
-        "statusState": "post",
-        "statusDetail": "Final",
-        "awayName": "Boston Bruins",
-        "awayRecord": "9-4-1, L2",
-        "awayScore": "1",
-        "homeName": "St. Louis Blues",
-        "homeRecord": "6-6-1, W1",
-        "homeScore": "4",
-        "homeWinChance": 36,
-        "awayWinChance": 64,
-        "verdict": "GOOD FOR BUFFALO",
-        "impactClass": "good",
-        "target": "Root for St. Louis Blues in Regulation",
-        "why": "St. Louis Blues handed Boston Bruins a regulation loss, keeping them at 0 points."
-      },
-      {
-        "isoTime": "2026-10-30T00:00:00Z",
-        "slot": "Thu, Oct 29 • 8:00 PM ET",
-        "broadcast": "Scripps Sports",
-        "announcers": "Steve Goldstein, Randy Moller",
-        "venue": "Bridgestone Arena, Nashville, TN",
-        "window": "THU",
-        "windowLabel": "Thursday Prime NHL Slate",
-        "windowBadge": "ESPN+ / RSN Lineups",
-        "statusState": "post",
-        "statusDetail": "Final",
-        "awayName": "Washington Capitals",
-        "awayRecord": "8-4-0, W3",
-        "awayScore": "4",
-        "homeName": "Nashville Predators",
-        "homeRecord": "4-4-5, L1",
-        "homeScore": "3",
-        "homeWinChance": 37,
-        "awayWinChance": 63,
-        "verdict": "RIVAL WIN",
-        "impactClass": "neutral",
-        "target": "Root for Nashville Predators in Regulation",
-        "why": "Washington Capitals picked up 2 points in the Eastern playoff race."
-      },
-      {
-        "isoTime": "2026-10-30T00:00:00Z",
-        "slot": "Thu, Oct 29 • 8:00 PM ET",
-        "broadcast": "Prime Video",
-        "announcers": "John Forslund, Jody Shelley, Thomas Hickey",
-        "venue": "American Airlines Center, Dallas, TX",
-        "window": "THU",
-        "windowLabel": "Thursday Prime NHL Slate",
-        "windowBadge": "ESPN+ / RSN Lineups",
-        "statusState": "post",
-        "statusDetail": "Final",
-        "awayName": "Montreal Canadiens",
-        "awayRecord": "8-3-2, W4",
-        "awayScore": "5",
-        "homeName": "Dallas Stars",
-        "homeRecord": "7-5-1, L2",
-        "homeScore": "2",
-        "homeWinChance": 41,
-        "awayWinChance": 59,
-        "verdict": "BAD FOR BUFFALO",
-        "impactClass": "bad",
-        "target": "Root for Dallas Stars in Regulation",
-        "why": "Montreal Canadiens collected 2 standings points in the Atlantic race."
-      },
-      {
-        "isoTime": "2026-10-30T00:00:00Z",
-        "slot": "Thu, Oct 29 • 8:00 PM ET",
-        "broadcast": "MINNHL",
-        "announcers": "Minnesota Wild Regional Broadcast Crew",
-        "venue": "Grand Casino Arena, St. Paul, MN",
-        "window": "THU",
-        "windowLabel": "Thursday Prime NHL Slate",
-        "windowBadge": "ESPN+ / RSN Lineups",
-        "statusState": "post",
-        "statusDetail": "Final/OT",
-        "awayName": "New York Islanders",
-        "awayRecord": "7-4-2, W2",
-        "awayScore": "4",
-        "homeName": "Minnesota Wild",
-        "homeRecord": "9-3-3, OT1",
-        "homeScore": "3",
-        "homeWinChance": 63,
-        "awayWinChance": 37,
-        "verdict": "RIVAL OT WIN",
-        "impactClass": "bad",
-        "target": "Root for Minnesota Wild in Regulation",
-        "why": "New York Islanders picked up 2 points in overtime."
-      },
-      {
-        "isoTime": "2026-10-30T02:00:00Z",
-        "slot": "Thu, Oct 29 • 10:00 PM ET",
-        "broadcast": "Altitude",
-        "announcers": "Marc Moser, Mark Rycroft",
-        "venue": "Crypto.com Arena, Los Angeles, CA",
-        "window": "THU",
-        "windowLabel": "Thursday Prime NHL Slate",
-        "windowBadge": "ESPN+ / RSN Lineups",
-        "statusState": "post",
-        "statusDetail": "Final/OT",
-        "awayName": "Ottawa Senators",
-        "awayRecord": "8-5-1, OT1",
-        "awayScore": "5",
-        "homeName": "Los Angeles Kings",
-        "homeRecord": "4-6-2, W1",
-        "homeScore": "6",
-        "homeWinChance": 35,
-        "awayWinChance": 65,
-        "verdict": "RIVAL STOLE OT POINT",
-        "impactClass": "warning",
-        "target": "Root for Los Angeles Kings in Regulation",
-        "why": "Los Angeles Kings won in overtime, but Ottawa Senators salvaged a loser point."
-      },
-      {
-        "isoTime": "2026-10-30T22:00:00Z",
-        "slot": "Fri, Oct 30 • 6:00 PM ET",
-        "broadcast": "Sportsnet",
-        "announcers": "Harnarayan Singh, Louie DeBrusk",
-        "venue": "T-Mobile Arena, Las Vegas, NV",
-        "window": "FRI",
-        "windowLabel": "Friday Night NHL Matchups",
-        "windowBadge": "Regional & Streaming Lineup",
-        "statusState": "post",
-        "statusDetail": "Final",
-        "awayName": "New Jersey Devils",
-        "awayRecord": "9-5-0, W1",
-        "awayScore": "5",
-        "homeName": "Vegas Golden Knights",
-        "homeRecord": "9-5-1, L1",
-        "homeScore": "2",
-        "homeWinChance": 52,
-        "awayWinChance": 48,
-        "verdict": "RIVAL WIN",
-        "impactClass": "neutral",
-        "target": "Root for Vegas Golden Knights in Regulation",
-        "why": "New Jersey Devils picked up 2 points in the Eastern playoff race."
-      },
-      {
-        "isoTime": "2026-10-30T23:00:00Z",
-        "slot": "Fri, Oct 30 • 7:00 PM ET",
-        "broadcast": "Scripps Sports",
-        "announcers": "Steve Goldstein, Randy Moller",
-        "venue": "Amerant Bank Arena, Sunrise, FL",
-        "window": "FRI",
-        "windowLabel": "Friday Night NHL Matchups",
-        "windowBadge": "Regional & Streaming Lineup",
-        "statusState": "post",
-        "statusDetail": "Final",
-        "awayName": "Winnipeg Jets",
-        "awayRecord": "4-7-3, L4",
-        "awayScore": "2",
-        "homeName": "Florida Panthers",
-        "homeRecord": "8-4-2, W3",
-        "homeScore": "5",
-        "homeWinChance": 77,
-        "awayWinChance": 23,
-        "verdict": "BAD FOR BUFFALO",
-        "impactClass": "bad",
-        "target": "Root for Winnipeg Jets in Regulation",
-        "why": "Florida Panthers collected 2 standings points in the Atlantic race."
-      },
       {
         "isoTime": "2026-10-31T17:00:00Z",
         "slot": "Sat, Oct 31 • 1:00 PM ET",
@@ -3214,20 +5192,20 @@
         "window": "SAT",
         "windowLabel": "Hockey Night in Canada & Saturday National",
         "windowBadge": "CBC / Sportsnet / NHL Network",
-        "statusState": "pre",
-        "statusDetail": "Scheduled",
+        "statusState": "post",
+        "statusDetail": "Final/OT",
         "awayName": "Chicago Blackhawks",
-        "awayRecord": "4-9-0, L1",
-        "awayScore": "",
+        "awayRecord": "4-9-1, OT1",
+        "awayScore": "4",
         "homeName": "Boston Bruins",
-        "homeRecord": "9-4-1, L2",
-        "homeScore": "",
-        "homeWinChance": 86,
-        "awayWinChance": 14,
-        "verdict": "ATLANTIC WATCH",
-        "impactClass": "warning",
+        "homeRecord": "10-4-1, W1",
+        "homeScore": "5",
+        "homeWinChance": 87,
+        "awayWinChance": 13,
+        "verdict": "BAD: RIVAL OT WIN",
+        "impactClass": "bad",
         "target": "Root for Chicago Blackhawks in Regulation",
-        "why": "A regulation loss leaves Boston Bruins with 0 standings points in the Atlantic Division."
+        "why": "Boston Bruins collected 2 standings points in overtime."
       },
       {
         "isoTime": "2026-10-31T17:00:00Z",
@@ -3238,20 +5216,20 @@
         "window": "SAT",
         "windowLabel": "Hockey Night in Canada & Saturday National",
         "windowBadge": "CBC / Sportsnet / NHL Network",
-        "statusState": "pre",
-        "statusDetail": "Scheduled",
+        "statusState": "post",
+        "statusDetail": "Final",
         "awayName": "St. Louis Blues",
-        "awayRecord": "6-6-1, W1",
-        "awayScore": "",
+        "awayRecord": "7-6-1, W2",
+        "awayScore": "5",
         "homeName": "Detroit Red Wings",
-        "homeRecord": "6-4-3, W2",
-        "homeScore": "",
-        "homeWinChance": 61,
-        "awayWinChance": 39,
-        "verdict": "ATLANTIC WATCH",
-        "impactClass": "warning",
+        "homeRecord": "6-5-3, L1",
+        "homeScore": "4",
+        "homeWinChance": 54,
+        "awayWinChance": 46,
+        "verdict": "GOOD FOR BUFFALO",
+        "impactClass": "good",
         "target": "Root for St. Louis Blues in Regulation",
-        "why": "A regulation loss leaves Detroit Red Wings with 0 standings points in the Atlantic Division."
+        "why": "St. Louis Blues handed Detroit Red Wings a regulation loss, keeping them at 0 points."
       },
       {
         "isoTime": "2026-10-31T18:00:00Z",
@@ -3262,20 +5240,20 @@
         "window": "SAT",
         "windowLabel": "Hockey Night in Canada & Saturday National",
         "windowBadge": "CBC / Sportsnet / NHL Network",
-        "statusState": "pre",
-        "statusDetail": "Scheduled",
+        "statusState": "post",
+        "statusDetail": "Final/SO",
         "awayName": "Tampa Bay Lightning",
-        "awayRecord": "8-3-1, W1",
-        "awayScore": "",
+        "awayRecord": "8-3-2, OT1",
+        "awayScore": "4",
         "homeName": "Nashville Predators",
-        "homeRecord": "4-4-5, L1",
-        "homeScore": "",
-        "homeWinChance": 33,
-        "awayWinChance": 67,
-        "verdict": "ATLANTIC WATCH",
+        "homeRecord": "5-4-5, W1",
+        "homeScore": "5",
+        "homeWinChance": 37,
+        "awayWinChance": 63,
+        "verdict": "RIVAL STOLE OT POINT",
         "impactClass": "warning",
         "target": "Root for Nashville Predators in Regulation",
-        "why": "A regulation loss leaves Tampa Bay Lightning with 0 standings points in the Atlantic Division."
+        "why": "Nashville Predators won in overtime, but Tampa Bay Lightning salvaged a loser point."
       },
       {
         "isoTime": "2026-10-31T18:00:00Z",
@@ -3286,20 +5264,20 @@
         "window": "SAT",
         "windowLabel": "Hockey Night in Canada & Saturday National",
         "windowBadge": "CBC / Sportsnet / NHL Network",
-        "statusState": "pre",
-        "statusDetail": "Scheduled",
+        "statusState": "post",
+        "statusDetail": "Final",
         "awayName": "Edmonton Oilers",
-        "awayRecord": "9-2-2, W1",
-        "awayScore": "",
+        "awayRecord": "11-2-2, W3",
+        "awayScore": "4",
         "homeName": "New York Islanders",
-        "homeRecord": "7-4-2, W2",
-        "homeScore": "",
-        "homeWinChance": 36,
-        "awayWinChance": 64,
-        "verdict": "WILD CARD WATCH",
-        "impactClass": "neutral",
+        "homeRecord": "7-5-2, L1",
+        "homeScore": "0",
+        "homeWinChance": 29,
+        "awayWinChance": 71,
+        "verdict": "GOOD FOR BUFFALO",
+        "impactClass": "good",
         "target": "Root for Edmonton Oilers in Regulation",
-        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points."
+        "why": "New York Islanders suffered a regulation loss, freezing their wildcard point total."
       },
       {
         "isoTime": "2026-10-31T20:00:00Z",
@@ -3310,20 +5288,20 @@
         "window": "SAT",
         "windowLabel": "Hockey Night in Canada & Saturday National",
         "windowBadge": "CBC / Sportsnet / NHL Network",
-        "statusState": "pre",
-        "statusDetail": "Scheduled",
+        "statusState": "post",
+        "statusDetail": "Final",
         "awayName": "Ottawa Senators",
-        "awayRecord": "8-5-1, OT1",
-        "awayScore": "",
+        "awayRecord": "9-6-1, L1",
+        "awayScore": "5",
         "homeName": "San Jose Sharks",
-        "homeRecord": "7-6-1, W1",
-        "homeScore": "",
-        "homeWinChance": 46,
-        "awayWinChance": 54,
-        "verdict": "ATLANTIC WATCH",
-        "impactClass": "warning",
+        "homeRecord": "7-7-1, L1",
+        "homeScore": "1",
+        "homeWinChance": 44,
+        "awayWinChance": 56,
+        "verdict": "BAD FOR BUFFALO",
+        "impactClass": "bad",
         "target": "Root for San Jose Sharks in Regulation",
-        "why": "A regulation loss leaves Ottawa Senators with 0 standings points in the Atlantic Division."
+        "why": "Ottawa Senators collected 2 standings points in the Atlantic race."
       },
       {
         "isoTime": "2026-10-31T23:00:00Z",
@@ -3334,20 +5312,20 @@
         "window": "SAT",
         "windowLabel": "Hockey Night in Canada & Saturday National",
         "windowBadge": "CBC / Sportsnet / NHL Network",
-        "statusState": "pre",
-        "statusDetail": "Scheduled",
+        "statusState": "post",
+        "statusDetail": "Final",
         "awayName": "Pittsburgh Penguins",
-        "awayRecord": "5-6-2, OT1",
-        "awayScore": "",
+        "awayRecord": "5-7-2, L1",
+        "awayScore": "4",
         "homeName": "Montreal Canadiens",
-        "homeRecord": "8-3-2, W4",
-        "homeScore": "",
-        "homeWinChance": 76,
-        "awayWinChance": 24,
-        "verdict": "ATLANTIC WATCH",
-        "impactClass": "warning",
+        "homeRecord": "9-3-2, W5",
+        "homeScore": "5",
+        "homeWinChance": 80,
+        "awayWinChance": 20,
+        "verdict": "BAD FOR BUFFALO",
+        "impactClass": "bad",
         "target": "Root for Pittsburgh Penguins in Regulation",
-        "why": "A regulation loss leaves Montreal Canadiens with 0 standings points in the Atlantic Division."
+        "why": "Montreal Canadiens collected 2 standings points in the Atlantic race."
       },
       {
         "isoTime": "2026-10-31T23:00:00Z",
@@ -3358,20 +5336,20 @@
         "window": "SAT",
         "windowLabel": "Hockey Night in Canada & Saturday National",
         "windowBadge": "CBC / Sportsnet / NHL Network",
-        "statusState": "pre",
-        "statusDetail": "Scheduled",
+        "statusState": "post",
+        "statusDetail": "Final",
         "awayName": "Toronto Maple Leafs",
-        "awayRecord": "7-6-2, L2",
-        "awayScore": "",
+        "awayRecord": "8-6-2, W1",
+        "awayScore": "4",
         "homeName": "Vancouver Canucks",
-        "homeRecord": "3-11-1, L1",
-        "homeScore": "",
-        "homeWinChance": 25,
-        "awayWinChance": 75,
-        "verdict": "ATLANTIC WATCH",
-        "impactClass": "warning",
+        "homeRecord": "3-12-1, L2",
+        "homeScore": "2",
+        "homeWinChance": 21,
+        "awayWinChance": 79,
+        "verdict": "BAD FOR BUFFALO",
+        "impactClass": "bad",
         "target": "Root for Vancouver Canucks in Regulation",
-        "why": "A regulation loss leaves Toronto Maple Leafs with 0 standings points in the Atlantic Division."
+        "why": "Toronto Maple Leafs collected 2 standings points in the Atlantic race."
       },
       {
         "isoTime": "2026-11-01T00:00:00Z",
@@ -3382,20 +5360,20 @@
         "window": "SAT",
         "windowLabel": "Hockey Night in Canada & Saturday National",
         "windowBadge": "CBC / Sportsnet / NHL Network",
-        "statusState": "pre",
-        "statusDetail": "Scheduled",
+        "statusState": "post",
+        "statusDetail": "Final",
         "awayName": "Columbus Blue Jackets",
-        "awayRecord": "5-6-0, L1",
-        "awayScore": "",
+        "awayRecord": "5-7-0, L2",
+        "awayScore": "1",
         "homeName": "Dallas Stars",
-        "homeRecord": "7-5-1, L2",
-        "homeScore": "",
-        "homeWinChance": 66,
-        "awayWinChance": 34,
-        "verdict": "WILD CARD WATCH",
-        "impactClass": "neutral",
+        "homeRecord": "8-5-1, W1",
+        "homeScore": "3",
+        "homeWinChance": 72,
+        "awayWinChance": 28,
+        "verdict": "GOOD FOR BUFFALO",
+        "impactClass": "good",
         "target": "Root for Dallas Stars in Regulation",
-        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points."
+        "why": "Columbus Blue Jackets suffered a regulation loss, freezing their wildcard point total."
       },
       {
         "isoTime": "2026-11-01T18:00:00Z",
@@ -3406,20 +5384,20 @@
         "window": "SUN",
         "windowLabel": "Sunday NHL Showcase Slate",
         "windowBadge": "National & Matinee Window",
-        "statusState": "pre",
-        "statusDetail": "Scheduled",
+        "statusState": "post",
+        "statusDetail": "Final",
         "awayName": "Winnipeg Jets",
-        "awayRecord": "4-7-3, L4",
-        "awayScore": "",
+        "awayRecord": "4-8-3, L5",
+        "awayScore": "0",
         "homeName": "Carolina Hurricanes",
-        "homeRecord": "11-2-2, W3",
-        "homeScore": "",
+        "homeRecord": "12-2-2, W4",
+        "homeScore": "7",
         "homeWinChance": 88,
         "awayWinChance": 12,
-        "verdict": "WILD CARD WATCH",
+        "verdict": "RIVAL WIN",
         "impactClass": "neutral",
         "target": "Root for Winnipeg Jets in Regulation",
-        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points."
+        "why": "Carolina Hurricanes picked up 2 points in the Eastern playoff race."
       },
       {
         "isoTime": "2026-11-01T20:30:00Z",
@@ -3430,20 +5408,20 @@
         "window": "SUN",
         "windowLabel": "Sunday NHL Showcase Slate",
         "windowBadge": "National & Matinee Window",
-        "statusState": "pre",
-        "statusDetail": "Scheduled",
+        "statusState": "post",
+        "statusDetail": "Final",
         "awayName": "Minnesota Wild",
-        "awayRecord": "9-3-3, OT1",
-        "awayScore": "",
+        "awayRecord": "10-3-3, W1",
+        "awayScore": "5",
         "homeName": "Washington Capitals",
-        "homeRecord": "8-4-0, W3",
-        "homeScore": "",
-        "homeWinChance": 50,
-        "awayWinChance": 50,
-        "verdict": "WILD CARD WATCH",
-        "impactClass": "neutral",
+        "homeRecord": "8-5-0, L1",
+        "homeScore": "1",
+        "homeWinChance": 42,
+        "awayWinChance": 58,
+        "verdict": "GOOD FOR BUFFALO",
+        "impactClass": "good",
         "target": "Root for Minnesota Wild in Regulation",
-        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points."
+        "why": "Washington Capitals suffered a regulation loss, freezing their wildcard point total."
       },
       {
         "isoTime": "2026-11-01T21:00:00Z",
@@ -3454,20 +5432,20 @@
         "window": "SUN",
         "windowLabel": "Sunday NHL Showcase Slate",
         "windowBadge": "National & Matinee Window",
-        "statusState": "pre",
-        "statusDetail": "Scheduled",
+        "statusState": "post",
+        "statusDetail": "Final",
         "awayName": "Utah Mammoth",
-        "awayRecord": "9-5-0, W1",
-        "awayScore": "",
+        "awayRecord": "9-6-0, L1",
+        "awayScore": "3",
         "homeName": "Philadelphia Flyers",
-        "homeRecord": "3-8-4, L1",
-        "homeScore": "",
-        "homeWinChance": 25,
-        "awayWinChance": 75,
-        "verdict": "WILD CARD WATCH",
+        "homeRecord": "4-8-4, W1",
+        "homeScore": "6",
+        "homeWinChance": 32,
+        "awayWinChance": 68,
+        "verdict": "RIVAL WIN",
         "impactClass": "neutral",
         "target": "Root for Utah Mammoth in Regulation",
-        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points."
+        "why": "Philadelphia Flyers picked up 2 points in the Eastern playoff race."
       },
       {
         "isoTime": "2026-11-01T23:00:00Z",
@@ -3478,20 +5456,20 @@
         "window": "SUN",
         "windowLabel": "Sunday NHL Showcase Slate",
         "windowBadge": "National & Matinee Window",
-        "statusState": "pre",
-        "statusDetail": "Scheduled",
+        "statusState": "post",
+        "statusDetail": "Final",
         "awayName": "Edmonton Oilers",
-        "awayRecord": "9-2-2, W1",
-        "awayScore": "",
+        "awayRecord": "11-2-2, W3",
+        "awayScore": "4",
         "homeName": "New York Rangers",
-        "homeRecord": "7-6-1, L3",
-        "homeScore": "",
-        "homeWinChance": 29,
-        "awayWinChance": 71,
-        "verdict": "WILD CARD WATCH",
-        "impactClass": "neutral",
+        "homeRecord": "7-7-1, L4",
+        "homeScore": "1",
+        "homeWinChance": 23,
+        "awayWinChance": 77,
+        "verdict": "GOOD FOR BUFFALO",
+        "impactClass": "good",
         "target": "Root for Edmonton Oilers in Regulation",
-        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points."
+        "why": "New York Rangers suffered a regulation loss, freezing their wildcard point total."
       },
       {
         "isoTime": "2026-11-02T01:00:00Z",
@@ -3502,20 +5480,20 @@
         "window": "SUN",
         "windowLabel": "Sunday NHL Showcase Slate",
         "windowBadge": "National & Matinee Window",
-        "statusState": "pre",
-        "statusDetail": "Scheduled",
+        "statusState": "post",
+        "statusDetail": "Final",
         "awayName": "Ottawa Senators",
-        "awayRecord": "8-5-1, OT1",
-        "awayScore": "",
+        "awayRecord": "9-6-1, L1",
+        "awayScore": "3",
         "homeName": "Anaheim Ducks",
-        "homeRecord": "5-7-1, L1",
-        "homeScore": "",
-        "homeWinChance": 36,
-        "awayWinChance": 64,
-        "verdict": "ATLANTIC WATCH",
-        "impactClass": "warning",
+        "homeRecord": "6-7-1, W1",
+        "homeScore": "6",
+        "homeWinChance": 41,
+        "awayWinChance": 59,
+        "verdict": "GOOD FOR BUFFALO",
+        "impactClass": "good",
         "target": "Root for Anaheim Ducks in Regulation",
-        "why": "A regulation loss leaves Ottawa Senators with 0 standings points in the Atlantic Division."
+        "why": "Anaheim Ducks handed Ottawa Senators a regulation loss, keeping them at 0 points."
       },
       {
         "isoTime": "2026-11-03T00:00:00Z",
@@ -3532,10 +5510,10 @@
         "awayRecord": "9-5-1, L1",
         "awayScore": "",
         "homeName": "Boston Bruins",
-        "homeRecord": "9-4-1, L2",
+        "homeRecord": "10-4-1, W1",
         "homeScore": "",
-        "homeWinChance": 58,
-        "awayWinChance": 42,
+        "homeWinChance": 61,
+        "awayWinChance": 39,
         "verdict": "ATLANTIC WATCH",
         "impactClass": "warning",
         "target": "Root for Vegas Golden Knights in Regulation",
@@ -3553,13 +5531,13 @@
         "statusState": "pre",
         "statusDetail": "Scheduled",
         "awayName": "Detroit Red Wings",
-        "awayRecord": "6-4-3, W2",
+        "awayRecord": "6-5-3, L1",
         "awayScore": "",
         "homeName": "Florida Panthers",
         "homeRecord": "8-4-2, W3",
         "homeScore": "",
-        "homeWinChance": 60,
-        "awayWinChance": 40,
+        "homeWinChance": 64,
+        "awayWinChance": 36,
         "verdict": "ATLANTIC WATCH",
         "impactClass": "warning",
         "target": "Root for Detroit Red Wings in Regulation",
@@ -3577,13 +5555,13 @@
         "statusState": "pre",
         "statusDetail": "Scheduled",
         "awayName": "Utah Mammoth",
-        "awayRecord": "9-5-0, W1",
+        "awayRecord": "9-6-0, L1",
         "awayScore": "",
         "homeName": "Toronto Maple Leafs",
-        "homeRecord": "7-6-2, L2",
+        "homeRecord": "8-6-2, W1",
         "homeScore": "",
-        "homeWinChance": 42,
-        "awayWinChance": 58,
+        "homeWinChance": 50,
+        "awayWinChance": 50,
         "verdict": "ATLANTIC WATCH",
         "impactClass": "warning",
         "target": "Root for Utah Mammoth in Regulation",
@@ -3601,13 +5579,13 @@
         "statusState": "pre",
         "statusDetail": "Scheduled",
         "awayName": "Winnipeg Jets",
-        "awayRecord": "4-7-3, L4",
+        "awayRecord": "4-8-3, L5",
         "awayScore": "",
         "homeName": "Montreal Canadiens",
-        "homeRecord": "8-3-2, W4",
+        "homeRecord": "9-3-2, W5",
         "homeScore": "",
-        "homeWinChance": 81,
-        "awayWinChance": 19,
+        "homeWinChance": 85,
+        "awayWinChance": 15,
         "verdict": "ATLANTIC WATCH",
         "impactClass": "warning",
         "target": "Root for Winnipeg Jets in Regulation",
@@ -3625,13 +5603,13 @@
         "statusState": "pre",
         "statusDetail": "Scheduled",
         "awayName": "Detroit Red Wings",
-        "awayRecord": "6-4-3, W2",
+        "awayRecord": "6-5-3, L1",
         "awayScore": "",
         "homeName": "Tampa Bay Lightning",
-        "homeRecord": "8-3-1, W1",
+        "homeRecord": "8-3-2, OT1",
         "homeScore": "",
-        "homeWinChance": 68,
-        "awayWinChance": 32,
+        "homeWinChance": 70,
+        "awayWinChance": 30,
         "verdict": "ATLANTIC WATCH",
         "impactClass": "warning",
         "target": "Root for Detroit Red Wings in Regulation",
@@ -3649,13 +5627,13 @@
         "statusState": "pre",
         "statusDetail": "Scheduled",
         "awayName": "St. Louis Blues",
-        "awayRecord": "6-6-1, W1",
+        "awayRecord": "7-6-1, W2",
         "awayScore": "",
         "homeName": "New York Rangers",
-        "homeRecord": "7-6-1, L3",
+        "homeRecord": "7-7-1, L4",
         "homeScore": "",
-        "homeWinChance": 57,
-        "awayWinChance": 43,
+        "homeWinChance": 50,
+        "awayWinChance": 50,
         "verdict": "WILD CARD WATCH",
         "impactClass": "neutral",
         "target": "Root for St. Louis Blues in Regulation",
@@ -3673,13 +5651,13 @@
         "statusState": "pre",
         "statusDetail": "Scheduled",
         "awayName": "Minnesota Wild",
-        "awayRecord": "9-3-3, OT1",
+        "awayRecord": "10-3-3, W1",
         "awayScore": "",
         "homeName": "Philadelphia Flyers",
-        "homeRecord": "3-8-4, L1",
+        "homeRecord": "4-8-4, W1",
         "homeScore": "",
-        "homeWinChance": 21,
-        "awayWinChance": 79,
+        "homeWinChance": 23,
+        "awayWinChance": 77,
         "verdict": "WILD CARD WATCH",
         "impactClass": "neutral",
         "target": "Root for Minnesota Wild in Regulation",
@@ -3700,10 +5678,10 @@
         "awayRecord": "9-5-1, L1",
         "awayScore": "",
         "homeName": "Pittsburgh Penguins",
-        "homeRecord": "5-6-2, OT1",
+        "homeRecord": "5-7-2, L1",
         "homeScore": "",
-        "homeWinChance": 37,
-        "awayWinChance": 63,
+        "homeWinChance": 34,
+        "awayWinChance": 66,
         "verdict": "WILD CARD WATCH",
         "impactClass": "neutral",
         "target": "Root for Vegas Golden Knights in Regulation",
@@ -3721,13 +5699,13 @@
         "statusState": "pre",
         "statusDetail": "Scheduled",
         "awayName": "Dallas Stars",
-        "awayRecord": "7-5-1, L2",
+        "awayRecord": "8-5-1, W1",
         "awayScore": "",
         "homeName": "Washington Capitals",
-        "homeRecord": "8-4-0, W3",
+        "homeRecord": "8-5-0, L1",
         "homeScore": "",
-        "homeWinChance": 63,
-        "awayWinChance": 37,
+        "homeWinChance": 54,
+        "awayWinChance": 46,
         "verdict": "WILD CARD WATCH",
         "impactClass": "neutral",
         "target": "Root for Dallas Stars in Regulation",
@@ -3745,13 +5723,13 @@
         "statusState": "pre",
         "statusDetail": "Scheduled",
         "awayName": "Colorado Avalanche",
-        "awayRecord": "7-5-1, W1",
+        "awayRecord": "8-5-1, W2",
         "awayScore": "",
         "homeName": "Columbus Blue Jackets",
-        "homeRecord": "5-6-0, L1",
+        "homeRecord": "5-7-0, L2",
         "homeScore": "",
-        "homeWinChance": 41,
-        "awayWinChance": 59,
+        "homeWinChance": 35,
+        "awayWinChance": 65,
         "verdict": "WILD CARD WATCH",
         "impactClass": "neutral",
         "target": "Root for Colorado Avalanche in Regulation",
@@ -3769,13 +5747,13 @@
         "statusState": "pre",
         "statusDetail": "Scheduled",
         "awayName": "Edmonton Oilers",
-        "awayRecord": "9-2-2, W1",
+        "awayRecord": "11-2-2, W3",
         "awayScore": "",
         "homeName": "New Jersey Devils",
         "homeRecord": "9-5-0, W1",
         "homeScore": "",
-        "homeWinChance": 39,
-        "awayWinChance": 61,
+        "homeWinChance": 35,
+        "awayWinChance": 65,
         "verdict": "WILD CARD WATCH",
         "impactClass": "neutral",
         "target": "Root for Edmonton Oilers in Regulation",
@@ -3793,13 +5771,13 @@
         "statusState": "pre",
         "statusDetail": "Scheduled",
         "awayName": "Carolina Hurricanes",
-        "awayRecord": "11-2-2, W3",
+        "awayRecord": "12-2-2, W4",
         "awayScore": "",
         "homeName": "Nashville Predators",
-        "homeRecord": "4-4-5, L1",
+        "homeRecord": "5-4-5, W1",
         "homeScore": "",
-        "homeWinChance": 23,
-        "awayWinChance": 77,
+        "homeWinChance": 25,
+        "awayWinChance": 75,
         "verdict": "WILD CARD WATCH",
         "impactClass": "neutral",
         "target": "Root for Nashville Predators in Regulation",
@@ -3817,13 +5795,13 @@
         "statusState": "pre",
         "statusDetail": "Scheduled",
         "awayName": "Chicago Blackhawks",
-        "awayRecord": "4-9-0, L1",
+        "awayRecord": "4-9-1, OT1",
         "awayScore": "",
         "homeName": "Florida Panthers",
         "homeRecord": "8-4-2, W3",
         "homeScore": "",
-        "homeWinChance": 84,
-        "awayWinChance": 16,
+        "homeWinChance": 83,
+        "awayWinChance": 17,
         "verdict": "ATLANTIC WATCH",
         "impactClass": "warning",
         "target": "Root for Chicago Blackhawks in Regulation",
@@ -3841,13 +5819,13 @@
         "statusState": "pre",
         "statusDetail": "Scheduled",
         "awayName": "Utah Mammoth",
-        "awayRecord": "9-5-0, W1",
+        "awayRecord": "9-6-0, L1",
         "awayScore": "",
         "homeName": "Montreal Canadiens",
-        "homeRecord": "8-3-2, W4",
+        "homeRecord": "9-3-2, W5",
         "homeScore": "",
-        "homeWinChance": 59,
-        "awayWinChance": 41,
+        "homeWinChance": 66,
+        "awayWinChance": 34,
         "verdict": "ATLANTIC WATCH",
         "impactClass": "warning",
         "target": "Root for Utah Mammoth in Regulation",
@@ -3868,10 +5846,10 @@
         "awayRecord": "9-5-1, L1",
         "awayScore": "",
         "homeName": "Detroit Red Wings",
-        "homeRecord": "6-4-3, W2",
+        "homeRecord": "6-5-3, L1",
         "homeScore": "",
-        "homeWinChance": 48,
-        "awayWinChance": 52,
+        "homeWinChance": 44,
+        "awayWinChance": 56,
         "verdict": "ATLANTIC WATCH",
         "impactClass": "warning",
         "target": "Root for Vegas Golden Knights in Regulation",
@@ -3889,13 +5867,13 @@
         "statusState": "pre",
         "statusDetail": "Scheduled",
         "awayName": "Chicago Blackhawks",
-        "awayRecord": "4-9-0, L1",
+        "awayRecord": "4-9-1, OT1",
         "awayScore": "",
         "homeName": "Tampa Bay Lightning",
-        "homeRecord": "8-3-1, W1",
+        "homeRecord": "8-3-2, OT1",
         "homeScore": "",
-        "homeWinChance": 88,
-        "awayWinChance": 12,
+        "homeWinChance": 86,
+        "awayWinChance": 14,
         "verdict": "ATLANTIC WATCH",
         "impactClass": "warning",
         "target": "Root for Chicago Blackhawks in Regulation",
@@ -3913,13 +5891,13 @@
         "statusState": "pre",
         "statusDetail": "Scheduled",
         "awayName": "St. Louis Blues",
-        "awayRecord": "6-6-1, W1",
+        "awayRecord": "7-6-1, W2",
         "awayScore": "",
         "homeName": "New Jersey Devils",
         "homeRecord": "9-5-0, W1",
         "homeScore": "",
-        "homeWinChance": 68,
-        "awayWinChance": 32,
+        "homeWinChance": 64,
+        "awayWinChance": 36,
         "verdict": "WILD CARD WATCH",
         "impactClass": "neutral",
         "target": "Root for St. Louis Blues in Regulation",
@@ -3937,13 +5915,13 @@
         "statusState": "pre",
         "statusDetail": "Scheduled",
         "awayName": "Carolina Hurricanes",
-        "awayRecord": "11-2-2, W3",
+        "awayRecord": "12-2-2, W4",
         "awayScore": "",
         "homeName": "New York Islanders",
-        "homeRecord": "7-4-2, W2",
+        "homeRecord": "7-5-2, L1",
         "homeScore": "",
-        "homeWinChance": 32,
-        "awayWinChance": 68,
+        "homeWinChance": 27,
+        "awayWinChance": 73,
         "verdict": "WILD CARD WATCH",
         "impactClass": "neutral",
         "target": "Root for New York Islanders in Regulation",
@@ -3961,13 +5939,13 @@
         "statusState": "pre",
         "statusDetail": "Scheduled",
         "awayName": "Philadelphia Flyers",
-        "awayRecord": "3-8-4, L1",
+        "awayRecord": "4-8-4, W1",
         "awayScore": "",
         "homeName": "New York Rangers",
-        "homeRecord": "7-6-1, L3",
+        "homeRecord": "7-7-1, L4",
         "homeScore": "",
-        "homeWinChance": 73,
-        "awayWinChance": 27,
+        "homeWinChance": 66,
+        "awayWinChance": 34,
         "verdict": "WILD CARD WATCH",
         "impactClass": "neutral",
         "target": "Root for Philadelphia Flyers in Regulation",
@@ -3985,13 +5963,13 @@
         "statusState": "pre",
         "statusDetail": "Scheduled",
         "awayName": "Boston Bruins",
-        "awayRecord": "9-4-1, L2",
+        "awayRecord": "10-4-1, W1",
         "awayScore": "",
         "homeName": "Pittsburgh Penguins",
-        "homeRecord": "5-6-2, OT1",
+        "homeRecord": "5-7-2, L1",
         "homeScore": "",
-        "homeWinChance": 32,
-        "awayWinChance": 68,
+        "homeWinChance": 28,
+        "awayWinChance": 72,
         "verdict": "ATLANTIC WATCH",
         "impactClass": "warning",
         "target": "Root for Pittsburgh Penguins in Regulation",
@@ -4009,16 +5987,232 @@
         "statusState": "pre",
         "statusDetail": "Scheduled",
         "awayName": "Dallas Stars",
-        "awayRecord": "7-5-1, L2",
+        "awayRecord": "8-5-1, W1",
         "awayScore": "",
         "homeName": "Columbus Blue Jackets",
-        "homeRecord": "5-6-0, L1",
+        "homeRecord": "5-7-0, L2",
         "homeScore": "",
-        "homeWinChance": 41,
-        "awayWinChance": 59,
+        "homeWinChance": 35,
+        "awayWinChance": 65,
         "verdict": "WILD CARD WATCH",
         "impactClass": "neutral",
         "target": "Root for Dallas Stars in Regulation",
+        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points."
+      },
+      {
+        "isoTime": "2026-11-07T17:30:00Z",
+        "slot": "Sat, Nov 7 • 12:30 PM ET",
+        "broadcast": "Sportsnet",
+        "announcers": "Chris Cuthbert, Craig Simpson",
+        "venue": "Capital One Arena, Washington, DC",
+        "window": "SAT",
+        "windowLabel": "Hockey Night in Canada & Saturday National",
+        "windowBadge": "CBC / Sportsnet / NHL Network",
+        "statusState": "pre",
+        "statusDetail": "Scheduled",
+        "awayName": "Florida Panthers",
+        "awayRecord": "8-4-2, W3",
+        "awayScore": "",
+        "homeName": "Washington Capitals",
+        "homeRecord": "8-5-0, L1",
+        "homeScore": "",
+        "homeWinChance": 51,
+        "awayWinChance": 49,
+        "verdict": "ATLANTIC WATCH",
+        "impactClass": "warning",
+        "target": "Root for Washington Capitals in Regulation",
+        "why": "A regulation loss leaves Florida Panthers with 0 standings points in the Atlantic Division."
+      },
+      {
+        "isoTime": "2026-11-07T22:00:00Z",
+        "slot": "Sat, Nov 7 • 5:00 PM ET",
+        "broadcast": "Prime Video",
+        "announcers": "John Forslund, Jody Shelley, Thomas Hickey",
+        "venue": "Climate Pledge Arena, Seattle, WA",
+        "window": "SAT",
+        "windowLabel": "Hockey Night in Canada & Saturday National",
+        "windowBadge": "CBC / Sportsnet / NHL Network",
+        "statusState": "pre",
+        "statusDetail": "Scheduled",
+        "awayName": "New York Rangers",
+        "awayRecord": "7-7-1, L4",
+        "awayScore": "",
+        "homeName": "Seattle Kraken",
+        "homeRecord": "8-5-1, L1",
+        "homeScore": "",
+        "homeWinChance": 64,
+        "awayWinChance": 36,
+        "verdict": "WILD CARD WATCH",
+        "impactClass": "neutral",
+        "target": "Root for Seattle Kraken in Regulation",
+        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points."
+      },
+      {
+        "isoTime": "2026-11-08T00:00:00Z",
+        "slot": "Sat, Nov 7 • 7:00 PM ET",
+        "broadcast": "Sportsnet",
+        "announcers": "Harnarayan Singh, Louie DeBrusk",
+        "venue": "Scotiabank Arena, Toronto, ON",
+        "window": "SAT",
+        "windowLabel": "Hockey Night in Canada & Saturday National",
+        "windowBadge": "CBC / Sportsnet / NHL Network",
+        "statusState": "pre",
+        "statusDetail": "Scheduled",
+        "awayName": "Montreal Canadiens",
+        "awayRecord": "9-3-2, W5",
+        "awayScore": "",
+        "homeName": "Toronto Maple Leafs",
+        "homeRecord": "8-6-2, W1",
+        "homeScore": "",
+        "homeWinChance": 37,
+        "awayWinChance": 63,
+        "verdict": "ATLANTIC WATCH",
+        "impactClass": "warning",
+        "target": "Root for Toronto Maple Leafs in Regulation",
+        "why": "A regulation loss leaves higher-standing Montreal Canadiens with 0 points in the Atlantic race."
+      },
+      {
+        "isoTime": "2026-11-08T00:00:00Z",
+        "slot": "Sat, Nov 7 • 7:00 PM ET",
+        "broadcast": "NHL Net",
+        "announcers": "E.J. Hradek, Kevin Weekes",
+        "venue": "Canadian Tire Centre, Ottawa, ON",
+        "window": "SAT",
+        "windowLabel": "Hockey Night in Canada & Saturday National",
+        "windowBadge": "CBC / Sportsnet / NHL Network",
+        "statusState": "pre",
+        "statusDetail": "Scheduled",
+        "awayName": "Utah Mammoth",
+        "awayRecord": "9-6-0, L1",
+        "awayScore": "",
+        "homeName": "Ottawa Senators",
+        "homeRecord": "9-6-1, L1",
+        "homeScore": "",
+        "homeWinChance": 53,
+        "awayWinChance": 47,
+        "verdict": "ATLANTIC WATCH",
+        "impactClass": "warning",
+        "target": "Root for Utah Mammoth in Regulation",
+        "why": "A regulation loss leaves Ottawa Senators with 0 standings points in the Atlantic Division."
+      },
+      {
+        "isoTime": "2026-11-08T00:00:00Z",
+        "slot": "Sat, Nov 7 • 7:00 PM ET",
+        "broadcast": "Sportsnet",
+        "announcers": "John Bartlett, Garry Galley",
+        "venue": "UBS Arena, Elmont, NY",
+        "window": "SAT",
+        "windowLabel": "Hockey Night in Canada & Saturday National",
+        "windowBadge": "CBC / Sportsnet / NHL Network",
+        "statusState": "pre",
+        "statusDetail": "Scheduled",
+        "awayName": "New Jersey Devils",
+        "awayRecord": "9-5-0, W1",
+        "awayScore": "",
+        "homeName": "New York Islanders",
+        "homeRecord": "7-5-2, L1",
+        "homeScore": "",
+        "homeWinChance": 46,
+        "awayWinChance": 54,
+        "verdict": "WILD CARD WATCH",
+        "impactClass": "neutral",
+        "target": "Root for New York Islanders in Regulation",
+        "why": "A regulation loss for higher-standing New Jersey Devils prevents a 3-point overtime game in the Wild Card race."
+      },
+      {
+        "isoTime": "2026-11-08T01:00:00Z",
+        "slot": "Sat, Nov 7 • 8:00 PM ET",
+        "broadcast": "FDSN South",
+        "announcers": "Mike Maniscalco, Tripp Tracy",
+        "venue": "Lenovo Center, Raleigh, NC",
+        "window": "SAT",
+        "windowLabel": "Hockey Night in Canada & Saturday National",
+        "windowBadge": "CBC / Sportsnet / NHL Network",
+        "statusState": "pre",
+        "statusDetail": "Scheduled",
+        "awayName": "Chicago Blackhawks",
+        "awayRecord": "4-9-1, OT1",
+        "awayScore": "",
+        "homeName": "Carolina Hurricanes",
+        "homeRecord": "12-2-2, W4",
+        "homeScore": "",
+        "homeWinChance": 88,
+        "awayWinChance": 12,
+        "verdict": "WILD CARD WATCH",
+        "impactClass": "neutral",
+        "target": "Root for Chicago Blackhawks in Regulation",
+        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points."
+      },
+      {
+        "isoTime": "2026-11-08T01:00:00Z",
+        "slot": "Sat, Nov 7 • 8:00 PM ET",
+        "broadcast": "MINNHL",
+        "announcers": "Minnesota Wild Regional Broadcast Crew",
+        "venue": "Grand Casino Arena, St. Paul, MN",
+        "window": "SAT",
+        "windowLabel": "Hockey Night in Canada & Saturday National",
+        "windowBadge": "CBC / Sportsnet / NHL Network",
+        "statusState": "pre",
+        "statusDetail": "Scheduled",
+        "awayName": "Tampa Bay Lightning",
+        "awayRecord": "8-3-2, OT1",
+        "awayScore": "",
+        "homeName": "Minnesota Wild",
+        "homeRecord": "10-3-3, W1",
+        "homeScore": "",
+        "homeWinChance": 57,
+        "awayWinChance": 43,
+        "verdict": "ATLANTIC WATCH",
+        "impactClass": "warning",
+        "target": "Root for Minnesota Wild in Regulation",
+        "why": "A regulation loss leaves Tampa Bay Lightning with 0 standings points in the Atlantic Division."
+      },
+      {
+        "isoTime": "2026-11-08T02:00:00Z",
+        "slot": "Sat, Nov 7 • 9:00 PM ET",
+        "broadcast": "Altitude",
+        "announcers": "Marc Moser, Mark Rycroft",
+        "venue": "Ball Arena, Denver, CO",
+        "window": "SAT",
+        "windowLabel": "Hockey Night in Canada & Saturday National",
+        "windowBadge": "CBC / Sportsnet / NHL Network",
+        "statusState": "pre",
+        "statusDetail": "Scheduled",
+        "awayName": "Detroit Red Wings",
+        "awayRecord": "6-5-3, L1",
+        "awayScore": "",
+        "homeName": "Colorado Avalanche",
+        "homeRecord": "8-5-1, W2",
+        "homeScore": "",
+        "homeWinChance": 61,
+        "awayWinChance": 39,
+        "verdict": "ATLANTIC WATCH",
+        "impactClass": "warning",
+        "target": "Root for Colorado Avalanche in Regulation",
+        "why": "A regulation loss leaves Detroit Red Wings with 0 standings points in the Atlantic Division."
+      },
+      {
+        "isoTime": "2026-11-08T02:00:00Z",
+        "slot": "Sat, Nov 7 • 9:00 PM ET",
+        "broadcast": "Altitude",
+        "announcers": "Marc Moser, Mark Rycroft",
+        "venue": "Crypto.com Arena, Los Angeles, CA",
+        "window": "SAT",
+        "windowLabel": "Hockey Night in Canada & Saturday National",
+        "windowBadge": "CBC / Sportsnet / NHL Network",
+        "statusState": "pre",
+        "statusDetail": "Scheduled",
+        "awayName": "Pittsburgh Penguins",
+        "awayRecord": "5-7-2, L1",
+        "awayScore": "",
+        "homeName": "Los Angeles Kings",
+        "homeRecord": "4-7-2, L1",
+        "homeScore": "",
+        "homeWinChance": 49,
+        "awayWinChance": 51,
+        "verdict": "WILD CARD WATCH",
+        "impactClass": "neutral",
+        "target": "Root for Los Angeles Kings in Regulation",
         "why": "Suppresses Eastern Conference Wild Card contenders from stacking points."
       }
     ]
@@ -4083,14 +6277,21 @@
         };
         updateSabresLiveUI(liveSabresGameData);
       } else if (liveSabresGameData && (liveSabresGameData.state === 'in' || liveSabresGameData.state === 'post')) {
-        if (currentSabresNextGame) {
-          currentSabresNextGame.statusState = liveSabresGameData.state;
-          currentSabresNextGame.statusDetail = liveSabresGameData.detail;
-          currentSabresNextGame.bufScore = liveSabresGameData.bufScore;
-          currentSabresNextGame.oppScore = liveSabresGameData.oppScore;
-          currentSabresNextGame.winChance = liveSabresGameData.winChance;
+        const liveOpp = (liveSabresGameData.oppName || '').toLowerCase().trim();
+        const nextOpp = (currentSabresNextGame?.oppShortName || currentSabresNextGame?.opponent || '').toLowerCase().replace(/^(vs\.?|@)\s*/i, '').trim();
+        if (nextOpp && liveOpp && (nextOpp.includes(liveOpp) || liveOpp.includes(nextOpp))) {
+          if (currentSabresNextGame) {
+            currentSabresNextGame.statusState = liveSabresGameData.state;
+            currentSabresNextGame.statusDetail = liveSabresGameData.detail;
+            currentSabresNextGame.bufScore = liveSabresGameData.bufScore;
+            currentSabresNextGame.oppScore = liveSabresGameData.oppScore;
+            currentSabresNextGame.winChance = liveSabresGameData.winChance;
+          }
+          updateSabresLiveUI(liveSabresGameData);
+        } else {
+          liveSabresGameData = null;
+          updateSabresLiveUI(null);
         }
-        updateSabresLiveUI(liveSabresGameData);
       } else {
         document.getElementById('sabres-win-chance').textContent = `${s.nextGame.winChance || 52}%`;
         document.getElementById('sabres-matchup-prefix').textContent = 'Next Matchup:';
@@ -4301,7 +6502,10 @@
       }
 
       // Populate Chronological Out-of-Town Scoreboard
-      if (liveSabresGameData && s.nextGame && s.nextGame.statusState === 'pre') {
+      const nextSabresOpp = (s.nextGame?.oppShortName || s.nextGame?.opponent || '').toLowerCase().replace(/^(vs\.?|@)\s*/i, '').trim();
+      const liveSabresOpp = (liveSabresGameData?.oppName || '').toLowerCase().trim();
+      const isLiveOppMatch = nextSabresOpp && liveSabresOpp && (nextSabresOpp.includes(liveSabresOpp) || liveSabresOpp.includes(nextSabresOpp));
+      if (liveSabresGameData && isLiveOppMatch && s.nextGame && s.nextGame.statusState === 'pre') {
         s.nextGame.statusState = liveSabresGameData.state;
         s.nextGame.statusDetail = liveSabresGameData.detail;
         s.nextGame.bufScore = liveSabresGameData.bufScore;
@@ -4318,6 +6522,7 @@
         return (prev && g.statusState === 'pre') ? { ...g, ...prev } : g;
       });
       renderSabresScoreboard(currentSabresOutOfTownGames, currentSabresNextGame);
+      renderSabresSeasonSchedule(s.seasonSchedule);
 
       // Check real-time live scores immediately
       pollLiveSabresScoreboard();

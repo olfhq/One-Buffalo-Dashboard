@@ -106,6 +106,66 @@ if (!data.bills.outOfTownGames || data.bills.outOfTownGames.length === 0) {
   console.log('Bills out of town games all have valid impactClass, verdict, target.');
 }
 
+console.log('\n=== CHECKING FULL SEASON SCHEDULES ===');
+if (!Array.isArray(data.bills.seasonSchedule) || data.bills.seasonSchedule.length !== 18) {
+  console.error(`FAIL: Bills seasonSchedule must have 18 weeks, found ${data.bills.seasonSchedule?.length}`);
+  errors++;
+} else {
+  const bye = data.bills.seasonSchedule.find(g => g.isBye);
+  if (!bye) {
+    console.error('FAIL: Bills seasonSchedule missing bye week');
+    errors++;
+  }
+  const played = data.bills.seasonSchedule.filter(g => g.statusState === 'post');
+  const future = data.bills.seasonSchedule.filter(g => g.statusState === 'pre');
+  if (played.length === 0 || future.length === 0) {
+    console.error(`FAIL: Bills seasonSchedule must have played and future games (played=${played.length}, future=${future.length})`);
+    errors++;
+  }
+  played.forEach(g => {
+    if (g.bufScore === null || g.oppScore === null || !g.result) {
+      console.error(`FAIL: Bills played week ${g.week} missing score/result`);
+      errors++;
+    }
+  });
+  future.forEach(g => {
+    if (!g.date || !g.dayOfWeek || !g.opponent) {
+      console.error(`FAIL: Bills future week ${g.week} missing date/day/opp`);
+      errors++;
+    }
+  });
+  console.log(`Bills season schedule verified: 18 weeks (${played.length} played, ${future.length} upcoming, bye week present)`);
+}
+
+if (!Array.isArray(data.sabres.seasonSchedule) || data.sabres.seasonSchedule.length < 80) {
+  console.error(`FAIL: Sabres seasonSchedule must have >= 80 games, found ${data.sabres.seasonSchedule?.length}`);
+  errors++;
+} else {
+  const months = new Set(data.sabres.seasonSchedule.map(g => g.monthLabel));
+  const expectedMonths = ['OCT', 'NOV', 'DEC', 'JAN', 'FEB', 'MAR', 'APR'];
+  expectedMonths.forEach(m => {
+    if (!months.has(m)) {
+      console.error(`FAIL: Sabres seasonSchedule missing games for month ${m}`);
+      errors++;
+    }
+  });
+  const played = data.sabres.seasonSchedule.filter(g => g.statusState === 'post');
+  const future = data.sabres.seasonSchedule.filter(g => g.statusState === 'pre');
+  played.forEach(g => {
+    if (g.bufScore === null || g.oppScore === null || !g.result) {
+      console.error(`FAIL: Sabres played game ${g.gameNumber} missing score/result`);
+      errors++;
+    }
+  });
+  future.forEach(g => {
+    if (!g.date || !g.dayOfWeek || !g.opponent) {
+      console.error(`FAIL: Sabres future game ${g.gameNumber} missing date/day/opp`);
+      errors++;
+    }
+  });
+  console.log(`Sabres season schedule verified: ${data.sabres.seasonSchedule.length} games across months ${[...months].join(', ')} (${played.length} played, ${future.length} upcoming)`);
+}
+
 if (errors > 0) {
   console.error(`\nTest failed with ${errors} error(s).`);
   process.exit(1);

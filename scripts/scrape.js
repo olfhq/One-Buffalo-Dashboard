@@ -2224,6 +2224,83 @@ async function fetchNextGameSchedule() {
     if (schedRes.ok) {
       const data = await schedRes.json();
       const events = data.events || [];
+
+      // Build Full 18-Week Bills Season Schedule
+      const eventsByWeek = new Map();
+      events.forEach(e => {
+        const w = e.week?.number;
+        if (w) eventsByWeek.set(w, e);
+      });
+
+      const billsSeasonSchedule = [];
+      for (let w = 1; w <= 18; w++) {
+        const ev = eventsByWeek.get(w);
+        if (!ev) {
+          billsSeasonSchedule.push({
+            week: w,
+            isBye: true,
+            opponent: 'BYE WEEK',
+            oppShortName: 'BYE',
+            oppAbbrev: 'BYE',
+            statusState: 'bye',
+            statusDetail: 'Bye Week'
+          });
+          continue;
+        }
+        const evComp = ev.competitions?.[0] || {};
+        const evBuf = evComp.competitors?.find(c => c.id === '2');
+        const evOpp = evComp.competitors?.find(c => c.id !== '2');
+        const evIsHome = evBuf?.homeAway === 'home';
+        const evState = evComp.status?.type?.state || 'pre';
+        const evBufScore = evBuf?.score?.value !== undefined ? Number(evBuf.score.value) : (evBuf?.score !== undefined ? Number(evBuf.score) : null);
+        const evOppScore = evOpp?.score?.value !== undefined ? Number(evOpp.score.value) : (evOpp?.score !== undefined ? Number(evOpp.score) : null);
+
+        let evResult = null;
+        if (evState === 'post' && evBufScore !== null && evOppScore !== null) {
+          if (evBufScore > evOppScore) evResult = 'W';
+          else if (evBufScore < evOppScore) evResult = 'L';
+          else evResult = 'T';
+        }
+
+        const evDt = new Date(ev.date);
+        const evDayOfWeek = evDt.toLocaleDateString('en-US', { timeZone: 'America/New_York', weekday: 'short' });
+        const evMonth = evDt.toLocaleDateString('en-US', { timeZone: 'America/New_York', month: 'short' });
+        const evDay = evDt.toLocaleDateString('en-US', { timeZone: 'America/New_York', day: 'numeric' });
+        const evTime = evDt.toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour: 'numeric', minute: '2-digit', hour12: true }) + ' ET';
+
+        let evBroadcast = evComp.broadcasts?.[0]?.media?.shortName || evComp.broadcasts?.[0]?.names?.[0] || 'CBS';
+        if (evBroadcast.toLowerCase().includes('prime')) evBroadcast = 'Prime';
+        else if (evBroadcast.toLowerCase().includes('fox')) evBroadcast = 'FOX';
+
+        let evPrimeTime = null;
+        const evHour = parseInt(evDt.toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour12: false, hour: '2-digit' }), 10);
+        if (evMonth === 'Dec' && evDay === '25') evPrimeTime = 'Christmas';
+        else if (evDayOfWeek === 'Thu') evPrimeTime = 'TNF';
+        else if (evDayOfWeek === 'Mon') evPrimeTime = 'MNF';
+        else if (evDayOfWeek === 'Sun' && evHour >= 20) evPrimeTime = 'SNF';
+
+        billsSeasonSchedule.push({
+          week: w,
+          isBye: false,
+          date: ev.date,
+          dayOfWeek: evDayOfWeek,
+          dateFormatted: `${evMonth} ${evDay}`,
+          timeFormatted: evTime,
+          opponent: evOpp?.team?.displayName || 'Opponent',
+          oppShortName: evOpp?.team?.shortDisplayName || evOpp?.team?.name || 'Opponent',
+          oppAbbrev: evOpp?.team?.abbreviation || '',
+          isHome: evIsHome,
+          statusState: evState,
+          statusDetail: evComp.status?.type?.shortDetail || 'Scheduled',
+          bufScore: evBufScore,
+          oppScore: evOppScore,
+          result: evResult,
+          broadcast: evBroadcast,
+          primeTime: evPrimeTime
+        });
+      }
+      billsSchedule.seasonSchedule = billsSeasonSchedule;
+
       const nextIdx = events.findIndex(e => e.competitions?.[0]?.status?.type?.state === 'pre' || e.competitions?.[0]?.status?.type?.state === 'in');
       const nextGame = nextIdx !== -1 ? events[nextIdx] : null;
       if (nextGame) {
@@ -2426,13 +2503,87 @@ async function fetchNextGameSchedule() {
   // 2. Sabres (Official NHL API)
   try {
     const [schedRes, standingsRes] = await Promise.all([
-      fetch('https://api-web.nhle.com/v1/club-schedule/BUF/week/now'),
+      fetch('https://api-web.nhle.com/v1/club-schedule-season/BUF/now'),
       fetch('https://api-web.nhle.com/v1/standings/now')
     ]);
 
     if (schedRes.ok) {
       const data = await schedRes.json();
       const games = data.games || [];
+
+      // Build Full 82-Game Sabres Season Schedule
+      const regGames = games.filter(g => g.gameType === 2);
+      const sabresSeasonSchedule = regGames.map((g, idx) => {
+        const gIsHome = g.homeTeam?.abbrev === 'BUF';
+        const gBuf = gIsHome ? g.homeTeam : g.awayTeam;
+        const gOpp = gIsHome ? g.awayTeam : g.homeTeam;
+        const gIsPost = g.gameState === 'FINAL' || g.gameState === 'OFF';
+        const gIsLive = g.gameState === 'LIVE' || g.gameState === 'CRIT';
+        const gState = gIsLive ? 'in' : (gIsPost ? 'post' : 'pre');
+
+        const gBufScore = gBuf?.score !== undefined ? Number(gBuf.score) : null;
+        const gOppScore = gOpp?.score !== undefined ? Number(gOpp.score) : null;
+        const gOutcome = g.gameOutcome?.lastPeriodType || 'REG';
+
+        let gResult = null;
+        if (gIsPost && gBufScore !== null && gOppScore !== null) {
+          if (gBufScore > gOppScore) gResult = 'W';
+          else if (gOutcome === 'OT' || gOutcome === 'SO') gResult = 'OTL';
+          else gResult = 'L';
+        }
+
+        const gDt = new Date(g.startTimeUTC);
+        const gDayOfWeek = gDt.toLocaleDateString('en-US', { timeZone: 'America/New_York', weekday: 'short' });
+        const gMonth = gDt.toLocaleDateString('en-US', { timeZone: 'America/New_York', month: 'short' });
+        const gMonthUpper = gMonth.toUpperCase();
+        const gDay = gDt.toLocaleDateString('en-US', { timeZone: 'America/New_York', day: 'numeric' });
+        const gTime = gDt.toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour: 'numeric', minute: '2-digit', hour12: true }) + ' ET';
+        const gMonthKey = g.gameDate?.slice(0, 7) || '2026-10';
+
+        let gBroadcast = 'MSG-B';
+        if (Array.isArray(g.tvBroadcasts) && g.tvBroadcasts.length > 0) {
+          const msg = g.tvBroadcasts.find(b => b.network && (b.network.includes('MSG-B') || b.network === 'MSG'));
+          if (msg) {
+            gBroadcast = msg.network;
+          } else {
+            const nat = g.tvBroadcasts.find(b => b.network && /^(ESPN|ESPN\+|ABC|TNT|MAX|Prime)/i.test(b.network));
+            if (nat) {
+              gBroadcast = nat.network;
+            } else {
+              const hn = g.tvBroadcasts.find(b => b.market === 'H' || b.market === 'N') || g.tvBroadcasts[0];
+              gBroadcast = hn.network || 'MSG-B';
+            }
+          }
+        }
+
+        const oppFullName = (gOpp.placeName?.default ? gOpp.placeName.default + ' ' : '') + (gOpp.commonName?.default || gOpp.abbrev);
+        const oppShort = gOpp.commonName?.default || gOpp.placeName?.default || gOpp.abbrev;
+
+        return {
+          gameNumber: idx + 1,
+          id: g.id,
+          date: g.gameDate,
+          isoTime: g.startTimeUTC,
+          monthKey: gMonthKey,
+          monthLabel: gMonthUpper,
+          dayOfWeek: gDayOfWeek,
+          dateFormatted: `${gMonth} ${gDay}`,
+          timeFormatted: gTime,
+          opponent: oppFullName,
+          oppShortName: oppShort,
+          oppAbbrev: gOpp.abbrev || '',
+          isHome: gIsHome,
+          statusState: gState,
+          statusDetail: gIsPost ? (gOutcome === 'OT' ? 'Final/OT' : (gOutcome === 'SO' ? 'Final/SO' : 'Final')) : (gIsLive ? 'Live' : `${gMonth} ${gDay}`),
+          bufScore: gBufScore,
+          oppScore: gOppScore,
+          result: gResult,
+          outcome: gOutcome,
+          broadcast: gBroadcast
+        };
+      });
+      sabresSchedule.seasonSchedule = sabresSeasonSchedule;
+
       const nextIdx = games.findIndex(g => g.gameState === 'LIVE' || g.gameState === 'CRIT' || (g.gameState !== 'FINAL' && g.gameState !== 'OFF' && (new Date(g.startTimeUTC) > new Date(Date.now() - 4 * 3600 * 1000))));
       const nextGame = nextIdx !== -1 ? games[nextIdx] : null;
       if (nextGame) {
@@ -2703,7 +2854,14 @@ async function scrapePlayoffStatus() {
       winChance: billsSchedule.winChance,
       matchupRecords: billsSchedule.matchupRecords,
       broadcast: billsSchedule.broadcast,
+      announcers: billsSchedule.announcers,
       venue: billsSchedule.venue,
+      roof: billsSchedule.roof,
+      surface: billsSchedule.surface,
+      weather: billsSchedule.weather,
+      window: billsSchedule.window,
+      windowLabel: billsSchedule.windowLabel,
+      windowBadge: billsSchedule.windowBadge,
       statusState: billsSchedule.statusState || 'pre',
       statusDetail: billsSchedule.statusDetail || billsSchedule.gameTime,
       bufScore: billsSchedule.bufScore || '',
@@ -2741,6 +2899,7 @@ async function scrapePlayoffStatus() {
       { team: 'Denver Broncos', pct: 7 },
       { team: 'Cleveland Browns', pct: 7 }
     ],
+    seasonSchedule: billsSchedule.seasonSchedule || [],
     outOfTownGames: outOfTownGames
   };
 
@@ -2762,6 +2921,7 @@ async function scrapePlayoffStatus() {
       winChance: sabresSchedule.winChance || 52,
       matchupRecords: sabresSchedule.matchupRecords,
       broadcast: sabresSchedule.broadcast,
+      announcers: sabresSchedule.announcers,
       venue: sabresSchedule.venue || 'KeyBank Center, Buffalo, NY',
       statusState: sabresSchedule.statusState || 'pre',
       statusDetail: sabresSchedule.statusDetail || sabresSchedule.gameTime,
@@ -2816,6 +2976,7 @@ async function scrapePlayoffStatus() {
       { team: 'Tampa Bay Lightning', pct: 18 },
       { team: 'Toronto Maple Leafs', pct: 14 }
     ],
+    seasonSchedule: sabresSchedule.seasonSchedule || [],
     outOfTownGames: nhlOutOfTownGames
   };
 
@@ -3103,7 +3264,7 @@ function buildTrimmedFallbackForFile(fileName, fullPayload) {
   if (fileName === 'index.html') {
     const trimSport = (s) => {
       if (!s) return s;
-      const { outOfTownGames, ...rest } = s;
+      const { outOfTownGames, seasonSchedule, ...rest } = s;
       const nextGame = rest.nextGame ? { ...rest.nextGame } : {};
       delete nextGame.efficiency;
       delete nextGame.injuries;

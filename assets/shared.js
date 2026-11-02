@@ -450,7 +450,7 @@
     }
 
     // WAI-ARIA Accessible Tab Switching & URL Hash Deep-Linking
-    const VALID_TAB_IDS = ['intel', 'rooting', 'radar'];
+    const VALID_TAB_IDS = ['intel', 'rooting', 'radar', 'schedule'];
 
     function switchTab(tabId, focusTab = false) {
       if (!VALID_TAB_IDS.includes(tabId)) return;
@@ -645,4 +645,70 @@
           </div>
         `;
       }).join('');
+    }
+
+    // Verify whether a live scoreboard feed event actually corresponds to the target scheduled game
+    function isSameTeamGame(event, targetGame, homeTeamAbbr = 'BUF') {
+      if (!event || !targetGame) return false;
+      const comp = event.competitions?.[0];
+      if (!comp) return false;
+
+      const buf = comp.competitors?.find(c => {
+        const abbrev = (c.team?.abbreviation || '').toUpperCase();
+        const id = String(c.team?.id || '');
+        const name = (c.team?.displayName || '').toLowerCase();
+        return abbrev === homeTeamAbbr.toUpperCase() || id === '2' || name.includes('buffalo');
+      });
+      const opp = comp.competitors?.find(c => c !== buf);
+      if (!buf || !opp) return false;
+
+      // 1. Date proximity check: if both event and targetGame provide date information, verify they are within 48 hours
+      const evDateStr = event.date || comp.date;
+      const targetDateStr = targetGame.isoTime;
+      if (evDateStr && targetDateStr) {
+        const evTime = new Date(evDateStr).getTime();
+        const targetTime = new Date(targetDateStr).getTime();
+        if (!isNaN(evTime) && !isNaN(targetTime)) {
+          const diffHours = Math.abs(evTime - targetTime) / (1000 * 60 * 60);
+          if (diffHours > 48) {
+            return false;
+          }
+        }
+      }
+
+      // 2. Opponent check
+      const targetOpp = (targetGame.oppShortName || targetGame.opponent || '').toLowerCase().replace(/^(vs\.?|@|at)\s*/i, '').trim();
+      const oppId = String(targetGame.oppId || '');
+      const evOppId = String(opp.team?.id || opp.id || '');
+
+      if (oppId && evOppId && oppId === evOppId) {
+        return true;
+      }
+
+      const evOppDisplay = (opp.team?.displayName || '').toLowerCase().trim();
+      const evOppShort = (opp.team?.shortDisplayName || '').toLowerCase().trim();
+      const evOppName = (opp.team?.name || '').toLowerCase().trim();
+      const evOppAbbr = (opp.team?.abbreviation || '').toLowerCase().trim();
+
+      if (!targetOpp) return false;
+
+      const matches = evOppDisplay.includes(targetOpp) ||
+        targetOpp.includes(evOppDisplay) ||
+        evOppShort.includes(targetOpp) ||
+        targetOpp.includes(evOppShort) ||
+        evOppName.includes(targetOpp) ||
+        targetOpp.includes(evOppName) ||
+        (evOppAbbr && (evOppAbbr === targetOpp || targetOpp.includes(evOppAbbr)));
+
+      return Boolean(matches);
+    }
+
+    if (typeof module !== 'undefined' && module.exports) {
+      module.exports = {
+        isSameTeamGame,
+        resolveGameIso,
+        compareEfficiencyRow,
+        renderEfficiencyRows,
+        renderSeedDistribution
+      };
     }
