@@ -485,7 +485,7 @@ const SABRES_INJ: InjuryIntelProps = {
 
 const css = `
 @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;800&family=Barlow:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap');
-.ob { font-family: 'Barlow', system-ui, sans-serif; background: ${C.midnight}; color: ${C.white}; min-height: 100vh; font-size: 15px; line-height: 1.45; }
+.ob { font-family: 'Barlow', system-ui, sans-serif; background: ${C.midnight}; color: ${C.white}; min-height: 100vh; font-size: 15px; line-height: 1.45; overflow-x: hidden; }
 .ob * { box-sizing: border-box; }
 .ob .disp { font-family: 'Barlow Condensed', 'Arial Narrow', sans-serif; font-weight: 800; letter-spacing: 0.01em; }
 .ob .num { font-family: 'JetBrains Mono', ui-monospace, monospace; font-variant-numeric: tabular-nums; }
@@ -495,16 +495,42 @@ const css = `
 .ob th { text-align: right; font-weight: 500; color: ${C.dim}; font-size: 12px; padding: 6px 10px; border-bottom: 1px solid ${C.hair}; }
 .ob td { text-align: right; padding: 8px 10px; border-bottom: 1px solid ${C.soft}; }
 .ob th.l, .ob td.l { text-align: left; }
-.ob .wrap { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
-.ob .grid2 { display: grid; grid-template-columns: 1fr 1fr; }
-.ob .grid2 > * + * { border-left: 1px solid ${C.hair}; }
+.ob .wrap { max-width: 1280px; margin: 0 auto; padding: 0 24px; width: 100%; }
+.ob .grid { display: grid; }
+.ob .grid-cols-1 { grid-template-columns: minmax(0, 1fr); }
+.ob .gap-6 { gap: 1.5rem; }
+.ob .grid2 { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.5rem; }
 .ob .sect { border-top: 1px solid ${C.hair}; padding: 24px 0; }
+.ob .w-full { width: 100%; }
+.ob .table-fixed { table-layout: fixed; }
+.ob .hidden { display: none; }
+.ob .md\\:hidden { display: inline; }
+.ob .whitespace-nowrap { white-space: nowrap; }
+.ob .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ob th.px-1\\.5, .ob td.px-1\\.5, .ob .px-1\\.5 { padding-left: 0.375rem; padding-right: 0.375rem; }
+.ob th.py-1, .ob td.py-1, .ob .py-1 { padding-top: 0.25rem; padding-bottom: 0.25rem; }
+.ob th.text-xs, .ob td.text-xs, .ob .text-xs { font-size: 0.75rem; line-height: 1rem; }
+.ob .rooting-row { display: flex; flex-direction: column; gap: 6px; width: 100%; text-align: left; padding: 10px 0; min-width: 0; }
+.ob .rooting-row-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%; min-width: 0; flex-wrap: wrap; }
+.ob .rooting-row-bottom { display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%; min-width: 0; flex-wrap: wrap; }
+@media (min-width: 640px) {
+  .ob th.sm\\:px-3, .ob td.sm\\:px-3, .ob .sm\\:px-3 { padding-left: 0.75rem; padding-right: 0.75rem; }
+  .ob th.sm\\:py-2, .ob td.sm\\:py-2, .ob .sm\\:py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+}
+@media (min-width: 768px) {
+  .ob .md\\:hidden { display: none !important; }
+  .ob th.md\\:table-cell, .ob td.md\\:table-cell, .ob .md\\:table-cell { display: table-cell; }
+  .ob .md\\:inline { display: inline; }
+}
+@media (min-width: 1024px) {
+  .ob .lg\\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ob .grid2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
 @keyframes obpulse { 50% { opacity: .2; } }
 .ob .live { animation: obpulse 1.4s steps(2) infinite; }
 @media (prefers-reduced-motion: reduce) { .ob .live { animation: none; } }
-@media (max-width: 860px) {
-  .ob .grid2 { grid-template-columns: 1fr; }
-  .ob .grid2 > * + * { border-left: 0; border-top: 1px solid ${C.hair}; }
+@media (max-width: 1023px) {
+  .ob .grid2 { grid-template-columns: minmax(0, 1fr); }
   .ob .wrap { padding: 0 14px; }
 }
 `;
@@ -1158,15 +1184,15 @@ function StandingsTable(p: StandingsTableProps) {
         <h3 className="disp" style={{ margin: 0, fontSize: 22 }}>{p.title}</h3>
         <span style={{ color: C.dim, fontSize: 12 }}>{p.subtitle}</span>
       </div>
-      <table className="num">
+      <table className="num w-full table-fixed">
         <thead>
           <tr>
-            <th className="l" style={{ width: 28 }}>Rank</th>
-            <th className="l" style={{ fontFamily: "Barlow, sans-serif" }}>Team</th>
-            <th>{p.recordLabel}</th>
-            {p.showPoints && <th>Pts</th>}
-            <th>{p.diffLabel}</th>
-            <th>Streak</th>
+            <th className="l px-1.5 py-1 text-xs sm:px-3 sm:py-2" style={{ width: 28 }}>Rank</th>
+            <th className="l px-1.5 py-1 text-xs sm:px-3 sm:py-2" style={{ fontFamily: "Barlow, sans-serif" }}>Team</th>
+            <th className="px-1.5 py-1 text-xs sm:px-3 sm:py-2">{p.recordLabel}</th>
+            {p.showPoints && <th className="px-1.5 py-1 text-xs sm:px-3 sm:py-2">Pts</th>}
+            <th className="px-1.5 py-1 text-xs sm:px-3 sm:py-2">{p.diffLabel}</th>
+            <th className="px-1.5 py-1 text-xs sm:px-3 sm:py-2">Streak</th>
           </tr>
         </thead>
         <tbody>
@@ -1175,12 +1201,12 @@ function StandingsTable(p: StandingsTableProps) {
             const showCutoff = p.showPoints && r.rank === 3 && nextRow !== undefined;
             const teamRow = (
               <tr key={r.team} style={r.buffalo ? { background: C.royal } : undefined}>
-                <td className="l">{r.rank}</td>
-                <td className="l" style={{ fontFamily: "Barlow, sans-serif", fontWeight: r.buffalo ? 600 : 400, whiteSpace: "nowrap" }}>{r.team}</td>
-                <td className="whitespace-nowrap" style={{ whiteSpace: "nowrap" }}>{r.record}</td>
-                {p.showPoints && <td style={{ fontWeight: 600 }}>{r.pts}</td>}
-                <td style={{ color: r.diff < 0 ? "#FF8A9C" : C.white }}>{signed(r.diff)}</td>
-                <td style={{ color: r.streak.startsWith("W") ? C.gold : C.dim }}>{r.streak}</td>
+                <td className="l px-1.5 py-1 text-xs sm:px-3 sm:py-2">{r.rank}</td>
+                <td className="l px-1.5 py-1 text-xs sm:px-3 sm:py-2 truncate" style={{ fontFamily: "Barlow, sans-serif", fontWeight: r.buffalo ? 600 : 400 }}>{r.team}</td>
+                <td className="px-1.5 py-1 text-xs sm:px-3 sm:py-2 whitespace-nowrap">{r.record}</td>
+                {p.showPoints && <td className="px-1.5 py-1 text-xs sm:px-3 sm:py-2" style={{ fontWeight: 600 }}>{r.pts}</td>}
+                <td className="px-1.5 py-1 text-xs sm:px-3 sm:py-2" style={{ color: r.diff < 0 ? "#FF8A9C" : C.white }}>{signed(r.diff)}</td>
+                <td className="px-1.5 py-1 text-xs sm:px-3 sm:py-2" style={{ color: r.streak.startsWith("W") ? C.gold : C.dim }}>{r.streak}</td>
               </tr>
             );
             if (!showCutoff) return [teamRow];
@@ -1189,7 +1215,7 @@ function StandingsTable(p: StandingsTableProps) {
               <tr key={`${r.team}-wildcard-cutoff`} style={{ background: C.navy }}>
                 <td
                   colSpan={colSpan}
-                  className="l"
+                  className="l px-1.5 py-1 text-xs sm:px-3 sm:py-2"
                   style={{
                     fontFamily: "Barlow, sans-serif",
                     fontSize: 11,
@@ -1232,20 +1258,26 @@ function RootingStrip({ games }: { games: (OutOfTownGame & { league: "NFL" | "NH
                 <button
                   onClick={() => setOpen(isOpen ? null : id)}
                   aria-expanded={isOpen}
-                  style={{ display: "grid", gridTemplateColumns: "44px minmax(0,1fr) 120px 150px 190px", gap: 12, width: "100%", textAlign: "left", padding: "9px 0", alignItems: "center" }}
+                  className="rooting-row"
                 >
-                  <span className="num" style={{ color: g.league === "NHL" ? C.gold : C.dim, fontSize: 12 }}>{g.league}</span>
-                  <span className="num" style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                    {g.awayName} <b>{pre ? "" : g.awayScore}</b>, {g.homeName} <b>{pre ? "" : g.homeScore}</b>
-                  </span>
-                  <span className="num" style={{ fontSize: 13, color: live ? C.white : C.dim }}>
-                    {live && <LiveDot />}{g.statusDetail}
-                  </span>
-                  <span style={{ fontSize: 12, color: IMPACT_COLOR[g.impactClass], fontWeight: 600 }}>{g.verdict}</span>
-                  <span style={{ fontSize: 13, textAlign: "right" }}>{g.target}</span>
+                  <div className="rooting-row-top">
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0 }}>
+                      <span className="num" style={{ color: g.league === "NHL" ? C.gold : C.dim, fontSize: 12, fontWeight: 600 }}>{g.league}</span>
+                      <span className="num truncate" style={{ fontWeight: 500 }}>
+                        {g.awayName} <b>{pre ? "" : g.awayScore}</b>, {g.homeName} <b>{pre ? "" : g.homeScore}</b>
+                      </span>
+                    </div>
+                    <span className="num whitespace-nowrap" style={{ fontSize: 12, color: live ? C.white : C.dim }}>
+                      {live && <LiveDot />}{g.statusDetail}
+                    </span>
+                  </div>
+                  <div className="rooting-row-bottom">
+                    <span style={{ fontSize: 12, color: IMPACT_COLOR[g.impactClass], fontWeight: 600 }}>{g.verdict}</span>
+                    <span className="truncate" style={{ fontSize: 12, color: C.dim, textAlign: "right" }}>{g.target}</span>
+                  </div>
                 </button>
                 {isOpen && (
-                  <div style={{ margin: "0 0 12px 56px", color: C.dim, fontSize: 14, maxWidth: "90ch" }}>
+                  <div style={{ margin: "0 0 12px 14px", color: C.dim, fontSize: 13, maxWidth: "90ch" }}>
                     <p style={{ margin: "0 0 6px", color: C.white }}>{g.why}</p>
                     <p className="num" style={{ margin: 0, fontSize: 12 }}>
                       {g.awayName} {g.awayRecord}, {g.awayWinChance}% win. {g.homeName} {g.homeRecord}, {g.homeWinChance}% win.
@@ -1412,16 +1444,16 @@ function ScheduleStrip({ title, rows }: { title: string; rows: ScheduleEntry[] }
         <h3 className="disp" style={{ margin: 0, fontSize: 22 }}>{title}</h3>
         <span style={{ color: C.dim, fontSize: 12 }}>Recent Results &amp; Upcoming</span>
       </div>
-      <div style={{ overflowX: "auto" }}>
-        <table className="num" style={{ minWidth: 520 }}>
+      <div>
+        <table className="num w-full table-fixed">
           <thead>
             <tr>
-              <th className="l">{rows[0]?.week !== undefined ? "Week" : "Game"}</th>
-              <th className="l">Date</th>
-              <th className="l" style={{ fontFamily: "Barlow, sans-serif" }}>Opponent</th>
-              <th>Score</th>
-              <th>Result</th>
-              <th>Network</th>
+              <th className="l px-1.5 py-1 text-xs sm:px-3 sm:py-2" style={{ width: "12%" }}>{rows[0]?.week !== undefined ? "Week" : "Game"}</th>
+              <th className="l px-1.5 py-1 text-xs sm:px-3 sm:py-2" style={{ width: "24%" }}>Date</th>
+              <th className="l px-1.5 py-1 text-xs sm:px-3 sm:py-2" style={{ fontFamily: "Barlow, sans-serif", width: "34%" }}>Opponent</th>
+              <th className="px-1.5 py-1 text-xs sm:px-3 sm:py-2" style={{ width: "16%" }}>Score</th>
+              <th className="px-1.5 py-1 text-xs sm:px-3 sm:py-2" style={{ width: "14%" }}>Result</th>
+              <th className="px-1.5 py-1 text-xs sm:px-3 sm:py-2 hidden md:table-cell" style={{ width: "18%" }}>Network</th>
             </tr>
           </thead>
           <tbody>
@@ -1430,29 +1462,33 @@ function ScheduleStrip({ title, rows }: { title: string; rows: ScheduleEntry[] }
               if (r.isBye) {
                 return (
                   <tr key={key}>
-                    <td className="l">{r.week}</td>
-                    <td className="l" colSpan={5} style={{ color: C.dim, fontFamily: "Barlow, sans-serif" }}>{r.statusDetail}</td>
+                    <td className="l px-1.5 py-1 text-xs sm:px-3 sm:py-2">{r.week}</td>
+                    <td className="l px-1.5 py-1 text-xs sm:px-3 sm:py-2" colSpan={5} style={{ color: C.dim, fontFamily: "Barlow, sans-serif" }}>{r.statusDetail}</td>
                   </tr>
                 );
               }
               const done = r.statusState === "post";
-              const dateLabel = [r.dayOfWeek && r.dateFormatted ? `${r.dayOfWeek}, ${r.dateFormatted}` : (r.dateFormatted ?? r.date), r.timeFormatted]
+              const fullDate = [r.dayOfWeek && r.dateFormatted ? `${r.dayOfWeek}, ${r.dateFormatted}` : (r.dateFormatted ?? r.date), r.timeFormatted]
                 .filter(Boolean)
                 .join(" • ");
+              const shortDate = r.dateFormatted ?? r.date ?? "";
               return (
                 <tr key={key}>
-                  <td className="l">{r.week ?? r.gameNumber}</td>
-                  <td className="l whitespace-nowrap" style={{ whiteSpace: "nowrap" }}>{dateLabel}</td>
-                  <td className="l whitespace-nowrap" style={{ fontFamily: "Barlow, sans-serif", whiteSpace: "nowrap" }}>
+                  <td className="l px-1.5 py-1 text-xs sm:px-3 sm:py-2">{r.week ?? r.gameNumber}</td>
+                  <td className="l px-1.5 py-1 text-xs sm:px-3 sm:py-2 truncate">
+                    <span className="md:hidden">{shortDate}</span>
+                    <span className="hidden md:inline">{fullDate}</span>
+                  </td>
+                  <td className="l px-1.5 py-1 text-xs sm:px-3 sm:py-2 truncate" style={{ fontFamily: "Barlow, sans-serif" }}>
                     {r.isHome ? "vs." : "at"} {r.opponent} <span className="num" style={{ color: C.dim }}>{r.oppAbbrev}</span>
                   </td>
-                  <td className="whitespace-nowrap" style={{ whiteSpace: "nowrap", color: done ? C.white : C.dim }}>
+                  <td className="px-1.5 py-1 text-xs sm:px-3 sm:py-2 whitespace-nowrap" style={{ color: done ? C.white : C.dim }}>
                     {done ? `${r.bufScore}-${r.oppScore}${r.outcome && r.outcome !== "REG" ? ` ${r.outcome}` : ""}` : "—"}
                   </td>
-                  <td className="whitespace-nowrap" style={{ whiteSpace: "nowrap", color: resColor(r.result), fontWeight: 600 }}>
+                  <td className="px-1.5 py-1 text-xs sm:px-3 sm:py-2 whitespace-nowrap" style={{ color: resColor(r.result), fontWeight: 600 }}>
                     {done ? (r.result ?? "—") : "—"}
                   </td>
-                  <td className="whitespace-nowrap" style={{ whiteSpace: "nowrap" }}>
+                  <td className="px-1.5 py-1 text-xs sm:px-3 sm:py-2 whitespace-nowrap hidden md:table-cell">
                     {r.primeTime ? `${r.broadcast} (${r.primeTime})` : r.broadcast}
                   </td>
                 </tr>
@@ -1489,9 +1525,9 @@ export default function Prompt_Test_Mockup() {
       <section aria-label="Next game intel" className="sect">
         <div className="wrap">
           <SectionHead title="Next game intel" />
-          <div className={two ? "grid2" : undefined} style={splitStyle}>
-            {showBills && <div style={{ paddingRight: two ? 20 : 0 }}><MatchupIntel title="Bills at Vikings" teamLabel="Bills" g={BILLS_NEXT} /></div>}
-            {showSabres && <div style={{ paddingLeft: two ? 20 : 0 }}><MatchupIntel title="Sabres vs. Senators" teamLabel="Sabres" g={SABRES_NEXT} /></div>}
+          <div className={two ? "grid grid-cols-1 lg:grid-cols-2 gap-6" : undefined} style={splitStyle}>
+            {showBills && <div><MatchupIntel title="Bills at Vikings" teamLabel="Bills" g={BILLS_NEXT} /></div>}
+            {showSabres && <div><MatchupIntel title="Sabres vs. Senators" teamLabel="Sabres" g={SABRES_NEXT} /></div>}
           </div>
         </div>
       </section>
@@ -1499,9 +1535,9 @@ export default function Prompt_Test_Mockup() {
       <section aria-label="Playoff picture" className="sect">
         <div className="wrap">
           <SectionHead title="Playoff picture" />
-          <div className={two ? "grid2" : undefined} style={splitStyle}>
-            {showBills && <div style={{ paddingRight: two ? 20 : 0 }}><PlayoffPicture {...BILLS_PICTURE} /></div>}
-            {showSabres && <div style={{ paddingLeft: two ? 20 : 0 }}><PlayoffPicture {...SABRES_PICTURE} /></div>}
+          <div className={two ? "grid grid-cols-1 lg:grid-cols-2 gap-6" : undefined} style={splitStyle}>
+            {showBills && <div><PlayoffPicture {...BILLS_PICTURE} /></div>}
+            {showSabres && <div><PlayoffPicture {...SABRES_PICTURE} /></div>}
           </div>
         </div>
       </section>
@@ -1509,9 +1545,9 @@ export default function Prompt_Test_Mockup() {
       <section aria-label="Division standings" className="sect">
         <div className="wrap">
           <SectionHead title="Division standings" />
-          <div className={two ? "grid2" : undefined} style={splitStyle}>
-            {showBills && <div style={{ paddingRight: two ? 20 : 0 }}><StandingsTable {...AFC_EAST} /></div>}
-            {showSabres && <div style={{ paddingLeft: two ? 20 : 0 }}><StandingsTable {...NHL_ATL} /></div>}
+          <div className={two ? "grid grid-cols-1 lg:grid-cols-2 gap-6" : undefined} style={splitStyle}>
+            {showBills && <div><StandingsTable {...AFC_EAST} /></div>}
+            {showSabres && <div><StandingsTable {...NHL_ATL} /></div>}
           </div>
         </div>
       </section>
@@ -1519,9 +1555,9 @@ export default function Prompt_Test_Mockup() {
       <section aria-label="Season schedule" className="sect">
         <div className="wrap">
           <SectionHead title="Season schedule" meta="Recent Results & Upcoming" />
-          <div className={two ? "grid2" : undefined} style={splitStyle}>
-            {showBills && <div style={{ paddingRight: two ? 20 : 0 }}><ScheduleStrip title="Bills" rows={BILLS_SCHEDULE} /></div>}
-            {showSabres && <div style={{ paddingLeft: two ? 20 : 0 }}><ScheduleStrip title="Sabres" rows={SABRES_SCHEDULE} /></div>}
+          <div className={two ? "grid grid-cols-1 lg:grid-cols-2 gap-6" : undefined} style={splitStyle}>
+            {showBills && <div><ScheduleStrip title="Bills" rows={BILLS_SCHEDULE} /></div>}
+            {showSabres && <div><ScheduleStrip title="Sabres" rows={SABRES_SCHEDULE} /></div>}
           </div>
         </div>
       </section>
@@ -1531,9 +1567,9 @@ export default function Prompt_Test_Mockup() {
       <section aria-label="Injury and practice wire" className="sect">
         <div className="wrap">
           <SectionHead title="Injury and practice wire" />
-          <div className={two ? "grid2" : undefined} style={splitStyle}>
-            {showBills && <div style={{ paddingRight: two ? 20 : 0 }}><InjuryIntel {...BILLS_INJ} /></div>}
-            {showSabres && <div style={{ paddingLeft: two ? 20 : 0 }}><InjuryIntel {...SABRES_INJ} /></div>}
+          <div className={two ? "grid grid-cols-1 lg:grid-cols-2 gap-6" : undefined} style={splitStyle}>
+            {showBills && <div><InjuryIntel {...BILLS_INJ} /></div>}
+            {showSabres && <div><InjuryIntel {...SABRES_INJ} /></div>}
           </div>
         </div>
       </section>
