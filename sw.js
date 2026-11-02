@@ -71,7 +71,27 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // 4. App shell & static assets: Stale-While-Revalidate (normalized by pathname)
+  // 4. HTML Navigation requests: Network-first strategy with cache fallback
+  if (event.request.mode === 'navigate' || url.pathname.endsWith('.html') || url.pathname === '/' || url.pathname.endsWith('/')) {
+    const cleanUrl = url.origin + url.pathname;
+    event.respondWith(
+      fetch(event.request)
+        .then((networkResponse) => {
+          if (networkResponse && networkResponse.status === 200) {
+            const clone = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(cleanUrl, clone));
+          }
+          return networkResponse;
+        })
+        .catch(() => {
+          return caches.match(event.request, { ignoreSearch: true })
+            .then((cached) => cached || caches.match('./index.html'));
+        })
+    );
+    return;
+  }
+
+  // 5. App shell & static assets: Stale-While-Revalidate (normalized by pathname)
   const cleanUrl = url.origin + url.pathname;
   event.respondWith(
     caches.match(event.request, { ignoreSearch: true }).then((cachedResponse) => {
