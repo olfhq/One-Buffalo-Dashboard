@@ -267,7 +267,11 @@ const NHL_ATL: StandingsTableProps = {
     { team: "Boston Bruins", record: "10-4-1", pts: 21, diff: 14, streak: "W1", rank: 1 },
     { team: "Montreal Canadiens", record: "9-3-2", pts: 20, diff: 9, streak: "W5", rank: 2 },
     { team: "Ottawa Senators", record: "9-6-1", pts: 19, diff: -1, streak: "L1", rank: 3 },
+    { team: "Tampa Bay Lightning", record: "8-3-2", pts: 18, diff: 8, streak: "OTL1", rank: 4 },
+    { team: "Florida Panthers", record: "8-5-1", pts: 17, diff: 3, streak: "W1", rank: 5 },
+    { team: "Toronto Maple Leafs", record: "7-5-3", pts: 17, diff: 1, streak: "L1", rank: 6 },
     { team: "Buffalo Sabres", record: "7-4-3", pts: 17, diff: -5, streak: "W3", rank: 7, buffalo: true },
+    { team: "Detroit Red Wings", record: "6-6-2", pts: 14, diff: -6, streak: "L2", rank: 8 },
   ],
 };
 
@@ -422,19 +426,17 @@ const SABRES_NEXT: NextGameIntel = {
 };
 
 const BILLS_SCHEDULE: ScheduleEntry[] = [
-  { week: 1, isBye: false, date: "2026-09-13T17:00Z", dayOfWeek: "Sun", dateFormatted: "Sep 13", timeFormatted: "1:00 PM ET", opponent: "Houston Texans", oppShortName: "Texans", oppAbbrev: "HOU", isHome: false, statusState: "post", statusDetail: "Final", bufScore: 36, oppScore: 31, result: "W", broadcast: "CBS", primeTime: null },
-  { week: 4, isBye: false, date: "2026-10-04T17:00Z", dayOfWeek: "Sun", dateFormatted: "Oct 4", timeFormatted: "1:00 PM ET", opponent: "New England Patriots", oppShortName: "Patriots", oppAbbrev: "NE", isHome: true, statusState: "post", statusDetail: "Final", bufScore: 26, oppScore: 29, result: "L", broadcast: "CBS", primeTime: null },
   { week: 5, isBye: false, date: "2026-10-13T00:15Z", dayOfWeek: "Mon", dateFormatted: "Oct 12", timeFormatted: "8:15 PM ET", opponent: "Los Angeles Rams", oppShortName: "Rams", oppAbbrev: "LAR", isHome: false, statusState: "post", statusDetail: "Final/OT", bufScore: 37, oppScore: 34, result: "W", broadcast: "ESPN", primeTime: "MNF" },
+  { week: 6, isBye: false, date: "2026-10-18T17:00Z", dayOfWeek: "Sun", dateFormatted: "Oct 18", timeFormatted: "1:00 PM ET", opponent: "Miami Dolphins", oppShortName: "Dolphins", oppAbbrev: "MIA", isHome: true, statusState: "post", statusDetail: "Final", bufScore: 31, oppScore: 17, result: "W", broadcast: "CBS", primeTime: null },
   { week: 7, isBye: true, opponent: "BYE WEEK", oppShortName: "BYE", oppAbbrev: "BYE", statusState: "bye", statusDetail: "Bye Week" },
   { week: 8, isBye: false, date: "2026-11-01T18:00Z", dayOfWeek: "Sun", dateFormatted: "Nov 1", timeFormatted: "1:00 PM ET", opponent: "Baltimore Ravens", oppShortName: "Ravens", oppAbbrev: "BAL", isHome: true, statusState: "post", statusDetail: "Final", bufScore: 36, oppScore: 10, result: "W", broadcast: "CBS", primeTime: null },
   { week: 9, isBye: false, date: "2026-11-10T01:15Z", dayOfWeek: "Mon", dateFormatted: "Nov 9", timeFormatted: "8:15 PM ET", opponent: "Minnesota Vikings", oppShortName: "Vikings", oppAbbrev: "MIN", isHome: false, statusState: "pre", statusDetail: "11/9 - 8:15 PM EST", bufScore: null, oppScore: null, result: null, broadcast: "ESPN", primeTime: "MNF" },
   { week: 10, isBye: false, date: "2026-11-15T18:00Z", dayOfWeek: "Sun", dateFormatted: "Nov 15", timeFormatted: "1:00 PM ET", opponent: "New York Jets", oppShortName: "Jets", oppAbbrev: "NYJ", isHome: false, statusState: "pre", statusDetail: "11/15 - 1:00 PM EST", bufScore: null, oppScore: null, result: null, broadcast: "CBS", primeTime: null },
-  { week: 12, isBye: false, date: "2026-11-27T01:20Z", dayOfWeek: "Thu", dateFormatted: "Nov 26", timeFormatted: "8:20 PM ET", opponent: "Kansas City Chiefs", oppShortName: "Chiefs", oppAbbrev: "KC", isHome: true, statusState: "pre", statusDetail: "11/26 - 8:20 PM EST", bufScore: null, oppScore: null, result: null, broadcast: "NBC", primeTime: "TNF" },
+  { week: 11, isBye: false, date: "2026-11-22T18:00Z", dayOfWeek: "Sun", dateFormatted: "Nov 22", timeFormatted: "1:00 PM ET", opponent: "Indianapolis Colts", oppShortName: "Colts", oppAbbrev: "IND", isHome: true, statusState: "pre", statusDetail: "11/22 - 1:00 PM EST", bufScore: null, oppScore: null, result: null, broadcast: "CBS", primeTime: null },
 ];
 
 const SABRES_SCHEDULE: ScheduleEntry[] = [
-  { gameNumber: 1, id: 2026020011, date: "2026-10-01", isoTime: "2026-10-01T23:00:00Z", monthKey: "2026-10", monthLabel: "OCT", dayOfWeek: "Thu", dateFormatted: "Oct 1", timeFormatted: "7:00 PM ET", opponent: "Columbus Blue Jackets", oppShortName: "Blue Jackets", oppAbbrev: "CBJ", isHome: false, statusState: "post", statusDetail: "Final", bufScore: 3, oppScore: 6, result: "L", outcome: "REG", broadcast: "MSG-B" },
-  { gameNumber: 7, id: 2026020092, date: "2026-10-13", isoTime: "2026-10-13T22:30:00Z", monthKey: "2026-10", monthLabel: "OCT", dayOfWeek: "Tue", dateFormatted: "Oct 13", timeFormatted: "6:30 PM ET", opponent: "Montréal Canadiens", oppShortName: "Canadiens", oppAbbrev: "MTL", isHome: false, statusState: "post", statusDetail: "Final/SO", bufScore: 3, oppScore: 4, result: "OTL", outcome: "SO", broadcast: "MSG-B" },
+  { gameNumber: 12, id: 2026020195, date: "2026-10-27", isoTime: "2026-10-27T23:00:00Z", monthKey: "2026-10", monthLabel: "OCT", dayOfWeek: "Tue", dateFormatted: "Oct 27", timeFormatted: "7:00 PM ET", opponent: "Detroit Red Wings", oppShortName: "Red Wings", oppAbbrev: "DET", isHome: true, statusState: "post", statusDetail: "Final", bufScore: 5, oppScore: 3, result: "W", outcome: "REG", broadcast: "MSG-B" },
   { gameNumber: 13, id: 2026020211, date: "2026-10-29", isoTime: "2026-10-30T02:00:00Z", monthKey: "2026-10", monthLabel: "OCT", dayOfWeek: "Thu", dateFormatted: "Oct 29", timeFormatted: "10:00 PM ET", opponent: "Anaheim Ducks", oppShortName: "Ducks", oppAbbrev: "ANA", isHome: false, statusState: "post", statusDetail: "Final", bufScore: 7, oppScore: 6, result: "W", outcome: "REG", broadcast: "ESPN+" },
   { gameNumber: 14, id: 2026020221, date: "2026-10-31", isoTime: "2026-10-31T20:00:00Z", monthKey: "2026-10", monthLabel: "OCT", dayOfWeek: "Sat", dateFormatted: "Oct 31", timeFormatted: "4:00 PM ET", opponent: "Los Angeles Kings", oppShortName: "Kings", oppAbbrev: "LAK", isHome: false, statusState: "post", statusDetail: "Final", bufScore: 3, oppScore: 2, result: "W", outcome: "REG", broadcast: "MSG-B" },
   { gameNumber: 15, id: 2026020247, date: "2026-11-04", isoTime: "2026-11-05T00:30:00Z", monthKey: "2026-11", monthLabel: "NOV", dayOfWeek: "Wed", dateFormatted: "Nov 4", timeFormatted: "7:30 PM ET", opponent: "Ottawa Senators", oppShortName: "Senators", oppAbbrev: "OTT", isHome: true, statusState: "pre", statusDetail: "Nov 4", bufScore: null, oppScore: null, result: null, outcome: "REG", broadcast: "MSG-B" },
@@ -1149,6 +1151,7 @@ function UpcomingGame(p: UpcomingGameProps) {
 /* ───────────── Standings ───────────── */
 
 function StandingsTable(p: StandingsTableProps) {
+  const colSpan = p.showPoints ? 6 : 5;
   return (
     <div style={{ minWidth: 0 }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 4 }}>
@@ -1167,16 +1170,42 @@ function StandingsTable(p: StandingsTableProps) {
           </tr>
         </thead>
         <tbody>
-          {p.rows.map((r) => (
-            <tr key={r.team} style={r.buffalo ? { background: C.royal } : undefined}>
-              <td className="l">{r.rank}</td>
-              <td className="l" style={{ fontFamily: "Barlow, sans-serif", fontWeight: r.buffalo ? 600 : 400, whiteSpace: "nowrap" }}>{r.team}</td>
-              <td>{r.record}</td>
-              {p.showPoints && <td style={{ fontWeight: 600 }}>{r.pts}</td>}
-              <td style={{ color: r.diff < 0 ? "#FF8A9C" : C.white }}>{signed(r.diff)}</td>
-              <td style={{ color: r.streak.startsWith("W") ? C.gold : C.dim }}>{r.streak}</td>
-            </tr>
-          ))}
+          {p.rows.flatMap((r, idx) => {
+            const nextRow = p.rows[idx + 1];
+            const showCutoff = p.showPoints && r.rank === 3 && nextRow !== undefined;
+            const teamRow = (
+              <tr key={r.team} style={r.buffalo ? { background: C.royal } : undefined}>
+                <td className="l">{r.rank}</td>
+                <td className="l" style={{ fontFamily: "Barlow, sans-serif", fontWeight: r.buffalo ? 600 : 400, whiteSpace: "nowrap" }}>{r.team}</td>
+                <td className="whitespace-nowrap" style={{ whiteSpace: "nowrap" }}>{r.record}</td>
+                {p.showPoints && <td style={{ fontWeight: 600 }}>{r.pts}</td>}
+                <td style={{ color: r.diff < 0 ? "#FF8A9C" : C.white }}>{signed(r.diff)}</td>
+                <td style={{ color: r.streak.startsWith("W") ? C.gold : C.dim }}>{r.streak}</td>
+              </tr>
+            );
+            if (!showCutoff) return [teamRow];
+            return [
+              teamRow,
+              <tr key={`${r.team}-wildcard-cutoff`} style={{ background: C.navy }}>
+                <td
+                  colSpan={colSpan}
+                  className="l"
+                  style={{
+                    fontFamily: "Barlow, sans-serif",
+                    fontSize: 11,
+                    fontWeight: 600,
+                    color: C.gold,
+                    letterSpacing: "0.05em",
+                    textTransform: "uppercase",
+                    padding: "4px 10px",
+                    borderBottom: `1px dashed ${C.gold}`,
+                  }}
+                >
+                  Wild Card Cutoff — Top 3 Clinch Division Seeds
+                </td>
+              </tr>,
+            ];
+          })}
         </tbody>
       </table>
     </div>
@@ -1379,7 +1408,10 @@ function ScheduleStrip({ title, rows }: { title: string; rows: ScheduleEntry[] }
   const resColor = (r?: string | null) => (r === "W" ? C.gold : r === "L" || r === "OTL" ? "#FF8A9C" : C.dim);
   return (
     <div style={{ minWidth: 0 }}>
-      <h3 className="disp" style={{ margin: "0 0 4px", fontSize: 22 }}>{title}</h3>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 4, gap: 8, flexWrap: "wrap" }}>
+        <h3 className="disp" style={{ margin: 0, fontSize: 22 }}>{title}</h3>
+        <span style={{ color: C.dim, fontSize: 12 }}>Recent Results &amp; Upcoming</span>
+      </div>
       <div style={{ overflowX: "auto" }}>
         <table className="num" style={{ minWidth: 520 }}>
           <thead>
@@ -1404,16 +1436,25 @@ function ScheduleStrip({ title, rows }: { title: string; rows: ScheduleEntry[] }
                 );
               }
               const done = r.statusState === "post";
+              const dateLabel = [r.dayOfWeek && r.dateFormatted ? `${r.dayOfWeek}, ${r.dateFormatted}` : (r.dateFormatted ?? r.date), r.timeFormatted]
+                .filter(Boolean)
+                .join(" • ");
               return (
                 <tr key={key}>
                   <td className="l">{r.week ?? r.gameNumber}</td>
-                  <td className="l">{r.dayOfWeek} {r.dateFormatted}, {r.timeFormatted}</td>
-                  <td className="l" style={{ fontFamily: "Barlow, sans-serif", whiteSpace: "nowrap" }}>
+                  <td className="l whitespace-nowrap" style={{ whiteSpace: "nowrap" }}>{dateLabel}</td>
+                  <td className="l whitespace-nowrap" style={{ fontFamily: "Barlow, sans-serif", whiteSpace: "nowrap" }}>
                     {r.isHome ? "vs." : "at"} {r.opponent} <span className="num" style={{ color: C.dim }}>{r.oppAbbrev}</span>
                   </td>
-                  <td>{done ? `${r.bufScore}-${r.oppScore}${r.outcome && r.outcome !== "REG" ? ` ${r.outcome}` : ""}` : r.statusDetail}</td>
-                  <td style={{ color: resColor(r.result), fontWeight: 600 }}>{r.result ?? "–"}</td>
-                  <td>{r.primeTime ? `${r.broadcast} (${r.primeTime})` : r.broadcast}</td>
+                  <td className="whitespace-nowrap" style={{ whiteSpace: "nowrap", color: done ? C.white : C.dim }}>
+                    {done ? `${r.bufScore}-${r.oppScore}${r.outcome && r.outcome !== "REG" ? ` ${r.outcome}` : ""}` : "—"}
+                  </td>
+                  <td className="whitespace-nowrap" style={{ whiteSpace: "nowrap", color: resColor(r.result), fontWeight: 600 }}>
+                    {done ? (r.result ?? "—") : "—"}
+                  </td>
+                  <td className="whitespace-nowrap" style={{ whiteSpace: "nowrap" }}>
+                    {r.primeTime ? `${r.broadcast} (${r.primeTime})` : r.broadcast}
+                  </td>
                 </tr>
               );
             })}
@@ -1477,7 +1518,7 @@ export default function Prompt_Test_Mockup() {
 
       <section aria-label="Season schedule" className="sect">
         <div className="wrap">
-          <SectionHead title="Season schedule" />
+          <SectionHead title="Season schedule" meta="Recent Results & Upcoming" />
           <div className={two ? "grid2" : undefined} style={splitStyle}>
             {showBills && <div style={{ paddingRight: two ? 20 : 0 }}><ScheduleStrip title="Bills" rows={BILLS_SCHEDULE} /></div>}
             {showSabres && <div style={{ paddingLeft: two ? 20 : 0 }}><ScheduleStrip title="Sabres" rows={SABRES_SCHEDULE} /></div>}
