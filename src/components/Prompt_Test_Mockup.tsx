@@ -156,6 +156,7 @@ export interface NextGameIntel {
   leverage: number;
   restAdvantage: { teamDays: number; billsDays?: number; sabresDays?: number; oppDays: number; summary: string };
   specialTeams?: { team: string; opp: string; advantage: string }; // NHL only
+  goalies?: { team: string; name: string; status: "Confirmed" | "Probable" | "Unconfirmed"; sv: string; gaa: string }[]; // NHL only
   efficiency: EfficiencyRow[];
   turnoverRatio?: { team: string; opp: string; advantage: string }; // NFL only
 }
@@ -232,13 +233,13 @@ const C = {
 /* ───────────── Mock data ───────────── */
 
 const UPCOMING: UpcomingGameProps = {
-  home: { name: "Buffalo Sabres", abbr: "BUF", record: "7-4-3" },
-  away: { name: "Toronto Maple Leafs", abbr: "TOR", record: "8-6-2" },
-  puckDrop: Date.now() + (6 * 3600 + 4 * 60 + 14) * 1000,
+  home: { name: "Buffalo Sabres", abbr: "BUF", record: "7-4-3, 17 PTS" },
+  away: { name: "Ottawa Senators", abbr: "OTT", record: "9-6-1, 19 PTS" },
+  puckDrop: Date.parse("2026-11-05T00:30:00Z"),
   venue: "KeyBank Center, Buffalo, NY",
   goalies: [
-    { team: "BUF", name: "Alex Lyon", status: "Confirmed", sv: ".915", gaa: "2.48" },
-    { team: "TOR", name: "Joseph Woll", status: "Probable", sv: ".907", gaa: "2.71" },
+    { team: "BUF", name: "Ukko-Pekka Luukkonen", status: "Probable", sv: ".874", gaa: "3.40" },
+    { team: "OTT", name: "Samuel Ersson", status: "Probable", sv: ".866", gaa: "3.78" },
   ],
 };
 
@@ -406,6 +407,10 @@ const SABRES_NEXT: NextGameIntel = {
   specialTeams: {
     team: "PP: 17.0% (23rd) | PK: 68.6% (29th)", opp: "PP: 12.3% (30th) | PK: 73.3% (22nd)", advantage: "Even Special Teams Matchup",
   },
+  goalies: [
+    { team: "BUF", name: "Ukko-Pekka Luukkonen", status: "Probable", sv: ".874", gaa: "3.40" },
+    { team: "OTT", name: "Samuel Ersson", status: "Probable", sv: ".866", gaa: "3.78" },
+  ],
   efficiency: [
     { metric: "Goals / Game", team: "3.07 (19th)", opp: "3.13 (18th)" },
     { metric: "Goals Against / Game", team: "3.43 (24th)", opp: "3.19 (16th)" },
@@ -1014,14 +1019,33 @@ function GameCenter(p: GameTelemetryProps) {
 /* ───────────── Upcoming game and pregame intel ───────────── */
 
 function UpcomingGame(p: UpcomingGameProps) {
-  const countdown = useCountdown(p.puckDrop);
+  const liveData = p.liveData ?? { sabres: { nextGame: p.nextGame ?? SABRES_NEXT } };
+  const nextGame = liveData.sabres?.nextGame ?? p.nextGame ?? SABRES_NEXT;
+  const intel = nextGame;
+  const puckDropTarget = Date.parse(nextGame.isoTime);
+  const countdown = useCountdown(Number.isFinite(puckDropTarget) ? puckDropTarget : p.puckDrop);
   const statusColor = (s: string) => (s === "Confirmed" ? C.gold : C.dim);
-  const intel = p.nextGame ?? SABRES_NEXT;
+
+  const oppAbbr = nextGame.opponent.toLowerCase().includes("ottawa") ? "OTT" : p.away.abbr;
+  const oppTeam = {
+    name: oppAbbr === "OTT" ? "Ottawa Senators" : (nextGame.oppShortName || p.away.name),
+    abbr: oppAbbr,
+    record: oppAbbr === "OTT" ? "9-6-1, 19 PTS" : p.away.record,
+  };
+  const gameTimeLabel = nextGame.gameTime || "Wed, Nov 4 • 7:30 PM ET";
+  const venueLabel = nextGame.venue || p.venue || "KeyBank Center, Buffalo, NY";
+  const goalies =
+    liveData.sabres?.nextGame?.goalies ??
+    nextGame.goalies ??
+    p.goalies ?? [
+      { team: "BUF", name: "Ukko-Pekka Luukkonen", status: "Probable", sv: ".874", gaa: "3.40" },
+      { team: "OTT", name: "Samuel Ersson", status: "Probable", sv: ".866", gaa: "3.78" },
+    ];
+
   const ppRow = intel.efficiency.find((e) => e.metric.toLowerCase().includes("power play"));
   const pkRow = intel.efficiency.find((e) => e.metric.toLowerCase().includes("penalty kill"));
-  const ppRate = ppRow ? `BUF ${ppRow.team} vs ${p.away.abbr} ${ppRow.opp}` : "BUF 17.0% (23rd) vs Opp 12.3% (30th)";
-  const pkRate = pkRow ? `BUF ${pkRow.team} vs ${p.away.abbr} ${pkRow.opp}` : "BUF 68.6% (29th) vs Opp 73.3% (22nd)";
-  const liveData = p.liveData;
+  const ppRate = ppRow ? `BUF ${ppRow.team} vs ${oppAbbr} ${ppRow.opp}` : `BUF 17.0% (23rd) vs ${oppAbbr} 12.3% (30th)`;
+  const pkRate = pkRow ? `BUF ${pkRow.team} vs ${oppAbbr} ${pkRow.opp}` : `BUF 68.6% (29th) vs ${oppAbbr} 73.3% (22nd)`;
   const sabresDays =
     liveData?.sabres?.nextGame?.restAdvantage?.sabresDays ??
     intel.restAdvantage?.sabresDays ??
@@ -1035,20 +1059,19 @@ function UpcomingGame(p: UpcomingGameProps) {
     "Sabres +1";
   const restSummary =
     sabresDays !== undefined && oppDays !== undefined
-      ? `BUF ${sabresDays}d vs TOR ${oppDays}d (${diffText})`
+      ? `BUF ${sabresDays}d vs ${oppAbbr} ${oppDays}d (${diffText})`
       : (intel.restAdvantage?.summary ?? "Sabres +1 (4d vs 3d Rest)");
-  const leveragePts = intel.leverage ?? 11;
 
   return (
     <section aria-label="Upcoming game" className="sect">
       <div className="wrap">
-        <SectionHead title="Sabres vs. Maple Leafs" meta={`${p.venue}, 7:00 PM ET`} />
+        <SectionHead title={`Sabres ${nextGame.opponent || "vs. Ottawa Senators"}`} meta={`${venueLabel} • ${gameTimeLabel}`} />
         <div className="grid2" style={{ borderTop: `1px solid ${C.hair}`, borderBottom: `1px solid ${C.hair}` }}>
           <div style={{ padding: "18px 20px 18px 0" }}>
             <div style={{ color: C.dim, fontSize: 13 }}>Puck drops in</div>
             <div className="num" style={{ fontSize: 56, fontWeight: 600, lineHeight: 1.1, color: C.gold }}>{countdown}</div>
             <div style={{ display: "flex", gap: 24, marginTop: 14 }}>
-              {[p.away, p.home].map((t) => (
+              {[oppTeam, p.home].map((t) => (
                 <div key={t.abbr}>
                   <div className="disp" style={{ fontSize: 28, lineHeight: 1 }}>{t.abbr}</div>
                   <div style={{ fontSize: 13, color: C.dim }}>{t.name}</div>
@@ -1063,7 +1086,7 @@ function UpcomingGame(p: UpcomingGameProps) {
                 <tr><th className="l">Goalie</th><th>Status</th><th>Sv%</th><th>GAA</th></tr>
               </thead>
               <tbody>
-                {p.goalies.map((g) => (
+                {goalies.map((g) => (
                   <tr key={g.team}>
                     <td className="l"><span className="num" style={{ color: C.dim }}>{g.team}</span> {g.name}</td>
                     <td style={{ color: statusColor(g.status), fontWeight: 600 }}>{g.status}</td>
@@ -1080,13 +1103,13 @@ function UpcomingGame(p: UpcomingGameProps) {
               <h3 className="disp" style={{ fontSize: 20, margin: "0 0 8px" }}>Pregame Matchup Info</h3>
               <div className="num" style={{ display: "grid", gridTemplateColumns: "120px 1fr", rowGap: 6, columnGap: 12, fontSize: 13 }}>
                 <span style={{ color: C.dim }}>Puck Drop</span>
-                <span>7:00 PM ET</span>
+                <span>{gameTimeLabel}</span>
                 <span style={{ color: C.dim }}>Broadcast</span>
                 <span>
                   {intel.broadcast || "MSG-B"} • {intel.announcers || "Dan Dunleavy, Rob Ray"} (Stream: ESPN+)
                 </span>
                 <span style={{ color: C.dim }}>Venue</span>
-                <span>{intel.venue || p.venue || "KeyBank Center, Buffalo, NY"}</span>
+                <span>{venueLabel}</span>
                 <span style={{ color: C.dim }}>Power Play %</span>
                 <span>{ppRate}</span>
                 <span style={{ color: C.dim }}>Penalty Kill %</span>
@@ -1096,14 +1119,21 @@ function UpcomingGame(p: UpcomingGameProps) {
               </div>
             </div>
 
-            <div className="num" style={{ display: "grid", gridTemplateColumns: "140px 1fr", borderTop: `1px solid ${C.hair}`, paddingTop: 10 }}>
-              <div>
-                <div style={{ fontSize: 11, color: C.dim, fontFamily: "Barlow, sans-serif" }}>Leverage</div>
-                <div style={{ fontSize: 18, fontWeight: 600, color: C.gold }}>{leveragePts} pts</div>
+            <div className="num" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", borderTop: `1px solid ${C.hair}`, paddingTop: 10 }}>
+              <div style={{ paddingRight: 10 }}>
+                <div style={{ fontSize: 11, color: C.dim, fontFamily: "Barlow, sans-serif", fontWeight: 600 }}>CURRENT STANDING</div>
+                <div style={{ fontSize: 13, fontWeight: 600, marginTop: 2 }}>7th in Atlantic • 17 PTS</div>
+                <div style={{ fontSize: 11, color: C.dim, fontFamily: "Barlow, sans-serif" }}>(2 pts back of WC2)</div>
               </div>
-              <div style={{ borderLeft: `1px solid ${C.soft}`, paddingLeft: 12 }}>
-                <div style={{ fontSize: 11, color: C.dim, fontFamily: "Barlow, sans-serif" }}>Points in Play</div>
-                <div style={{ fontSize: 16, fontWeight: 600 }}>2 pts <span style={{ fontSize: 12, fontWeight: 400, color: C.dim }}>(Atlantic Division / Wildcard cutline impact)</span></div>
+              <div style={{ borderLeft: `1px solid ${C.soft}`, padding: "0 10px" }}>
+                <div style={{ fontSize: 11, color: C.gold, fontFamily: "Barlow, sans-serif", fontWeight: 600 }}>REGULATION WIN (+2)</div>
+                <div style={{ fontSize: 13, fontWeight: 600, color: C.gold, marginTop: 2 }}>Up to 19 PTS</div>
+                <div style={{ fontSize: 11, color: C.dim, fontFamily: "Barlow, sans-serif" }}>Closes Wild Card gap</div>
+              </div>
+              <div style={{ borderLeft: `1px solid ${C.soft}`, paddingLeft: 10 }}>
+                <div style={{ fontSize: 11, color: "#FF8A9C", fontFamily: "Barlow, sans-serif", fontWeight: 600 }}>REGULATION LOSS (0)</div>
+                <div style={{ fontSize: 13, fontWeight: 600, marginTop: 2 }}>Stays at 17 PTS</div>
+                <div style={{ fontSize: 11, color: C.dim, fontFamily: "Barlow, sans-serif" }}>Missed opportunity vs division rival</div>
               </div>
             </div>
           </div>
