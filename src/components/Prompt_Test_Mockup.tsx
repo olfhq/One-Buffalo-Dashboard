@@ -1561,7 +1561,7 @@ export default function Prompt_Test_Mockup() {
             margin: "0 auto",
           }}
         >
-          One Buffalo Tracker is an independent fan dashboard and is not affiliated with, endorsed by, or sponsored by Pegula Sports &amp; Entertainment, the Buffalo Bills, the Buffalo Sabres, the NFL, or the NHL.
+          {"One Buffalo Tracker is an independent fan dashboard and is not affiliated with, endorsed by, or sponsored by Pegula Sports & Entertainment, the Buffalo Bills, the Buffalo Sabres, the NFL, or the NHL."}
         </p>
       </footer>
     </div>
