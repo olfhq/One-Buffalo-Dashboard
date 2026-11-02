@@ -1283,34 +1283,10 @@ function MatchupIntel({ title, teamLabel, g }: { title: string; teamLabel: strin
   const special = g.specialTeams ?? g.turnoverRatio;
   return (
     <div style={{ minWidth: 0 }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 4, gap: 8, flexWrap: "wrap" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 8, gap: 8, flexWrap: "wrap" }}>
         <h3 className="disp" style={{ margin: 0, fontSize: 22 }}>{title}</h3>
-        <span className="num" style={{ color: C.dim, fontSize: 12 }}>{g.opponent}, {g.gameTime}</span>
+        <span style={{ color: C.dim, fontSize: 12 }}>Matchup Tale of the Tape</span>
       </div>
-      <p className="num" style={{ margin: "0 0 4px", fontSize: 13 }}>{g.matchupRecords}</p>
-      <p style={{ margin: "0 0 10px", fontSize: 13, color: C.dim, maxWidth: "80ch" }}>
-        {g.broadcast}, {g.announcers}. {g.venue}.
-        {g.roof ? ` ${g.roof}, ${g.surface}, ${g.weather}.` : ""}
-        {g.windowLabel ? ` ${g.windowLabel} (${g.windowBadge}).` : ""}
-      </p>
-      <div className="num" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", borderTop: `1px solid ${C.hair}`, borderBottom: `1px solid ${C.hair}`, marginBottom: 10 }}>
-        {[
-          { l: "Win chance", v: `${g.winChance}%` },
-          { l: "Playoffs if win", v: `${g.ifWin}%` },
-          { l: "Playoffs if loss", v: `${g.ifLoss}%` },
-          { l: "Leverage", v: `${g.leverage} pts` },
-        ].map((s, i) => (
-          <div key={s.l} style={{ padding: "8px 10px", borderLeft: i ? `1px solid ${C.soft}` : 0 }}>
-            <div style={{ fontSize: 11, color: C.dim, fontFamily: "Barlow, sans-serif" }}>{s.l}</div>
-            <div style={{ fontSize: 20, fontWeight: 600 }}>{s.v}</div>
-          </div>
-        ))}
-      </div>
-      <p style={{ margin: "0 0 8px", fontSize: 13 }}>
-        <span style={{ color: C.dim }}>Rest: </span>
-        <span className="num">{g.restAdvantage.summary}</span>
-        <span className="num" style={{ color: C.dim }}> ({g.restAdvantage.teamDays}d vs {g.restAdvantage.oppDays}d)</span>
-      </p>
       <table>
         <thead>
           <tr><th className="l">Metric</th><th>{teamLabel}</th><th>{g.oppShortName}</th></tr>
