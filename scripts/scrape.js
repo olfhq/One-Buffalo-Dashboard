@@ -331,22 +331,109 @@ async function getNflStadium(teamName, compVenue, compWeather, isoTime) {
   };
 }
 
+function resolveNFLBroadcast(rawNetwork, date) {
+  if (rawNetwork && typeof rawNetwork === 'object' && rawNetwork.network && rawNetwork.badgeTitle && rawNetwork.crew) {
+    const netName = String(rawNetwork.network);
+    const badge = String(rawNetwork.badgeTitle);
+    const crewStr = String(rawNetwork.crew);
+    return {
+      network: netName,
+      badgeTitle: badge,
+      crew: crewStr,
+      displayString: rawNetwork.displayString || `${netName} • ${crewStr} (${badge})`
+    };
+  }
+
+  const net = String(rawNetwork || '').trim().toUpperCase();
+  const dateStr = String(date || '');
+  let day = '';
+  let hour = 13;
+
+  if (date) {
+    const dt = new Date(date);
+    if (!isNaN(dt.getTime())) {
+      day = dt.toLocaleDateString('en-US', { timeZone: 'America/New_York', weekday: 'short' });
+      hour = parseInt(dt.toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour12: false, hour: '2-digit' }), 10);
+    } else if (/\bmon/i.test(dateStr)) {
+      day = 'Mon';
+    } else if (/\bthu/i.test(dateStr)) {
+      day = 'Thu';
+    } else if (/\bsun/i.test(dateStr)) {
+      day = 'Sun';
+    }
+  }
+
+  const isMonday = day === 'Mon' || /\bmonday\b|\bmon\b/i.test(dateStr);
+  const isThursday = day === 'Thu' || /\bthursday\b|\bthu\b/i.test(dateStr);
+  const isSundayNight = (day === 'Sun' && hour >= 20) || /\bsnf\b/i.test(dateStr);
+
+  let network = 'CBS';
+  let badgeTitle = 'NFL on CBS';
+  let crew = 'Jim Nantz, Tony Romo, Tracy Wolfson';
+
+  if (isMonday || net.includes('ESPN') || net.includes('ABC') || net.includes('MNF')) {
+    network = 'ESPN';
+    badgeTitle = 'Monday Night Football';
+    crew = 'Joe Buck, Troy Aikman, Lisa Salters';
+  } else if (net.includes('PRIME') || net.includes('AMAZON') || net.includes('TNF') || (isThursday && !net.includes('NBC') && !net.includes('CBS') && !net.includes('FOX'))) {
+    network = 'Prime Video';
+    badgeTitle = 'Thursday Night Football';
+    crew = 'Al Michaels, Kirk Herbstreit, Kaylee Hartung';
+  } else if (net.includes('NBC') || net.includes('PEACOCK') || net.includes('SNF') || isSundayNight) {
+    network = 'NBC';
+    badgeTitle = 'Sunday Night Football';
+    crew = 'Mike Tirico, Cris Collinsworth, Melissa Stark';
+  } else if (net.includes('FOX')) {
+    network = 'FOX';
+    badgeTitle = 'NFL on FOX';
+    crew = 'Kevin Burkhardt, Tom Brady, Erin Andrews';
+  } else if (net.includes('NETFLIX')) {
+    network = 'Netflix';
+    badgeTitle = 'NFL Christmas Gameday';
+    crew = 'Ian Eagle, Nate Burleson, J.J. Watt';
+  } else if (net.includes('NFL')) {
+    network = 'NFL Network';
+    badgeTitle = 'NFL Network Exclusive';
+    crew = 'Rich Eisen, Kurt Warner, Stacey Dales';
+  } else {
+    network = 'CBS';
+    badgeTitle = 'NFL on CBS';
+    crew = 'Jim Nantz, Tony Romo, Tracy Wolfson';
+  }
+
+  return {
+    network,
+    badgeTitle,
+    crew,
+    displayString: `${network} • ${crew} (${badgeTitle})`
+  };
+}
+
 function getNflBroadcast(rawNet, homeName, awayName, isoTime, isBillsGame = false) {
-  const net = (rawNet || 'CBS').trim().toUpperCase();
+  const resolved = resolveNFLBroadcast(rawNet, isoTime);
+  if (isBillsGame || resolved.network !== 'CBS' && resolved.network !== 'FOX') {
+    const tagMap = {
+      'ESPN': 'tv-espn',
+      'Prime Video': 'tv-prime',
+      'NBC': 'tv-nbc',
+      'FOX': 'tv-fox',
+      'Netflix': 'tv-nfln',
+      'NFL Network': 'tv-nfln',
+      'CBS': 'tv-cbs'
+    };
+    return {
+      ...resolved,
+      tag: tagMap[resolved.network] || 'tv-cbs'
+    };
+  }
+
   const dt = new Date(isoTime);
   const hour = parseInt(dt.toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour12: false, hour: '2-digit' }), 10);
   const matchHash = ((homeName || '').length * 7 + (awayName || '').length * 13 + (homeName || '').charCodeAt(0) || 0);
 
-  if (net.includes('PRIME')) return { network: 'Prime Video', crew: 'Al Michaels, Kirk Herbstreit', tag: 'tv-prime' };
-  if (net === 'PEACOCK') return { network: 'Peacock', crew: 'Noah Eagle, Todd Blackledge', tag: 'tv-nbc' };
-  if (net.includes('NBC') || net.includes('PEACOCK')) return { network: 'NBC', crew: 'Mike Tirico, Cris Collinsworth', tag: 'tv-nbc' };
-  if (net.includes('NETFLIX')) return { network: 'Netflix', crew: 'Ian Eagle, Nate Burleson, J.J. Watt', tag: 'tv-nfln' };
-  if (net.includes('ESPN') || net.includes('ABC')) return { network: net.includes('ABC') ? 'ABC/ESPN' : 'ESPN', crew: 'Joe Buck, Troy Aikman', tag: 'tv-espn' };
-  if (net.includes('NFL')) return { network: 'NFL Net', crew: 'Rich Eisen, Kurt Warner', tag: 'tv-nfln' };
-
-  if (net.includes('FOX')) {
+  if (resolved.network === 'FOX') {
     if (hour >= 16 && (homeName.includes('Chiefs') || awayName.includes('Chiefs') || homeName.includes('Cowboys') || homeName.includes('49ers') || homeName.includes('Eagles'))) {
-      return { network: 'FOX', crew: 'Kevin Burkhardt, Tom Brady', tag: 'tv-fox' };
+      return { ...resolved, tag: 'tv-fox' };
     }
     const foxCrews = [
       'Joe Davis, Greg Olsen',
@@ -354,26 +441,36 @@ function getNflBroadcast(rawNet, homeName, awayName, isoTime, isBillsGame = fals
       'Adam Amin, Drew Brees',
       'Kevin Kugler, Daryl Johnston',
       'Chris Myers, Mark Schlereth',
-      'Kevin Burkhardt, Tom Brady'
+      'Kevin Burkhardt, Tom Brady, Erin Andrews'
     ];
-    return { network: 'FOX', crew: foxCrews[matchHash % foxCrews.length], tag: 'tv-fox' };
+    const crew = foxCrews[matchHash % foxCrews.length];
+    return {
+      network: 'FOX',
+      badgeTitle: 'NFL on FOX',
+      crew,
+      displayString: `FOX • ${crew} (NFL on FOX)`,
+      tag: 'tv-fox'
+    };
   }
 
-  if (net.includes('CBS')) {
-    if (isBillsGame || (hour >= 16 && (homeName.includes('Chiefs') || awayName.includes('Chiefs') || homeName.includes('Ravens')))) {
-      return { network: 'CBS', crew: 'Jim Nantz, Tony Romo', tag: 'tv-cbs' };
-    }
-    const cbsCrews = [
-      'Ian Eagle, J.J. Watt',
-      'Kevin Harlan, Trent Green',
-      'Andrew Catalon, Tiki Barber, Jason McCourty',
-      'Spero Dedes, Adam Archuleta',
-      'Tom McCarthy, Ross Tucker'
-    ];
-    return { network: 'CBS', crew: cbsCrews[matchHash % cbsCrews.length], tag: 'tv-cbs' };
+  if (hour >= 16 && (homeName.includes('Chiefs') || awayName.includes('Chiefs') || homeName.includes('Ravens'))) {
+    return { ...resolved, tag: 'tv-cbs' };
   }
-
-  return { network: (rawNet || 'CBS').trim(), crew: 'Regional Broadcast Crew', tag: 'tv-cbs' };
+  const cbsCrews = [
+    'Ian Eagle, J.J. Watt',
+    'Kevin Harlan, Trent Green',
+    'Andrew Catalon, Tiki Barber, Jason McCourty',
+    'Spero Dedes, Adam Archuleta',
+    'Tom McCarthy, Ross Tucker'
+  ];
+  const crew = cbsCrews[matchHash % cbsCrews.length];
+  return {
+    network: 'CBS',
+    badgeTitle: 'NFL on CBS',
+    crew,
+    displayString: `CBS • ${crew} (NFL on CBS)`,
+    tag: 'tv-cbs'
+  };
 }
 
 function getNflWindow(isoTime) {
@@ -598,7 +695,7 @@ async function fetchNflScoreboard() {
       const awayScore = away.score || '0';
       const statusState = comp.status?.type?.state;
       const statusDetail = comp.status?.type?.shortDetail || 'Scheduled';
-      const broadcast = (comp.broadcasts?.[0]?.names?.[0] || 'TV').trim();
+      const broadcast = (comp.broadcasts?.[0]?.media?.shortName || comp.broadcasts?.[0]?.names?.[0] || comp.geoBroadcasts?.[0]?.media?.shortName || '').trim();
 
       const awayRecordStr = getNflRecordStr(away, awayName);
       const homeRecordStr = getNflRecordStr(home, homeName);
@@ -2141,6 +2238,7 @@ async function fetchNhlTeamEfficiency(oppAbbrev, oppName, allStandings = [], sea
 
 // Fetch live game schedules, game win chance, ISO timestamps, team records, broadcast networks, and matchup intel
 async function fetchNextGameSchedule() {
+  const defaultBillsBroadcast = resolveNFLBroadcast('CBS', '2026-11-01T18:00:00Z');
   let billsSchedule = {
     opponent: 'vs. Ravens',
     oppShortName: 'Ravens',
@@ -2150,7 +2248,10 @@ async function fetchNextGameSchedule() {
     isoTime: '2026-11-01T18:00:00Z',
     winChance: 60,
     matchupRecords: 'Bills vs. Ravens',
-    broadcast: 'CBS',
+    broadcast: defaultBillsBroadcast,
+    announcers: defaultBillsBroadcast.crew,
+    windowLabel: defaultBillsBroadcast.badgeTitle,
+    windowBadge: defaultBillsBroadcast.badgeTitle,
     venue: 'Highmark Stadium, Orchard Park',
     restBills: 14,
     restOpp: 7,
@@ -2268,9 +2369,9 @@ async function fetchNextGameSchedule() {
         const evDay = evDt.toLocaleDateString('en-US', { timeZone: 'America/New_York', day: 'numeric' });
         const evTime = evDt.toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour: 'numeric', minute: '2-digit', hour12: true }) + ' ET';
 
-        let evBroadcast = evComp.broadcasts?.[0]?.media?.shortName || evComp.broadcasts?.[0]?.names?.[0] || 'CBS';
-        if (evBroadcast.toLowerCase().includes('prime')) evBroadcast = 'Prime';
-        else if (evBroadcast.toLowerCase().includes('fox')) evBroadcast = 'FOX';
+        const rawEvBroadcast = evComp.broadcasts?.[0]?.media?.shortName || evComp.broadcasts?.[0]?.names?.[0] || evComp.geoBroadcasts?.[0]?.media?.shortName || '';
+        const evResolvedBroadcast = resolveNFLBroadcast(rawEvBroadcast, ev.date);
+        let evBroadcast = evResolvedBroadcast.network === 'Prime Video' ? 'Prime' : evResolvedBroadcast.network;
 
         let evPrimeTime = null;
         const evHour = parseInt(evDt.toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour12: false, hour: '2-digit' }), 10);
@@ -2347,7 +2448,7 @@ async function fetchNextGameSchedule() {
 
         const dateStr = d.toLocaleDateString('en-US', { timeZone: 'America/New_York', weekday: 'short', month: 'short', day: 'numeric' });
         const timeStr = d.toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour: 'numeric', minute: '2-digit', hour12: true });
-        const tvNetwork = comp.broadcasts?.[0]?.names?.[0] || 'CBS';
+        const tvNetwork = comp.broadcasts?.[0]?.media?.shortName || comp.broadcasts?.[0]?.names?.[0] || comp.geoBroadcasts?.[0]?.media?.shortName || '';
 
         let bufRecord = '';
         let oppRecord = '';
@@ -2472,18 +2573,18 @@ async function fetchNextGameSchedule() {
           fetchGameInjuries(nextGame.id, oppName, oppId),
           fetchNflTeamEfficiency(oppId, oppName, data.season?.year || 2026)
         ]);
-        const billsBroadcast = getNflBroadcast(tvNetwork, isHome ? 'Buffalo Bills' : oppName, isHome ? oppName : 'Buffalo Bills', nextGame.date, true);
+        const billsBroadcast = resolveNFLBroadcast(tvNetwork, nextGame.date);
         const billsWindow = getNflWindow(nextGame.date);
 
-        billsSchedule.broadcast = billsBroadcast.network;
+        billsSchedule.broadcast = billsBroadcast;
         billsSchedule.announcers = billsBroadcast.crew;
         billsSchedule.venue = billsStadium.fullVenue;
         billsSchedule.roof = billsStadium.roof;
         billsSchedule.surface = billsStadium.surface;
         billsSchedule.weather = billsStadium.weather;
         billsSchedule.window = billsWindow.key;
-        billsSchedule.windowLabel = billsWindow.label;
-        billsSchedule.windowBadge = billsWindow.badge;
+        billsSchedule.windowLabel = billsBroadcast.badgeTitle;
+        billsSchedule.windowBadge = billsBroadcast.badgeTitle;
 
         if (nflEff?.efficiency) {
           billsSchedule.efficiency = nflEff.efficiency;
@@ -3383,6 +3484,7 @@ if (require.main === module) {
 }
 
 module.exports = {
+  resolveNFLBroadcast,
   scrapePlayoffStatus,
   syncHtmlFallbacks,
   buildTrimmedFallbackForFile

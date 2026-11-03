@@ -26,11 +26,19 @@ export interface LiveGameTelemetry {
   bills?: { nextGame?: NextGameIntel };
 }
 
+export interface BroadcastInfo {
+  network: string;
+  badgeTitle: string;
+  crew: string;
+  displayString: string;
+}
+
 export interface GameTelemetryProps {
   home: { name: string; abbr: string; record: string; score?: number | string | null };
   away: { name: string; abbr: string; record: string; score?: number | string | null };
   venue: string;
   network: string;
+  broadcast?: BroadcastInfo;
   leverage?: number;
   status?: StatusState;
   nextGame: NextGameIntel;
@@ -137,7 +145,7 @@ export interface NextGameIntel {
   isoTime: string;
   winChance: number;
   matchupRecords: string;
-  broadcast: string;
+  broadcast: BroadcastInfo;
   announcers: string;
   venue: string;
   roof?: string;
@@ -230,6 +238,100 @@ const C = {
   soft: "rgba(255,255,255,0.16)",
 };
 
+/* ───────────── Broadcast Resolver ───────────── */
+
+export function resolveNFLBroadcast(rawNetwork?: string | BroadcastInfo | null, date?: string | Date | null): BroadcastInfo {
+  if (rawNetwork && typeof rawNetwork === "object" && rawNetwork.network && rawNetwork.badgeTitle && rawNetwork.crew) {
+    return {
+      network: rawNetwork.network,
+      badgeTitle: rawNetwork.badgeTitle,
+      crew: rawNetwork.crew,
+      displayString: rawNetwork.displayString || `${rawNetwork.network} • ${rawNetwork.crew} (${rawNetwork.badgeTitle})`,
+    };
+  }
+
+  const net = String(rawNetwork || "").trim().toUpperCase();
+  const dateStr = String(date || "");
+  let day = "";
+  let hour = 13;
+
+  if (date) {
+    const dt = new Date(date);
+    if (!isNaN(dt.getTime())) {
+      day = dt.toLocaleDateString("en-US", { timeZone: "America/New_York", weekday: "short" });
+      hour = parseInt(dt.toLocaleTimeString("en-US", { timeZone: "America/New_York", hour12: false, hour: "2-digit" }), 10);
+    } else if (/\bmon/i.test(dateStr)) {
+      day = "Mon";
+    } else if (/\bthu/i.test(dateStr)) {
+      day = "Thu";
+    } else if (/\bsun/i.test(dateStr)) {
+      day = "Sun";
+    }
+  }
+
+  const isMonday = day === "Mon" || /\bmonday\b|\bmon\b/i.test(dateStr);
+  const isThursday = day === "Thu" || /\bthursday\b|\bthu\b/i.test(dateStr);
+  const isSundayNight = (day === "Sun" && hour >= 20) || /\bsnf\b/i.test(dateStr);
+
+  const PACKAGES: Record<string, { network: string; badgeTitle: string; crew: string }> = {
+    MNF: { network: "ESPN", badgeTitle: "Monday Night Football", crew: "Joe Buck, Troy Aikman, Lisa Salters" },
+    TNF: { network: "Prime Video", badgeTitle: "Thursday Night Football", crew: "Al Michaels, Kirk Herbstreit, Kaylee Hartung" },
+    SNF: { network: "NBC", badgeTitle: "Sunday Night Football", crew: "Mike Tirico, Cris Collinsworth, Melissa Stark" },
+    FOX: { network: "FOX", badgeTitle: "NFL on FOX", crew: "Kevin Burkhardt, Tom Brady, Erin Andrews" },
+    NETFLIX: { network: "Netflix", badgeTitle: "NFL Christmas Gameday", crew: "Ian Eagle, Nate Burleson, J.J. Watt" },
+    NFLN: { network: "NFL Network", badgeTitle: "NFL Network Exclusive", crew: "Rich Eisen, Kurt Warner, Stacey Dales" },
+    SUNDAY_AFC: { network: "CBS", badgeTitle: "NFL on CBS", crew: "Jim Nantz, Tony Romo, Tracy Wolfson" },
+  };
+
+  let pkg = PACKAGES.SUNDAY_AFC;
+  if (isMonday || net.includes(PACKAGES.MNF.network) || net.includes("ABC") || net.includes("MNF")) {
+    pkg = PACKAGES.MNF;
+  } else if (net.includes("PRIME") || net.includes("AMAZON") || net.includes("TNF") || (isThursday && !net.includes("NBC") && !net.includes(PACKAGES.SUNDAY_AFC.network) && !net.includes("FOX"))) {
+    pkg = PACKAGES.TNF;
+  } else if (net.includes("NBC") || net.includes("PEACOCK") || net.includes("SNF") || isSundayNight) {
+    pkg = PACKAGES.SNF;
+  } else if (net.includes("FOX")) {
+    pkg = PACKAGES.FOX;
+  } else if (net.includes("NETFLIX")) {
+    pkg = PACKAGES.NETFLIX;
+  } else if (net.includes("NFL")) {
+    pkg = PACKAGES.NFLN;
+  }
+
+  return {
+    network: pkg.network,
+    badgeTitle: pkg.badgeTitle,
+    crew: pkg.crew,
+    displayString: `${pkg.network} • ${pkg.crew} (${pkg.badgeTitle})`,
+  };
+}
+
+function getGameBroadcast(game: { broadcast?: BroadcastInfo | string; announcers?: string; windowLabel?: string; windowBadge?: string; isoTime?: string; gameTime?: string }, isNfl = true): BroadcastInfo {
+  if (game.broadcast && typeof game.broadcast === "object" && "network" in game.broadcast) {
+    const b = game.broadcast;
+    const badgeTitle = b.badgeTitle || game.windowLabel || game.windowBadge || "";
+    const crew = b.crew || game.announcers || "";
+    return {
+      network: b.network,
+      badgeTitle,
+      crew,
+      displayString: b.displayString || `${b.network}${crew ? ` • ${crew}` : ""}${badgeTitle ? ` (${badgeTitle})` : ""}`,
+    };
+  }
+  if (isNfl) {
+    return resolveNFLBroadcast(typeof game.broadcast === "string" ? game.broadcast : "", game.isoTime || game.gameTime);
+  }
+  const network = typeof game.broadcast === "string" && game.broadcast ? game.broadcast : "MSG-B";
+  const badgeTitle = game.windowBadge || game.windowLabel || "Sabres Hockey Network";
+  const crew = game.announcers || "Dan Dunleavy, Rob Ray";
+  return {
+    network,
+    badgeTitle,
+    crew,
+    displayString: `${network}${crew ? ` • ${crew}` : ""}${badgeTitle ? ` (${badgeTitle})` : ""}`,
+  };
+}
+
 /* ───────────── Mock data ───────────── */
 
 const UPCOMING: UpcomingGameProps = {
@@ -277,16 +379,19 @@ const NHL_ATL: StandingsTableProps = {
 
 const META: DashboardMeta = {
   updatedAt: "2026-11-02T15:54:21.411Z",
-  source: "http://www.playoffstatus.com and ESPN NFL API",
+  source: "http://www.playoffstatus.com and NFL API",
   theme: "regular",
   billsTheme: "regular",
   sabresTheme: "regular",
   themeUntil: null,
 };
 
+const SUNDAY_LATE_BC = resolveNFLBroadcast("", "2026-11-01T21:25Z");
+const MONDAY_BC = resolveNFLBroadcast("", "2026-11-03T01:15Z");
+
 const NFL_OOT: OutOfTownGame[] = [
   {
-    isoTime: "2026-11-01T21:25Z", slot: "Sun, Nov 1 • 4:25 PM ET", broadcast: "CBS", announcers: "Ian Eagle, J.J. Watt",
+    isoTime: "2026-11-01T21:25Z", slot: "Sun, Nov 1 • 4:25 PM ET", broadcast: SUNDAY_LATE_BC.network, announcers: "Ian Eagle, J.J. Watt",
     venue: "Hard Rock Stadium, Miami Gardens, FL", roof: "Open-Air Stadium", surface: "Natural Bermuda Grass", weather: "77°F, 9mph Wind, 76% PoP",
     window: "LATE", windowLabel: "Sunday 4:25 PM ET National Window", windowBadge: "America's Game of the Week",
     statusState: "post", statusDetail: "Final", awayName: "New England Patriots", awayRecord: "5-3, W1", awayScore: "24",
@@ -297,14 +402,14 @@ const NFL_OOT: OutOfTownGame[] = [
   {
     isoTime: "2026-11-01T18:00Z", slot: "Sun, Nov 1 • 1:00 PM ET", broadcast: "FOX", announcers: "Joe Davis, Greg Olsen",
     venue: "MetLife Stadium, East Rutherford, NJ", roof: "Open-Air Stadium", surface: "FieldTurf CORE", weather: "61°F, 2mph Wind, 0% PoP",
-    window: "EARLY", windowLabel: "Sunday 1:00 PM ET Early Window", windowBadge: "Regional CBS / FOX Lineups",
+    window: "EARLY", windowLabel: "Sunday 1:00 PM ET Early Window", windowBadge: "Regional Sunday Lineups",
     statusState: "post", statusDetail: "Final", awayName: "Las Vegas Raiders", awayRecord: "4-4, W1", awayScore: "38",
     homeName: "New York Jets", homeRecord: "2-6, L3", homeScore: "33", homeWinChance: 34, awayWinChance: 66,
     verdict: "GOOD FOR BUFFALO", impactClass: "good", target: "Root for Las Vegas Raiders",
     why: "New York Jets dropped a game, widening Buffalo's division lead.",
   },
   {
-    isoTime: "2026-11-01T21:25Z", slot: "Sun, Nov 1 • 4:25 PM ET", broadcast: "CBS", announcers: "Jim Nantz, Tony Romo",
+    isoTime: "2026-11-01T21:25Z", slot: "Sun, Nov 1 • 4:25 PM ET", broadcast: SUNDAY_LATE_BC.network, announcers: SUNDAY_LATE_BC.crew,
     venue: "Empower Field at Mile High, Denver, CO", roof: "Open-Air Stadium", surface: "Natural Kentucky Bluegrass", weather: "60°F, 13mph Wind, 1% PoP",
     window: "LATE", windowLabel: "Sunday 4:25 PM ET National Window", windowBadge: "America's Game of the Week",
     statusState: "post", statusDetail: "Final", awayName: "Kansas City Chiefs", awayRecord: "5-2, L2", awayScore: "24",
@@ -313,9 +418,9 @@ const NFL_OOT: OutOfTownGame[] = [
     why: "Denver Broncos won, keeping pace in the AFC playoff picture.",
   },
   {
-    isoTime: "2026-11-03T01:15Z", slot: "Mon, Nov 2 • 8:15 PM ET", broadcast: "ESPN", announcers: "Joe Buck, Troy Aikman",
+    isoTime: "2026-11-03T01:15Z", slot: "Mon, Nov 2 • 8:15 PM ET", broadcast: MONDAY_BC.network, announcers: MONDAY_BC.crew,
     venue: "Lumen Field, Seattle, WA", roof: "Open-Air Stadium", surface: "FieldTurf Revolution", weather: "50°F, 2mph Wind, 2% PoP",
-    window: "MNF", windowLabel: "Monday Night Football", windowBadge: "ESPN / ABC Prime Time",
+    window: "MNF", windowLabel: MONDAY_BC.badgeTitle, windowBadge: MONDAY_BC.badgeTitle,
     statusState: "pre", statusDetail: "11/2 - 8:15 PM EST", awayName: "Chicago Bears", awayRecord: "5-2, W2", awayScore: "0",
     homeName: "Seattle Seahawks", homeRecord: "4-3, W1", homeScore: "0", homeWinChance: 62, awayWinChance: 38,
     verdict: "NFC MATCHUP", impactClass: "neutral", target: "Neutral Matchup",
@@ -380,11 +485,15 @@ const SABRES_PICTURE: PlayoffPictureProps = {
   opponents: [{ team: "Boston Bruins", pct: 7 }, { team: "Montreal Canadiens", pct: 7 }, { team: "Tampa Bay Lightning", pct: 6 }],
 };
 
+const BILLS_NEXT_BROADCAST = resolveNFLBroadcast("", "2026-11-10T01:15Z");
+
 const BILLS_NEXT: NextGameIntel = {
   opponent: "@ Vikings", oppShortName: "Vikings", gameTime: "Mon, Nov 9 • 8:15 PM ET", isoTime: "2026-11-10T01:15Z", winChance: 46,
-  matchupRecords: "Bills (6-1, W3) vs. Vikings (6-1, L1)", broadcast: "CBS", announcers: "Jim Nantz, Tony Romo",
+  matchupRecords: "Bills (6-1, W3) vs. Vikings (6-1, L1)",
+  broadcast: BILLS_NEXT_BROADCAST,
+  announcers: BILLS_NEXT_BROADCAST.crew,
   venue: "U.S. Bank Stadium, Minneapolis, MN", roof: "Domed Stadium", surface: "Act Global Turf", weather: "Controlled 72°F Climate",
-  window: "MNF", windowLabel: "Monday Night Football", windowBadge: "ESPN / ABC Prime Time",
+  window: "MNF", windowLabel: BILLS_NEXT_BROADCAST.badgeTitle, windowBadge: BILLS_NEXT_BROADCAST.badgeTitle,
   statusState: "pre", statusDetail: "11/9 - 8:15 PM EST", bufScore: "", oppScore: "", liveScore: null,
   ifWin: 99, ifLoss: 84, leverage: 15,
   restAdvantage: { teamDays: 8, billsDays: 8, oppDays: 8, summary: "Even Rest (Both on 8 Days Rest)" },
@@ -401,9 +510,18 @@ const BILLS_NEXT: NextGameIntel = {
   },
 };
 
+const SABRES_NEXT_BROADCAST: BroadcastInfo = {
+  network: "MSG-B",
+  badgeTitle: "Sabres Hockey Network",
+  crew: "Dan Dunleavy, Rob Ray",
+  displayString: "MSG-B • Dan Dunleavy, Rob Ray (Sabres Hockey Network)",
+};
+
 const SABRES_NEXT: NextGameIntel = {
   opponent: "vs. Ottawa", oppShortName: "Ottawa", gameTime: "Wed, Nov 4 • 7:30 PM ET", isoTime: "2026-11-05T00:30:00Z", winChance: 55,
-  matchupRecords: "Sabres (7-4-3, 17 pts, W3) vs. Ottawa (9-6-1, 19 pts, L1)", broadcast: "MSG-B", announcers: "Dan Dunleavy, Rob Ray",
+  matchupRecords: "Sabres (7-4-3, 17 pts, W3) vs. Ottawa (9-6-1, 19 pts, L1)",
+  broadcast: SABRES_NEXT_BROADCAST,
+  announcers: SABRES_NEXT_BROADCAST.crew,
   venue: "KeyBank Center, Buffalo, NY",
   statusState: "pre", statusDetail: "Wed, Nov 4 • 7:30 PM ET", bufScore: "", oppScore: "", liveScore: null,
   ifWin: 54, ifLoss: 43, leverage: 11,
@@ -426,18 +544,18 @@ const SABRES_NEXT: NextGameIntel = {
 };
 
 const BILLS_SCHEDULE: ScheduleEntry[] = [
-  { week: 5, isBye: false, date: "2026-10-13T00:15Z", dayOfWeek: "Mon", dateFormatted: "Oct 12", timeFormatted: "8:15 PM ET", opponent: "Los Angeles Rams", oppShortName: "Rams", oppAbbrev: "LAR", isHome: false, statusState: "post", statusDetail: "Final/OT", bufScore: 37, oppScore: 34, result: "W", broadcast: "ESPN", primeTime: "MNF" },
-  { week: 6, isBye: false, date: "2026-10-18T17:00Z", dayOfWeek: "Sun", dateFormatted: "Oct 18", timeFormatted: "1:00 PM ET", opponent: "Miami Dolphins", oppShortName: "Dolphins", oppAbbrev: "MIA", isHome: true, statusState: "post", statusDetail: "Final", bufScore: 31, oppScore: 17, result: "W", broadcast: "CBS", primeTime: null },
+  { week: 5, isBye: false, date: "2026-10-13T00:15Z", dayOfWeek: "Mon", dateFormatted: "Oct 12", timeFormatted: "8:15 PM ET", opponent: "Los Angeles Rams", oppShortName: "Rams", oppAbbrev: "LAR", isHome: false, statusState: "post", statusDetail: "Final/OT", bufScore: 37, oppScore: 34, result: "W", broadcast: resolveNFLBroadcast("", "2026-10-13T00:15Z").network, primeTime: "MNF" },
+  { week: 6, isBye: false, date: "2026-10-18T17:00Z", dayOfWeek: "Sun", dateFormatted: "Oct 18", timeFormatted: "1:00 PM ET", opponent: "Miami Dolphins", oppShortName: "Dolphins", oppAbbrev: "MIA", isHome: true, statusState: "post", statusDetail: "Final", bufScore: 31, oppScore: 17, result: "W", broadcast: resolveNFLBroadcast("", "2026-10-18T17:00Z").network, primeTime: null },
   { week: 7, isBye: true, opponent: "BYE WEEK", oppShortName: "BYE", oppAbbrev: "BYE", statusState: "bye", statusDetail: "Bye Week" },
-  { week: 8, isBye: false, date: "2026-11-01T18:00Z", dayOfWeek: "Sun", dateFormatted: "Nov 1", timeFormatted: "1:00 PM ET", opponent: "Baltimore Ravens", oppShortName: "Ravens", oppAbbrev: "BAL", isHome: true, statusState: "post", statusDetail: "Final", bufScore: 36, oppScore: 10, result: "W", broadcast: "CBS", primeTime: null },
-  { week: 9, isBye: false, date: "2026-11-10T01:15Z", dayOfWeek: "Mon", dateFormatted: "Nov 9", timeFormatted: "8:15 PM ET", opponent: "Minnesota Vikings", oppShortName: "Vikings", oppAbbrev: "MIN", isHome: false, statusState: "pre", statusDetail: "11/9 - 8:15 PM EST", bufScore: null, oppScore: null, result: null, broadcast: "ESPN", primeTime: "MNF" },
-  { week: 10, isBye: false, date: "2026-11-15T18:00Z", dayOfWeek: "Sun", dateFormatted: "Nov 15", timeFormatted: "1:00 PM ET", opponent: "New York Jets", oppShortName: "Jets", oppAbbrev: "NYJ", isHome: false, statusState: "pre", statusDetail: "11/15 - 1:00 PM EST", bufScore: null, oppScore: null, result: null, broadcast: "CBS", primeTime: null },
-  { week: 11, isBye: false, date: "2026-11-22T18:00Z", dayOfWeek: "Sun", dateFormatted: "Nov 22", timeFormatted: "1:00 PM ET", opponent: "Indianapolis Colts", oppShortName: "Colts", oppAbbrev: "IND", isHome: true, statusState: "pre", statusDetail: "11/22 - 1:00 PM EST", bufScore: null, oppScore: null, result: null, broadcast: "CBS", primeTime: null },
+  { week: 8, isBye: false, date: "2026-11-01T18:00Z", dayOfWeek: "Sun", dateFormatted: "Nov 1", timeFormatted: "1:00 PM ET", opponent: "Baltimore Ravens", oppShortName: "Ravens", oppAbbrev: "BAL", isHome: true, statusState: "post", statusDetail: "Final", bufScore: 36, oppScore: 10, result: "W", broadcast: resolveNFLBroadcast("", "2026-11-01T18:00Z").network, primeTime: null },
+  { week: 9, isBye: false, date: "2026-11-10T01:15Z", dayOfWeek: "Mon", dateFormatted: "Nov 9", timeFormatted: "8:15 PM ET", opponent: "Minnesota Vikings", oppShortName: "Vikings", oppAbbrev: "MIN", isHome: false, statusState: "pre", statusDetail: "11/9 - 8:15 PM EST", bufScore: null, oppScore: null, result: null, broadcast: resolveNFLBroadcast("", "2026-11-10T01:15Z").network, primeTime: "MNF" },
+  { week: 10, isBye: false, date: "2026-11-15T18:00Z", dayOfWeek: "Sun", dateFormatted: "Nov 15", timeFormatted: "1:00 PM ET", opponent: "New York Jets", oppShortName: "Jets", oppAbbrev: "NYJ", isHome: false, statusState: "pre", statusDetail: "11/15 - 1:00 PM EST", bufScore: null, oppScore: null, result: null, broadcast: resolveNFLBroadcast("", "2026-11-15T18:00Z").network, primeTime: null },
+  { week: 11, isBye: false, date: "2026-11-22T18:00Z", dayOfWeek: "Sun", dateFormatted: "Nov 22", timeFormatted: "1:00 PM ET", opponent: "Indianapolis Colts", oppShortName: "Colts", oppAbbrev: "IND", isHome: true, statusState: "pre", statusDetail: "11/22 - 1:00 PM EST", bufScore: null, oppScore: null, result: null, broadcast: resolveNFLBroadcast("", "2026-11-22T18:00Z").network, primeTime: null },
 ];
 
 const SABRES_SCHEDULE: ScheduleEntry[] = [
   { gameNumber: 12, id: 2026020195, date: "2026-10-27", isoTime: "2026-10-27T23:00:00Z", monthKey: "2026-10", monthLabel: "OCT", dayOfWeek: "Tue", dateFormatted: "Oct 27", timeFormatted: "7:00 PM ET", opponent: "Detroit Red Wings", oppShortName: "Red Wings", oppAbbrev: "DET", isHome: true, statusState: "post", statusDetail: "Final", bufScore: 5, oppScore: 3, result: "W", outcome: "REG", broadcast: "MSG-B" },
-  { gameNumber: 13, id: 2026020211, date: "2026-10-29", isoTime: "2026-10-30T02:00:00Z", monthKey: "2026-10", monthLabel: "OCT", dayOfWeek: "Thu", dateFormatted: "Oct 29", timeFormatted: "10:00 PM ET", opponent: "Anaheim Ducks", oppShortName: "Ducks", oppAbbrev: "ANA", isHome: false, statusState: "post", statusDetail: "Final", bufScore: 7, oppScore: 6, result: "W", outcome: "REG", broadcast: "ESPN+" },
+  { gameNumber: 13, id: 2026020211, date: "2026-10-29", isoTime: "2026-10-30T02:00:00Z", monthKey: "2026-10", monthLabel: "OCT", dayOfWeek: "Thu", dateFormatted: "Oct 29", timeFormatted: "10:00 PM ET", opponent: "Anaheim Ducks", oppShortName: "Ducks", oppAbbrev: "ANA", isHome: false, statusState: "post", statusDetail: "Final", bufScore: 7, oppScore: 6, result: "W", outcome: "REG", broadcast: "MSG-B" },
   { gameNumber: 14, id: 2026020221, date: "2026-10-31", isoTime: "2026-10-31T20:00:00Z", monthKey: "2026-10", monthLabel: "OCT", dayOfWeek: "Sat", dateFormatted: "Oct 31", timeFormatted: "4:00 PM ET", opponent: "Los Angeles Kings", oppShortName: "Kings", oppAbbrev: "LAK", isHome: false, statusState: "post", statusDetail: "Final", bufScore: 3, oppScore: 2, result: "W", outcome: "REG", broadcast: "MSG-B" },
   { gameNumber: 15, id: 2026020247, date: "2026-11-04", isoTime: "2026-11-05T00:30:00Z", monthKey: "2026-11", monthLabel: "NOV", dayOfWeek: "Wed", dateFormatted: "Nov 4", timeFormatted: "7:30 PM ET", opponent: "Ottawa Senators", oppShortName: "Senators", oppAbbrev: "OTT", isHome: true, statusState: "pre", statusDetail: "Nov 4", bufScore: null, oppScore: null, result: null, outcome: "REG", broadcast: "MSG-B" },
   { gameNumber: 16, id: 2026020262, date: "2026-11-06", isoTime: "2026-11-07T00:00:00Z", monthKey: "2026-11", monthLabel: "NOV", dayOfWeek: "Fri", dateFormatted: "Nov 6", timeFormatted: "7:00 PM ET", opponent: "Columbus Blue Jackets", oppShortName: "Blue Jackets", oppAbbrev: "CBJ", isHome: true, statusState: "pre", statusDetail: "Nov 6", bufScore: null, oppScore: null, result: null, outcome: "REG", broadcast: "MSG-B" },
@@ -578,15 +696,10 @@ const GAME: GameTelemetryProps = {
     score: parseSideScore(BILLS_NEXT.oppScore),
   },
   venue: BILLS_NEXT.venue,
-  network: BILLS_NEXT.broadcast,
+  network: BILLS_NEXT.broadcast.network,
+  broadcast: BILLS_NEXT.broadcast,
   leverage: BILLS_NEXT.leverage,
 };
-
-const CHANNELS = [
-  { name: BILLS_NEXT.broadcast, detail: `Bills ${BILLS_NEXT.opponent} • ${BILLS_NEXT.gameTime}`, live: BILLS_NEXT.statusState === "in" },
-  { name: SABRES_NEXT.broadcast, detail: `Sabres ${SABRES_NEXT.opponent} • ${SABRES_NEXT.gameTime}`, live: SABRES_NEXT.statusState === "in" },
-  { name: "ESPN+", detail: "Sabres stream", live: false },
-];
 
 function useCountdown(target: number) {
   const [left, setLeft] = useState(() => Math.max(0, target - Date.now()));
@@ -604,7 +717,17 @@ function useCountdown(target: number) {
     : `${pad(hours)}:${pad(mins)}:${pad(secs)}`;
 }
 
-function TelemetryBar({ filter, onFilter }: { filter: TeamFilter; onFilter: (f: TeamFilter) => void }) {
+function TelemetryBar({
+  filter,
+  onFilter,
+  game = BILLS_NEXT,
+  sabresGame = SABRES_NEXT,
+}: {
+  filter: TeamFilter;
+  onFilter: (f: TeamFilter) => void;
+  game?: NextGameIntel;
+  sabresGame?: NextGameIntel;
+}) {
   const [now, setNow] = useState(() => new Date());
   useEffect(() => {
     const t = setInterval(() => setNow(new Date()), 1000);
@@ -614,6 +737,12 @@ function TelemetryBar({ filter, onFilter }: { filter: TeamFilter; onFilter: (f: 
   const hours12 = rawHours % 12 || 12;
   const ampm = rawHours >= 12 ? "PM" : "AM";
   const time = `${hours12}:${pad(now.getMinutes())}:${pad(now.getSeconds())} ${ampm}`;
+  const billsBroadcast = getGameBroadcast(game, true);
+  const sabresBroadcast = getGameBroadcast(sabresGame, false);
+  const channels = [
+    { name: billsBroadcast.network, detail: `Bills ${game.opponent} • ${game.gameTime}`, live: game.statusState === "in" },
+    { name: sabresBroadcast.network, detail: `Sabres ${sabresGame.opponent} • ${sabresGame.gameTime}`, live: sabresGame.statusState === "in" },
+  ];
   const tabs: { id: TeamFilter; label: string }[] = [
     { id: "all", label: "All Teams" },
     { id: "bills", label: "Buffalo Bills" },
@@ -630,7 +759,7 @@ function TelemetryBar({ filter, onFilter }: { filter: TeamFilter; onFilter: (f: 
           </div>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 20, flexWrap: "wrap" }}>
-          {CHANNELS.map((c) => (
+          {channels.map((c) => (
             <div key={c.name} style={{ fontSize: 12, lineHeight: 1.25 }}>
               <div style={{ fontWeight: 600 }}>{c.live && <LiveDot />}{c.name}</div>
               <div style={{ color: "#DCE6FF" }}>{c.detail}</div>
@@ -673,16 +802,17 @@ function TelemetryBar({ filter, onFilter }: { filter: TeamFilter; onFilter: (f: 
 /* ───────────── Active game center ───────────── */
 
 function GameCenter(p: GameTelemetryProps) {
-  const nextGame = p.nextGame ?? BILLS_NEXT;
-  const statusState: StatusState = nextGame.statusState ?? p.status ?? "pre";
+  const game = p.nextGame ?? BILLS_NEXT;
+  const nextGame = game;
+  const statusState: StatusState = game.statusState ?? p.status ?? "pre";
   const live = p.liveData ?? p.liveTelemetry;
   const [expanded, setExpanded] = useState(false);
-  const kickoffTarget = Date.parse(nextGame.isoTime);
+  const kickoffTarget = Date.parse(game.isoTime);
   const kickoffCountdown = useCountdown(Number.isFinite(kickoffTarget) ? kickoffTarget : Date.now());
 
-  const bufIsAway = nextGame.opponent.trim().startsWith("@");
-  const bufRawScore = parseSideScore(nextGame.bufScore);
-  const oppRawScore = parseSideScore(nextGame.oppScore);
+  const bufIsAway = game.opponent.trim().startsWith("@");
+  const bufRawScore = parseSideScore(game.bufScore);
+  const oppRawScore = parseSideScore(game.oppScore);
   const sumSplits = (splits?: (number | null)[]) =>
     splits && splits.some((s) => s !== null)
       ? splits.reduce<number>((acc, s) => acc + (s ?? 0), 0)
@@ -697,12 +827,13 @@ function GameCenter(p: GameTelemetryProps) {
     parseSideScore(p.home.score) ??
     sumSplits(live?.homeSplits);
 
-  const bufWinChance = nextGame.winChance;
+  const bufWinChance = game.winChance;
   const homeWin = live?.winProbHome ?? (bufIsAway ? 100 - bufWinChance : bufWinChance);
   const awayWin = 100 - homeWin;
 
-  const venueLabel = nextGame.venue || p.venue;
-  const networkLabel = nextGame.broadcast || p.network;
+  const venueLabel = game.venue || p.venue;
+  const broadcast = getGameBroadcast(game, true);
+  const networkLabel = broadcast.network;
   const matchupTitle = `${p.away.name} at ${p.home.name}`;
 
   const quarterLabels = live?.quarterLabels ?? ["1st", "2nd", "3rd", "4th", "OT"];
@@ -755,16 +886,16 @@ function GameCenter(p: GameTelemetryProps) {
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap", marginBottom: 14 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
                   <span style={{ background: C.royal, border: `1px solid ${C.hair}`, padding: "2px 8px", fontSize: 12, fontWeight: 600 }}>
-                    {networkLabel}
+                    {broadcast.network}
                   </span>
-                  {nextGame.windowLabel && (
+                  {broadcast.badgeTitle && (
                     <span style={{ color: C.gold, fontSize: 12, fontWeight: 600 }}>
-                      {nextGame.windowLabel}
+                      {broadcast.badgeTitle}
                     </span>
                   )}
                 </div>
                 <span className="num" style={{ fontSize: 14, fontWeight: 600, color: C.white }}>
-                  Kickoff: {nextGame.gameTime}
+                  Kickoff: {game.gameTime}
                 </span>
               </div>
 
@@ -809,13 +940,9 @@ function GameCenter(p: GameTelemetryProps) {
                 <h3 className="disp" style={{ margin: "0 0 8px", fontSize: 20 }}>Pregame Matchup Info</h3>
                 <div className="num" style={{ display: "grid", gridTemplateColumns: "110px 1fr", rowGap: 6, columnGap: 12, fontSize: 13 }}>
                   <span style={{ color: C.dim }}>Kickoff</span>
-                  <span>{nextGame.gameTime} ({nextGame.statusDetail})</span>
+                  <span>{game.gameTime} ({game.statusDetail})</span>
                   <span style={{ color: C.dim }}>Broadcast</span>
-                  <span>
-                    {networkLabel}
-                    {nextGame.announcers ? ` • ${nextGame.announcers}` : ""}
-                    {nextGame.windowBadge ? ` (${nextGame.windowBadge})` : ""}
-                  </span>
+                  <span>{broadcast.displayString}</span>
                   <span style={{ color: C.dim }}>Venue</span>
                   <span>{venueLabel}</span>
                   {(nextGame.roof || nextGame.surface || nextGame.weather) && (
@@ -1029,10 +1156,9 @@ function GameCenter(p: GameTelemetryProps) {
             {/* Postgame summary */}
             <div style={{ padding: "18px 0 18px 20px", display: "flex", flexDirection: "column", justifyContent: "center", gap: 8 }}>
               <h3 className="disp" style={{ margin: 0, fontSize: 20 }}>Final Matchup Summary</h3>
-              <p className="num" style={{ margin: 0, fontSize: 13 }}>{nextGame.matchupRecords}</p>
+              <p className="num" style={{ margin: 0, fontSize: 13 }}>{game.matchupRecords}</p>
               <p style={{ margin: 0, fontSize: 13, color: C.dim }}>
-                {venueLabel} • {networkLabel}
-                {nextGame.announcers ? ` (${nextGame.announcers})` : ""}
+                {venueLabel} • {broadcast.displayString}
               </p>
               {(nextGame.weather || nextGame.roof || nextGame.surface) && (
                 <p className="num" style={{ margin: 0, fontSize: 12, color: C.dim }}>
@@ -1136,9 +1262,7 @@ function UpcomingGame(p: UpcomingGameProps) {
                 <span style={{ color: C.dim }}>Puck Drop</span>
                 <span>{gameTimeLabel}</span>
                 <span style={{ color: C.dim }}>Broadcast</span>
-                <span>
-                  {intel.broadcast || "MSG-B"} • {intel.announcers || "Dan Dunleavy, Rob Ray"} (Stream: ESPN+)
-                </span>
+                <span>{getGameBroadcast(intel, false).displayString}</span>
                 <span style={{ color: C.dim }}>Venue</span>
                 <span>{venueLabel}</span>
                 <span style={{ color: C.dim }}>Power Play %</span>

@@ -860,7 +860,7 @@
       const statusEl = document.getElementById('update-status');
 
       const FALLBACK_DATA = {
-  "updatedAt": "2026-11-03T00:43:43.275Z",
+  "updatedAt": "2026-11-03T00:39:04.863Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
   "theme": "regular",
   "billsTheme": "regular",
@@ -883,15 +883,20 @@
       "isoTime": "2026-11-10T01:15Z",
       "winChance": 46,
       "matchupRecords": "Bills (6-1, W3) vs. Vikings (6-1, L1)",
-      "broadcast": "CBS",
-      "announcers": "Jim Nantz, Tony Romo",
+      "broadcast": {
+        "network": "ESPN",
+        "badgeTitle": "Monday Night Football",
+        "crew": "Joe Buck, Troy Aikman, Lisa Salters",
+        "displayString": "ESPN • Joe Buck, Troy Aikman, Lisa Salters (Monday Night Football)"
+      },
+      "announcers": "Joe Buck, Troy Aikman, Lisa Salters",
       "venue": "U.S. Bank Stadium, Minneapolis, MN",
       "roof": "Domed Stadium",
       "surface": "Act Global Turf",
       "weather": "Controlled 72°F Climate",
       "window": "MNF",
       "windowLabel": "Monday Night Football",
-      "windowBadge": "ESPN / ABC Prime Time",
+      "windowBadge": "Monday Night Football",
       "statusState": "pre",
       "statusDetail": "11/9 - 8:15 PM EST",
       "bufScore": "",
@@ -1099,7 +1104,7 @@
       document.getElementById('bills-magic-num').textContent = b.magicNumber || '--';
 
       document.getElementById('bills-game-time').textContent = b.nextGame.gameTime || '';
-      document.getElementById('bills-broadcast').textContent = b.nextGame.broadcast || 'CBS';
+      document.getElementById('bills-broadcast').textContent = (typeof b.nextGame.broadcast === 'object' ? b.nextGame.broadcast?.network : b.nextGame.broadcast) || 'CBS';
       document.getElementById('bills-if-win').textContent = `Win: ${b.nextGame.ifWin}%`;
       document.getElementById('bills-if-loss').textContent = `Loss: ${b.nextGame.ifLoss}%`;
 

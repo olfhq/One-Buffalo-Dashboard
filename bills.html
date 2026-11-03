@@ -2390,14 +2390,17 @@
           defaultWeather = cSt.weather;
         }
 
+        const rawBillsBroadcast = typeof bg.broadcast === 'object' ? bg.broadcast?.network : bg.broadcast;
+        const rawBillsCrew = (typeof bg.broadcast === 'object' ? bg.broadcast?.crew : null) || bg.announcers;
+
         const enrichedBills = {
           opponent: bg.opponent || 'Next Matchup',
           oppShortName: bg.oppShortName || 'Opponent',
           records: bg.matchupRecords || 'Bills (5-1) vs. Opponent',
           gameTime: bg.gameTime || 'Sun • 1:00 PM ET',
           isoTime: bg.isoTime,
-          broadcast: bg.broadcast || 'CBS',
-          announcers: bg.announcers || 'Jim Nantz, Tony Romo',
+          broadcast: rawBillsBroadcast || 'CBS',
+          announcers: rawBillsCrew || 'Jim Nantz, Tony Romo, Tracy Wolfson',
           venue: bg.venue || defaultVenue,
           roof: bg.roof || defaultRoof,
           surface: bg.surface || defaultSurface,
@@ -2879,7 +2882,7 @@
       let data = null;
 
       const FALLBACK_DATA = {
-  "updatedAt": "2026-11-03T00:43:43.275Z",
+  "updatedAt": "2026-11-03T00:39:04.863Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
   "theme": "regular",
   "billsTheme": "regular",
@@ -2902,15 +2905,20 @@
       "isoTime": "2026-11-10T01:15Z",
       "winChance": 46,
       "matchupRecords": "Bills (6-1, W3) vs. Vikings (6-1, L1)",
-      "broadcast": "CBS",
-      "announcers": "Jim Nantz, Tony Romo",
+      "broadcast": {
+        "network": "ESPN",
+        "badgeTitle": "Monday Night Football",
+        "crew": "Joe Buck, Troy Aikman, Lisa Salters",
+        "displayString": "ESPN • Joe Buck, Troy Aikman, Lisa Salters (Monday Night Football)"
+      },
+      "announcers": "Joe Buck, Troy Aikman, Lisa Salters",
       "venue": "U.S. Bank Stadium, Minneapolis, MN",
       "roof": "Domed Stadium",
       "surface": "Act Global Turf",
       "weather": "Controlled 72°F Climate",
       "window": "MNF",
       "windowLabel": "Monday Night Football",
-      "windowBadge": "ESPN / ABC Prime Time",
+      "windowBadge": "Monday Night Football",
       "statusState": "pre",
       "statusDetail": "11/9 - 8:15 PM EST",
       "bufScore": "",
@@ -3435,7 +3443,7 @@
         "isoTime": "2026-10-30T00:15Z",
         "slot": "Thu, Oct 29 • 8:15 PM ET",
         "broadcast": "Prime Video",
-        "announcers": "Al Michaels, Kirk Herbstreit",
+        "announcers": "Al Michaels, Kirk Herbstreit, Kaylee Hartung",
         "venue": "Lambeau Field, Green Bay, WI",
         "roof": "Open-Air Stadium",
         "surface": "Natural Grass (SISGrass)",
@@ -3597,7 +3605,7 @@
         "isoTime": "2026-11-01T18:00Z",
         "slot": "Sun, Nov 1 • 1:00 PM ET",
         "broadcast": "FOX",
-        "announcers": "Kevin Burkhardt, Tom Brady",
+        "announcers": "Kevin Burkhardt, Tom Brady, Erin Andrews",
         "venue": "Raymond James Stadium, Tampa, FL",
         "roof": "Open-Air Stadium",
         "surface": "Natural Bermuda Grass",
@@ -3678,7 +3686,7 @@
         "isoTime": "2026-11-01T21:25Z",
         "slot": "Sun, Nov 1 • 4:25 PM ET",
         "broadcast": "CBS",
-        "announcers": "Jim Nantz, Tony Romo",
+        "announcers": "Jim Nantz, Tony Romo, Tracy Wolfson",
         "venue": "Empower Field at Mile High, Denver, CO",
         "roof": "Open-Air Stadium",
         "surface": "Natural Kentucky Bluegrass",
@@ -3732,7 +3740,7 @@
         "isoTime": "2026-11-02T01:20Z",
         "slot": "Sun, Nov 1 • 8:20 PM ET",
         "broadcast": "NBC",
-        "announcers": "Mike Tirico, Cris Collinsworth",
+        "announcers": "Mike Tirico, Cris Collinsworth, Melissa Stark",
         "venue": "Northwest Stadium, Landover, MD",
         "roof": "Open-Air Stadium",
         "surface": "Natural Bermuda Grass",
@@ -3759,7 +3767,7 @@
         "isoTime": "2026-11-03T01:15Z",
         "slot": "Mon, Nov 2 • 8:15 PM ET",
         "broadcast": "ESPN",
-        "announcers": "Joe Buck, Troy Aikman",
+        "announcers": "Joe Buck, Troy Aikman, Lisa Salters",
         "venue": "Lumen Field, Seattle, WA",
         "roof": "Open-Air Stadium",
         "surface": "FieldTurf Revolution",
@@ -3828,7 +3836,7 @@
       }
 
       document.getElementById('bills-game-time').textContent = b.nextGame.gameTime || '';
-      document.getElementById('bills-broadcast').textContent = b.nextGame.broadcast || 'CBS';
+      document.getElementById('bills-broadcast').textContent = (typeof b.nextGame.broadcast === 'object' ? b.nextGame.broadcast?.network : b.nextGame.broadcast) || 'CBS';
       document.getElementById('bills-if-win').textContent = `Win: ${b.nextGame.ifWin}%`;
       document.getElementById('bills-if-loss').textContent = `Loss: ${b.nextGame.ifLoss}%`;
       
