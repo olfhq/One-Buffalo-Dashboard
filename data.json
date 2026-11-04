@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-04T05:24:53.401Z",
+  "updatedAt": "2026-11-04T13:57:23.628Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
   "theme": "regular",
   "billsTheme": "regular",
@@ -915,7 +915,7 @@
         "venue": "M&T Bank Stadium, Baltimore, MD",
         "roof": "Open-Air Stadium",
         "surface": "Natural Bermuda Grass",
-        "weather": "67°F, 4mph Wind, 14% PoP",
+        "weather": "67°F, 4mph Wind, 21% PoP",
         "window": "TNF",
         "windowLabel": "Thursday Night Football",
         "windowBadge": "Prime Video Exclusive",
@@ -954,8 +954,8 @@
         "homeName": "Atlanta Falcons",
         "homeRecord": "3-5, L1",
         "homeScore": "0",
-        "homeWinChance": 41,
-        "awayWinChance": 59,
+        "homeWinChance": 42,
+        "awayWinChance": 58,
         "verdict": "SEEDING WATCH",
         "impactClass": "good",
         "target": "Root for Atlanta Falcons",
@@ -996,7 +996,7 @@
         "venue": "Arrowhead Stadium, Kansas City, MO",
         "roof": "Open-Air Stadium",
         "surface": "Natural Bermuda Grass",
-        "weather": "56°F, 4mph Wind, 0% PoP",
+        "weather": "55°F, 1mph Wind, 0% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -1023,7 +1023,7 @@
         "venue": "Hard Rock Stadium, Miami Gardens, FL",
         "roof": "Open-Air Stadium",
         "surface": "Natural Bermuda Grass",
-        "weather": "85°F, 8mph Wind, 4% PoP",
+        "weather": "84°F, 9mph Wind, 5% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -1077,7 +1077,7 @@
         "venue": "Lincoln Financial Field, Philadelphia, PA",
         "roof": "Open-Air Stadium",
         "surface": "Natural Grass (Desso)",
-        "weather": "58°F, 15mph Wind, 1% PoP",
+        "weather": "58°F, 12mph Wind, 2% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -1104,7 +1104,7 @@
         "venue": "Northwest Stadium, Landover, MD",
         "roof": "Open-Air Stadium",
         "surface": "Natural Bermuda Grass",
-        "weather": "59°F, 14mph Wind, 0% PoP",
+        "weather": "59°F, 12mph Wind, 1% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -1116,8 +1116,8 @@
         "homeName": "Washington Commanders",
         "homeRecord": "2-4-1, W1",
         "homeScore": "0",
-        "homeWinChance": 32,
-        "awayWinChance": 68,
+        "homeWinChance": 33,
+        "awayWinChance": 67,
         "verdict": "NFC MATCHUP",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
@@ -1131,7 +1131,7 @@
         "venue": "Bank of America Stadium, Charlotte, NC",
         "roof": "Open-Air Stadium",
         "surface": "FieldTurf",
-        "weather": "63°F, 3mph Wind, 1% PoP",
+        "weather": "63°F, 2mph Wind, 0% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -1143,8 +1143,8 @@
         "homeName": "Carolina Panthers",
         "homeRecord": "3-4, L2",
         "homeScore": "0",
-        "homeWinChance": 44,
-        "awayWinChance": 56,
+        "homeWinChance": 43,
+        "awayWinChance": 57,
         "verdict": "SEEDING WATCH",
         "impactClass": "good",
         "target": "Root for Carolina Panthers",
@@ -1185,7 +1185,7 @@
         "venue": "Gillette Stadium, Foxborough, MA",
         "roof": "Open-Air Stadium",
         "surface": "FieldTurf CORE",
-        "weather": "50°F, 14mph Wind, 5% PoP",
+        "weather": "50°F, 11mph Wind, 6% PoP",
         "window": "LATE",
         "windowLabel": "Sunday 4:25 PM ET National Window",
         "windowBadge": "America's Game of the Week",
@@ -1212,7 +1212,7 @@
         "venue": "Levi's Stadium, Santa Clara, CA",
         "roof": "Open-Air Stadium",
         "surface": "Natural Bermuda Grass",
-        "weather": "70°F, 8mph Wind, 0% PoP",
+        "weather": "73°F, 6mph Wind, 0% PoP",
         "window": "LATE",
         "windowLabel": "Sunday 4:25 PM ET National Window",
         "windowBadge": "America's Game of the Week",
@@ -1224,8 +1224,8 @@
         "homeName": "San Francisco 49ers",
         "homeRecord": "6-1, L1",
         "homeScore": "0",
-        "homeWinChance": 81,
-        "awayWinChance": 19,
+        "homeWinChance": 80,
+        "awayWinChance": 20,
         "verdict": "SEEDING WATCH",
         "impactClass": "good",
         "target": "Root for San Francisco 49ers",
@@ -1239,7 +1239,7 @@
         "venue": "Lumen Field, Seattle, WA",
         "roof": "Open-Air Stadium",
         "surface": "FieldTurf Revolution",
-        "weather": "55°F, 9mph Wind, 34% PoP",
+        "weather": "55°F, 10mph Wind, 31% PoP",
         "window": "LATE",
         "windowLabel": "Sunday 4:25 PM ET National Window",
         "windowBadge": "America's Game of the Week",
@@ -1251,8 +1251,8 @@
         "homeName": "Seattle Seahawks",
         "homeRecord": "4-4, L1",
         "homeScore": "0",
-        "homeWinChance": 84,
-        "awayWinChance": 16,
+        "homeWinChance": 85,
+        "awayWinChance": 15,
         "verdict": "NFC MATCHUP",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
@@ -1266,7 +1266,7 @@
         "venue": "Soldier Field, Chicago, IL",
         "roof": "Open-Air Stadium",
         "surface": "Natural Bermuda Grass",
-        "weather": "51°F, 8mph Wind, 2% PoP",
+        "weather": "51°F, 6mph Wind, 1% PoP",
         "window": "SNF",
         "windowLabel": "Sunday Night Football",
         "windowBadge": "NBC / Peacock Marquee",
@@ -1290,8 +1290,8 @@
   "sabres": {
     "team": "Buffalo Sabres",
     "makePlayoffs": 47,
-    "winDivision": 31,
-    "wildcard": 16,
+    "winDivision": 32,
+    "wildcard": 15,
     "tragicNumber": "100 PTS",
     "projectedPoints": 100,
     "cutlinePoints": 98,
@@ -1457,15 +1457,15 @@
     "divisionRadar": [
       {
         "team": "Bruins",
-        "pct": 69
+        "pct": 73
+      },
+      {
+        "team": "Lightning",
+        "pct": 66
       },
       {
         "team": "Canadiens",
-        "pct": 64
-      },
-      {
-        "team": "Senators",
-        "pct": 52
+        "pct": 59
       },
       {
         "team": "Sabres",
@@ -1479,7 +1479,7 @@
       },
       {
         "seed": "Div 2",
-        "pct": 11
+        "pct": 12
       },
       {
         "seed": "Div 3",
@@ -1491,20 +1491,20 @@
       },
       {
         "seed": "Wildcard 2",
-        "pct": 8
+        "pct": 7
       }
     ],
     "opponents": [
+      {
+        "team": "Tampa Bay Lightning",
+        "pct": 7
+      },
       {
         "team": "Boston Bruins",
         "pct": 7
       },
       {
         "team": "Montreal Canadiens",
-        "pct": 6
-      },
-      {
-        "team": "Tampa Bay Lightning",
         "pct": 6
       }
     ],
