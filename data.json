@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-05T05:43:44.811Z",
+  "updatedAt": "2026-11-05T11:00:27.416Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
   "theme": "regular",
   "billsTheme": "regular",
@@ -915,7 +915,7 @@
         "venue": "M&T Bank Stadium, Baltimore, MD",
         "roof": "Open-Air Stadium",
         "surface": "Natural Bermuda Grass",
-        "weather": "68°F, 1mph Wind, 23% PoP",
+        "weather": "68°F, 2mph Wind, 31% PoP",
         "window": "TNF",
         "windowLabel": "Thursday Night Football",
         "windowBadge": "Prime Video Exclusive",
@@ -927,8 +927,8 @@
         "homeName": "Baltimore Ravens",
         "homeRecord": "4-4, L3",
         "homeScore": "0",
-        "homeWinChance": 20,
-        "awayWinChance": 80,
+        "homeWinChance": 19,
+        "awayWinChance": 81,
         "verdict": "SEEDING WATCH",
         "impactClass": "good",
         "target": "Root for Baltimore Ravens",
@@ -954,8 +954,8 @@
         "homeName": "Atlanta Falcons",
         "homeRecord": "3-5, L1",
         "homeScore": "0",
-        "homeWinChance": 42,
-        "awayWinChance": 58,
+        "homeWinChance": 40,
+        "awayWinChance": 60,
         "verdict": "SEEDING WATCH",
         "impactClass": "good",
         "target": "Root for Atlanta Falcons",
@@ -996,7 +996,7 @@
         "venue": "Arrowhead Stadium, Kansas City, MO",
         "roof": "Open-Air Stadium",
         "surface": "Natural Bermuda Grass",
-        "weather": "54°F, 6mph Wind, 1% PoP",
+        "weather": "64°F, 8mph Wind, 0% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -1023,7 +1023,7 @@
         "venue": "Hard Rock Stadium, Miami Gardens, FL",
         "roof": "Open-Air Stadium",
         "surface": "Natural Bermuda Grass",
-        "weather": "84°F, 9mph Wind, 3% PoP",
+        "weather": "82°F, 10mph Wind, 6% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -1077,7 +1077,7 @@
         "venue": "Lincoln Financial Field, Philadelphia, PA",
         "roof": "Open-Air Stadium",
         "surface": "Natural Grass (Desso)",
-        "weather": "57°F, 13mph Wind, 0% PoP",
+        "weather": "58°F, 12mph Wind, 1% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -1104,7 +1104,7 @@
         "venue": "Northwest Stadium, Landover, MD",
         "roof": "Open-Air Stadium",
         "surface": "Natural Bermuda Grass",
-        "weather": "59°F, 13mph Wind, 0% PoP",
+        "weather": "59°F, 12mph Wind, 0% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -1131,7 +1131,7 @@
         "venue": "Bank of America Stadium, Charlotte, NC",
         "roof": "Open-Air Stadium",
         "surface": "FieldTurf",
-        "weather": "63°F, 3mph Wind, 0% PoP",
+        "weather": "63°F, 5mph Wind, 0% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -1185,7 +1185,7 @@
         "venue": "Gillette Stadium, Foxborough, MA",
         "roof": "Open-Air Stadium",
         "surface": "FieldTurf CORE",
-        "weather": "45°F, 6mph Wind, 2% PoP",
+        "weather": "44°F, 4mph Wind, 4% PoP",
         "window": "LATE",
         "windowLabel": "Sunday 4:25 PM ET National Window",
         "windowBadge": "America's Game of the Week",
@@ -1239,7 +1239,7 @@
         "venue": "Lumen Field, Seattle, WA",
         "roof": "Open-Air Stadium",
         "surface": "FieldTurf Revolution",
-        "weather": "56°F, 7mph Wind, 20% PoP",
+        "weather": "54°F, 6mph Wind, 19% PoP",
         "window": "LATE",
         "windowLabel": "Sunday 4:25 PM ET National Window",
         "windowBadge": "America's Game of the Week",
@@ -1266,7 +1266,7 @@
         "venue": "Soldier Field, Chicago, IL",
         "roof": "Open-Air Stadium",
         "surface": "Natural Bermuda Grass",
-        "weather": "48°F, 3mph Wind, 0% PoP",
+        "weather": "52°F, 4mph Wind, 0% PoP",
         "window": "SNF",
         "windowLabel": "Sunday Night Football",
         "windowBadge": "NBC / Peacock Marquee",
@@ -1289,9 +1289,9 @@
   },
   "sabres": {
     "team": "Buffalo Sabres",
-    "makePlayoffs": 47,
-    "winDivision": 32,
-    "wildcard": 15,
+    "makePlayoffs": 42,
+    "winDivision": 26,
+    "wildcard": 16,
     "tragicNumber": "93 PTS",
     "projectedPoints": 93,
     "cutlinePoints": 102,
@@ -1315,8 +1315,8 @@
       "bufScore": "",
       "oppScore": "",
       "liveScore": null,
-      "ifWin": 53,
-      "ifLoss": 42,
+      "ifWin": 48,
+      "ifLoss": 37,
       "leverage": 11,
       "restAdvantage": {
         "sabresDays": 2,
@@ -1331,12 +1331,12 @@
       "efficiency": [
         {
           "metric": "Goals / Game",
-          "sabres": "2.93 (22nd)",
+          "sabres": "2.93 (23rd)",
           "opp": "2.69 (27th)"
         },
         {
           "metric": "Goals Against / Game",
-          "sabres": "3.33 (21st)",
+          "sabres": "3.33 (20th)",
           "opp": "3.15 (17th)"
         },
         {
@@ -1352,7 +1352,7 @@
         {
           "metric": "Shots / Game",
           "sabres": "27.8 (14th)",
-          "opp": "25.5 (25th)"
+          "opp": "25.5 (26th)"
         },
         {
           "metric": "Faceoff Win %",
@@ -1415,29 +1415,29 @@
     "divisionRadar": [
       {
         "team": "Bruins",
-        "pct": 73
-      },
-      {
-        "team": "Lightning",
-        "pct": 66
+        "pct": 72
       },
       {
         "team": "Canadiens",
-        "pct": 59
+        "pct": 58
+      },
+      {
+        "team": "Senators",
+        "pct": 58
       },
       {
         "team": "Sabres",
-        "pct": 47
+        "pct": 42
       }
     ],
     "seedDistribution": [
       {
         "seed": "Div 1",
-        "pct": 8
+        "pct": 5
       },
       {
         "seed": "Div 2",
-        "pct": 12
+        "pct": 9
       },
       {
         "seed": "Div 3",
@@ -1449,21 +1449,21 @@
       },
       {
         "seed": "Wildcard 2",
-        "pct": 7
+        "pct": 8
       }
     ],
     "opponents": [
       {
-        "team": "Tampa Bay Lightning",
-        "pct": 7
+        "team": "Boston Bruins",
+        "pct": 6
       },
       {
-        "team": "Boston Bruins",
-        "pct": 7
+        "team": "Tampa Bay Lightning",
+        "pct": 6
       },
       {
         "team": "Montreal Canadiens",
-        "pct": 6
+        "pct": 5
       }
     ],
     "seasonSchedule": [
@@ -3980,10 +3980,10 @@
         "awayRecord": "5-8-2, L2",
         "awayScore": "",
         "homeName": "Los Angeles Kings",
-        "homeRecord": "4-7-2, L1",
+        "homeRecord": "5-7-2, W1",
         "homeScore": "",
-        "homeWinChance": 52,
-        "awayWinChance": 48,
+        "homeWinChance": 56,
+        "awayWinChance": 44,
         "verdict": "WILD CARD WATCH",
         "impactClass": "neutral",
         "target": "Root for Los Angeles Kings in Regulation",
@@ -4172,10 +4172,10 @@
         "awayRecord": "7-5-2, L1",
         "awayScore": "",
         "homeName": "San Jose Sharks",
-        "homeRecord": "7-8-1, L2",
+        "homeRecord": "7-9-1, L3",
         "homeScore": "",
-        "homeWinChance": 43,
-        "awayWinChance": 57,
+        "homeWinChance": 41,
+        "awayWinChance": 59,
         "verdict": "WILD CARD WATCH",
         "impactClass": "neutral",
         "target": "Root for San Jose Sharks in Regulation",
