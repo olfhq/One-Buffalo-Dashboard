@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-09T05:16:47.527Z",
+  "updatedAt": "2026-11-09T11:00:31.952Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
   "theme": "regular",
   "billsTheme": "regular",
@@ -7,9 +7,9 @@
   "themeUntil": null,
   "bills": {
     "team": "Buffalo Bills",
-    "makePlayoffs": 93,
-    "winDivision": 71,
-    "seed1": 25,
+    "makePlayoffs": 96,
+    "winDivision": 82,
+    "seed1": 26,
     "magicNumber": "8",
     "clinchAlert": {
       "active": false,
@@ -42,8 +42,8 @@
       "oppScore": "",
       "liveScore": null,
       "ifWin": 99,
-      "ifLoss": 83,
-      "leverage": 16,
+      "ifLoss": 86,
+      "leverage": 13,
       "restAdvantage": {
         "billsDays": 8,
         "oppDays": 8,
@@ -53,31 +53,31 @@
         {
           "metric": "Points / Game",
           "bills": "33.3 (1st)",
-          "opp": "20.0 (27th)"
+          "opp": "20.0 (26th)"
         },
         {
           "metric": "Total Yards / Game",
-          "bills": "404.6 (3rd)",
-          "opp": "299.3 (29th)"
+          "bills": "404.6 (1st)",
+          "opp": "299.3 (28th)"
         },
         {
           "metric": "Passing Yards / Game",
-          "bills": "244.7 (10th)",
-          "opp": "165.6 (31st)"
+          "bills": "244.7 (11th)",
+          "opp": "165.6 (30th)"
         },
         {
           "metric": "Rushing Yards / Game",
-          "bills": "148.4 (3rd)",
+          "bills": "148.4 (2nd)",
           "opp": "113.9 (17th)"
         },
         {
           "metric": "3rd Down Conversion %",
           "bills": "44.2% (6th)",
-          "opp": "36.0% (26th)"
+          "opp": "36.0% (25th)"
         },
         {
           "metric": "Red Zone TD %",
-          "bills": "70.0% (6th)",
+          "bills": "70.0% (5th)",
           "opp": "56.3% (19th)"
         }
       ],
@@ -162,11 +162,11 @@
     "divisionRadar": [
       {
         "team": "Bills",
-        "pct": 71
+        "pct": 82
       },
       {
         "team": "Patriots",
-        "pct": 29
+        "pct": 18
       },
       {
         "team": "Jets",
@@ -180,41 +180,41 @@
     "seedDistribution": [
       {
         "seed": "#1 Seed",
-        "pct": 25
+        "pct": 26
       },
       {
         "seed": "#2 Seed",
-        "pct": 17
+        "pct": 19
       },
       {
         "seed": "#3 Seed",
-        "pct": 16
+        "pct": 20
       },
       {
         "seed": "#4 Seed",
-        "pct": 13
+        "pct": 17
       },
       {
         "seed": "#5 Seed",
-        "pct": 8
+        "pct": 4
       },
       {
         "seed": "#6 Seed",
-        "pct": 8
+        "pct": 5
       },
       {
         "seed": "#7 Seed",
-        "pct": 6
+        "pct": 5
       }
     ],
     "opponents": [
       {
-        "team": "New England Patriots",
+        "team": "Kansas City Chiefs",
         "pct": 13
       },
       {
-        "team": "Kansas City Chiefs",
-        "pct": 12
+        "team": "New England Patriots",
+        "pct": 11
       },
       {
         "team": "Pittsburgh Steelers",
