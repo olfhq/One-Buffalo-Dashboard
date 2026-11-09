@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-09T11:00:31.952Z",
+  "updatedAt": "2026-11-09T15:34:12.972Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
   "theme": "regular",
   "billsTheme": "regular",
@@ -938,9 +938,9 @@
   },
   "sabres": {
     "team": "Buffalo Sabres",
-    "makePlayoffs": 45,
-    "winDivision": 28,
-    "wildcard": 17,
+    "makePlayoffs": 41,
+    "winDivision": 25,
+    "wildcard": 16,
     "tragicNumber": "92 PTS",
     "projectedPoints": 92,
     "cutlinePoints": 91,
@@ -964,8 +964,8 @@
       "bufScore": "",
       "oppScore": "",
       "liveScore": null,
-      "ifWin": 51,
-      "ifLoss": 40,
+      "ifWin": 47,
+      "ifLoss": 36,
       "leverage": 11,
       "restAdvantage": {
         "sabresDays": 3,
@@ -1064,29 +1064,29 @@
     "divisionRadar": [
       {
         "team": "Bruins",
-        "pct": 77
+        "pct": 82
       },
       {
         "team": "Lightning",
-        "pct": 73
+        "pct": 69
       },
       {
         "team": "Canadiens",
-        "pct": 66
+        "pct": 68
       },
       {
         "team": "Sabres",
-        "pct": 45
+        "pct": 41
       }
     ],
     "seedDistribution": [
       {
         "seed": "Div 1",
-        "pct": 6
+        "pct": 4
       },
       {
         "seed": "Div 2",
-        "pct": 10
+        "pct": 9
       },
       {
         "seed": "Div 3",
@@ -1094,7 +1094,7 @@
       },
       {
         "seed": "Wildcard 1",
-        "pct": 9
+        "pct": 8
       },
       {
         "seed": "Wildcard 2",
@@ -1104,14 +1104,14 @@
     "opponents": [
       {
         "team": "Boston Bruins",
-        "pct": 8
-      },
-      {
-        "team": "Tampa Bay Lightning",
         "pct": 7
       },
       {
         "team": "Montreal Canadiens",
+        "pct": 6
+      },
+      {
+        "team": "Tampa Bay Lightning",
         "pct": 6
       }
     ],
