@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-10T05:00:26.633Z",
+  "updatedAt": "2026-11-10T11:00:28.765Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
   "theme": "regular",
   "billsTheme": "regular",
@@ -7,9 +7,9 @@
   "themeUntil": null,
   "bills": {
     "team": "Buffalo Bills",
-    "makePlayoffs": 96,
-    "winDivision": 82,
-    "seed1": 26,
+    "makePlayoffs": 100,
+    "winDivision": 92,
+    "seed1": 38,
     "magicNumber": "7",
     "clinchAlert": {
       "active": false,
@@ -32,7 +32,7 @@
       "venue": "MetLife Stadium, East Rutherford, NJ",
       "roof": "Open-Air Stadium",
       "surface": "FieldTurf CORE",
-      "weather": "48°F, 15mph Wind, 0% PoP",
+      "weather": "49°F, 8mph Wind, 0% PoP",
       "window": "EARLY",
       "windowLabel": "NFL on CBS",
       "windowBadge": "NFL on CBS",
@@ -42,8 +42,8 @@
       "oppScore": "",
       "liveScore": null,
       "ifWin": 99,
-      "ifLoss": 86,
-      "leverage": 13,
+      "ifLoss": 90,
+      "leverage": 9,
       "restAdvantage": {
         "billsDays": 6,
         "oppDays": 7,
@@ -52,39 +52,39 @@
       "efficiency": [
         {
           "metric": "Points / Game",
-          "bills": "33.3 (1st)",
+          "bills": "32.0 (1st)",
           "opp": "20.2 (25th)"
         },
         {
           "metric": "Total Yards / Game",
-          "bills": "404.6 (1st)",
+          "bills": "400.0 (1st)",
           "opp": "336.1 (21st)"
         },
         {
           "metric": "Passing Yards / Game",
-          "bills": "244.7 (11th)",
+          "bills": "239.8 (13th)",
           "opp": "204.7 (22nd)"
         },
         {
           "metric": "Rushing Yards / Game",
-          "bills": "148.4 (2nd)",
+          "bills": "146.6 (2nd)",
           "opp": "105.2 (20th)"
         },
         {
           "metric": "3rd Down Conversion %",
-          "bills": "44.2% (6th)",
-          "opp": "35.4% (27th)"
+          "bills": "43.2% (8th)",
+          "opp": "35.4% (26th)"
         },
         {
           "metric": "Red Zone TD %",
-          "bills": "70.0% (5th)",
+          "bills": "66.7% (8th)",
           "opp": "40.7% (31st)"
         }
       ],
       "turnoverRatio": {
-        "bills": "-2 (9 Takeaways / 11 Giveaways)",
+        "bills": "0 (12 Takeaways / 12 Giveaways)",
         "opp": "+3 (10 Takeaways / 7 Giveaways)",
-        "advantage": "Jets (+5 Differential Margin)"
+        "advantage": "Jets (+3 Differential Margin)"
       },
       "injuries": [
         {
@@ -162,11 +162,11 @@
     "divisionRadar": [
       {
         "team": "Bills",
-        "pct": 82
+        "pct": 92
       },
       {
         "team": "Patriots",
-        "pct": 18
+        "pct": 10
       },
       {
         "team": "Jets",
@@ -180,45 +180,45 @@
     "seedDistribution": [
       {
         "seed": "#1 Seed",
-        "pct": 26
+        "pct": 38
       },
       {
         "seed": "#2 Seed",
-        "pct": 19
+        "pct": 22
       },
       {
         "seed": "#3 Seed",
-        "pct": 20
+        "pct": 19
       },
       {
         "seed": "#4 Seed",
-        "pct": 17
+        "pct": 13
       },
       {
         "seed": "#5 Seed",
-        "pct": 4
+        "pct": 3
       },
       {
         "seed": "#6 Seed",
-        "pct": 5
+        "pct": 3
       },
       {
         "seed": "#7 Seed",
-        "pct": 5
+        "pct": 2
       }
     ],
     "opponents": [
       {
         "team": "Kansas City Chiefs",
-        "pct": 13
-      },
-      {
-        "team": "New England Patriots",
         "pct": 11
       },
       {
-        "team": "Pittsburgh Steelers",
-        "pct": 9
+        "team": "New England Patriots",
+        "pct": 10
+      },
+      {
+        "team": "Cleveland Browns",
+        "pct": 8
       }
     ],
     "seasonSchedule": [
@@ -942,7 +942,7 @@
         "venue": "MetLife Stadium, East Rutherford, NJ",
         "roof": "Open-Air Stadium",
         "surface": "FieldTurf CORE",
-        "weather": "55°F, 6mph Wind, 73% PoP",
+        "weather": "55°F, 7mph Wind, 58% PoP",
         "window": "TNF",
         "windowLabel": "Thursday Night Football",
         "windowBadge": "Prime Video Exclusive",
@@ -954,8 +954,8 @@
         "homeName": "New York Giants",
         "homeRecord": "5-2-1, W2",
         "homeScore": "0",
-        "homeWinChance": 54,
-        "awayWinChance": 46,
+        "homeWinChance": 55,
+        "awayWinChance": 45,
         "verdict": "NFC MATCHUP",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
@@ -981,8 +981,8 @@
         "homeName": "Detroit Lions",
         "homeRecord": "6-2, W4",
         "homeScore": "0",
-        "homeWinChance": 58,
-        "awayWinChance": 42,
+        "homeWinChance": 57,
+        "awayWinChance": 43,
         "verdict": "AFC EAST WATCH",
         "impactClass": "bad",
         "target": "Root for Detroit Lions",
@@ -1023,7 +1023,7 @@
         "venue": "Huntington Bank Field, Cleveland, OH",
         "roof": "Open-Air Stadium",
         "surface": "Natural Kentucky Bluegrass",
-        "weather": "46°F, 12mph Wind, 7% PoP",
+        "weather": "45°F, 10mph Wind, 8% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -1035,8 +1035,8 @@
         "homeName": "Cleveland Browns",
         "homeRecord": "5-4, L2",
         "homeScore": "0",
-        "homeWinChance": 33,
-        "awayWinChance": 67,
+        "homeWinChance": 34,
+        "awayWinChance": 66,
         "verdict": "SEEDING WATCH",
         "impactClass": "good",
         "target": "Root for Houston Texans",
@@ -1050,7 +1050,7 @@
         "venue": "Lambeau Field, Green Bay, WI",
         "roof": "Open-Air Stadium",
         "surface": "Natural Grass (SISGrass)",
-        "weather": "45°F, 7mph Wind, 1% PoP",
+        "weather": "42°F, 6mph Wind, 0% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -1077,7 +1077,7 @@
         "venue": "Nissan Stadium, Nashville, TN",
         "roof": "Open-Air Stadium",
         "surface": "Matrix Helix Turf",
-        "weather": "51°F, 1mph Wind, 0% PoP",
+        "weather": "52°F, 6mph Wind, 0% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -1197,8 +1197,8 @@
         "homeName": "Arizona Cardinals",
         "homeRecord": "3-6, L1",
         "homeScore": "0",
-        "homeWinChance": 21,
-        "awayWinChance": 79,
+        "homeWinChance": 22,
+        "awayWinChance": 78,
         "verdict": "NFC MATCHUP",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
@@ -1224,8 +1224,8 @@
         "homeName": "Dallas Cowboys",
         "homeRecord": "4-5, W1",
         "homeScore": "0",
-        "homeWinChance": 34,
-        "awayWinChance": 66,
+        "homeWinChance": 36,
+        "awayWinChance": 64,
         "verdict": "NFC MATCHUP",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
@@ -1239,7 +1239,7 @@
         "venue": "Paycor Stadium, Cincinnati, OH",
         "roof": "Open-Air Stadium",
         "surface": "FieldTurf CORE",
-        "weather": "41°F, 2mph Wind, 1% PoP",
+        "weather": "40°F, 3mph Wind, 2% PoP",
         "window": "SNF",
         "windowLabel": "Sunday Night Football",
         "windowBadge": "NBC / Peacock Marquee",
@@ -1266,7 +1266,7 @@
         "venue": "M&T Bank Stadium, Baltimore, MD",
         "roof": "Open-Air Stadium",
         "surface": "Natural Bermuda Grass",
-        "weather": "45°F, 6mph Wind, 2% PoP",
+        "weather": "48°F, 3mph Wind, 3% PoP",
         "window": "MNF",
         "windowLabel": "Monday Night Football",
         "windowBadge": "ESPN / ABC Prime Time",
@@ -1336,7 +1336,7 @@
         },
         {
           "metric": "Goals Against / Game",
-          "sabres": "3.29 (19th)",
+          "sabres": "3.29 (20th)",
           "opp": "3.06 (15th)"
         },
         {
@@ -1415,15 +1415,15 @@
     "divisionRadar": [
       {
         "team": "Bruins",
-        "pct": 82
+        "pct": 81
       },
       {
         "team": "Lightning",
-        "pct": 69
+        "pct": 68
       },
       {
         "team": "Canadiens",
-        "pct": 68
+        "pct": 67
       },
       {
         "team": "Sabres",
@@ -1455,14 +1455,14 @@
     "opponents": [
       {
         "team": "Boston Bruins",
-        "pct": 7
-      },
-      {
-        "team": "Montreal Canadiens",
-        "pct": 6
+        "pct": 8
       },
       {
         "team": "Tampa Bay Lightning",
+        "pct": 6
+      },
+      {
+        "team": "Montreal Canadiens",
         "pct": 6
       }
     ],
@@ -3401,13 +3401,13 @@
         "statusState": "post",
         "statusDetail": "Final/OT",
         "awayName": "Philadelphia Flyers",
-        "awayRecord": "4-10-5, OT1",
+        "awayRecord": "5-10-5, W1",
         "awayScore": "3",
         "homeName": "Calgary Flames",
         "homeRecord": "8-9-1, W1",
         "homeScore": "4",
-        "homeWinChance": 67,
-        "awayWinChance": 33,
+        "homeWinChance": 63,
+        "awayWinChance": 37,
         "verdict": "WILDCARD OT POINT",
         "impactClass": "warning",
         "target": "Root for Calgary Flames in Regulation",
@@ -3470,20 +3470,20 @@
         "window": "MON",
         "windowLabel": "Monday Night NHL Action",
         "windowBadge": "Early Week Matchups",
-        "statusState": "in",
-        "statusDetail": "5:03 - 3rd",
+        "statusState": "post",
+        "statusDetail": "Final",
         "awayName": "Philadelphia Flyers",
-        "awayRecord": "4-10-5, OT1",
-        "awayScore": "2",
+        "awayRecord": "5-10-5, W1",
+        "awayScore": "3",
         "homeName": "Vancouver Canucks",
-        "homeRecord": "3-15-1, L5",
+        "homeRecord": "3-16-1, L6",
         "homeScore": "1",
-        "homeWinChance": 34,
-        "awayWinChance": 66,
-        "verdict": "WILD CARD WATCH",
+        "homeWinChance": 30,
+        "awayWinChance": 70,
+        "verdict": "RIVAL WIN",
         "impactClass": "neutral",
         "target": "Root for Vancouver Canucks in Regulation",
-        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points."
+        "why": "Philadelphia Flyers picked up 2 points in the Eastern playoff race."
       },
       {
         "isoTime": "2026-11-10T03:00:00Z",
@@ -3494,20 +3494,20 @@
         "window": "MON",
         "windowLabel": "Monday Night NHL Action",
         "windowBadge": "Early Week Matchups",
-        "statusState": "in",
-        "statusDetail": "18:37 - 3rd",
+        "statusState": "post",
+        "statusDetail": "Final/SO",
         "awayName": "New York Islanders",
-        "awayRecord": "7-6-3, OT1",
+        "awayRecord": "7-6-4, OT2",
         "awayScore": "2",
         "homeName": "San Jose Sharks",
-        "homeRecord": "7-11-1, L5",
-        "homeScore": "2",
-        "homeWinChance": 40,
-        "awayWinChance": 60,
-        "verdict": "WILD CARD WATCH",
-        "impactClass": "neutral",
+        "homeRecord": "8-11-1, W1",
+        "homeScore": "3",
+        "homeWinChance": 43,
+        "awayWinChance": 57,
+        "verdict": "WILDCARD OT POINT",
+        "impactClass": "warning",
         "target": "Root for San Jose Sharks in Regulation",
-        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points."
+        "why": "San Jose Sharks won in overtime, but Wild Card contender New York Islanders salvaged a point."
       },
       {
         "isoTime": "2026-11-11T00:00:00Z",
@@ -3689,7 +3689,7 @@
         "statusState": "pre",
         "statusDetail": "Scheduled",
         "awayName": "Philadelphia Flyers",
-        "awayRecord": "4-10-5, OT1",
+        "awayRecord": "5-10-5, W1",
         "awayScore": "",
         "homeName": "Edmonton Oilers",
         "homeRecord": "13-3-3, W2",
@@ -3716,10 +3716,10 @@
         "awayRecord": "6-10-2, L1",
         "awayScore": "",
         "homeName": "San Jose Sharks",
-        "homeRecord": "7-11-1, L5",
+        "homeRecord": "8-11-1, W1",
         "homeScore": "",
-        "homeWinChance": 54,
-        "awayWinChance": 46,
+        "homeWinChance": 57,
+        "awayWinChance": 43,
         "verdict": "WILD CARD WATCH",
         "impactClass": "neutral",
         "target": "Root for San Jose Sharks in Regulation",
@@ -3905,7 +3905,7 @@
         "statusState": "pre",
         "statusDetail": "Scheduled",
         "awayName": "New York Islanders",
-        "awayRecord": "7-6-3, OT1",
+        "awayRecord": "7-6-4, OT2",
         "awayScore": "",
         "homeName": "Los Angeles Kings",
         "homeRecord": "5-8-2, L1",
@@ -3932,10 +3932,10 @@
         "awayRecord": "10-8-1, L1",
         "awayScore": "",
         "homeName": "Vancouver Canucks",
-        "homeRecord": "3-15-1, L5",
+        "homeRecord": "3-16-1, L6",
         "homeScore": "",
-        "homeWinChance": 19,
-        "awayWinChance": 81,
+        "homeWinChance": 18,
+        "awayWinChance": 82,
         "verdict": "WILD CARD WATCH",
         "impactClass": "neutral",
         "target": "Root for Vancouver Canucks in Regulation",
@@ -4121,13 +4121,13 @@
         "statusState": "pre",
         "statusDetail": "Scheduled",
         "awayName": "Philadelphia Flyers",
-        "awayRecord": "4-10-5, OT1",
+        "awayRecord": "5-10-5, W1",
         "awayScore": "",
         "homeName": "Columbus Blue Jackets",
         "homeRecord": "7-8-0, L1",
         "homeScore": "",
-        "homeWinChance": 66,
-        "awayWinChance": 34,
+        "homeWinChance": 63,
+        "awayWinChance": 37,
         "verdict": "WILD CARD WATCH",
         "impactClass": "neutral",
         "target": "Root for Philadelphia Flyers in Regulation",
@@ -4169,7 +4169,7 @@
         "statusState": "pre",
         "statusDetail": "Scheduled",
         "awayName": "New York Islanders",
-        "awayRecord": "7-6-3, OT1",
+        "awayRecord": "7-6-4, OT2",
         "awayScore": "",
         "homeName": "Anaheim Ducks",
         "homeRecord": "10-7-1, W5",
@@ -4196,10 +4196,10 @@
         "awayRecord": "13-3-3, W2",
         "awayScore": "",
         "homeName": "Philadelphia Flyers",
-        "homeRecord": "4-10-5, OT1",
+        "homeRecord": "5-10-5, W1",
         "homeScore": "",
-        "homeWinChance": 17,
-        "awayWinChance": 83,
+        "homeWinChance": 19,
+        "awayWinChance": 81,
         "verdict": "WILD CARD WATCH",
         "impactClass": "neutral",
         "target": "Root for Edmonton Oilers in Regulation",
