@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-11T05:16:06.266Z",
+  "updatedAt": "2026-11-11T11:00:30.774Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
   "theme": "regular",
   "billsTheme": "regular",
@@ -32,7 +32,7 @@
       "venue": "MetLife Stadium, East Rutherford, NJ",
       "roof": "Open-Air Stadium",
       "surface": "FieldTurf CORE",
-      "weather": "51°F, 6mph Wind, 0% PoP",
+      "weather": "52°F, 10mph Wind, 0% PoP",
       "window": "EARLY",
       "windowLabel": "NFL on CBS",
       "windowBadge": "NFL on CBS",
@@ -942,7 +942,7 @@
         "venue": "MetLife Stadium, East Rutherford, NJ",
         "roof": "Open-Air Stadium",
         "surface": "FieldTurf CORE",
-        "weather": "52°F, 9mph Wind, 67% PoP",
+        "weather": "50°F, 13mph Wind, 64% PoP",
         "window": "TNF",
         "windowLabel": "Thursday Night Football",
         "windowBadge": "Prime Video Exclusive",
@@ -1023,7 +1023,7 @@
         "venue": "Huntington Bank Field, Cleveland, OH",
         "roof": "Open-Air Stadium",
         "surface": "Natural Kentucky Bluegrass",
-        "weather": "47°F, 9mph Wind, 10% PoP",
+        "weather": "45°F, 9mph Wind, 14% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -1050,7 +1050,7 @@
         "venue": "Lambeau Field, Green Bay, WI",
         "roof": "Open-Air Stadium",
         "surface": "Natural Grass (SISGrass)",
-        "weather": "44°F, 7mph Wind, 0% PoP",
+        "weather": "43°F, 7mph Wind, 0% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -1062,8 +1062,8 @@
         "homeName": "Green Bay Packers",
         "homeRecord": "6-3, W2",
         "homeScore": "0",
-        "homeWinChance": 61,
-        "awayWinChance": 39,
+        "homeWinChance": 60,
+        "awayWinChance": 40,
         "verdict": "NFC MATCHUP",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
@@ -1239,7 +1239,7 @@
         "venue": "Paycor Stadium, Cincinnati, OH",
         "roof": "Open-Air Stadium",
         "surface": "FieldTurf CORE",
-        "weather": "40°F, 4mph Wind, 0% PoP",
+        "weather": "40°F, 3mph Wind, 1% PoP",
         "window": "SNF",
         "windowLabel": "Sunday Night Football",
         "windowBadge": "NBC / Peacock Marquee",
@@ -1251,8 +1251,8 @@
         "homeName": "Cincinnati Bengals",
         "homeRecord": "6-2, W4",
         "homeScore": "0",
-        "homeWinChance": 62,
-        "awayWinChance": 38,
+        "homeWinChance": 61,
+        "awayWinChance": 39,
         "verdict": "SEEDING WATCH",
         "impactClass": "good",
         "target": "Root for Cincinnati Bengals",
@@ -1266,7 +1266,7 @@
         "venue": "M&T Bank Stadium, Baltimore, MD",
         "roof": "Open-Air Stadium",
         "surface": "Natural Bermuda Grass",
-        "weather": "48°F, 4mph Wind, 1% PoP",
+        "weather": "48°F, 3mph Wind, 1% PoP",
         "window": "MNF",
         "windowLabel": "Monday Night Football",
         "windowBadge": "ESPN / ABC Prime Time",
@@ -1331,7 +1331,7 @@
       "efficiency": [
         {
           "metric": "Goals / Game",
-          "sabres": "2.94 (22nd)",
+          "sabres": "2.94 (21st)",
           "opp": "3.71 (6th)"
         },
         {
@@ -1415,15 +1415,15 @@
     "divisionRadar": [
       {
         "team": "Bruins",
-        "pct": 81
+        "pct": 83
       },
       {
         "team": "Lightning",
-        "pct": 68
+        "pct": 72
       },
       {
         "team": "Canadiens",
-        "pct": 67
+        "pct": 66
       },
       {
         "team": "Sabres",
@@ -3788,10 +3788,10 @@
         "awayRecord": "7-6-4, OT2",
         "awayScore": "",
         "homeName": "Los Angeles Kings",
-        "homeRecord": "5-8-2, L1",
+        "homeRecord": "5-9-2, L2",
         "homeScore": "",
-        "homeWinChance": 41,
-        "awayWinChance": 59,
+        "homeWinChance": 38,
+        "awayWinChance": 62,
         "verdict": "WILD CARD WATCH",
         "impactClass": "neutral",
         "target": "Root for Los Angeles Kings in Regulation",
