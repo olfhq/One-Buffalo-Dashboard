@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-14T11:00:28.722Z",
+  "updatedAt": "2026-11-14T13:10:13.500Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
   "theme": "regular",
   "billsTheme": "regular",
@@ -645,7 +645,7 @@
         "venue": "Huntington Bank Field, Cleveland, OH",
         "roof": "Open-Air Stadium",
         "surface": "Natural Kentucky Bluegrass",
-        "weather": "46°F, 13mph Wind, 4% PoP",
+        "weather": "46°F, 13mph Wind, 5% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -888,7 +888,7 @@
         "venue": "M&T Bank Stadium, Baltimore, MD",
         "roof": "Open-Air Stadium",
         "surface": "Natural Bermuda Grass",
-        "weather": "47°F, 5mph Wind, 0% PoP",
+        "weather": "48°F, 4mph Wind, 0% PoP",
         "window": "MNF",
         "windowLabel": "Monday Night Football",
         "windowBadge": "ESPN / ABC Prime Time",
@@ -1044,6 +1044,13 @@
           "pos": "C",
           "status": "Injured Reserve",
           "injury": "Finger",
+          "team": "Dallas"
+        },
+        {
+          "player": "Matt Duchene",
+          "pos": "C",
+          "status": "Injured Reserve",
+          "injury": "Abdomen",
           "team": "Dallas"
         }
       ]
