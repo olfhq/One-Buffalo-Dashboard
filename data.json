@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-14T05:00:27.046Z",
+  "updatedAt": "2026-11-14T05:30:25.453Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
   "theme": "regular",
   "billsTheme": "regular",
@@ -861,7 +861,7 @@
         "venue": "Paycor Stadium, Cincinnati, OH",
         "roof": "Open-Air Stadium",
         "surface": "FieldTurf CORE",
-        "weather": "41°F, 3mph Wind, 0% PoP",
+        "weather": "42°F, 1mph Wind, 0% PoP",
         "window": "SNF",
         "windowLabel": "Sunday Night Football",
         "windowBadge": "NBC / Peacock Marquee",
@@ -947,7 +947,7 @@
       },
       "specialTeams": {
         "sabres": "PP: 15.9% (29th) | PK: 69.7% (28th)",
-        "opp": "PP: 26.2% (9th) | PK: 88.5% (2nd)",
+        "opp": "PP: 26.2% (9th) | PK: 88.5% (3rd)",
         "advantage": "Dallas Special Teams Edge (+29.1% Net Margin)"
       },
       "efficiency": [
@@ -969,7 +969,7 @@
         {
           "metric": "Penalty Kill %",
           "sabres": "69.7% (28th)",
-          "opp": "88.5% (2nd)"
+          "opp": "88.5% (3rd)"
         },
         {
           "metric": "Shots / Game",
