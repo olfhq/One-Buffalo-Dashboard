@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-14T05:30:25.453Z",
+  "updatedAt": "2026-11-14T11:00:28.722Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
   "theme": "regular",
   "billsTheme": "regular",
@@ -32,7 +32,7 @@
       "venue": "MetLife Stadium, East Rutherford, NJ",
       "roof": "Open-Air Stadium",
       "surface": "FieldTurf CORE",
-      "weather": "47°F, 11mph Wind, 0% PoP",
+      "weather": "46°F, 11mph Wind, 1% PoP",
       "window": "EARLY",
       "windowLabel": "NFL on CBS",
       "windowBadge": "NFL on CBS",
@@ -645,7 +645,7 @@
         "venue": "Huntington Bank Field, Cleveland, OH",
         "roof": "Open-Air Stadium",
         "surface": "Natural Kentucky Bluegrass",
-        "weather": "46°F, 12mph Wind, 45% PoP",
+        "weather": "46°F, 13mph Wind, 4% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -672,7 +672,7 @@
         "venue": "Lambeau Field, Green Bay, WI",
         "roof": "Open-Air Stadium",
         "surface": "Natural Grass (SISGrass)",
-        "weather": "37°F, 3mph Wind, 0% PoP",
+        "weather": "36°F, 1mph Wind, 0% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -699,7 +699,7 @@
         "venue": "Nissan Stadium, Nashville, TN",
         "roof": "Open-Air Stadium",
         "surface": "Matrix Helix Turf",
-        "weather": "52°F, 8mph Wind, 0% PoP",
+        "weather": "52°F, 6mph Wind, 0% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -861,7 +861,7 @@
         "venue": "Paycor Stadium, Cincinnati, OH",
         "roof": "Open-Air Stadium",
         "surface": "FieldTurf CORE",
-        "weather": "42°F, 1mph Wind, 0% PoP",
+        "weather": "43°F, 2mph Wind, 0% PoP",
         "window": "SNF",
         "windowLabel": "Sunday Night Football",
         "windowBadge": "NBC / Peacock Marquee",
@@ -947,7 +947,7 @@
       },
       "specialTeams": {
         "sabres": "PP: 15.9% (29th) | PK: 69.7% (28th)",
-        "opp": "PP: 26.2% (9th) | PK: 88.5% (3rd)",
+        "opp": "PP: 26.2% (8th) | PK: 88.5% (3rd)",
         "advantage": "Dallas Special Teams Edge (+29.1% Net Margin)"
       },
       "efficiency": [
@@ -959,12 +959,12 @@
         {
           "metric": "Goals Against / Game",
           "sabres": "3.53 (27th)",
-          "opp": "2.61 (4th)"
+          "opp": "2.61 (5th)"
         },
         {
           "metric": "Power Play %",
           "sabres": "15.9% (29th)",
-          "opp": "26.2% (9th)"
+          "opp": "26.2% (8th)"
         },
         {
           "metric": "Penalty Kill %",
@@ -1045,28 +1045,21 @@
           "status": "Injured Reserve",
           "injury": "Finger",
           "team": "Dallas"
-        },
-        {
-          "player": "Matt Duchene",
-          "pos": "C",
-          "status": "Injured Reserve",
-          "injury": "Abdomen",
-          "team": "Dallas"
         }
       ]
     },
     "divisionRadar": [
       {
         "team": "Lightning",
-        "pct": 81
+        "pct": 82
       },
       {
         "team": "Bruins",
-        "pct": 79
+        "pct": 80
       },
       {
         "team": "Canadiens",
-        "pct": 70
+        "pct": 71
       },
       {
         "team": "Sabres",
@@ -1098,7 +1091,7 @@
     "opponents": [
       {
         "team": "Tampa Bay Lightning",
-        "pct": 6
+        "pct": 5
       },
       {
         "team": "Boston Bruins",
@@ -1106,7 +1099,7 @@
       },
       {
         "team": "Montreal Canadiens",
-        "pct": 5
+        "pct": 4
       }
     ],
     "seasonSchedule": [
