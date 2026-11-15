@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-15T05:28:26.941Z",
+  "updatedAt": "2026-11-15T11:00:30.643Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
   "theme": "regular",
   "billsTheme": "regular",
@@ -32,7 +32,7 @@
       "venue": "MetLife Stadium, East Rutherford, NJ",
       "roof": "Open-Air Stadium",
       "surface": "FieldTurf CORE",
-      "weather": "47°F, 11mph Wind, 1% PoP",
+      "weather": "47°F, 12mph Wind, 0% PoP",
       "window": "EARLY",
       "windowLabel": "NFL on CBS",
       "windowBadge": "NFL on CBS",
@@ -645,7 +645,7 @@
         "venue": "Huntington Bank Field, Cleveland, OH",
         "roof": "Open-Air Stadium",
         "surface": "Natural Kentucky Bluegrass",
-        "weather": "45°F, 13mph Wind, 7% PoP",
+        "weather": "45°F, 13mph Wind, 5% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -672,7 +672,7 @@
         "venue": "Lambeau Field, Green Bay, WI",
         "roof": "Open-Air Stadium",
         "surface": "Natural Grass (SISGrass)",
-        "weather": "43°F, 2mph Wind, 0% PoP",
+        "weather": "41°F, 1mph Wind, 0% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -699,7 +699,7 @@
         "venue": "Nissan Stadium, Nashville, TN",
         "roof": "Open-Air Stadium",
         "surface": "Matrix Helix Turf",
-        "weather": "53°F, 4mph Wind, 0% PoP",
+        "weather": "52°F, 4mph Wind, 0% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -792,8 +792,8 @@
         "homeName": "Las Vegas Raiders",
         "homeRecord": "4-5, L1",
         "homeScore": "0",
-        "homeWinChance": 28,
-        "awayWinChance": 72,
+        "homeWinChance": 27,
+        "awayWinChance": 73,
         "verdict": "SEEDING WATCH",
         "impactClass": "good",
         "target": "Root for Seattle Seahawks",
@@ -846,8 +846,8 @@
         "homeName": "Dallas Cowboys",
         "homeRecord": "4-5, W1",
         "homeScore": "0",
-        "homeWinChance": 36,
-        "awayWinChance": 64,
+        "homeWinChance": 34,
+        "awayWinChance": 66,
         "verdict": "NFC MATCHUP",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
@@ -861,7 +861,7 @@
         "venue": "Paycor Stadium, Cincinnati, OH",
         "roof": "Open-Air Stadium",
         "surface": "FieldTurf CORE",
-        "weather": "42°F, 4mph Wind, 1% PoP",
+        "weather": "45°F, 4mph Wind, 1% PoP",
         "window": "SNF",
         "windowLabel": "Sunday Night Football",
         "windowBadge": "NBC / Peacock Marquee",
@@ -888,7 +888,7 @@
         "venue": "M&T Bank Stadium, Baltimore, MD",
         "roof": "Open-Air Stadium",
         "surface": "Natural Bermuda Grass",
-        "weather": "47°F, 4mph Wind, 0% PoP",
+        "weather": "40°F, 4mph Wind, 0% PoP",
         "window": "MNF",
         "windowLabel": "Monday Night Football",
         "windowBadge": "ESPN / ABC Prime Time",
@@ -911,9 +911,9 @@
   },
   "sabres": {
     "team": "Buffalo Sabres",
-    "makePlayoffs": 31,
-    "winDivision": 16,
-    "wildcard": 15,
+    "makePlayoffs": 25,
+    "winDivision": 12,
+    "wildcard": 13,
     "tragicNumber": "82 PTS",
     "projectedPoints": 82,
     "cutlinePoints": 102,
@@ -937,8 +937,8 @@
       "bufScore": "",
       "oppScore": "",
       "liveScore": null,
-      "ifWin": 37,
-      "ifLoss": 26,
+      "ifWin": 31,
+      "ifLoss": 20,
       "leverage": 11,
       "restAdvantage": {
         "sabresDays": 3,
@@ -947,24 +947,24 @@
       },
       "specialTeams": {
         "sabres": "PP: 14.7% (29th) | PK: 70.4% (28th)",
-        "opp": "PP: 19.4% (24th) | PK: 79.7% (12th)",
+        "opp": "PP: 19.4% (25th) | PK: 79.7% (12th)",
         "advantage": "Philadelphia Special Teams Edge (+14.0% Net Margin)"
       },
       "efficiency": [
         {
           "metric": "Goals / Game",
-          "sabres": "2.75 (24th)",
+          "sabres": "2.75 (23rd)",
           "opp": "2.32 (31st)"
         },
         {
           "metric": "Goals Against / Game",
-          "sabres": "3.45 (24th)",
+          "sabres": "3.45 (23rd)",
           "opp": "3.23 (19th)"
         },
         {
           "metric": "Power Play %",
           "sabres": "14.7% (29th)",
-          "opp": "19.4% (24th)"
+          "opp": "19.4% (25th)"
         },
         {
           "metric": "Penalty Kill %",
@@ -973,7 +973,7 @@
         },
         {
           "metric": "Shots / Game",
-          "sabres": "27.9 (13th)",
+          "sabres": "27.9 (12th)",
           "opp": "24.0 (30th)"
         },
         {
@@ -1030,55 +1030,55 @@
     "divisionRadar": [
       {
         "team": "Lightning",
-        "pct": 82
+        "pct": 75
       },
       {
-        "team": "Bruins",
-        "pct": 80
+        "team": "Senators",
+        "pct": 69
       },
       {
         "team": "Canadiens",
-        "pct": 71
+        "pct": 66
       },
       {
         "team": "Sabres",
-        "pct": 31
+        "pct": 25
       }
     ],
     "seedDistribution": [
       {
         "seed": "Div 1",
-        "pct": 2
+        "pct": 1
       },
       {
         "seed": "Div 2",
-        "pct": 5
+        "pct": 4
       },
       {
         "seed": "Div 3",
-        "pct": 9
-      },
-      {
-        "seed": "Wildcard 1",
         "pct": 7
       },
       {
+        "seed": "Wildcard 1",
+        "pct": 6
+      },
+      {
         "seed": "Wildcard 2",
-        "pct": 8
+        "pct": 7
       }
     ],
     "opponents": [
       {
         "team": "Tampa Bay Lightning",
-        "pct": 5
+        "pct": 4
       },
       {
         "team": "Boston Bruins",
-        "pct": 5
+        "pct": 4
       },
       {
-        "team": "Montreal Canadiens",
-        "pct": 4
+        "team": "Ottawa Senators",
+        "pct": 3
       }
     ],
     "seasonSchedule": [
@@ -3181,20 +3181,20 @@
         "window": "SAT",
         "windowLabel": "Hockey Night in Canada & Saturday National",
         "windowBadge": "CBC / Sportsnet / NHL Network",
-        "statusState": "in",
-        "statusDetail": "3:49 - 3rd",
+        "statusState": "post",
+        "statusDetail": "Final",
         "awayName": "New York Islanders",
-        "awayRecord": "8-6-4, W1",
+        "awayRecord": "9-6-4, W2",
         "awayScore": "6",
         "homeName": "Anaheim Ducks",
-        "homeRecord": "10-8-1, L1",
+        "homeRecord": "10-9-1, L2",
         "homeScore": "2",
-        "homeWinChance": 53,
-        "awayWinChance": 47,
-        "verdict": "WILD CARD WATCH",
+        "homeWinChance": 48,
+        "awayWinChance": 52,
+        "verdict": "RIVAL WIN",
         "impactClass": "neutral",
         "target": "Root for Anaheim Ducks in Regulation",
-        "why": "Suppresses Eastern Conference Wild Card contenders from stacking points."
+        "why": "New York Islanders picked up 2 points in the Eastern playoff race."
       },
       {
         "isoTime": "2026-11-16T00:30:00Z",
@@ -3280,13 +3280,13 @@
         "statusState": "pre",
         "statusDetail": "Scheduled",
         "awayName": "Los Angeles Kings",
-        "awayRecord": "5-10-2, L3",
+        "awayRecord": "5-11-2, L4",
         "awayScore": "",
         "homeName": "Boston Bruins",
         "homeRecord": "13-6-1, L2",
         "homeScore": "",
-        "homeWinChance": 83,
-        "awayWinChance": 17,
+        "homeWinChance": 84,
+        "awayWinChance": 16,
         "verdict": "ATLANTIC WATCH",
         "impactClass": "warning",
         "target": "Root for Los Angeles Kings in Regulation",
@@ -3331,10 +3331,10 @@
         "awayRecord": "7-11-0, L4",
         "awayScore": "",
         "homeName": "New York Islanders",
-        "homeRecord": "8-6-4, W1",
+        "homeRecord": "9-6-4, W2",
         "homeScore": "",
-        "homeWinChance": 70,
-        "awayWinChance": 30,
+        "homeWinChance": 72,
+        "awayWinChance": 28,
         "verdict": "WILD CARD WATCH",
         "impactClass": "neutral",
         "target": "Root for Columbus Blue Jackets in Regulation",
@@ -3472,13 +3472,13 @@
         "statusState": "pre",
         "statusDetail": "Scheduled",
         "awayName": "Los Angeles Kings",
-        "awayRecord": "5-10-2, L3",
+        "awayRecord": "5-11-2, L4",
         "awayScore": "",
         "homeName": "Toronto Maple Leafs",
         "homeRecord": "8-12-2, L6",
         "homeScore": "",
-        "homeWinChance": 59,
-        "awayWinChance": 41,
+        "homeWinChance": 62,
+        "awayWinChance": 38,
         "verdict": "ATLANTIC WATCH",
         "impactClass": "warning",
         "target": "Root for Los Angeles Kings in Regulation",
@@ -3568,13 +3568,13 @@
         "statusState": "pre",
         "statusDetail": "Scheduled",
         "awayName": "New York Islanders",
-        "awayRecord": "8-6-4, W1",
+        "awayRecord": "9-6-4, W2",
         "awayScore": "",
         "homeName": "Winnipeg Jets",
         "homeRecord": "10-8-3, W6",
         "homeScore": "",
-        "homeWinChance": 53,
-        "awayWinChance": 47,
+        "homeWinChance": 50,
+        "awayWinChance": 50,
         "verdict": "WILD CARD WATCH",
         "impactClass": "neutral",
         "target": "Root for Winnipeg Jets in Regulation",
