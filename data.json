@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-16T14:25:25.172Z",
+  "updatedAt": "2026-11-16T15:10:21.843Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
   "theme": "regular",
   "billsTheme": "regular",
@@ -32,7 +32,7 @@
       "venue": "Highmark Stadium, Orchard Park, NY",
       "roof": "Open-Air Stadium",
       "surface": "Natural Grass",
-      "weather": "57°F, 15mph Wind, 22% PoP",
+      "weather": "57°F, 15mph Wind, 17% PoP",
       "window": "EARLY",
       "windowLabel": "NFL on CBS",
       "windowBadge": "NFL on CBS",
