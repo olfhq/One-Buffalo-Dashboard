@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-16T05:27:45.108Z",
+  "updatedAt": "2026-11-16T11:01:33.082Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
   "theme": "gameday",
   "billsTheme": "gameday",
@@ -9,7 +9,7 @@
     "team": "Buffalo Bills",
     "makePlayoffs": 100,
     "winDivision": 97,
-    "seed1": 40,
+    "seed1": 41,
     "magicNumber": "5",
     "clinchAlert": {
       "active": false,
@@ -32,7 +32,7 @@
       "venue": "Highmark Stadium, Orchard Park, NY",
       "roof": "Open-Air Stadium",
       "surface": "Natural Grass",
-      "weather": "56°F, 8mph Wind, 14% PoP",
+      "weather": "46°F, 18mph Wind, 20% PoP",
       "window": "EARLY",
       "windowLabel": "NFL on CBS",
       "windowBadge": "NFL on CBS",
@@ -52,39 +52,39 @@
       "efficiency": [
         {
           "metric": "Points / Game",
-          "bills": "32.0 (1st)",
-          "opp": "15.8 (31st)"
+          "bills": "31.9 (1st)",
+          "opp": "16.4 (30th)"
         },
         {
           "metric": "Total Yards / Game",
-          "bills": "400.0 (1st)",
-          "opp": "297.8 (28th)"
+          "bills": "399.7 (4th)",
+          "opp": "300.3 (28th)"
         },
         {
           "metric": "Passing Yards / Game",
-          "bills": "239.8 (13th)",
-          "opp": "164.8 (30th)"
+          "bills": "234.0 (13th)",
+          "opp": "170.3 (29th)"
         },
         {
           "metric": "Rushing Yards / Game",
-          "bills": "146.6 (2nd)",
-          "opp": "117.5 (12th)"
+          "bills": "152.7 (2nd)",
+          "opp": "113.1 (17th)"
         },
         {
           "metric": "3rd Down Conversion %",
-          "bills": "43.2% (8th)",
-          "opp": "41.6% (10th)"
+          "bills": "41.0% (9th)",
+          "opp": "40.2% (11th)"
         },
         {
           "metric": "Red Zone TD %",
           "bills": "66.7% (7th)",
-          "opp": "47.6% (28th)"
+          "opp": "47.8% (26th)"
         }
       ],
       "turnoverRatio": {
-        "bills": "0 (12 Takeaways / 12 Giveaways)",
-        "opp": "-3 (7 Takeaways / 10 Giveaways)",
-        "advantage": "Bills (+3 Differential Margin)"
+        "bills": "0 (14 Takeaways / 14 Giveaways)",
+        "opp": "-2 (9 Takeaways / 11 Giveaways)",
+        "advantage": "Bills (+2 Differential Margin)"
       },
       "injuries": [
         {
@@ -180,7 +180,7 @@
     "seedDistribution": [
       {
         "seed": "#1 Seed",
-        "pct": 40
+        "pct": 41
       },
       {
         "seed": "#2 Seed",
@@ -188,7 +188,7 @@
       },
       {
         "seed": "#3 Seed",
-        "pct": 20
+        "pct": 19
       },
       {
         "seed": "#4 Seed",
@@ -213,12 +213,12 @@
         "pct": 11
       },
       {
-        "team": "Cleveland Browns",
+        "team": "Pittsburgh Steelers",
         "pct": 11
       },
       {
-        "team": "Cincinnati Bengals",
-        "pct": 9
+        "team": "Cleveland Browns",
+        "pct": 10
       }
     ],
     "seasonSchedule": [
@@ -564,7 +564,7 @@
         "venue": "MetLife Stadium, East Rutherford, NJ",
         "roof": "Open-Air Stadium",
         "surface": "FieldTurf CORE",
-        "weather": "48°F, 10mph Wind, 72% PoP",
+        "weather": "54°F, 8mph Wind, 10% PoP",
         "window": "TNF",
         "windowLabel": "Thursday Night Football",
         "windowBadge": "Prime Video Exclusive",
@@ -645,7 +645,7 @@
         "venue": "Huntington Bank Field, Cleveland, OH",
         "roof": "Open-Air Stadium",
         "surface": "Natural Kentucky Bluegrass",
-        "weather": "46°F, 13mph Wind, 2% PoP",
+        "weather": "48°F, 14mph Wind, 25% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -672,7 +672,7 @@
         "venue": "Lambeau Field, Green Bay, WI",
         "roof": "Open-Air Stadium",
         "surface": "Natural Grass (SISGrass)",
-        "weather": "45°F, 2mph Wind, 0% PoP",
+        "weather": "41°F, 16mph Wind, 30% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -699,7 +699,7 @@
         "venue": "Nissan Stadium, Nashville, TN",
         "roof": "Open-Air Stadium",
         "surface": "Matrix Helix Turf",
-        "weather": "56°F, 3mph Wind, 0% PoP",
+        "weather": "62°F, 9mph Wind, 10% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -861,7 +861,7 @@
         "venue": "Paycor Stadium, Cincinnati, OH",
         "roof": "Open-Air Stadium",
         "surface": "FieldTurf CORE",
-        "weather": "41°F, 2mph Wind, 0% PoP",
+        "weather": "55°F, 10mph Wind, 15% PoP",
         "window": "SNF",
         "windowLabel": "Sunday Night Football",
         "windowBadge": "NBC / Peacock Marquee",
@@ -888,7 +888,7 @@
         "venue": "M&T Bank Stadium, Baltimore, MD",
         "roof": "Open-Air Stadium",
         "surface": "Natural Bermuda Grass",
-        "weather": "43°F, 6mph Wind, 0% PoP",
+        "weather": "58°F, 8mph Wind, 10% PoP",
         "window": "MNF",
         "windowLabel": "Monday Night Football",
         "windowBadge": "ESPN / ABC Prime Time",
@@ -900,8 +900,8 @@
         "homeName": "Baltimore Ravens",
         "homeRecord": "4-5, L4",
         "homeScore": "0",
-        "homeWinChance": 66,
-        "awayWinChance": 34,
+        "homeWinChance": 67,
+        "awayWinChance": 33,
         "verdict": "SEEDING WATCH",
         "impactClass": "good",
         "target": "Root for Los Angeles Chargers",
@@ -911,8 +911,8 @@
   },
   "sabres": {
     "team": "Buffalo Sabres",
-    "makePlayoffs": 25,
-    "winDivision": 12,
+    "makePlayoffs": 26,
+    "winDivision": 13,
     "wildcard": 13,
     "tragicNumber": "82 PTS",
     "projectedPoints": 82,
@@ -937,8 +937,8 @@
       "bufScore": "",
       "oppScore": "",
       "liveScore": null,
-      "ifWin": 31,
-      "ifLoss": 20,
+      "ifWin": 32,
+      "ifLoss": 21,
       "leverage": 11,
       "restAdvantage": {
         "sabresDays": 3,
@@ -1037,7 +1037,7 @@
     "divisionRadar": [
       {
         "team": "Lightning",
-        "pct": 75
+        "pct": 77
       },
       {
         "team": "Senators",
@@ -1045,11 +1045,11 @@
       },
       {
         "team": "Canadiens",
-        "pct": 66
+        "pct": 68
       },
       {
         "team": "Sabres",
-        "pct": 25
+        "pct": 26
       }
     ],
     "seedDistribution": [
@@ -1063,7 +1063,7 @@
       },
       {
         "seed": "Div 3",
-        "pct": 7
+        "pct": 8
       },
       {
         "seed": "Wildcard 1",
