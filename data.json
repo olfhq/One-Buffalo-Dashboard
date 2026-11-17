@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-17T05:00:29.677Z",
+  "updatedAt": "2026-11-17T11:02:44.947Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
   "theme": "regular",
   "billsTheme": "regular",
@@ -8,8 +8,8 @@
   "bills": {
     "team": "Buffalo Bills",
     "makePlayoffs": 100,
-    "winDivision": 97,
-    "seed1": 41,
+    "winDivision": 98,
+    "seed1": 42,
     "magicNumber": "5",
     "clinchAlert": {
       "active": false,
@@ -32,7 +32,7 @@
       "venue": "Highmark Stadium, Orchard Park, NY",
       "roof": "Open-Air Stadium",
       "surface": "Natural Grass",
-      "weather": "63°F, 14mph Wind, 19% PoP",
+      "weather": "46°F, 18mph Wind, 20% PoP",
       "window": "EARLY",
       "windowLabel": "NFL on CBS",
       "windowBadge": "NFL on CBS",
@@ -162,7 +162,7 @@
     "divisionRadar": [
       {
         "team": "Bills",
-        "pct": 97
+        "pct": 98
       },
       {
         "team": "Patriots",
@@ -180,7 +180,7 @@
     "seedDistribution": [
       {
         "seed": "#1 Seed",
-        "pct": 41
+        "pct": 42
       },
       {
         "seed": "#2 Seed",
@@ -209,16 +209,16 @@
     ],
     "opponents": [
       {
+        "team": "Pittsburgh Steelers",
+        "pct": 12
+      },
+      {
         "team": "Kansas City Chiefs",
         "pct": 11
       },
       {
-        "team": "Pittsburgh Steelers",
-        "pct": 11
-      },
-      {
         "team": "Cleveland Browns",
-        "pct": 10
+        "pct": 11
       }
     ],
     "seasonSchedule": [
@@ -564,7 +564,7 @@
         "venue": "MetLife Stadium, East Rutherford, NJ",
         "roof": "Open-Air Stadium",
         "surface": "FieldTurf CORE",
-        "weather": "48°F, 10mph Wind, 72% PoP",
+        "weather": "54°F, 8mph Wind, 10% PoP",
         "window": "TNF",
         "windowLabel": "Thursday Night Football",
         "windowBadge": "Prime Video Exclusive",
@@ -645,7 +645,7 @@
         "venue": "Huntington Bank Field, Cleveland, OH",
         "roof": "Open-Air Stadium",
         "surface": "Natural Kentucky Bluegrass",
-        "weather": "46°F, 13mph Wind, 2% PoP",
+        "weather": "48°F, 14mph Wind, 25% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -672,7 +672,7 @@
         "venue": "Lambeau Field, Green Bay, WI",
         "roof": "Open-Air Stadium",
         "surface": "Natural Grass (SISGrass)",
-        "weather": "45°F, 2mph Wind, 0% PoP",
+        "weather": "41°F, 16mph Wind, 30% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -699,7 +699,7 @@
         "venue": "Nissan Stadium, Nashville, TN",
         "roof": "Open-Air Stadium",
         "surface": "Matrix Helix Turf",
-        "weather": "56°F, 3mph Wind, 0% PoP",
+        "weather": "62°F, 9mph Wind, 10% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -861,7 +861,7 @@
         "venue": "Paycor Stadium, Cincinnati, OH",
         "roof": "Open-Air Stadium",
         "surface": "FieldTurf CORE",
-        "weather": "41°F, 2mph Wind, 0% PoP",
+        "weather": "55°F, 10mph Wind, 15% PoP",
         "window": "SNF",
         "windowLabel": "Sunday Night Football",
         "windowBadge": "NBC / Peacock Marquee",
@@ -888,7 +888,7 @@
         "venue": "M&T Bank Stadium, Baltimore, MD",
         "roof": "Open-Air Stadium",
         "surface": "Natural Bermuda Grass",
-        "weather": "45°F, 2mph Wind, 0% PoP",
+        "weather": "58°F, 8mph Wind, 10% PoP",
         "window": "MNF",
         "windowLabel": "Monday Night Football",
         "windowBadge": "ESPN / ABC Prime Time",
@@ -942,7 +942,7 @@
         "venue": "Soldier Field, Chicago, IL",
         "roof": "Open-Air Stadium",
         "surface": "Natural Bermuda Grass",
-        "weather": "55°F, 10mph Wind, 17% PoP",
+        "weather": "49°F, 15mph Wind, 20% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -954,8 +954,8 @@
         "homeName": "Chicago Bears",
         "homeRecord": "7-2, W4",
         "homeScore": "0",
-        "homeWinChance": 84,
-        "awayWinChance": 16,
+        "homeWinChance": 83,
+        "awayWinChance": 17,
         "verdict": "NFC MATCHUP",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
@@ -1008,8 +1008,8 @@
         "homeName": "Detroit Lions",
         "homeRecord": "7-2, W5",
         "homeScore": "0",
-        "homeWinChance": 71,
-        "awayWinChance": 29,
+        "homeWinChance": 70,
+        "awayWinChance": 30,
         "verdict": "NFC MATCHUP",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
@@ -1023,7 +1023,7 @@
         "venue": "Arrowhead Stadium, Kansas City, MO",
         "roof": "Open-Air Stadium",
         "surface": "Natural Bermuda Grass",
-        "weather": "52°F, 10mph Wind, 2% PoP",
+        "weather": "59°F, 12mph Wind, 5% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -1050,7 +1050,7 @@
         "venue": "Lincoln Financial Field, Philadelphia, PA",
         "roof": "Open-Air Stadium",
         "surface": "Natural Grass (Desso)",
-        "weather": "62°F, 3mph Wind, 21% PoP",
+        "weather": "56°F, 10mph Wind, 10% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -1077,7 +1077,7 @@
         "venue": "Bank of America Stadium, Charlotte, NC",
         "roof": "Open-Air Stadium",
         "surface": "FieldTurf",
-        "weather": "57°F, 8mph Wind, 13% PoP",
+        "weather": "66°F, 6mph Wind, 10% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -1089,8 +1089,8 @@
         "homeName": "Carolina Panthers",
         "homeRecord": "4-5, W1",
         "homeScore": "0",
-        "homeWinChance": 56,
-        "awayWinChance": 44,
+        "homeWinChance": 55,
+        "awayWinChance": 45,
         "verdict": "SEEDING WATCH",
         "impactClass": "good",
         "target": "Root for Carolina Panthers",
@@ -1116,8 +1116,8 @@
         "homeName": "Los Angeles Chargers",
         "homeRecord": "1-8, W1",
         "homeScore": "0",
-        "homeWinChance": 60,
-        "awayWinChance": 40,
+        "homeWinChance": 58,
+        "awayWinChance": 42,
         "verdict": "AFC EAST WATCH",
         "impactClass": "bad",
         "target": "Root for Los Angeles Chargers",
@@ -1131,7 +1131,7 @@
         "venue": "Empower Field at Mile High, Denver, CO",
         "roof": "Open-Air Stadium",
         "surface": "Natural Kentucky Bluegrass",
-        "weather": "50°F, 3mph Wind, 0% PoP",
+        "weather": "52°F, 9mph Wind, 0% PoP",
         "window": "LATE",
         "windowLabel": "Sunday 4:25 PM ET National Window",
         "windowBadge": "America's Game of the Week",
@@ -1158,7 +1158,7 @@
         "venue": "MetLife Stadium, East Rutherford, NJ",
         "roof": "Open-Air Stadium",
         "surface": "FieldTurf CORE",
-        "weather": "59°F, 3mph Wind, 26% PoP",
+        "weather": "54°F, 8mph Wind, 10% PoP",
         "window": "LATE",
         "windowLabel": "Sunday 4:25 PM ET National Window",
         "windowBadge": "America's Game of the Week",
@@ -1212,7 +1212,7 @@
         "venue": "Northwest Stadium, Landover, MD",
         "roof": "Open-Air Stadium",
         "surface": "Natural Bermuda Grass",
-        "weather": "53°F, 12mph Wind, 4% PoP",
+        "weather": "57°F, 9mph Wind, 10% PoP",
         "window": "MNF",
         "windowLabel": "Monday Night Football",
         "windowBadge": "ESPN / ABC Prime Time",
@@ -1224,8 +1224,8 @@
         "homeName": "Washington Commanders",
         "homeRecord": "3-5-1, W1",
         "homeScore": "0",
-        "homeWinChance": 28,
-        "awayWinChance": 72,
+        "homeWinChance": 29,
+        "awayWinChance": 71,
         "verdict": "SEEDING WATCH",
         "impactClass": "good",
         "target": "Root for Washington Commanders",
@@ -1270,7 +1270,7 @@
         "summary": "Sabres +1 (3d vs 2d Rest)"
       },
       "specialTeams": {
-        "sabres": "PP: 14.7% (29th) | PK: 70.4% (28th)",
+        "sabres": "PP: 14.7% (29th) | PK: 70.4% (27th)",
         "opp": "PP: 17.3% (27th) | PK: 77.8% (17th)",
         "advantage": "Philadelphia Special Teams Edge (+10.0% Net Margin)"
       },
@@ -1292,7 +1292,7 @@
         },
         {
           "metric": "Penalty Kill %",
-          "sabres": "70.4% (28th)",
+          "sabres": "70.4% (27th)",
           "opp": "77.8% (17th)"
         },
         {
