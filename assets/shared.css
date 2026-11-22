@@ -709,6 +709,26 @@ html[data-theme="cold-front"] .divider-results {
   background: linear-gradient(90deg, #e2e8f0, #f8fafc) !important;
   color: #334155 !important;
 }
+html[data-theme="cold-front"] .radar-item,
+html[data-theme="cold-front"] .opp-chip {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #09152b !important;
+}
+html[data-theme="cold-front"] .radar-team,
+html[data-theme="cold-front"] .dist-row.dist-row-leader .dist-name {
+  color: #09152b !important;
+}
+html[data-theme="cold-front"] .dist-name {
+  color: #334155 !important;
+}
+html[data-theme="cold-front"] .dist-track {
+  background: #e2e8f0 !important;
+}
+html[data-theme="cold-front"] .dist-row.dist-row-leader .dist-pct,
+html[data-theme="cold-front"] .opp-pct {
+  color: #00338D !important;
+}
 [data-team-theme="cold-front"].card:hover,
 html[data-theme="cold-front"] .card:hover {
   border-color: #1d4ed8 !important;
