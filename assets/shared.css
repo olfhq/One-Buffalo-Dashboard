@@ -373,9 +373,11 @@ html[data-theme="cold-front"] .card {
 [data-team-theme="cold-front"].card-bills::before,
 html[data-theme="cold-front"] .card::before {
   content: "";
-  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
   height: 6px;
-  margin: -24px -24px 16px -24px;
   background: linear-gradient(90deg,
     #00338D 0%,
     #00338D 18%,
@@ -402,8 +404,93 @@ html[data-theme="cold-front"] .badge-bills {
 }
 [data-team-theme="cold-front"].card-bills .card-header h2,
 [data-team-theme="cold-front"].card-bills .countdown-val,
-[data-team-theme="cold-front"].card-bills .stat-val {
-  color: #00338D;
+[data-team-theme="cold-front"].card-bills .stat-val,
+html[data-theme="cold-front"] .card-header h2,
+html[data-theme="cold-front"] .countdown-val,
+html[data-theme="cold-front"] .stat-val {
+  color: #00338D !important;
+}
+[data-team-theme="cold-front"].card-bills .matchup-opp,
+html[data-theme="cold-front"] .matchup-opp,
+html[data-theme="cold-front"] .intel-col-opp,
+html[data-theme="cold-front"] .score-target-title,
+html[data-theme="cold-front"] .team-winner {
+  color: #09152b !important;
+}
+[data-team-theme="cold-front"].card-bills .matchup-records-line,
+[data-team-theme="cold-front"].card-bills .matchup-prefix,
+[data-team-theme="cold-front"].card-bills .countdown-label,
+[data-team-theme="cold-front"].card-bills .metric-label,
+[data-team-theme="cold-front"].card-bills .stat-label,
+[data-team-theme="cold-front"].card-bills .stat-sublabel,
+html[data-theme="cold-front"] .matchup-records-line,
+html[data-theme="cold-front"] .matchup-prefix,
+html[data-theme="cold-front"] .countdown-label,
+html[data-theme="cold-front"] .metric-label,
+html[data-theme="cold-front"] .stat-label,
+html[data-theme="cold-front"] .stat-sublabel,
+html[data-theme="cold-front"] .intel-col-metric {
+  color: #334155 !important;
+}
+[data-team-theme="cold-front"].card-bills .stat-box,
+[data-team-theme="cold-front"].card-bills .countdown-box,
+html[data-theme="cold-front"] .stat-box,
+html[data-theme="cold-front"] .countdown-box {
+  background: #ffffff !important;
+  border: 1.5px solid #cbd5e1 !important;
+  box-shadow: 0 1px 3px rgba(0, 51, 141, 0.06);
+}
+[data-team-theme="cold-front"].card-bills .stakes-banner,
+html[data-theme="cold-front"] .stakes-banner {
+  background: rgba(255, 255, 255, 0.85) !important;
+  border: 1.5px solid #00338D !important;
+}
+[data-team-theme="cold-front"].card-bills .tv-badge,
+html[data-theme="cold-front"] .tv-badge {
+  background: #e0ecff !important;
+  color: #00338D !important;
+  border-color: #93c5fd !important;
+}
+[data-team-theme="cold-front"].card-bills .win-chance-value,
+html[data-theme="cold-front"] .win-chance-value {
+  color: #047857 !important;
+}
+[data-team-theme="cold-front"].card-bills .pill-win,
+html[data-theme="cold-front"] .pill-win {
+  background: #d1fae5 !important;
+  color: #065f46 !important;
+  border-color: #6ee7b7 !important;
+}
+[data-team-theme="cold-front"].card-bills .pill-loss,
+html[data-theme="cold-front"] .pill-loss {
+  background: #e2e8f0 !important;
+  color: #1e293b !important;
+  border-color: #94a3b8 !important;
+}
+[data-team-theme="cold-front"].card-bills .pill-swing,
+html[data-theme="cold-front"] .pill-swing {
+  background: #dbeafe !important;
+  color: #00338D !important;
+  border-color: #93c5fd !important;
+}
+[data-team-theme="cold-front"].card-bills .hub-link-btn {
+  background: linear-gradient(135deg, #00338D 0%, #1d4ed8 65%, #475569 100%) !important;
+  border: 1.5px solid #94a3b8 !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 12px rgba(0, 51, 141, 0.25) !important;
+}
+[data-team-theme="cold-front"].card-bills .hub-link-btn:hover {
+  background: linear-gradient(135deg, #00266b 0%, #1e40af 70%, #334155 100%) !important;
+  border-color: #00338D !important;
+}
+html[data-theme="cold-front"] .back-nav-btn,
+html[data-theme="cold-front"] .tab-btn {
+  color: #1e293b;
+}
+html[data-theme="cold-front"] .tab-btn[aria-selected="true"] {
+  background: #00338D !important;
+  color: #ffffff !important;
+  border-color: #94a3b8 !important;
 }
 [data-team-theme="cold-front"].card:hover,
 html[data-theme="cold-front"] .card:hover {
