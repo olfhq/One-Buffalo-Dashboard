@@ -489,6 +489,18 @@ html[data-theme="cold-front"] .slate-filter-btn,
 html[data-theme="cold-front"] .hub-pill {
   color: #1e293b;
 }
+html[data-theme="cold-front"] .back-nav-btn {
+  background: linear-gradient(135deg, #00338D 0%, #1d4ed8 65%, #475569 100%) !important;
+  border-color: #94a3b8 !important;
+  color: #ffffff !important;
+}
+html[data-theme="cold-front"] header h1,
+html[data-theme="cold-front"] .header h1 {
+  background: linear-gradient(90deg, #00338D 0%, #1d4ed8 55%, #475569 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
 html[data-theme="cold-front"] .tab-btn[aria-selected="true"],
 html[data-theme="cold-front"] .tab-btn.active,
 html[data-theme="cold-front"] .hub-pill.active {
@@ -503,6 +515,7 @@ html[data-theme="cold-front"] .pinned-title-group,
 html[data-theme="cold-front"] .pinned-matchup-title,
 html[data-theme="cold-front"] .window-title,
 html[data-theme="cold-front"] .schedule-opp,
+html[data-theme="cold-front"] .schedule-opp-line,
 html[data-theme="cold-front"] .result-score,
 html[data-theme="cold-front"] .opp-col-header .injury-column-name,
 html[data-theme="cold-front"] .live-radar-title {
