@@ -526,9 +526,175 @@ html[data-theme="cold-front"] .buf-col-header .injury-column-name {
   color: #00338D !important;
 }
 html[data-theme="cold-front"] .injury-card,
-html[data-theme="cold-front"] .context-card {
+html[data-theme="cold-front"] .context-card,
+html[data-theme="cold-front"] .score-card,
+html[data-theme="cold-front"] .schedule-card {
   background: #ffffff !important;
   border-color: #cbd5e1 !important;
+}
+html[data-theme="cold-front"] .schedule-card.schedule-card-next {
+  background: linear-gradient(135deg, rgba(0, 51, 141, 0.08), #ffffff) !important;
+  border-color: #00338D !important;
+}
+html[data-theme="cold-front"] .schedule-card.schedule-card-bye {
+  background: #e2e8f0 !important;
+}
+html[data-theme="cold-front"] .schedule-date {
+  color: #09152b !important;
+}
+html[data-theme="cold-front"] .schedule-tv-badge {
+  background: #e2e8f0 !important;
+  color: #334155 !important;
+}
+html[data-theme="cold-front"] .schedule-primetime-badge {
+  background: #fef3c7 !important;
+  color: #92400e !important;
+}
+html[data-theme="cold-front"] .schedule-next-badge {
+  background: #00338D !important;
+  color: #ffffff !important;
+}
+html[data-theme="cold-front"] .result-pill-w {
+  background: #d1fae5 !important;
+  color: #065f46 !important;
+}
+html[data-theme="cold-front"] .result-pill-l {
+  background: #e2e8f0 !important;
+  color: #1e293b !important;
+}
+html[data-theme="cold-front"] .result-pill-otl {
+  background: #fef3c7 !important;
+  color: #92400e !important;
+}
+html[data-theme="cold-front"] .game-status-badge,
+html[data-theme="cold-front"] .score-team-points,
+html[data-theme="cold-front"] .game-status-upcoming {
+  color: #00338D !important;
+}
+html[data-theme="cold-front"] .points-winner {
+  color: #047857 !important;
+}
+html[data-theme="cold-front"] .verdict-good,
+html[data-theme="cold-front"] .card-win-live {
+  background: #d1fae5 !important;
+  color: #065f46 !important;
+  border-color: #6ee7b7 !important;
+}
+html[data-theme="cold-front"] .verdict-bad {
+  background: #e2e8f0 !important;
+  color: #1e293b !important;
+  border-color: #94a3b8 !important;
+}
+html[data-theme="cold-front"] .verdict-warning {
+  background: #fef3c7 !important;
+  color: #92400e !important;
+  border-color: #fcd34d !important;
+}
+html[data-theme="cold-front"] .verdict-neutral,
+html[data-theme="cold-front"] .card-win-post {
+  background: #e2e8f0 !important;
+  color: #334155 !important;
+  border-color: #cbd5e1 !important;
+}
+html[data-theme="cold-front"] .card-win-pre {
+  background: #dbeafe !important;
+  color: #00338D !important;
+  border-color: #93c5fd !important;
+}
+html[data-theme="cold-front"] .score-analysis-box {
+  background: #f8fafc !important;
+  border-color: #cbd5e1 !important;
+}
+html[data-theme="cold-front"] .win-chance-meter-wrap {
+  background: #e2e8f0 !important;
+}
+html[data-theme="cold-front"] .pinned-bills-card {
+  background: linear-gradient(135deg, rgba(0, 51, 141, 0.1) 0%, rgba(148, 163, 184, 0.16) 100%), #ffffff !important;
+  border-color: #00338D !important;
+}
+html[data-theme="cold-front"] .pinned-tag {
+  background: #dbeafe !important;
+  color: #00338D !important;
+  border-color: #93c5fd !important;
+}
+html[data-theme="cold-front"] .window-header,
+html[data-theme="cold-front"] .window-header-nfc {
+  background: #eef2f7 !important;
+  border-color: #cbd5e1 !important;
+}
+html[data-theme="cold-front"] .window-badge {
+  background: #dbeafe !important;
+  color: #00338D !important;
+  border-color: #93c5fd !important;
+}
+html[data-theme="cold-front"] .venue-pill,
+html[data-theme="cold-front"] .pill-stadium {
+  background: #ffffff !important;
+  color: #09152b !important;
+  border-color: #cbd5e1 !important;
+}
+html[data-theme="cold-front"] .pill-roof {
+  background: #ede9fe !important;
+  color: #5b21b6 !important;
+  border-color: #c4b5fd !important;
+}
+html[data-theme="cold-front"] .pill-surface {
+  background: #d1fae5 !important;
+  color: #065f46 !important;
+  border-color: #6ee7b7 !important;
+}
+html[data-theme="cold-front"] .pill-weather {
+  background: #fef3c7 !important;
+  color: #92400e !important;
+  border-color: #fcd34d !important;
+}
+html[data-theme="cold-front"] .tv-cbs,
+html[data-theme="cold-front"] .tv-prime {
+  background: #dbeafe !important;
+  color: #00338D !important;
+  border-color: #93c5fd !important;
+}
+html[data-theme="cold-front"] .tv-nbc {
+  background: #d1fae5 !important;
+  color: #065f46 !important;
+  border-color: #6ee7b7 !important;
+}
+html[data-theme="cold-front"] .tv-fox,
+html[data-theme="cold-front"] .tv-espn,
+html[data-theme="cold-front"] .tv-nfln {
+  background: #e2e8f0 !important;
+  color: #1e293b !important;
+  border-color: #94a3b8 !important;
+}
+html[data-theme="cold-front"] .slate-filter-btn {
+  background: #ffffff !important;
+  color: #334155 !important;
+  border-color: #cbd5e1 !important;
+}
+html[data-theme="cold-front"] .slate-filter-btn:hover {
+  background: #eef2f7 !important;
+  color: #09152b !important;
+}
+html[data-theme="cold-front"] .slate-filter-btn.active {
+  background: #00338D !important;
+  color: #ffffff !important;
+  border-color: #00338D !important;
+}
+html[data-theme="cold-front"] .filter-count-badge {
+  background: #e2e8f0 !important;
+  color: #334155 !important;
+}
+html[data-theme="cold-front"] .slate-filter-btn.active .filter-count-badge {
+  background: rgba(255, 255, 255, 0.22) !important;
+  color: #ffffff !important;
+}
+html[data-theme="cold-front"] .divider-upcoming {
+  background: linear-gradient(90deg, #dbeafe, #f8fafc) !important;
+  color: #00338D !important;
+}
+html[data-theme="cold-front"] .divider-results {
+  background: linear-gradient(90deg, #e2e8f0, #f8fafc) !important;
+  color: #334155 !important;
 }
 [data-team-theme="cold-front"].card:hover,
 html[data-theme="cold-front"] .card:hover {
