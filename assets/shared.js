@@ -325,7 +325,7 @@
       'heritage'
     ];
 
-    const VALID_BILLS_OVERRIDES = ['regular', 'red-helmet', 'standing-buffalo', 'gameday'];
+    const VALID_BILLS_OVERRIDES = ['regular', 'red-helmet', 'standing-buffalo', 'cold-front', 'gameday'];
     const VALID_SABRES_OVERRIDES = ['regular', 'goathead', 'french-connection', 'gameday'];
 
     const THEME_COLORS = {
@@ -342,6 +342,7 @@
       'heritage': '#051329',
       'red-helmet': '#060b14',
       'standing-buffalo': '#05101f',
+      'cold-front': '#e2e8f0',
       'french-connection': '#051329'
     };
 

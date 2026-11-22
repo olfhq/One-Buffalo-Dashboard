@@ -332,6 +332,85 @@ html[data-theme="standing-buffalo"] .card:hover {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 16px rgba(0, 83, 155, 0.35) !important;
 }
 
+/* BILLS: COLD-FRONT (Rivalries Uniform: Ice-White, Metallic Silver & Royal Blue, Zero Red) */
+[data-team-theme="cold-front"],
+html[data-theme="cold-front"] {
+  --bills-accent: #00338D;
+  --bills-blue: #00338D;
+  --bills-red: #00338D;
+  --accent-blue: #1d4ed8;
+  --accent-gold: #64748b;
+  --focus-ring: #00338D;
+  --card-border: #00338D;
+  --border-subtle: #94a3b8;
+  --surface-card: #f8fafc;
+  --surface-inset: #eef2f7;
+  --card-bg: #f8fafc;
+  --card-inner: #eef2f7;
+  --text-main: #09152b;
+  --text-muted: #475569;
+}
+html[data-theme="cold-front"] {
+  --bg-canvas: #e2e8f0;
+  --theme-color: #e2e8f0;
+}
+[data-team-theme="cold-front"].card-bills,
+html[data-theme="cold-front"] .card {
+  position: relative;
+  overflow: hidden;
+  background-color: #f8fafc !important;
+  background-image:
+    radial-gradient(1.5px 1.5px at 24px 32px, rgba(148, 163, 184, 0.35), transparent),
+    radial-gradient(2px 2px at 110px 68px, rgba(255, 255, 255, 0.95), transparent),
+    radial-gradient(1.5px 1.5px at 210px 24px, rgba(148, 163, 184, 0.3), transparent),
+    radial-gradient(2px 2px at 310px 92px, rgba(255, 255, 255, 0.9), transparent),
+    linear-gradient(165deg, rgba(255, 255, 255, 0.96) 0%, rgba(241, 245, 249, 0.94) 55%, rgba(226, 232, 240, 0.95) 100%) !important;
+  background-size: 340px 140px, 340px 140px, 340px 140px, 340px 140px, 100% 100% !important;
+  border: 2px solid #00338D !important;
+  box-shadow: 0 10px 26px rgba(0, 51, 141, 0.18), inset 0 0 0 2px #cbd5e1, inset 0 1px 0 #ffffff !important;
+  color: #09152b;
+}
+[data-team-theme="cold-front"].card-bills::before,
+html[data-theme="cold-front"] .card::before {
+  content: "";
+  display: block;
+  height: 6px;
+  margin: -24px -24px 16px -24px;
+  background: linear-gradient(90deg,
+    #00338D 0%,
+    #00338D 18%,
+    #f8fafc 18%,
+    #cbd5e1 28%,
+    #94a3b8 38%,
+    #f8fafc 48%,
+    #00338D 50%,
+    #f8fafc 52%,
+    #cbd5e1 64%,
+    #94a3b8 74%,
+    #f8fafc 82%,
+    #00338D 82%,
+    #00338D 100%
+  );
+  border-bottom: 1.5px solid #94a3b8;
+  pointer-events: none;
+}
+[data-team-theme="cold-front"].card-bills .badge-bills,
+html[data-theme="cold-front"] .badge-bills {
+  background: linear-gradient(135deg, #00338D 0%, #1d4ed8 100%);
+  border: 1.5px solid #cbd5e1;
+  color: #ffffff;
+}
+[data-team-theme="cold-front"].card-bills .card-header h2,
+[data-team-theme="cold-front"].card-bills .countdown-val,
+[data-team-theme="cold-front"].card-bills .stat-val {
+  color: #00338D;
+}
+[data-team-theme="cold-front"].card:hover,
+html[data-theme="cold-front"] .card:hover {
+  border-color: #1d4ed8 !important;
+  box-shadow: 0 12px 30px rgba(0, 51, 141, 0.28), 0 0 20px rgba(203, 213, 225, 0.65), inset 0 0 0 2px #e2e8f0 !important;
+}
+
 /* SABRES: GOATHEAD (1990s Black & Red Era) */
 [data-team-theme="goathead"],
 html[data-theme="goathead"] {

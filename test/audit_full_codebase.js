@@ -199,6 +199,7 @@ try {
   const expectedTeamOverrides = [
     '[data-team-theme="red-helmet"]',
     '[data-team-theme="standing-buffalo"]',
+    '[data-team-theme="cold-front"]',
     '[data-team-theme="goathead"]',
     '[data-team-theme="french-connection"]'
   ];
@@ -356,6 +357,12 @@ try {
     const overrideResult = testApplyTheme('regular', 'red-helmet', 'goathead');
     if (overrideResult.billsTheme !== 'red-helmet' || overrideResult.sabresTheme !== 'goathead' || mockRootTheme !== 'regular') {
       issues.push(`applyTheme team overrides failed: got bills=${overrideResult.billsTheme}, sabres=${overrideResult.sabresTheme}`);
+    }
+
+    // 3b. Cold Front Bills override resolves independently
+    const coldFrontResult = testApplyTheme('regular', 'cold-front', null);
+    if (coldFrontResult.billsTheme !== 'cold-front' || coldFrontResult.sabresTheme !== 'regular' || mockRootTheme !== 'regular') {
+      issues.push(`applyTheme('regular', 'cold-front') failed: got bills=${coldFrontResult.billsTheme}, sabres=${coldFrontResult.sabresTheme}`);
     }
 
     // 4. Fallback on invalid theme

@@ -33,6 +33,7 @@ on:
           - regular
           - red-helmet
           - standing-buffalo
+          - cold-front
           - gameday
       sabresTheme:
         description: 'Sabres team override (optional)'
