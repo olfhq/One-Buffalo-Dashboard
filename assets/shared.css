@@ -484,13 +484,51 @@ html[data-theme="cold-front"] .pill-swing {
   border-color: #00338D !important;
 }
 html[data-theme="cold-front"] .back-nav-btn,
-html[data-theme="cold-front"] .tab-btn {
+html[data-theme="cold-front"] .tab-btn,
+html[data-theme="cold-front"] .slate-filter-btn,
+html[data-theme="cold-front"] .hub-pill {
   color: #1e293b;
 }
-html[data-theme="cold-front"] .tab-btn[aria-selected="true"] {
-  background: #00338D !important;
+html[data-theme="cold-front"] .tab-btn[aria-selected="true"],
+html[data-theme="cold-front"] .tab-btn.active,
+html[data-theme="cold-front"] .hub-pill.active {
+  background: linear-gradient(135deg, #00338D 0%, #1d4ed8 100%) !important;
   color: #ffffff !important;
   border-color: #94a3b8 !important;
+}
+html[data-theme="cold-front"] .context-card-val,
+html[data-theme="cold-front"] .injury-player-name,
+html[data-theme="cold-front"] .score-team-name,
+html[data-theme="cold-front"] .pinned-title-group,
+html[data-theme="cold-front"] .pinned-matchup-title,
+html[data-theme="cold-front"] .window-title,
+html[data-theme="cold-front"] .schedule-opp,
+html[data-theme="cold-front"] .result-score,
+html[data-theme="cold-front"] .opp-col-header .injury-column-name,
+html[data-theme="cold-front"] .live-radar-title {
+  color: #09152b !important;
+}
+html[data-theme="cold-front"] .injury-condition-text,
+html[data-theme="cold-front"] .pinned-records-sub,
+html[data-theme="cold-front"] .schedule-ha-tag,
+html[data-theme="cold-front"] .score-team-record {
+  color: #334155 !important;
+}
+html[data-theme="cold-front"] .schedule-ha-tag {
+  background: #e2e8f0 !important;
+  border-color: #cbd5e1 !important;
+}
+html[data-theme="cold-front"] .context-card-note {
+  color: #047857 !important;
+}
+html[data-theme="cold-front"] .intel-col-buf,
+html[data-theme="cold-front"] .buf-col-header .injury-column-name {
+  color: #00338D !important;
+}
+html[data-theme="cold-front"] .injury-card,
+html[data-theme="cold-front"] .context-card {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
 }
 [data-team-theme="cold-front"].card:hover,
 html[data-theme="cold-front"] .card:hover {
