@@ -524,7 +524,8 @@ html[data-theme="cold-front"] .live-radar-title {
 html[data-theme="cold-front"] .injury-condition-text,
 html[data-theme="cold-front"] .pinned-records-sub,
 html[data-theme="cold-front"] .schedule-ha-tag,
-html[data-theme="cold-front"] .score-team-record {
+html[data-theme="cold-front"] .score-team-record,
+html[data-theme="cold-front"] .live-radar-date {
   color: #334155 !important;
 }
 html[data-theme="cold-front"] .schedule-ha-tag {
@@ -728,6 +729,11 @@ html[data-theme="cold-front"] .dist-track {
 html[data-theme="cold-front"] .dist-row.dist-row-leader .dist-pct,
 html[data-theme="cold-front"] .opp-pct {
   color: #00338D !important;
+}
+html[data-theme="cold-front"] .win-prob-chip {
+  background: #e2e8f0 !important;
+  color: #09152b !important;
+  border-color: #cbd5e1 !important;
 }
 [data-team-theme="cold-front"].card:hover,
 html[data-theme="cold-front"] .card:hover {
