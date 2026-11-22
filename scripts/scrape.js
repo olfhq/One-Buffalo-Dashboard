@@ -3444,12 +3444,15 @@ function syncHtmlFallbacks(fullPayload) {
           activeHtmlTheme = effectiveSabres;
         }
 
-        // Keep root data-theme attribute in sync with payload theme
+        // Keep root data-theme and data-global-theme attributes in sync with payload theme
         updatedContent = updatedContent.replace(/<html([^>]*)>/i, (match, attrs) => {
-          if (/data-theme="[^"]*"/.test(attrs)) {
-            return `<html${attrs.replace(/data-theme="[^"]*"/, `data-theme="${activeHtmlTheme}"`)}>`;
-          }
-          return `<html${attrs} data-theme="${activeHtmlTheme}">`;
+          let nextAttrs = /data-theme="[^"]*"/.test(attrs)
+            ? attrs.replace(/data-theme="[^"]*"/, `data-theme="${activeHtmlTheme}"`)
+            : `${attrs} data-theme="${activeHtmlTheme}"`;
+          nextAttrs = /data-global-theme="[^"]*"/.test(nextAttrs)
+            ? nextAttrs.replace(/data-global-theme="[^"]*"/, `data-global-theme="${globalTheme}"`)
+            : `${nextAttrs} data-global-theme="${globalTheme}"`;
+          return `<html${nextAttrs}>`;
         });
 
         // For index.html, also stamp data-team-theme onto bills-card and sabres-card

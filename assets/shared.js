@@ -412,6 +412,8 @@
       const isBillsHub = path.includes('bills.html') || document.body?.classList.contains('bills-theme');
       const isSabresHub = path.includes('sabres.html') || document.body?.classList.contains('sabres-theme');
 
+      document.documentElement.setAttribute('data-global-theme', targetGlobal);
+
       if (isBillsHub) {
         // Full page adoption for bills.html
         document.documentElement.setAttribute('data-theme', effectiveBills);

@@ -1243,7 +1243,8 @@ html[data-theme="heritage"] .card:hover {
 }
 
 /* 5. GAMEDAY (High-Intensity Stadium Floodlight Towers & Night Sky Beams) */
-html[data-theme="gameday"] body::before {
+html[data-theme="gameday"] body::before,
+html[data-global-theme="gameday"] body::before {
   content: "";
   position: fixed;
   top: 0;
@@ -1257,7 +1258,8 @@ html[data-theme="gameday"] body::before {
     radial-gradient(circle at 90% 0%, rgba(255, 255, 255, 0.35) 0%, rgba(198, 12, 48, 0.35) 20%, transparent 55%);
 }
 
-html[data-theme="gameday"] body::after {
+html[data-theme="gameday"] body::after,
+html[data-global-theme="gameday"] body::after {
   content: "";
   position: fixed;
   top: 0;
@@ -1271,6 +1273,22 @@ html[data-theme="gameday"] body::after {
     conic-gradient(from 175deg at 90% 0%, rgba(255, 255, 255, 0.22) 0deg, rgba(198, 12, 48, 0.26) 18deg, transparent 38deg);
   opacity: 0.9;
   animation: stadium-lights-sway 8s ease-in-out infinite alternate;
+}
+
+/* Cold-Front Light Canvas Override: Retune Gameday Spotlights to Royal & Ice Blue (Zero Red) */
+html[data-theme="cold-front"][data-global-theme="gameday"] body::before {
+  background:
+    radial-gradient(circle at 10% 0%, rgba(0, 51, 141, 0.34) 0%, rgba(29, 78, 216, 0.20) 24%, transparent 58%),
+    radial-gradient(circle at 90% 0%, rgba(2, 132, 199, 0.32) 0%, rgba(56, 189, 248, 0.18) 24%, transparent 58%);
+  mix-blend-mode: multiply;
+}
+
+html[data-theme="cold-front"][data-global-theme="gameday"] body::after {
+  background:
+    conic-gradient(from 145deg at 10% 0%, rgba(0, 51, 141, 0.30) 0deg, rgba(29, 78, 216, 0.18) 18deg, transparent 38deg),
+    conic-gradient(from 175deg at 90% 0%, rgba(2, 132, 199, 0.28) 0deg, rgba(56, 189, 248, 0.16) 18deg, transparent 38deg);
+  mix-blend-mode: multiply;
+  opacity: 0.95;
 }
 
 @keyframes stadium-lights-sway {
