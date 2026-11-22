@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-22T11:00:30.420Z",
+  "updatedAt": "2026-11-22T14:16:28.678Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
   "theme": "gameday",
   "billsTheme": "cold-front",
@@ -32,7 +32,7 @@
       "venue": "Highmark Stadium, Orchard Park, NY",
       "roof": "Open-Air Stadium",
       "surface": "Natural Grass",
-      "weather": "68°F, 15mph Wind, 1% PoP",
+      "weather": "68°F, 14mph Wind, 1% PoP",
       "window": "EARLY",
       "windowLabel": "NFL on CBS",
       "windowBadge": "NFL on CBS",
@@ -591,7 +591,7 @@
         "venue": "Soldier Field, Chicago, IL",
         "roof": "Open-Air Stadium",
         "surface": "Natural Bermuda Grass",
-        "weather": "56°F, 8mph Wind, 84% PoP",
+        "weather": "55°F, 11mph Wind, 85% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -603,8 +603,8 @@
         "homeName": "Chicago Bears",
         "homeRecord": "7-2, W4",
         "homeScore": "0",
-        "homeWinChance": 83,
-        "awayWinChance": 17,
+        "homeWinChance": 84,
+        "awayWinChance": 16,
         "verdict": "NFC MATCHUP",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
@@ -630,8 +630,8 @@
         "homeName": "Dallas Cowboys",
         "homeRecord": "4-6, L1",
         "homeScore": "0",
-        "homeWinChance": 74,
-        "awayWinChance": 26,
+        "homeWinChance": 75,
+        "awayWinChance": 25,
         "verdict": "SEEDING WATCH",
         "impactClass": "good",
         "target": "Root for Dallas Cowboys",
@@ -657,8 +657,8 @@
         "homeName": "Detroit Lions",
         "homeRecord": "7-2, W5",
         "homeScore": "0",
-        "homeWinChance": 64,
-        "awayWinChance": 36,
+        "homeWinChance": 65,
+        "awayWinChance": 35,
         "verdict": "NFC MATCHUP",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
@@ -672,7 +672,7 @@
         "venue": "Arrowhead Stadium, Kansas City, MO",
         "roof": "Open-Air Stadium",
         "surface": "Natural Bermuda Grass",
-        "weather": "46°F, 15mph Wind, 0% PoP",
+        "weather": "45°F, 16mph Wind, 0% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -684,8 +684,8 @@
         "homeName": "Kansas City Chiefs",
         "homeRecord": "7-2, W2",
         "homeScore": "0",
-        "homeWinChance": 89,
-        "awayWinChance": 11,
+        "homeWinChance": 90,
+        "awayWinChance": 10,
         "verdict": "SEEDING WATCH",
         "impactClass": "good",
         "target": "Root for Arizona Cardinals",
@@ -699,7 +699,7 @@
         "venue": "Lincoln Financial Field, Philadelphia, PA",
         "roof": "Open-Air Stadium",
         "surface": "Natural Grass (Desso)",
-        "weather": "62°F, 9mph Wind, 3% PoP",
+        "weather": "63°F, 7mph Wind, 6% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -726,7 +726,7 @@
         "venue": "Bank of America Stadium, Charlotte, NC",
         "roof": "Open-Air Stadium",
         "surface": "FieldTurf",
-        "weather": "61°F, 7mph Wind, 30% PoP",
+        "weather": "59°F, 7mph Wind, 22% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -780,7 +780,7 @@
         "venue": "Empower Field at Mile High, Denver, CO",
         "roof": "Open-Air Stadium",
         "surface": "Natural Kentucky Bluegrass",
-        "weather": "43°F, 8mph Wind, 0% PoP",
+        "weather": "40°F, 7mph Wind, 0% PoP",
         "window": "LATE",
         "windowLabel": "Sunday 4:25 PM ET National Window",
         "windowBadge": "America's Game of the Week",
@@ -807,7 +807,7 @@
         "venue": "MetLife Stadium, East Rutherford, NJ",
         "roof": "Open-Air Stadium",
         "surface": "FieldTurf CORE",
-        "weather": "56°F, 9mph Wind, 21% PoP",
+        "weather": "61°F, 7mph Wind, 26% PoP",
         "window": "LATE",
         "windowLabel": "Sunday 4:25 PM ET National Window",
         "windowBadge": "America's Game of the Week",
@@ -819,8 +819,8 @@
         "homeName": "New York Giants",
         "homeRecord": "5-3-1, L1",
         "homeScore": "0",
-        "homeWinChance": 31,
-        "awayWinChance": 69,
+        "homeWinChance": 30,
+        "awayWinChance": 70,
         "verdict": "SEEDING WATCH",
         "impactClass": "good",
         "target": "Root for New York Giants",
@@ -861,7 +861,7 @@
         "venue": "Northwest Stadium, Landover, MD",
         "roof": "Open-Air Stadium",
         "surface": "Natural Bermuda Grass",
-        "weather": "44°F, 7mph Wind, 0% PoP",
+        "weather": "49°F, 11mph Wind, 0% PoP",
         "window": "MNF",
         "windowLabel": "Monday Night Football",
         "windowBadge": "ESPN / ABC Prime Time",
@@ -884,9 +884,9 @@
   },
   "sabres": {
     "team": "Buffalo Sabres",
-    "makePlayoffs": 26,
-    "winDivision": 12,
-    "wildcard": 14,
+    "makePlayoffs": 21,
+    "winDivision": 9,
+    "wildcard": 12,
     "tragicNumber": "78 PTS",
     "projectedPoints": 78,
     "cutlinePoints": 99,
@@ -910,8 +910,8 @@
       "bufScore": "",
       "oppScore": "",
       "liveScore": null,
-      "ifWin": 32,
-      "ifLoss": 21,
+      "ifWin": 27,
+      "ifLoss": 16,
       "leverage": 11,
       "restAdvantage": {
         "sabresDays": 1,
@@ -1017,19 +1017,19 @@
     "divisionRadar": [
       {
         "team": "Lightning",
-        "pct": 86
-      },
-      {
-        "team": "Canadiens",
-        "pct": 77
+        "pct": 88
       },
       {
         "team": "Senators",
+        "pct": 74
+      },
+      {
+        "team": "Canadiens",
         "pct": 69
       },
       {
         "team": "Sabres",
-        "pct": 26
+        "pct": 21
       }
     ],
     "seedDistribution": [
@@ -1039,33 +1039,33 @@
       },
       {
         "seed": "Div 2",
-        "pct": 4
+        "pct": 2
       },
       {
         "seed": "Div 3",
-        "pct": 7
-      },
-      {
-        "seed": "Wildcard 1",
         "pct": 6
       },
       {
+        "seed": "Wildcard 1",
+        "pct": 5
+      },
+      {
         "seed": "Wildcard 2",
-        "pct": 8
+        "pct": 7
       }
     ],
     "opponents": [
       {
         "team": "Tampa Bay Lightning",
-        "pct": 5
+        "pct": 4
       },
       {
-        "team": "Montreal Canadiens",
+        "team": "Carolina Hurricanes",
         "pct": 4
       },
       {
         "team": "Boston Bruins",
-        "pct": 4
+        "pct": 3
       }
     ],
     "seasonSchedule": [
