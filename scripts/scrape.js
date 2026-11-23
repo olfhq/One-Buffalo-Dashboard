@@ -2926,13 +2926,371 @@ async function fetchNextGameSchedule() {
   return { billsSchedule, sabresSchedule };
 }
 
+const NLL_ARENAS = {
+  'Buffalo Bandits': 'KeyBank Center, Buffalo, NY',
+  'BUF': 'KeyBank Center, Buffalo, NY',
+  'Calgary Roughnecks': 'Scotiabank Saddledome, Calgary, AB',
+  'CGY': 'Scotiabank Saddledome, Calgary, AB',
+  'Colorado Mammoth': 'Ball Arena, Denver, CO',
+  'COL': 'Ball Arena, Denver, CO',
+  'Georgia Swarm': 'Gas South Arena, Duluth, GA',
+  'GA': 'Gas South Arena, Duluth, GA',
+  'Halifax Thunderbirds': 'Scotiabank Centre, Halifax, NS',
+  'HFX': 'Scotiabank Centre, Halifax, NS',
+  'Las Vegas Desert Dogs': "Lee's Family Forum, Henderson, NV",
+  'LV': "Lee's Family Forum, Henderson, NV",
+  'Oshawa FireWolves': 'Tribute Communities Centre, Oshawa, ON',
+  'OSH': 'Tribute Communities Centre, Oshawa, ON',
+  'Rochester Knighthawks': 'Blue Cross Arena, Rochester, NY',
+  'ROC': 'Blue Cross Arena, Rochester, NY',
+  'San Diego Seals': 'Pechanga Arena, San Diego, CA',
+  'SD': 'Pechanga Arena, San Diego, CA',
+  'Saskatchewan Rush': 'SaskTel Centre, Saskatoon, SK',
+  'SAS': 'SaskTel Centre, Saskatoon, SK',
+  'Toronto Rock': 'TD Coliseum, Hamilton, ON',
+  'TOR': 'TD Coliseum, Hamilton, ON',
+  'Vancouver Warriors': 'Rogers Arena, Vancouver, BC',
+  'VAN': 'Rogers Arena, Vancouver, BC'
+};
+
+function formatNllEtParts(isoStr) {
+  const dt = new Date(isoStr);
+  if (isNaN(dt.getTime())) {
+    return {
+      date: '',
+      monthKey: '',
+      monthLabel: '',
+      dayOfWeek: '',
+      dateFormatted: 'TBD',
+      timeFormatted: 'TBD',
+      gameTime: 'TBD'
+    };
+  }
+  const nyDateParts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'America/New_York',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  }).format(dt); // YYYY-MM-DD
+  const monthKey = nyDateParts.slice(0, 7);
+  const monthLabel = dt.toLocaleDateString('en-US', { timeZone: 'America/New_York', month: 'short' }).toUpperCase();
+  const dayOfWeek = dt.toLocaleDateString('en-US', { timeZone: 'America/New_York', weekday: 'short' });
+  const dateFormatted = dt.toLocaleDateString('en-US', { timeZone: 'America/New_York', month: 'short', day: 'numeric' });
+  const time12 = dt.toLocaleTimeString('en-US', {
+    timeZone: 'America/New_York',
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true
+  });
+  const timeFormatted = `${time12} ET`;
+  return {
+    date: nyDateParts,
+    monthKey,
+    monthLabel,
+    dayOfWeek,
+    dateFormatted,
+    timeFormatted,
+    gameTime: `${dayOfWeek}, ${dateFormatted} • ${timeFormatted}`
+  };
+}
+
+function formatOrdinalSimple(n) {
+  const s = ['th', 'st', 'nd', 'rd'];
+  const v = n % 100;
+  return n + (s[(v - 20) % 10] || s[v] || s[0]);
+}
+
+async function fetchBanditsData() {
+  const fallback = {
+    team: 'Buffalo Bandits',
+    record: '0-0',
+    wins: 0,
+    losses: 0,
+    winPct: '.000',
+    standingPosition: 1,
+    standingSummary: '1st in NLL',
+    goalsFor: 0,
+    goalsAgainst: 0,
+    goalDiff: 0,
+    streak: '—',
+    gamesPlayed: 0,
+    gamesRemaining: 18,
+    nextGame: {
+      opponent: 'vs. Georgia Swarm',
+      oppShortName: 'Georgia Swarm',
+      oppAbbrev: 'GA',
+      isHome: true,
+      gameTime: 'Sat, Nov 28 • 7:00 PM ET',
+      isoTime: '2026-11-29T00:00Z',
+      matchupRecords: 'Bandits (0-0) vs. Georgia Swarm (0-0)',
+      broadcast: 'ESPN+',
+      venue: 'KeyBank Center, Buffalo, NY',
+      statusState: 'pre',
+      statusDetail: 'Sat, Nov 28 • 7:00 PM ET',
+      bufScore: '',
+      oppScore: '',
+      liveScore: null
+    },
+    standings: [],
+    seasonSchedule: [],
+    recentResults: [],
+    leagueScoreboard: [],
+    teamStats: []
+  };
+
+  try {
+    const [schedRes, standRes, sbRes] = await Promise.all([
+      fetch('https://site.api.espn.com/apis/site/v2/sports/lacrosse/nll/teams/125429/schedule', { signal: AbortSignal.timeout(10000) }).then(r => r.ok ? r.json() : null),
+      fetch('https://site.api.espn.com/apis/v2/sports/lacrosse/nll/standings', { signal: AbortSignal.timeout(10000) }).then(r => r.ok ? r.json() : null),
+      fetch('https://site.api.espn.com/apis/site/v2/sports/lacrosse/nll/scoreboard', { signal: AbortSignal.timeout(10000) }).then(r => r.ok ? r.json() : null)
+    ]);
+
+    // 1. Parse NLL Standings
+    const standings = [];
+    const entries = standRes?.standings?.entries || [];
+    entries.forEach(entry => {
+      const t = entry.team || {};
+      const statsMap = {};
+      (entry.stats || []).forEach(st => {
+        statsMap[st.name] = st;
+      });
+      const wins = Number(statsMap.wins?.value ?? 0);
+      const losses = Number(statsMap.losses?.value ?? 0);
+      const winPctVal = Number(statsMap.winPercent?.value ?? 0);
+      const winPct = statsMap.winPercent?.displayValue || '.000';
+      const gf = Number(statsMap.pointsFor?.value ?? 0);
+      const ga = Number(statsMap.pointsAgainst?.value ?? 0);
+      const diff = Number(statsMap.pointDifferential?.value ?? (gf - ga));
+      standings.push({
+        team: t.displayName || t.name || 'Team',
+        shortName: t.shortDisplayName || t.name || t.displayName || 'Team',
+        abbrev: t.abbreviation || '',
+        wins,
+        losses,
+        winPctVal,
+        winPct,
+        gf,
+        ga,
+        diff,
+        isBandits: t.id === '125429' || t.abbreviation === 'BUF'
+      });
+    });
+
+    standings.sort((a, b) => {
+      if (b.wins !== a.wins) return b.wins - a.wins;
+      if (b.winPctVal !== a.winPctVal) return b.winPctVal - a.winPctVal;
+      if (b.diff !== a.diff) return b.diff - a.diff;
+      return b.gf - a.gf;
+    });
+    standings.forEach((row, idx) => {
+      row.rank = idx + 1;
+      delete row.winPctVal;
+    });
+
+    const banditsStanding = standings.find(s => s.isBandits) || {
+      rank: 1,
+      team: 'Buffalo Bandits',
+      abbrev: 'BUF',
+      wins: 0,
+      losses: 0,
+      winPct: '.000',
+      gf: 0,
+      ga: 0,
+      diff: 0
+    };
+
+    // 2. Parse Bandits Season Schedule
+    const events = schedRes?.events || [];
+    const seasonSchedule = events.map((ev, idx) => {
+      const comp = ev.competitions?.[0] || {};
+      const competitors = comp.competitors || [];
+      const bufComp = competitors.find(c => c.id === '125429' || c.team?.abbreviation === 'BUF') || {};
+      const oppComp = competitors.find(c => c.id !== '125429' && c.team?.abbreviation !== 'BUF') || {};
+      const isHome = bufComp.homeAway === 'home';
+      const oppName = oppComp.team?.displayName || 'Opponent';
+      const oppShortName = oppComp.team?.shortDisplayName || oppComp.team?.name || oppName;
+      const oppAbbrev = oppComp.team?.abbreviation || '';
+      const homeKey = isHome ? 'BUF' : (oppAbbrev || oppName);
+      const venue = comp.venue?.fullName || NLL_ARENAS[homeKey] || NLL_ARENAS[oppName] || 'KeyBank Center, Buffalo, NY';
+      const broadcast = comp.broadcasts?.[0]?.media?.shortName || 'ESPN+';
+      const statusState = comp.status?.type?.state || 'pre';
+      const bufScoreRaw = bufComp.score?.value ?? (bufComp.score?.displayValue !== undefined ? Number(bufComp.score.displayValue) : null);
+      const oppScoreRaw = oppComp.score?.value ?? (oppComp.score?.displayValue !== undefined ? Number(oppComp.score.displayValue) : null);
+      const bufScore = Number.isFinite(bufScoreRaw) ? bufScoreRaw : null;
+      const oppScore = Number.isFinite(oppScoreRaw) ? oppScoreRaw : null;
+      const result = (statusState === 'post' && bufScore !== null && oppScore !== null)
+        ? (bufScore > oppScore ? 'W' : 'L')
+        : null;
+
+      const parts = formatNllEtParts(ev.date);
+      let statusDetail = parts.timeFormatted;
+      if (statusState === 'post') statusDetail = 'Final';
+      else if (statusState === 'in') statusDetail = comp.status?.type?.shortDetail || comp.status?.type?.detail || 'Live';
+
+      return {
+        gameNumber: idx + 1,
+        id: String(ev.id || idx + 1),
+        date: parts.date,
+        isoTime: ev.date,
+        monthKey: parts.monthKey,
+        monthLabel: parts.monthLabel,
+        dayOfWeek: parts.dayOfWeek,
+        dateFormatted: parts.dateFormatted,
+        timeFormatted: parts.timeFormatted,
+        opponent: oppName,
+        oppShortName,
+        oppAbbrev,
+        isHome,
+        venue,
+        statusState,
+        statusDetail,
+        bufScore,
+        oppScore,
+        result,
+        broadcast
+      };
+    });
+
+    // Compute streak & played/remaining counts
+    const completedGames = seasonSchedule.filter(g => g.statusState === 'post' && g.result);
+    const gamesPlayed = completedGames.length;
+    const gamesRemaining = Math.max(0, seasonSchedule.length - gamesPlayed);
+    let streak = '—';
+    if (completedGames.length > 0) {
+      const lastRes = completedGames[completedGames.length - 1].result;
+      let count = 0;
+      for (let i = completedGames.length - 1; i >= 0; i--) {
+        if (completedGames[i].result === lastRes) count++;
+        else break;
+      }
+      streak = `${lastRes}${count}`;
+    }
+
+    const recentResults = completedGames.slice(-5).reverse();
+
+    // 3. Determine Next Game
+    const activeGame = seasonSchedule.find(g => g.statusState === 'in')
+      || seasonSchedule.find(g => g.statusState === 'pre')
+      || seasonSchedule[seasonSchedule.length - 1];
+
+    let nextGame = fallback.nextGame;
+    let teamStats = [];
+    if (activeGame) {
+      const oppStanding = standings.find(s => s.abbrev === activeGame.oppAbbrev || s.team === activeGame.opponent) || {
+        wins: 0, losses: 0, gf: 0, ga: 0, diff: 0, winPct: '.000'
+      };
+      const parts = formatNllEtParts(activeGame.isoTime);
+      const prefix = activeGame.isHome ? 'vs.' : '@';
+      const bufRecStr = `${banditsStanding.wins}-${banditsStanding.losses}`;
+      const oppRecStr = `${oppStanding.wins}-${oppStanding.losses}`;
+      const hasScore = activeGame.bufScore !== null && activeGame.oppScore !== null;
+
+      nextGame = {
+        opponent: `${prefix} ${activeGame.opponent}`,
+        oppShortName: activeGame.opponent,
+        oppAbbrev: activeGame.oppAbbrev,
+        isHome: activeGame.isHome,
+        gameTime: parts.gameTime,
+        isoTime: activeGame.isoTime,
+        matchupRecords: `Bandits (${bufRecStr}) vs. ${activeGame.oppShortName} (${oppRecStr})`,
+        broadcast: activeGame.broadcast,
+        venue: activeGame.venue,
+        statusState: activeGame.statusState,
+        statusDetail: activeGame.statusState === 'pre' ? parts.gameTime : activeGame.statusDetail,
+        bufScore: hasScore ? String(activeGame.bufScore) : '',
+        oppScore: hasScore ? String(activeGame.oppScore) : '',
+        liveScore: hasScore
+          ? (activeGame.isHome
+            ? `Bandits ${activeGame.bufScore} - ${activeGame.oppScore} ${activeGame.oppShortName}`
+            : `${activeGame.oppShortName} ${activeGame.oppScore} - ${activeGame.bufScore} Bandits`)
+          : null
+      };
+
+      const bufGp = Math.max(1, banditsStanding.wins + banditsStanding.losses);
+      const oppGp = Math.max(1, oppStanding.wins + oppStanding.losses);
+      const hasAnyGames = (banditsStanding.wins + banditsStanding.losses) > 0 || (oppStanding.wins + oppStanding.losses) > 0;
+      teamStats = [
+        { metric: 'Season Record', bandits: bufRecStr, opp: oppRecStr },
+        { metric: 'NLL Standings', bandits: `${formatOrdinalSimple(banditsStanding.rank)}`, opp: `${formatOrdinalSimple(oppStanding.rank || 1)}` },
+        { metric: 'Goals For', bandits: String(banditsStanding.gf), opp: String(oppStanding.gf) },
+        { metric: 'Goals Against', bandits: String(banditsStanding.ga), opp: String(oppStanding.ga) },
+        { metric: 'Goal Differential', bandits: (banditsStanding.diff > 0 ? `+${banditsStanding.diff}` : String(banditsStanding.diff)), opp: (oppStanding.diff > 0 ? `+${oppStanding.diff}` : String(oppStanding.diff)) },
+        { metric: 'Goals / Game', bandits: hasAnyGames ? (banditsStanding.gf / bufGp).toFixed(1) : '0.0', opp: hasAnyGames ? (oppStanding.gf / oppGp).toFixed(1) : '0.0' }
+      ];
+    }
+
+    // 4. Parse League Scoreboard
+    const leagueScoreboard = (sbRes?.events || []).map(ev => {
+      const comp = ev.competitions?.[0] || {};
+      const competitors = comp.competitors || [];
+      const home = competitors.find(c => c.homeAway === 'home') || competitors[0] || {};
+      const away = competitors.find(c => c.homeAway === 'away') || competitors[1] || {};
+      const homeAbbrev = home.team?.abbreviation || '';
+      const awayAbbrev = away.team?.abbreviation || '';
+      const homeName = home.team?.displayName || 'Home';
+      const awayName = away.team?.displayName || 'Away';
+      const parts = formatNllEtParts(ev.date);
+      const statusState = comp.status?.type?.state || 'pre';
+      let statusDetail = parts.timeFormatted;
+      if (statusState === 'post') statusDetail = 'Final';
+      else if (statusState === 'in') statusDetail = comp.status?.type?.shortDetail || comp.status?.type?.detail || 'Live';
+
+      return {
+        id: String(ev.id || ''),
+        isoTime: ev.date,
+        dateFormatted: parts.dateFormatted,
+        timeFormatted: parts.timeFormatted,
+        statusState,
+        statusDetail,
+        awayTeam: awayName,
+        awayShort: away.team?.shortDisplayName || awayName,
+        awayAbbrev,
+        awayScore: away.score !== undefined ? String(away.score) : '',
+        homeTeam: homeName,
+        homeShort: home.team?.shortDisplayName || homeName,
+        homeAbbrev,
+        homeScore: home.score !== undefined ? String(home.score) : '',
+        broadcast: comp.broadcasts?.[0]?.media?.shortName || 'ESPN+',
+        venue: comp.venue?.fullName || NLL_ARENAS[homeAbbrev] || NLL_ARENAS[homeName] || 'NLL Arena',
+        isBanditsGame: homeAbbrev === 'BUF' || awayAbbrev === 'BUF'
+      };
+    });
+
+    return {
+      team: 'Buffalo Bandits',
+      record: `${banditsStanding.wins}-${banditsStanding.losses}`,
+      wins: banditsStanding.wins,
+      losses: banditsStanding.losses,
+      winPct: banditsStanding.winPct,
+      standingPosition: banditsStanding.rank,
+      standingSummary: `${formatOrdinalSimple(banditsStanding.rank)} in NLL`,
+      goalsFor: banditsStanding.gf,
+      goalsAgainst: banditsStanding.ga,
+      goalDiff: banditsStanding.diff,
+      streak,
+      gamesPlayed,
+      gamesRemaining,
+      nextGame,
+      standings,
+      seasonSchedule,
+      recentResults,
+      leagueScoreboard,
+      teamStats
+    };
+  } catch (err) {
+    console.warn('Bandits data fetch fallback used:', err.message);
+    return fallback;
+  }
+}
+
 async function scrapePlayoffStatus() {
   console.log('Initiating matrix scrape from PlayoffStatus.com and ESPN NFL API...');
 
-  const [{ billsSchedule, sabresSchedule }, outOfTownGames, nhlOutOfTownGames] = await Promise.all([
+  const [{ billsSchedule, sabresSchedule }, outOfTownGames, nhlOutOfTownGames, banditsData] = await Promise.all([
     fetchNextGameSchedule(),
     fetchNflScoreboard(),
-    fetchNhlScoreboard()
+    fetchNhlScoreboard(),
+    fetchBanditsData()
   ]);
 
   const billsUrl = 'http://www.playoffstatus.com/nfl/billsstandings.html';
@@ -3336,13 +3694,14 @@ async function scrapePlayoffStatus() {
 
   const finalPayload = {
     updatedAt: new Date().toISOString(),
-    source: 'http://www.playoffstatus.com and ESPN NFL API',
+    source: 'http://www.playoffstatus.com and ESPN API',
     theme: currentTheme,
     billsTheme: currentBillsTheme,
     sabresTheme: currentSabresTheme,
     themeUntil: currentThemeUntil,
     bills: billsData,
-    sabres: sabresData
+    sabres: sabresData,
+    bandits: banditsData
   };
 
   const payloadStr = JSON.stringify(finalPayload, null, 2);
@@ -3365,7 +3724,7 @@ function buildTrimmedFallbackForFile(fileName, fullPayload) {
   if (fileName === 'index.html') {
     const trimSport = (s) => {
       if (!s) return s;
-      const { outOfTownGames, seasonSchedule, ...rest } = s;
+      const { outOfTownGames, seasonSchedule, standings, leagueScoreboard, teamStats, recentResults, ...rest } = s;
       const nextGame = rest.nextGame ? { ...rest.nextGame } : {};
       delete nextGame.efficiency;
       delete nextGame.injuries;
@@ -3374,7 +3733,8 @@ function buildTrimmedFallbackForFile(fileName, fullPayload) {
     return {
       ...baseFallback,
       bills: trimSport(fullPayload.bills),
-      sabres: trimSport(fullPayload.sabres)
+      sabres: trimSport(fullPayload.sabres),
+      bandits: trimSport(fullPayload.bandits)
     };
   }
   if (fileName === 'bills.html') {
@@ -3401,12 +3761,18 @@ function buildTrimmedFallbackForFile(fileName, fullPayload) {
       sabres: fullPayload.sabres
     };
   }
+  if (fileName === 'bandits.html') {
+    return {
+      ...baseFallback,
+      bandits: fullPayload.bandits
+    };
+  }
   return fullPayload;
 }
 
 function syncHtmlFallbacks(fullPayload) {
   const rootDir = path.resolve(__dirname, '..');
-  const files = ['index.html', 'bills.html', 'sabres.html'].map(f => path.join(rootDir, f));
+  const files = ['index.html', 'bills.html', 'sabres.html', 'bandits.html'].map(f => path.join(rootDir, f));
   const startMarker = 'const FALLBACK_DATA =';
   const endMarker = 'try {';
 
@@ -3468,6 +3834,12 @@ function syncHtmlFallbacks(fullPayload) {
               return before.replace(/data-team-theme="[^"]*"/, `data-team-theme="${effectiveSabres}"`) + '>';
             }
             return `${before} data-team-theme="${effectiveSabres}">`;
+          });
+          updatedContent = updatedContent.replace(/(<article[^>]*class="[^"]*card-bandits[^"]*"[^>]*)>/i, (match, before) => {
+            if (/data-team-theme="[^"]*"/.test(before)) {
+              return before.replace(/data-team-theme="[^"]*"/, `data-team-theme="${globalTheme}"`) + '>';
+            }
+            return `${before} data-team-theme="${globalTheme}">`;
           });
         }
 

@@ -38,6 +38,8 @@ html[data-theme="regular"],
   --bills-red: #C60C30;
   --sabres-blue: #002654;
   --sabres-gold: var(--sabres-accent);
+  --bandits-orange: #ff671f;
+  --bandits-purple: #6d28d9;
 }
 
 /* 2. 90s-NOSTALGIA & GOATHEAD (Paired 90s Kelly Red Helmet + Sabres Goathead + Full CRT) */
@@ -841,6 +843,28 @@ html[data-theme="french-connection"] .card:hover {
 [data-team-theme="thanksgiving"].card-sabres:hover {
   border-color: #f59e0b !important;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55), 0 0 16px rgba(245, 158, 11, 0.4) !important;
+}
+
+[data-team-theme="regular"].card-bandits {
+  --bandits-accent: #ff671f;
+  --card-border: #1f2c44;
+  --focus-ring: #ff671f;
+}
+[data-team-theme="gameday"].card-bandits {
+  --bandits-accent: #ff671f;
+  --card-border: #9a3412;
+  --focus-ring: #ff671f;
+}
+[data-team-theme="gameday"].card-bandits:hover {
+  border-color: #ff671f !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 16px rgba(255, 103, 31, 0.35) !important;
+}
+[data-team-theme="thanksgiving"].card-bandits {
+  --bandits-accent: #f97316 !important;
+  --card-border: #9a3412 !important;
+  --border-subtle: #9a3412 !important;
+  --surface-card: #241108 !important;
+  --focus-ring: #f97316 !important;
 }
 
 /* --------------------------------------------------------------------------

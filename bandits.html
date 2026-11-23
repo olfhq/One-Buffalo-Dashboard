@@ -1,0 +1,1753 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="gameday" data-global-theme="gameday">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Live NLL standings, next game countdown, full schedule, and matchup intelligence for Buffalo Bandits fans.">
+  <link rel="canonical" href="https://onebuffalotracker.fyi/bandits.html">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+
+  <!-- PWA & Mobile App Meta Tags -->
+  <link rel="manifest" href="./manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="One Buffalo">
+  <meta name="theme-color" content="#080a0f">
+
+  <!-- OpenGraph & Twitter Social Cards -->
+  <meta property="og:title" content="Buffalo Bandits Hub | One Buffalo Tracker">
+  <meta property="og:description" content="Live NLL standings, next game countdown, full season schedule, and matchup intelligence for Buffalo Bandits fans.">
+  <meta property="og:url" content="https://onebuffalotracker.fyi/bandits.html">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://onebuffalotracker.fyi/og-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Buffalo Bandits Hub command center preview">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Buffalo Bandits Hub | One Buffalo Tracker">
+  <meta name="twitter:description" content="Live NLL standings, next game countdown, full season schedule, and matchup intelligence for Buffalo Bandits fans.">
+  <meta name="twitter:image" content="https://onebuffalotracker.fyi/og-card.png">
+
+  <!-- Structured Data: SportsApplication -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Buffalo Bandits Hub | One Buffalo Tracker",
+    "url": "https://onebuffalotracker.fyi/bandits.html",
+    "description": "Live Buffalo Bandits NLL standings, next game countdown, and full season schedule.",
+    "applicationCategory": "SportsApplication",
+    "operatingSystem": "All",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
+
+  <!-- App Icons -->
+  <link rel="apple-touch-icon" href="./icon-512.png">
+  <link rel="shortcut icon" href="./favicon.ico">
+  <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png">
+
+  <!-- Analytics: Umami & Microsoft Clarity -->
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="357e6519-737e-4ead-a2c1-d698ed45e807"></script>
+  <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        var loadClarity=function(){
+          t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+          y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        };
+        if(c.requestIdleCallback){c.addEventListener("load",function(){c.requestIdleCallback(loadClarity,{timeout:2000})},{once:true})}
+        else{c.addEventListener("load",function(){setTimeout(loadClarity,500)},{once:true})}
+    })(window, document, "clarity", "script", "z1eofksq8i");
+  </script>
+
+  <!-- Service Worker Registration for Offline PWA -->
+  <script id="pwa-sw-register">
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').then((reg) => {
+          reg.update();
+        }).catch(err => console.warn('SW registration failed:', err));
+      });
+      let swRefreshing = false;
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (!swRefreshing) {
+          swRefreshing = true;
+          window.location.reload();
+        }
+      });
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible' && navigator.serviceWorker.controller) {
+          navigator.serviceWorker.getRegistration().then(reg => reg && reg.update());
+        }
+      });
+    }
+  </script>
+
+  <title>Buffalo Bandits Hub | One Buffalo Tracker</title>
+  <!-- Typography Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./assets/shared.css">
+  <script src="./assets/shared.js"></script>
+  <style>
+    header {
+      text-align: center;
+      margin-bottom: 1.25rem;
+    }
+
+    .nav-switch-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.85rem;
+    }
+
+    .back-nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.42rem 0.8rem;
+      background: var(--card-inner);
+      border: 1px solid var(--card-border);
+      border-radius: 999px;
+      color: var(--text-main);
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 700;
+      transition: all 0.2s ease;
+    }
+    .back-nav-btn:hover {
+      border-color: var(--bandits-orange);
+      color: var(--bandits-orange);
+    }
+
+    .hub-switcher {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: var(--card-inner);
+      border: 1px solid var(--card-border);
+      padding: 0.25rem;
+      border-radius: 999px;
+      flex-wrap: wrap;
+    }
+
+    .hub-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.32rem 0.72rem;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      text-decoration: none;
+      color: var(--text-muted);
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+    .hub-pill:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .hub-pill.active {
+      background: rgba(255, 103, 31, 0.2);
+      color: #fb923c;
+      border: 1px solid rgba(255, 103, 31, 0.45);
+    }
+
+    header h1 {
+      font-family: var(--font-display);
+      font-size: clamp(1.75rem, 4vw, 2.4rem);
+      font-weight: 800;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #ffffff 0%, #ff671f 65%, #a855f7 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.25rem;
+    }
+
+    .meta-bar {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    /* SEGMENTED TAB BAR */
+    .tab-bar {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.45rem;
+      max-width: 960px;
+      margin: 0 auto 1.25rem auto;
+      background: var(--card-inner);
+      border: 1px solid var(--card-border);
+      padding: 0.35rem;
+      border-radius: 12px;
+    }
+
+    @media (max-width: 640px) {
+      .tab-bar {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 0.55rem 0.65rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .tab-btn:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.04);
+    }
+    .tab-btn.active {
+      background: rgba(255, 103, 31, 0.16);
+      color: #fb923c;
+      border-color: rgba(255, 103, 31, 0.45);
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-top: 4px solid var(--bandits-orange);
+      border-radius: 14px;
+      padding: 1.4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
+    }
+
+    @media (max-width: 600px) {
+      .card {
+        padding: 1rem;
+      }
+    }
+
+    .stakes-banner {
+      background: var(--card-inner);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 1.05rem 1.15rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .stakes-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .matchup-main {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      min-width: 0;
+    }
+
+    .matchup-prefix {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+
+    .matchup-opp {
+      font-family: var(--font-display);
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1.15;
+    }
+
+    .matchup-records-line {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .schedule-tag {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      font-size: 0.8rem;
+      color: var(--text-main);
+      margin-top: 0.15rem;
+    }
+
+    .tv-badge {
+      background: rgba(255, 103, 31, 0.16);
+      color: #fb923c;
+      border: 1px solid rgba(255, 103, 31, 0.4);
+      padding: 0.12rem 0.45rem;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 0.4px;
+    }
+
+    .venue-line {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+    }
+
+    .countdown-box {
+      background: rgba(8, 10, 15, 0.55);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 0.65rem 0.95rem;
+      text-align: center;
+      min-width: 140px;
+    }
+
+    .countdown-val {
+      font-family: var(--font-data);
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #fb923c;
+      letter-spacing: 0.5px;
+    }
+
+    .countdown-label {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      color: var(--text-muted);
+      margin-top: 0.15rem;
+      font-weight: 700;
+    }
+
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.75rem;
+    }
+
+    @media (max-width: 640px) {
+      .stat-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    .stat-box {
+      background: var(--card-inner);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 0.8rem 0.6rem;
+      text-align: center;
+    }
+
+    .stat-val {
+      font-family: var(--font-data);
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .stat-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+      font-weight: 700;
+    }
+
+    .section-subtitle {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      font-size: 0.85rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      color: var(--text-main);
+      margin-bottom: 0.65rem;
+    }
+
+    .intel-table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .intel-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+    }
+
+    .intel-table th,
+    .intel-table td {
+      padding: 0.6rem 0.55rem;
+      border-bottom: 1px solid var(--card-border);
+      text-align: left;
+    }
+
+    .intel-table th {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+
+    .intel-table td {
+      font-family: var(--font-data);
+      font-size: 0.8rem;
+    }
+
+    .intel-table td:first-child {
+      font-family: inherit;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .standings-row-bandits {
+      background: rgba(255, 103, 31, 0.12);
+    }
+    .standings-row-bandits td {
+      color: #fb923c;
+      font-weight: 700;
+    }
+
+    /* SLATE FILTER BAR & CARDS */
+    .slate-filter-bar {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .slate-filter-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: var(--card-inner);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 0.42rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .slate-filter-btn.active {
+      background: rgba(255, 103, 31, 0.16);
+      border-color: rgba(255, 103, 31, 0.45);
+      color: #fb923c;
+    }
+
+    .filter-count-badge {
+      background: rgba(255, 255, 255, 0.08);
+      padding: 0.08rem 0.4rem;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-family: var(--font-data);
+    }
+
+    .slate-card {
+      background: var(--card-inner);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 0.9rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .slate-card.is-bandits {
+      border-left: 4px solid var(--bandits-orange);
+    }
+
+    .slate-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      font-size: 0.76rem;
+      color: var(--text-muted);
+    }
+
+    .slate-card-matchup {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    /* MONTH PILL BAR & FULL SCHEDULE */
+    .month-pill-bar {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    .month-pill {
+      background: var(--card-inner);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 0.35rem 0.7rem;
+      border-radius: 999px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .month-pill.active {
+      background: rgba(255, 103, 31, 0.18);
+      border-color: rgba(255, 103, 31, 0.45);
+      color: #fb923c;
+    }
+
+    .schedule-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .sched-row {
+      display: grid;
+      grid-template-columns: 95px 1fr auto;
+      align-items: center;
+      gap: 0.75rem;
+      background: var(--card-inner);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 0.75rem 0.9rem;
+    }
+
+    @media (max-width: 600px) {
+      .sched-row {
+        grid-template-columns: 1fr;
+        gap: 0.4rem;
+      }
+    }
+
+    .sched-date {
+      font-family: var(--font-data);
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+    .sched-date strong {
+      display: block;
+      color: var(--text-main);
+      font-size: 0.85rem;
+    }
+
+    .sched-opp {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+      min-width: 0;
+    }
+    .sched-opp-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--text-main);
+    }
+    .sched-venue {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+    }
+
+    .sched-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    @media (max-width: 600px) {
+      .sched-meta {
+        justify-content: flex-start;
+      }
+    }
+
+    .result-badge {
+      font-family: var(--font-data);
+      font-size: 0.78rem;
+      font-weight: 800;
+      padding: 0.2rem 0.55rem;
+      border-radius: 6px;
+    }
+    .result-win {
+      background: rgba(16, 185, 129, 0.16);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.35);
+    }
+    .result-loss {
+      background: rgba(239, 68, 68, 0.16);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.35);
+    }
+  </style>
+</head>
+<body class="bandits-theme">
+
+  <header>
+    <div class="nav-switch-row">
+      <a href="./index.html" class="back-nav-btn" data-umami-event="nav-portal-from-bandits">‹ Portal</a>
+      <div class="hub-switcher">
+        <a href="./bills.html" class="hub-pill" data-umami-event="nav-bills-from-bandits">🦬 Bills Hub</a>
+        <a href="./sabres.html" class="hub-pill" data-umami-event="nav-sabres-from-bandits">⚔️ Sabres Hub</a>
+        <span class="hub-pill active">🥍 Bandits Hub</span>
+      </div>
+    </div>
+    <h1>BUFFALO BANDITS HUB</h1>
+    <div class="meta-bar">
+      <span id="update-status" aria-live="polite">Loading data...</span>
+    </div>
+  </header>
+
+  <!-- SEGMENTED TABS -->
+  <nav class="tab-bar" role="tablist" aria-label="Bandits Hub Sections">
+    <button class="tab-btn active" id="tab-btn-intel" role="tab" aria-selected="true" tabindex="0" aria-controls="tab-intel" onclick="switchTab('intel')" data-umami-event="tab-intel-bandits">Matchup Intel</button>
+    <button class="tab-btn" id="tab-btn-rooting" role="tab" aria-selected="false" tabindex="-1" aria-controls="tab-rooting" onclick="switchTab('rooting')" data-umami-event="tab-rooting-bandits">NLL Slate & TV Guide</button>
+    <button class="tab-btn" id="tab-btn-radar" role="tab" aria-selected="false" tabindex="-1" aria-controls="tab-radar" onclick="switchTab('radar')" data-umami-event="tab-radar-bandits">NLL Standings</button>
+    <button class="tab-btn" id="tab-btn-schedule" role="tab" aria-selected="false" tabindex="-1" aria-controls="tab-schedule" onclick="switchTab('schedule')" data-umami-event="tab-schedule-bandits">Full Schedule</button>
+  </nav>
+
+  <main class="container">
+    <!-- TAB 1: MATCHUP INTEL -->
+    <section id="tab-intel" class="tab-content active" role="tabpanel" aria-labelledby="tab-btn-intel">
+      <div class="card">
+        <div class="stakes-banner">
+          <div class="stakes-top-row">
+            <div class="matchup-main">
+              <div class="matchup-prefix" id="bandits-matchup-prefix">Next Matchup:</div>
+              <div class="matchup-opp" id="bandits-next-opp">--</div>
+              <div class="matchup-records-line" id="bandits-records">--</div>
+              <div class="schedule-tag">
+                <span id="bandits-game-time">--</span>
+                <span class="tv-badge" id="bandits-broadcast">ESPN+</span>
+              </div>
+              <div class="venue-line" id="bandits-venue">--</div>
+            </div>
+
+            <div class="countdown-box">
+              <div class="countdown-val" id="bandits-countdown" aria-live="polite">--:--:--</div>
+              <div class="countdown-label" id="bandits-countdown-label">Faceoff In</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stat-row">
+          <div class="stat-box">
+            <div class="stat-val" id="bandits-record-val">--</div>
+            <div class="stat-label">Record</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val" id="bandits-rank-val" style="color: #fb923c;">--</div>
+            <div class="stat-label">NLL Rank</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val" id="bandits-diff-val">--</div>
+            <div class="stat-label">Goal Diff</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val" id="bandits-streak-val">--</div>
+            <div class="stat-label">Streak</div>
+          </div>
+        </div>
+
+        <div>
+          <div class="section-subtitle">
+            <span>Tale of the Tape: Team Comparison</span>
+            <span style="font-size: 0.72rem; color: #fb923c;" id="bandits-opp-header">vs. Opponent</span>
+          </div>
+          <div class="intel-table-wrap">
+            <table class="intel-table">
+              <thead>
+                <tr>
+                  <th style="width: 44%;">Category</th>
+                  <th style="width: 28%; color: #fb923c;">Buffalo Bandits</th>
+                  <th style="width: 28%; text-align: right;" id="bandits-th-opp">Opponent</th>
+                </tr>
+              </thead>
+              <tbody id="bandits-team-stats-tbody">
+                <!-- Populated dynamically via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div>
+          <div class="section-subtitle">
+            <span>Recent Completed Games</span>
+            <span style="font-size: 0.72rem; color: var(--text-muted);" id="bandits-played-summary">--</span>
+          </div>
+          <div id="bandits-recent-results" class="schedule-list">
+            <!-- Populated dynamically via JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: NLL SLATE & TV GUIDE -->
+    <section id="tab-rooting" class="tab-content" role="tabpanel" aria-labelledby="tab-btn-rooting">
+      <div class="card">
+        <div class="section-subtitle">
+          <span>NLL League Scoreboard & Broadcast Guide</span>
+          <span style="font-size: 0.72rem; color: #fb923c;">2026-27 NLL Season</span>
+        </div>
+
+        <div class="slate-filter-bar" role="group" aria-label="Filter NLL Slate">
+          <button class="slate-filter-btn active" id="filter-btn-all" aria-pressed="true" onclick="setBanditsSlateFilter('all')">
+            <span>All Matchups</span>
+            <span class="filter-count-badge" id="count-all">0</span>
+          </button>
+          <button class="slate-filter-btn" id="filter-btn-upcoming" aria-pressed="false" onclick="setBanditsSlateFilter('upcoming')">
+            <span>Upcoming</span>
+            <span class="filter-count-badge" id="count-upcoming">0</span>
+          </button>
+          <button class="slate-filter-btn" id="filter-btn-results" aria-pressed="false" onclick="setBanditsSlateFilter('results')">
+            <span>Final</span>
+            <span class="filter-count-badge" id="count-results">0</span>
+          </button>
+        </div>
+
+        <div id="bandits-scoreboard-grid" style="display: flex; flex-direction: column; gap: 0.85rem;">
+          <div style="color: var(--text-muted); font-size: 0.85rem; text-align: center; padding: 1rem;">
+            Loading NLL scoreboard...
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: NLL STANDINGS -->
+    <section id="tab-radar" class="tab-content" role="tabpanel" aria-labelledby="tab-btn-radar">
+      <div class="card">
+        <div class="section-subtitle">
+          <span>2026-27 NLL Standings</span>
+          <span style="font-size: 0.72rem; color: #fb923c;" id="bandits-standings-summary">12 Teams • Top 8 Make Playoffs</span>
+        </div>
+
+        <div class="intel-table-wrap">
+          <table class="intel-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Team</th>
+                <th>W</th>
+                <th>L</th>
+                <th>PCT</th>
+                <th>GF</th>
+                <th>GA</th>
+                <th style="text-align: right;">DIFF</th>
+              </tr>
+            </thead>
+            <tbody id="bandits-standings-tbody">
+              <!-- Populated dynamically via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: FULL SEASON SCHEDULE -->
+    <section id="tab-schedule" class="tab-content" role="tabpanel" aria-labelledby="tab-btn-schedule">
+      <div class="card">
+        <div class="section-subtitle">
+          <span>2026-27 Buffalo Bandits Season Schedule</span>
+          <span style="font-size: 0.72rem; color: #fb923c;" id="bandits-schedule-summary">18 Games • Results & Upcoming Slate</span>
+        </div>
+
+        <div class="month-pill-bar" id="bandits-month-pills" role="toolbar" aria-label="Filter schedule by month">
+          <button type="button" class="month-pill active" data-month="ALL" onclick="filterBanditsMonth('ALL')" aria-pressed="true">ALL</button>
+          <button type="button" class="month-pill" data-month="NOV" onclick="filterBanditsMonth('NOV')" aria-pressed="false">NOV</button>
+          <button type="button" class="month-pill" data-month="DEC" onclick="filterBanditsMonth('DEC')" aria-pressed="false">DEC</button>
+          <button type="button" class="month-pill" data-month="JAN" onclick="filterBanditsMonth('JAN')" aria-pressed="false">JAN</button>
+          <button type="button" class="month-pill" data-month="FEB" onclick="filterBanditsMonth('FEB')" aria-pressed="false">FEB</button>
+          <button type="button" class="month-pill" data-month="MAR" onclick="filterBanditsMonth('MAR')" aria-pressed="false">MAR</button>
+          <button type="button" class="month-pill" data-month="APR" onclick="filterBanditsMonth('APR')" aria-pressed="false">APR</button>
+        </div>
+
+        <div id="bandits-schedule-list" class="schedule-list" role="feed" aria-label="Bandits Season Schedule">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer style="text-align: center; padding: 2.5rem 1.5rem 2rem 1.5rem; max-width: 820px; margin: 0 auto; font-size: 0.72rem; color: var(--text-muted); line-height: 1.6; opacity: 0.75;">
+    <p>One Buffalo Tracker is an independent fan dashboard and is not affiliated with, endorsed by, or sponsored by Pegula Sports & Entertainment, the Buffalo Bills, the Buffalo Sabres, the Buffalo Bandits, the NFL, the NHL, or the NLL.</p>
+  </footer>
+
+  <script>
+    let data = null;
+    let banditsSlateFilter = 'all';
+    let currentMonthFilter = 'ALL';
+    let currentLeagueGames = [];
+    let currentSchedule = [];
+    let liveBanditsPollTimer = null;
+
+    function setBanditsSlateFilter(filter) {
+      banditsSlateFilter = filter;
+      ['all', 'upcoming', 'results'].forEach(key => {
+        const btn = document.getElementById(`filter-btn-${key}`);
+        if (btn) {
+          btn.classList.toggle('active', key === filter);
+          btn.setAttribute('aria-pressed', key === filter ? 'true' : 'false');
+        }
+      });
+      renderLeagueScoreboard(currentLeagueGames);
+    }
+
+    function filterBanditsMonth(month) {
+      currentMonthFilter = month;
+      document.querySelectorAll('#bandits-month-pills .month-pill').forEach(btn => {
+        const isActive = btn.getAttribute('data-month') === month;
+        btn.classList.toggle('active', isActive);
+        btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+      });
+      renderBanditsSchedule(currentSchedule);
+    }
+
+    function renderLeagueScoreboard(games) {
+      const grid = document.getElementById('bandits-scoreboard-grid');
+      if (!grid) return;
+
+      const allCount = games.length;
+      const upCount = games.filter(g => g.statusState === 'pre' || g.statusState === 'in').length;
+      const resCount = games.filter(g => g.statusState === 'post').length;
+      const cAll = document.getElementById('count-all');
+      const cUp = document.getElementById('count-upcoming');
+      const cRes = document.getElementById('count-results');
+      if (cAll) cAll.textContent = allCount;
+      if (cUp) cUp.textContent = upCount;
+      if (cRes) cRes.textContent = resCount;
+
+      const filtered = games.filter(g => {
+        if (banditsSlateFilter === 'upcoming') return g.statusState === 'pre' || g.statusState === 'in';
+        if (banditsSlateFilter === 'results') return g.statusState === 'post';
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `<div style="color: var(--text-muted); font-size: 0.85rem; text-align: center; padding: 1.25rem;">No NLL matchups match this filter right now.</div>`;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(g => {
+        const hasScore = g.statusState === 'in' || g.statusState === 'post';
+        const scoreLine = hasScore
+          ? `${g.awayShort} ${g.awayScore} @ ${g.homeShort} ${g.homeScore}`
+          : `${g.awayTeam} @ ${g.homeTeam}`;
+        return `
+          <div class="slate-card ${g.isBanditsGame ? 'is-bandits' : ''}">
+            <div class="slate-card-top">
+              <span>${g.dateFormatted} • ${g.statusState === 'pre' ? g.timeFormatted : g.statusDetail}</span>
+              <span class="tv-badge">${g.broadcast || 'ESPN+'}</span>
+            </div>
+            <div class="slate-card-matchup">
+              <span>${scoreLine}</span>
+              <span style="font-size: 0.74rem; color: var(--text-muted); font-weight: 600;">${g.venue || ''}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderBanditsSchedule(schedule) {
+      const listEl = document.getElementById('bandits-schedule-list');
+      if (!listEl) return;
+
+      const filtered = schedule.filter(g => currentMonthFilter === 'ALL' || g.monthLabel === currentMonthFilter);
+      if (filtered.length === 0) {
+        listEl.innerHTML = `<div style="color: var(--text-muted); font-size: 0.85rem; text-align: center; padding: 1.25rem;">No Bandits games scheduled in ${currentMonthFilter}.</div>`;
+        return;
+      }
+
+      listEl.innerHTML = filtered.map(g => {
+        const prefix = g.isHome ? 'vs.' : '@';
+        let rightBadge = `<span style="font-family: var(--font-data); font-size: 0.78rem; color: var(--text-main);">${g.timeFormatted}</span>`;
+        if (g.statusState === 'post' && g.result) {
+          const cls = g.result === 'W' ? 'result-win' : 'result-loss';
+          rightBadge = `<span class="result-badge ${cls}">${g.result} ${g.bufScore}-${g.oppScore}</span>`;
+        } else if (g.statusState === 'in') {
+          rightBadge = `<span class="result-badge" style="background: rgba(255,103,31,0.2); color: #fb923c; border: 1px solid rgba(255,103,31,0.45);">LIVE ${g.bufScore ?? 0}-${g.oppScore ?? 0}</span>`;
+        }
+
+        return `
+          <div class="sched-row">
+            <div class="sched-date">
+              <strong>${g.dayOfWeek}, ${g.dateFormatted}</strong>
+              <span>Game ${g.gameNumber}</span>
+            </div>
+            <div class="sched-opp">
+              <span class="sched-opp-title">${prefix} ${g.opponent}</span>
+              <span class="sched-venue">${g.venue}</span>
+            </div>
+            <div class="sched-meta">
+              <span class="tv-badge">${g.broadcast || 'ESPN+'}</span>
+              ${rightBadge}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderStandings(standings) {
+      const tbody = document.getElementById('bandits-standings-tbody');
+      if (!tbody) return;
+      if (!Array.isArray(standings) || standings.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; color: var(--text-muted);">Standings unavailable</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = standings.map(row => {
+        const diffStr = row.diff > 0 ? `+${row.diff}` : String(row.diff);
+        return `
+          <tr class="${row.isBandits ? 'standings-row-bandits' : ''}">
+            <td>${row.rank}</td>
+            <td>${row.team}</td>
+            <td>${row.wins}</td>
+            <td>${row.losses}</td>
+            <td>${row.winPct}</td>
+            <td>${row.gf}</td>
+            <td>${row.ga}</td>
+            <td style="text-align: right;">${diffStr}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    async function checkLiveBanditsScore() {
+      if (document.hidden || !data?.bandits?.nextGame) return;
+      try {
+        const res = await fetch('https://site.api.espn.com/apis/site/v2/sports/lacrosse/nll/scoreboard', { cache: 'no-store' });
+        if (!res.ok) return;
+        const sb = await res.json();
+        const ev = (sb.events || []).find(e =>
+          e.competitions?.[0]?.competitors?.some(c => c.id === '125429' || c.team?.abbreviation === 'BUF')
+        );
+        if (!ev || !isSameTeamGame(ev, data.bandits.nextGame, 'BUF')) return;
+
+        const comp = ev.competitions[0];
+        const state = comp.status?.type?.state;
+        const bufComp = comp.competitors.find(c => c.id === '125429' || c.team?.abbreviation === 'BUF');
+        const oppComp = comp.competitors.find(c => c !== bufComp);
+        if (state === 'in' || state === 'post') {
+          const bufScore = bufComp?.score ?? '0';
+          const oppScore = oppComp?.score ?? '0';
+          const oppName = oppComp?.team?.shortDisplayName || oppComp?.team?.displayName || 'Opponent';
+          const prefixEl = document.getElementById('bandits-matchup-prefix');
+          const oppEl = document.getElementById('bandits-next-opp');
+          const cdEl = document.getElementById('bandits-countdown');
+          const cdLabelEl = document.getElementById('bandits-countdown-label');
+          if (prefixEl) prefixEl.textContent = state === 'in' ? 'LIVE NLL GAME:' : 'FINAL SCORE:';
+          if (oppEl) oppEl.textContent = `Bandits ${bufScore} - ${oppScore} ${oppName}`;
+          if (cdEl) cdEl.textContent = state === 'in' ? (comp.status?.type?.shortDetail || 'LIVE') : 'FINAL';
+          if (cdLabelEl) cdLabelEl.textContent = state === 'in' ? 'In Progress' : 'Completed';
+        }
+      } catch (e) {
+        // Silent fallback
+      }
+    }
+
+    async function loadData() {
+      const statusEl = document.getElementById('update-status');
+
+      const FALLBACK_DATA = {
+  "updatedAt": "2026-11-23T20:27:48.714Z",
+  "source": "http://www.playoffstatus.com and ESPN API",
+  "theme": "gameday",
+  "billsTheme": "cold-front",
+  "sabresTheme": "regular",
+  "themeUntil": null,
+  "bandits": {
+    "team": "Buffalo Bandits",
+    "record": "0-0",
+    "wins": 0,
+    "losses": 0,
+    "winPct": ".000",
+    "standingPosition": 1,
+    "standingSummary": "1st in NLL",
+    "goalsFor": 0,
+    "goalsAgainst": 0,
+    "goalDiff": 0,
+    "streak": "—",
+    "gamesPlayed": 0,
+    "gamesRemaining": 18,
+    "nextGame": {
+      "opponent": "vs. Georgia Swarm",
+      "oppShortName": "Georgia Swarm",
+      "oppAbbrev": "GA",
+      "isHome": true,
+      "gameTime": "Sat, Nov 28 • 7:00 PM ET",
+      "isoTime": "2026-11-29T00:00Z",
+      "matchupRecords": "Bandits (0-0) vs. Swarm (0-0)",
+      "broadcast": "ESPN+",
+      "venue": "KeyBank Center, Buffalo, NY",
+      "statusState": "pre",
+      "statusDetail": "Sat, Nov 28 • 7:00 PM ET",
+      "bufScore": "",
+      "oppScore": "",
+      "liveScore": null
+    },
+    "standings": [
+      {
+        "team": "Buffalo Bandits",
+        "shortName": "Bandits",
+        "abbrev": "BUF",
+        "wins": 0,
+        "losses": 0,
+        "winPct": ".000",
+        "gf": 0,
+        "ga": 0,
+        "diff": 0,
+        "isBandits": true,
+        "rank": 1
+      },
+      {
+        "team": "Calgary Roughnecks",
+        "shortName": "Roughnecks",
+        "abbrev": "CGY",
+        "wins": 0,
+        "losses": 0,
+        "winPct": ".000",
+        "gf": 0,
+        "ga": 0,
+        "diff": 0,
+        "isBandits": false,
+        "rank": 2
+      },
+      {
+        "team": "Colorado Mammoth",
+        "shortName": "Mammoth",
+        "abbrev": "COL",
+        "wins": 0,
+        "losses": 0,
+        "winPct": ".000",
+        "gf": 0,
+        "ga": 0,
+        "diff": 0,
+        "isBandits": false,
+        "rank": 3
+      },
+      {
+        "team": "Georgia Swarm",
+        "shortName": "Swarm",
+        "abbrev": "GA",
+        "wins": 0,
+        "losses": 0,
+        "winPct": ".000",
+        "gf": 0,
+        "ga": 0,
+        "diff": 0,
+        "isBandits": false,
+        "rank": 4
+      },
+      {
+        "team": "Halifax Thunderbirds",
+        "shortName": "Thunderbirds",
+        "abbrev": "HFX",
+        "wins": 0,
+        "losses": 0,
+        "winPct": ".000",
+        "gf": 0,
+        "ga": 0,
+        "diff": 0,
+        "isBandits": false,
+        "rank": 5
+      },
+      {
+        "team": "Las Vegas Desert Dogs",
+        "shortName": "Desert Dogs",
+        "abbrev": "LV",
+        "wins": 0,
+        "losses": 0,
+        "winPct": ".000",
+        "gf": 0,
+        "ga": 0,
+        "diff": 0,
+        "isBandits": false,
+        "rank": 6
+      },
+      {
+        "team": "Oshawa FireWolves",
+        "shortName": "FireWolves",
+        "abbrev": "OSH",
+        "wins": 0,
+        "losses": 0,
+        "winPct": ".000",
+        "gf": 0,
+        "ga": 0,
+        "diff": 0,
+        "isBandits": false,
+        "rank": 7
+      },
+      {
+        "team": "Rochester Knighthawks",
+        "shortName": "Knighthawks",
+        "abbrev": "ROC",
+        "wins": 0,
+        "losses": 0,
+        "winPct": ".000",
+        "gf": 0,
+        "ga": 0,
+        "diff": 0,
+        "isBandits": false,
+        "rank": 8
+      },
+      {
+        "team": "San Diego Seals",
+        "shortName": "Seals",
+        "abbrev": "SD",
+        "wins": 0,
+        "losses": 0,
+        "winPct": ".000",
+        "gf": 0,
+        "ga": 0,
+        "diff": 0,
+        "isBandits": false,
+        "rank": 9
+      },
+      {
+        "team": "Saskatchewan Rush",
+        "shortName": "Rush",
+        "abbrev": "SAS",
+        "wins": 0,
+        "losses": 0,
+        "winPct": ".000",
+        "gf": 0,
+        "ga": 0,
+        "diff": 0,
+        "isBandits": false,
+        "rank": 10
+      },
+      {
+        "team": "Toronto Rock",
+        "shortName": "Rock",
+        "abbrev": "TOR",
+        "wins": 0,
+        "losses": 0,
+        "winPct": ".000",
+        "gf": 0,
+        "ga": 0,
+        "diff": 0,
+        "isBandits": false,
+        "rank": 11
+      },
+      {
+        "team": "Vancouver Warriors",
+        "shortName": "Warriors",
+        "abbrev": "VAN",
+        "wins": 0,
+        "losses": 0,
+        "winPct": ".000",
+        "gf": 0,
+        "ga": 0,
+        "diff": 0,
+        "isBandits": false,
+        "rank": 12
+      }
+    ],
+    "seasonSchedule": [
+      {
+        "gameNumber": 1,
+        "id": "401930987",
+        "date": "2026-11-28",
+        "isoTime": "2026-11-29T00:00Z",
+        "monthKey": "2026-11",
+        "monthLabel": "NOV",
+        "dayOfWeek": "Sat",
+        "dateFormatted": "Nov 28",
+        "timeFormatted": "7:00 PM ET",
+        "opponent": "Georgia Swarm",
+        "oppShortName": "Swarm",
+        "oppAbbrev": "GA",
+        "isHome": true,
+        "venue": "KeyBank Center, Buffalo, NY",
+        "statusState": "pre",
+        "statusDetail": "7:00 PM ET",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "broadcast": "ESPN+"
+      },
+      {
+        "gameNumber": 2,
+        "id": "401931364",
+        "date": "2026-12-19",
+        "isoTime": "2026-12-19T23:00Z",
+        "monthKey": "2026-12",
+        "monthLabel": "DEC",
+        "dayOfWeek": "Sat",
+        "dateFormatted": "Dec 19",
+        "timeFormatted": "6:00 PM ET",
+        "opponent": "Halifax Thunderbirds",
+        "oppShortName": "Thunderbirds",
+        "oppAbbrev": "HFX",
+        "isHome": false,
+        "venue": "Scotiabank Centre, Halifax, NS",
+        "statusState": "pre",
+        "statusDetail": "6:00 PM ET",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "broadcast": "ESPN+"
+      },
+      {
+        "gameNumber": 3,
+        "id": "401931368",
+        "date": "2026-12-27",
+        "isoTime": "2026-12-27T23:00Z",
+        "monthKey": "2026-12",
+        "monthLabel": "DEC",
+        "dayOfWeek": "Sun",
+        "dateFormatted": "Dec 27",
+        "timeFormatted": "6:00 PM ET",
+        "opponent": "Toronto Rock",
+        "oppShortName": "Rock",
+        "oppAbbrev": "TOR",
+        "isHome": true,
+        "venue": "KeyBank Center, Buffalo, NY",
+        "statusState": "pre",
+        "statusDetail": "6:00 PM ET",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "broadcast": "ESPN+"
+      },
+      {
+        "gameNumber": 4,
+        "id": "401931370",
+        "date": "2027-01-02",
+        "isoTime": "2027-01-03T00:00Z",
+        "monthKey": "2027-01",
+        "monthLabel": "JAN",
+        "dayOfWeek": "Sat",
+        "dateFormatted": "Jan 2",
+        "timeFormatted": "7:00 PM ET",
+        "opponent": "Vancouver Warriors",
+        "oppShortName": "Warriors",
+        "oppAbbrev": "VAN",
+        "isHome": true,
+        "venue": "KeyBank Center, Buffalo, NY",
+        "statusState": "pre",
+        "statusDetail": "7:00 PM ET",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "broadcast": "ESPN+"
+      },
+      {
+        "gameNumber": 5,
+        "id": "401931376",
+        "date": "2027-01-09",
+        "isoTime": "2027-01-10T00:30Z",
+        "monthKey": "2027-01",
+        "monthLabel": "JAN",
+        "dayOfWeek": "Sat",
+        "dateFormatted": "Jan 9",
+        "timeFormatted": "7:30 PM ET",
+        "opponent": "Georgia Swarm",
+        "oppShortName": "Swarm",
+        "oppAbbrev": "GA",
+        "isHome": false,
+        "venue": "Gas South Arena, Duluth, GA",
+        "statusState": "pre",
+        "statusDetail": "7:30 PM ET",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "broadcast": "ESPN+"
+      },
+      {
+        "gameNumber": 6,
+        "id": "401931387",
+        "date": "2027-01-23",
+        "isoTime": "2027-01-24T00:00Z",
+        "monthKey": "2027-01",
+        "monthLabel": "JAN",
+        "dayOfWeek": "Sat",
+        "dateFormatted": "Jan 23",
+        "timeFormatted": "7:00 PM ET",
+        "opponent": "San Diego Seals",
+        "oppShortName": "Seals",
+        "oppAbbrev": "SD",
+        "isHome": true,
+        "venue": "KeyBank Center, Buffalo, NY",
+        "statusState": "pre",
+        "statusDetail": "7:00 PM ET",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "broadcast": "ESPN+"
+      },
+      {
+        "gameNumber": 7,
+        "id": "401931393",
+        "date": "2027-01-30",
+        "isoTime": "2027-01-31T03:00Z",
+        "monthKey": "2027-01",
+        "monthLabel": "JAN",
+        "dayOfWeek": "Sat",
+        "dateFormatted": "Jan 30",
+        "timeFormatted": "10:00 PM ET",
+        "opponent": "Las Vegas Desert Dogs",
+        "oppShortName": "Desert Dogs",
+        "oppAbbrev": "LV",
+        "isHome": false,
+        "venue": "Lee's Family Forum, Henderson, NV",
+        "statusState": "pre",
+        "statusDetail": "10:00 PM ET",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "broadcast": "ESPN+"
+      },
+      {
+        "gameNumber": 8,
+        "id": "401931395",
+        "date": "2027-02-05",
+        "isoTime": "2027-02-06T00:30Z",
+        "monthKey": "2027-02",
+        "monthLabel": "FEB",
+        "dayOfWeek": "Fri",
+        "dateFormatted": "Feb 5",
+        "timeFormatted": "7:30 PM ET",
+        "opponent": "Toronto Rock",
+        "oppShortName": "Rock",
+        "oppAbbrev": "TOR",
+        "isHome": false,
+        "venue": "TD Coliseum, Hamilton, ON",
+        "statusState": "pre",
+        "statusDetail": "7:30 PM ET",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "broadcast": "ESPN+"
+      },
+      {
+        "gameNumber": 9,
+        "id": "401931406",
+        "date": "2027-02-20",
+        "isoTime": "2027-02-21T00:00Z",
+        "monthKey": "2027-02",
+        "monthLabel": "FEB",
+        "dayOfWeek": "Sat",
+        "dateFormatted": "Feb 20",
+        "timeFormatted": "7:00 PM ET",
+        "opponent": "Halifax Thunderbirds",
+        "oppShortName": "Thunderbirds",
+        "oppAbbrev": "HFX",
+        "isHome": true,
+        "venue": "KeyBank Center, Buffalo, NY",
+        "statusState": "pre",
+        "statusDetail": "7:00 PM ET",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "broadcast": "ESPN+"
+      },
+      {
+        "gameNumber": 10,
+        "id": "401931420",
+        "date": "2027-03-06",
+        "isoTime": "2027-03-07T03:00Z",
+        "monthKey": "2027-03",
+        "monthLabel": "MAR",
+        "dayOfWeek": "Sat",
+        "dateFormatted": "Mar 6",
+        "timeFormatted": "10:00 PM ET",
+        "opponent": "San Diego Seals",
+        "oppShortName": "Seals",
+        "oppAbbrev": "SD",
+        "isHome": false,
+        "venue": "Pechanga Arena, San Diego, CA",
+        "statusState": "pre",
+        "statusDetail": "10:00 PM ET",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "broadcast": "ESPN+"
+      },
+      {
+        "gameNumber": 11,
+        "id": "401931422",
+        "date": "2027-03-13",
+        "isoTime": "2027-03-14T00:00Z",
+        "monthKey": "2027-03",
+        "monthLabel": "MAR",
+        "dayOfWeek": "Sat",
+        "dateFormatted": "Mar 13",
+        "timeFormatted": "7:00 PM ET",
+        "opponent": "Colorado Mammoth",
+        "oppShortName": "Mammoth",
+        "oppAbbrev": "COL",
+        "isHome": true,
+        "venue": "KeyBank Center, Buffalo, NY",
+        "statusState": "pre",
+        "statusDetail": "7:00 PM ET",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "broadcast": "ESPN+"
+      },
+      {
+        "gameNumber": 12,
+        "id": "401931428",
+        "date": "2027-03-19",
+        "isoTime": "2027-03-20T02:00Z",
+        "monthKey": "2027-03",
+        "monthLabel": "MAR",
+        "dayOfWeek": "Fri",
+        "dateFormatted": "Mar 19",
+        "timeFormatted": "10:00 PM ET",
+        "opponent": "Vancouver Warriors",
+        "oppShortName": "Warriors",
+        "oppAbbrev": "VAN",
+        "isHome": false,
+        "venue": "Rogers Arena, Vancouver, BC",
+        "statusState": "pre",
+        "statusDetail": "10:00 PM ET",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "broadcast": "ESPN+"
+      },
+      {
+        "gameNumber": 13,
+        "id": "401931430",
+        "date": "2027-03-20",
+        "isoTime": "2027-03-21T01:00Z",
+        "monthKey": "2027-03",
+        "monthLabel": "MAR",
+        "dayOfWeek": "Sat",
+        "dateFormatted": "Mar 20",
+        "timeFormatted": "9:00 PM ET",
+        "opponent": "Saskatchewan Rush",
+        "oppShortName": "Rush",
+        "oppAbbrev": "SAS",
+        "isHome": false,
+        "venue": "SaskTel Centre, Saskatoon, SK",
+        "statusState": "pre",
+        "statusDetail": "9:00 PM ET",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "broadcast": "ESPN+"
+      },
+      {
+        "gameNumber": 14,
+        "id": "401931436",
+        "date": "2027-03-27",
+        "isoTime": "2027-03-27T23:00Z",
+        "monthKey": "2027-03",
+        "monthLabel": "MAR",
+        "dayOfWeek": "Sat",
+        "dateFormatted": "Mar 27",
+        "timeFormatted": "7:00 PM ET",
+        "opponent": "Oshawa FireWolves",
+        "oppShortName": "FireWolves",
+        "oppAbbrev": "OSH",
+        "isHome": true,
+        "venue": "KeyBank Center, Buffalo, NY",
+        "statusState": "pre",
+        "statusDetail": "7:00 PM ET",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "broadcast": "ESPN+"
+      },
+      {
+        "gameNumber": 15,
+        "id": "401931443",
+        "date": "2027-04-03",
+        "isoTime": "2027-04-03T23:00Z",
+        "monthKey": "2027-04",
+        "monthLabel": "APR",
+        "dayOfWeek": "Sat",
+        "dateFormatted": "Apr 3",
+        "timeFormatted": "7:00 PM ET",
+        "opponent": "Rochester Knighthawks",
+        "oppShortName": "Knighthawks",
+        "oppAbbrev": "ROC",
+        "isHome": true,
+        "venue": "KeyBank Center, Buffalo, NY",
+        "statusState": "pre",
+        "statusDetail": "7:00 PM ET",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "broadcast": "ESPN+"
+      },
+      {
+        "gameNumber": 16,
+        "id": "401931447",
+        "date": "2027-04-10",
+        "isoTime": "2027-04-10T23:00Z",
+        "monthKey": "2027-04",
+        "monthLabel": "APR",
+        "dayOfWeek": "Sat",
+        "dateFormatted": "Apr 10",
+        "timeFormatted": "7:00 PM ET",
+        "opponent": "Rochester Knighthawks",
+        "oppShortName": "Knighthawks",
+        "oppAbbrev": "ROC",
+        "isHome": false,
+        "venue": "Blue Cross Arena, Rochester, NY",
+        "statusState": "pre",
+        "statusDetail": "7:00 PM ET",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "broadcast": "ESPN+"
+      },
+      {
+        "gameNumber": 17,
+        "id": "401931452",
+        "date": "2027-04-17",
+        "isoTime": "2027-04-17T23:00Z",
+        "monthKey": "2027-04",
+        "monthLabel": "APR",
+        "dayOfWeek": "Sat",
+        "dateFormatted": "Apr 17",
+        "timeFormatted": "7:00 PM ET",
+        "opponent": "Oshawa FireWolves",
+        "oppShortName": "FireWolves",
+        "oppAbbrev": "OSH",
+        "isHome": false,
+        "venue": "Tribute Communities Centre, Oshawa, ON",
+        "statusState": "pre",
+        "statusDetail": "7:00 PM ET",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "broadcast": "ESPN+"
+      },
+      {
+        "gameNumber": 18,
+        "id": "401931459",
+        "date": "2027-04-24",
+        "isoTime": "2027-04-24T23:00Z",
+        "monthKey": "2027-04",
+        "monthLabel": "APR",
+        "dayOfWeek": "Sat",
+        "dateFormatted": "Apr 24",
+        "timeFormatted": "7:00 PM ET",
+        "opponent": "Calgary Roughnecks",
+        "oppShortName": "Roughnecks",
+        "oppAbbrev": "CGY",
+        "isHome": true,
+        "venue": "KeyBank Center, Buffalo, NY",
+        "statusState": "pre",
+        "statusDetail": "7:00 PM ET",
+        "bufScore": null,
+        "oppScore": null,
+        "result": null,
+        "broadcast": "ESPN+"
+      }
+    ],
+    "recentResults": [],
+    "leagueScoreboard": [
+      {
+        "id": "401930984",
+        "isoTime": "2026-11-28T00:30Z",
+        "dateFormatted": "Nov 27",
+        "timeFormatted": "7:30 PM ET",
+        "statusState": "pre",
+        "statusDetail": "7:30 PM ET",
+        "awayTeam": "Saskatchewan Rush",
+        "awayShort": "Rush",
+        "awayAbbrev": "SAS",
+        "awayScore": "0",
+        "homeTeam": "Oshawa FireWolves",
+        "homeShort": "FireWolves",
+        "homeAbbrev": "OSH",
+        "homeScore": "0",
+        "broadcast": "ESPN+",
+        "venue": "Tribute Communities Centre, Oshawa, ON",
+        "isBanditsGame": false
+      }
+    ],
+    "teamStats": [
+      {
+        "metric": "Season Record",
+        "bandits": "0-0",
+        "opp": "0-0"
+      },
+      {
+        "metric": "NLL Standings",
+        "bandits": "1st",
+        "opp": "4th"
+      },
+      {
+        "metric": "Goals For",
+        "bandits": "0",
+        "opp": "0"
+      },
+      {
+        "metric": "Goals Against",
+        "bandits": "0",
+        "opp": "0"
+      },
+      {
+        "metric": "Goal Differential",
+        "bandits": "0",
+        "opp": "0"
+      },
+      {
+        "metric": "Goals / Game",
+        "bandits": "0.0",
+        "opp": "0.0"
+      }
+    ]
+  }
+};
+
+      try {
+        const res = await fetch('./data.json?v=' + Date.now(), { cache: 'no-store' });
+        if (!res.ok) throw new Error('data.json not loaded');
+        data = await res.json();
+      } catch (err) {
+        console.warn('Network/CORS fetch failed, using embedded fallback data:', err);
+        data = FALLBACK_DATA;
+      }
+
+      if (data && data.theme && typeof applyTheme === 'function') {
+        applyTheme(data.theme, data.billsTheme, data.sabresTheme, data.themeUntil);
+      }
+
+      const dateStr = new Date(data.updatedAt || Date.now()).toLocaleDateString('en-US', {
+        timeZone: 'America/New_York',
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+      });
+      statusEl.textContent = `Updated: ${dateStr} ET`;
+
+      const b = data.bandits || {};
+      const ng = b.nextGame || {};
+
+      document.getElementById('bandits-next-opp').textContent = ng.opponent || 'TBD';
+      document.getElementById('bandits-records').textContent = ng.matchupRecords || `Bandits (${b.record || '0-0'})`;
+      document.getElementById('bandits-game-time').textContent = ng.gameTime || '--';
+      document.getElementById('bandits-broadcast').textContent = ng.broadcast || 'ESPN+';
+      document.getElementById('bandits-venue').textContent = ng.venue || 'KeyBank Center, Buffalo, NY';
+
+      document.getElementById('bandits-record-val').textContent = b.record || '0-0';
+      document.getElementById('bandits-rank-val').textContent = b.standingSummary ? b.standingSummary.replace(' in NLL', '') : '1st';
+      const diffVal = Number(b.goalDiff || 0);
+      document.getElementById('bandits-diff-val').textContent = diffVal > 0 ? `+${diffVal}` : String(diffVal);
+      document.getElementById('bandits-streak-val').textContent = b.streak || '—';
+
+      if (ng.statusState === 'in' || ng.statusState === 'post') {
+        document.getElementById('bandits-matchup-prefix').textContent = ng.statusState === 'in' ? 'LIVE NLL GAME:' : 'FINAL SCORE:';
+        if (ng.liveScore) document.getElementById('bandits-next-opp').textContent = ng.liveScore;
+        document.getElementById('bandits-countdown').textContent = ng.statusState === 'in' ? (ng.statusDetail || 'LIVE') : 'FINAL';
+        document.getElementById('bandits-countdown-label').textContent = ng.statusState === 'in' ? 'In Progress' : 'Completed';
+      } else if (ng.isoTime) {
+        startCountdown('bandits-countdown', ng.isoTime);
+      }
+
+      // Team Comparison Table
+      const oppHeader = document.getElementById('bandits-opp-header');
+      const thOpp = document.getElementById('bandits-th-opp');
+      if (oppHeader) oppHeader.textContent = `vs. ${ng.oppShortName || 'Opponent'}`;
+      if (thOpp) thOpp.textContent = ng.oppShortName || 'Opponent';
+
+      const statsTbody = document.getElementById('bandits-team-stats-tbody');
+      if (statsTbody) {
+        const rows = Array.isArray(b.teamStats) ? b.teamStats : [];
+        statsTbody.innerHTML = rows.map(r => `
+          <tr>
+            <td>${r.metric}</td>
+            <td style="color: #fb923c;">${r.bandits}</td>
+            <td style="text-align: right;">${r.opp}</td>
+          </tr>
+        `).join('');
+      }
+
+      // Recent Completed Games
+      const playedSummary = document.getElementById('bandits-played-summary');
+      if (playedSummary) {
+        playedSummary.textContent = `${b.gamesPlayed ?? 0} Played • ${b.gamesRemaining ?? 18} Remaining`;
+      }
+      const recentEl = document.getElementById('bandits-recent-results');
+      if (recentEl) {
+        const recents = Array.isArray(b.recentResults) ? b.recentResults : [];
+        if (recents.length === 0) {
+          recentEl.innerHTML = `<div style="color: var(--text-muted); font-size: 0.85rem; padding: 0.75rem 0;">2026-27 NLL regular season opener is ${ng.gameTime || 'coming up'}.</div>`;
+        } else {
+          recentEl.innerHTML = recents.map(g => {
+            const prefix = g.isHome ? 'vs.' : '@';
+            const cls = g.result === 'W' ? 'result-win' : 'result-loss';
+            return `
+              <div class="sched-row">
+                <div class="sched-date"><strong>${g.dayOfWeek}, ${g.dateFormatted}</strong><span>Game ${g.gameNumber}</span></div>
+                <div class="sched-opp"><span class="sched-opp-title">${prefix} ${g.opponent}</span><span class="sched-venue">${g.venue}</span></div>
+                <div class="sched-meta"><span class="result-badge ${cls}">${g.result} ${g.bufScore}-${g.oppScore}</span></div>
+              </div>
+            `;
+          }).join('');
+        }
+      }
+
+      currentLeagueGames = Array.isArray(b.leagueScoreboard) ? b.leagueScoreboard : [];
+      currentSchedule = Array.isArray(b.seasonSchedule) ? b.seasonSchedule : [];
+
+      renderLeagueScoreboard(currentLeagueGames);
+      renderStandings(b.standings || []);
+      renderBanditsSchedule(currentSchedule);
+
+      checkLiveBanditsScore();
+      if (liveBanditsPollTimer) clearInterval(liveBanditsPollTimer);
+      liveBanditsPollTimer = setInterval(checkLiveBanditsScore, 60000);
+    }
+
+    document.addEventListener('DOMContentLoaded', loadData);
+  </script>
+</body>
+</html>

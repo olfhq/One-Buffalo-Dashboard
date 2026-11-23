@@ -411,6 +411,7 @@
       const path = (typeof window !== 'undefined' && window.location) ? window.location.pathname : '';
       const isBillsHub = path.includes('bills.html') || document.body?.classList.contains('bills-theme');
       const isSabresHub = path.includes('sabres.html') || document.body?.classList.contains('sabres-theme');
+      const isBanditsHub = path.includes('bandits.html') || document.body?.classList.contains('bandits-theme');
 
       document.documentElement.setAttribute('data-global-theme', targetGlobal);
 
@@ -420,6 +421,9 @@
       } else if (isSabresHub) {
         // Full page adoption for sabres.html
         document.documentElement.setAttribute('data-theme', effectiveSabres);
+      } else if (isBanditsHub) {
+        // Full page adoption for bandits.html
+        document.documentElement.setAttribute('data-theme', targetGlobal);
       } else {
         // index.html: Canvas runs globalTheme, cards run team-specific themes
         document.documentElement.setAttribute('data-theme', targetGlobal);
@@ -430,6 +434,10 @@
         const sabresCard = document.getElementById('sabres-card') || document.querySelector('.card-sabres');
         if (sabresCard) {
           sabresCard.setAttribute('data-team-theme', effectiveSabres);
+        }
+        const banditsCard = document.getElementById('bandits-card') || document.querySelector('.card-bandits');
+        if (banditsCard) {
+          banditsCard.setAttribute('data-team-theme', targetGlobal);
         }
       }
 

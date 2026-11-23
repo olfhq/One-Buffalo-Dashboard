@@ -4,7 +4,7 @@ const cheerio = require('cheerio');
 console.log('=== FULL CODEBASE AUDIT ===\n');
 let issues = [];
 
-const pages = ['index.html', 'bills.html', 'sabres.html'];
+const pages = ['index.html', 'bills.html', 'sabres.html', 'bandits.html'];
 
 // 1. Check Links and Navigation
 pages.forEach(page => {
@@ -133,7 +133,7 @@ pages.forEach(page => {
     issues.push(`${page} #update-status is missing aria-live="polite"`);
   }
 
-  if (page === 'bills.html' || page === 'sabres.html') {
+  if (page === 'bills.html' || page === 'sabres.html' || page === 'bandits.html') {
     const tablist = $('[role="tablist"]');
     if (tablist.length === 0) {
       issues.push(`${page} is missing [role="tablist"] navigation`);
