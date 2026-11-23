@@ -1721,7 +1721,7 @@ export default function Prompt_Test_Mockup() {
             margin: "0 auto",
           }}
         >
-          {"One Buffalo Tracker is an independent fan dashboard and is not affiliated with, endorsed by, or sponsored by Pegula Sports & Entertainment, the Buffalo Bills, the Buffalo Sabres, the NFL, or the NHL."}
+          {'One Buffalo Tracker is an independent, unofficial fan dashboard and is not affiliated with, endorsed by, or sponsored by the Buffalo Bills, the Buffalo Sabres, the Buffalo Bandits, the NFL, the NHL, the NLL, ESPN, PlayoffStatus.com, or any of their respective owners or affiliates. "One Buffalo" and all team, league, and broadcast names and trademarks belong to their respective owners, and all stats, schedules, and probabilities are provided for informational purposes only.'}
         </p>
       </footer>
     </div>

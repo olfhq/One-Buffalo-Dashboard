@@ -84,6 +84,16 @@ pages.forEach(page => {
   if (rawUndefined) issues.push(`Found "undefined" text in static body of ${page}`);
   if (rawNaN) issues.push(`Found "NaN" text in static body of ${page}`);
   if (rawNull) issues.push(`Found "null" text in static body of ${page}`);
+
+  const footerText = $('footer').text();
+  if (/Pegula Sports\s*&\s*Entertainment/i.test(footerText)) {
+    issues.push(`${page} footer still references dissolved Pegula Sports & Entertainment`);
+  }
+  ['Buffalo Bills', 'Buffalo Sabres', 'Buffalo Bandits', 'NFL', 'NHL', 'NLL'].forEach(entity => {
+    if (!footerText.includes(entity)) {
+      issues.push(`${page} footer legal disclaimer is missing "${entity}"`);
+    }
+  });
 });
 
 console.log('Static text audit complete. Issues so far:', issues.length);
