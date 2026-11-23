@@ -268,6 +268,9 @@ try {
   if (!('sabresTheme' in dataJson)) {
     issues.push('data.json missing "sabresTheme" attribute');
   }
+  if (!('banditsTheme' in dataJson)) {
+    issues.push('data.json missing "banditsTheme" attribute');
+  }
   if (!('themeUntil' in dataJson)) {
     issues.push('data.json missing "themeUntil" attribute');
   }
@@ -285,8 +288,8 @@ try {
       issues.push(`${page} is missing Google Fonts link for Barlow Condensed and JetBrains Mono`);
     }
 
-    if (!html.includes('applyTheme(data.theme, data.billsTheme, data.sabresTheme, data.themeUntil)')) {
-      issues.push(`${page} does not call applyTheme(data.theme, data.billsTheme, data.sabresTheme, data.themeUntil) in loadData()`);
+    if (!html.includes('applyTheme(data.theme, data.billsTheme, data.sabresTheme, data.themeUntil')) {
+      issues.push(`${page} does not call applyTheme(data.theme, data.billsTheme, data.sabresTheme, data.themeUntil, data.banditsTheme) in loadData()`);
     }
 
     if (page === 'index.html') {
@@ -295,6 +298,9 @@ try {
       }
       if (!$('#sabres-card').attr('data-team-theme')) {
         issues.push('index.html #sabres-card is missing data-team-theme attribute');
+      }
+      if (!$('#bandits-card').attr('data-team-theme')) {
+        issues.push('index.html #bandits-card is missing data-team-theme attribute');
       }
     }
 
@@ -317,6 +323,7 @@ try {
     let mockMetaColor = null;
     let mockBillsCardTheme = null;
     let mockSabresCardTheme = null;
+    let mockBanditsCardTheme = null;
     const mockDocument = {
       documentElement: {
         setAttribute: (attr, val) => { if (attr === 'data-theme') mockRootTheme = val; },
@@ -325,6 +332,7 @@ try {
       getElementById: (id) => {
         if (id === 'bills-card') return { setAttribute: (a, v) => { mockBillsCardTheme = v; } };
         if (id === 'sabres-card') return { setAttribute: (a, v) => { mockSabresCardTheme = v; } };
+        if (id === 'bandits-card') return { setAttribute: (a, v) => { mockBanditsCardTheme = v; } };
         return null;
       },
       querySelector: (sel) => {
@@ -354,9 +362,9 @@ try {
     }
 
     // 3. Team overrides take precedence
-    const overrideResult = testApplyTheme('regular', 'red-helmet', 'goathead');
-    if (overrideResult.billsTheme !== 'red-helmet' || overrideResult.sabresTheme !== 'goathead' || mockRootTheme !== 'regular') {
-      issues.push(`applyTheme team overrides failed: got bills=${overrideResult.billsTheme}, sabres=${overrideResult.sabresTheme}`);
+    const overrideResult = testApplyTheme('regular', 'red-helmet', 'goathead', null, 'gameday');
+    if (overrideResult.billsTheme !== 'red-helmet' || overrideResult.sabresTheme !== 'goathead' || overrideResult.banditsTheme !== 'gameday' || mockRootTheme !== 'regular') {
+      issues.push(`applyTheme team overrides failed: got bills=${overrideResult.billsTheme}, sabres=${overrideResult.sabresTheme}, bandits=${overrideResult.banditsTheme}`);
     }
 
     // 3b. Cold Front Bills override resolves independently
@@ -372,22 +380,22 @@ try {
     }
 
     // 5. Total reset on expired timestamp
-    const expiredResult = testApplyTheme('snow-game', 'red-helmet', 'goathead', '2020-01-01T00:00:00Z');
-    if (mockRootTheme !== 'regular' || expiredResult.billsTheme !== 'regular' || expiredResult.sabresTheme !== 'regular') {
-      issues.push(`applyTheme with expired timestamp did not perform total reset: root="${mockRootTheme}", bills="${expiredResult.billsTheme}", sabres="${expiredResult.sabresTheme}"`);
+    const expiredResult = testApplyTheme('snow-game', 'red-helmet', 'goathead', '2020-01-01T00:00:00Z', 'gameday');
+    if (mockRootTheme !== 'regular' || expiredResult.billsTheme !== 'regular' || expiredResult.sabresTheme !== 'regular' || expiredResult.banditsTheme !== 'regular') {
+      issues.push(`applyTheme with expired timestamp did not perform total reset: root="${mockRootTheme}", bills="${expiredResult.billsTheme}", sabres="${expiredResult.sabresTheme}", bandits="${expiredResult.banditsTheme}"`);
     }
 
     // 6. Dev / preview URL query parameters override data.json and survive updates
     const mockWindow = {
       location: {
         pathname: '/',
-        search: '?theme=thanksgiving&billsTheme=standing-buffalo'
+        search: '?theme=thanksgiving&billsTheme=standing-buffalo&banditsTheme=gameday'
       }
     };
     const urlOverrideApplyTheme = new Function('document', 'Date', 'window', `${fnText}; return applyTheme;`)(mockDocument, Date, mockWindow);
-    const urlResult = urlOverrideApplyTheme('regular', null, null, null);
-    if (urlResult.globalTheme !== 'thanksgiving' || urlResult.billsTheme !== 'standing-buffalo' || mockRootTheme !== 'thanksgiving') {
-      issues.push(`applyTheme failed to respect URL search params during auto-update: got global=${urlResult.globalTheme}, bills=${urlResult.billsTheme}`);
+    const urlResult = urlOverrideApplyTheme('regular', null, null, null, null);
+    if (urlResult.globalTheme !== 'thanksgiving' || urlResult.billsTheme !== 'standing-buffalo' || urlResult.banditsTheme !== 'gameday' || mockRootTheme !== 'thanksgiving') {
+      issues.push(`applyTheme failed to respect URL search params during auto-update: got global=${urlResult.globalTheme}, bills=${urlResult.billsTheme}, bandits=${urlResult.banditsTheme}`);
     }
   }
 

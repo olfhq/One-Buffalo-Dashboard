@@ -47,6 +47,16 @@ on:
           - goathead
           - french-connection
           - gameday
+      banditsTheme:
+        description: 'Bandits team override (optional)'
+        required: false
+        default: 'keep-current'
+        type: choice
+        options:
+          - keep-current
+          - follow-global
+          - regular
+          - gameday
       themeUntil:
         description: 'Auto-revert ISO expiration (e.g. 2026-11-01T23:59:59Z, "clear" to remove, or blank to keep current)'
         required: false
@@ -98,6 +108,10 @@ jobs:
             if (sTheme && sTheme !== "keep-current") {
               data.sabresTheme = (sTheme !== "follow-global") ? sTheme : null;
             }
+            const bdTheme = "${{ github.event.inputs.banditsTheme }}".trim();
+            if (bdTheme && bdTheme !== "keep-current") {
+              data.banditsTheme = (bdTheme !== "follow-global") ? bdTheme : null;
+            }
             const untilInput = "${{ github.event.inputs.themeUntil }}".trim();
             if (untilInput === "clear") {
               data.themeUntil = null;
@@ -107,7 +121,7 @@ jobs:
               data.themeUntil = null;
             }
             fs.writeFileSync(p, JSON.stringify(data, null, 2), "utf8");
-            console.log("Themes updated -> Global:", data.theme, "| Bills:", data.billsTheme, "| Sabres:", data.sabresTheme, "| Until:", data.themeUntil);
+            console.log("Themes updated -> Global:", data.theme, "| Bills:", data.billsTheme, "| Sabres:", data.sabresTheme, "| Bandits:", data.banditsTheme, "| Until:", data.themeUntil);
           '
 
       - name: Run Scraper
@@ -120,7 +134,7 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add data.json index.html bills.html sabres.html
+          git add data.json index.html bills.html sabres.html bandits.html
           if ! git diff --staged --quiet; then
             git commit -m "Auto-update Buffalo playoff probabilities [skip ci]"
             git pull --rebase --autostash origin v4

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="gameday" data-global-theme="gameday">
+<html lang="en" data-theme="regular" data-global-theme="regular">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -996,11 +996,12 @@
       const statusEl = document.getElementById('update-status');
 
       const FALLBACK_DATA = {
-  "updatedAt": "2026-11-23T20:27:48.714Z",
+  "updatedAt": "2026-11-23T20:30:02.651Z",
   "source": "http://www.playoffstatus.com and ESPN API",
-  "theme": "gameday",
-  "billsTheme": "cold-front",
-  "sabresTheme": "regular",
+  "theme": "regular",
+  "billsTheme": null,
+  "sabresTheme": null,
+  "banditsTheme": null,
   "themeUntil": null,
   "bandits": {
     "team": "Buffalo Bandits",
@@ -1655,7 +1656,7 @@
       }
 
       if (data && data.theme && typeof applyTheme === 'function') {
-        applyTheme(data.theme, data.billsTheme, data.sabresTheme, data.themeUntil);
+        applyTheme(data.theme, data.billsTheme, data.sabresTheme, data.themeUntil, data.banditsTheme);
       }
 
       const dateStr = new Date(data.updatedAt || Date.now()).toLocaleDateString('en-US', {

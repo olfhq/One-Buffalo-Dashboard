@@ -327,6 +327,7 @@
 
     const VALID_BILLS_OVERRIDES = ['regular', 'red-helmet', 'standing-buffalo', 'cold-front', 'gameday'];
     const VALID_SABRES_OVERRIDES = ['regular', 'goathead', 'french-connection', 'gameday'];
+    const VALID_BANDITS_OVERRIDES = ['regular', 'gameday'];
 
     const THEME_COLORS = {
       'regular': '#080a0f',
@@ -346,12 +347,13 @@
       'french-connection': '#051329'
     };
 
-    function applyTheme(globalTheme, billsOverride, sabresOverride, themeUntil) {
+    function applyTheme(globalTheme, billsOverride, sabresOverride, themeUntil, banditsOverride) {
       if (typeof document === 'undefined') return { globalTheme: 'regular' };
 
       let targetGlobal = (globalTheme || '').toLowerCase().trim();
       let targetBills = billsOverride ? (billsOverride || '').toLowerCase().trim() : null;
       let targetSabres = sabresOverride ? (sabresOverride || '').toLowerCase().trim() : null;
+      let targetBandits = banditsOverride ? (banditsOverride || '').toLowerCase().trim() : null;
 
       // Auto-revert check: Total reset if expired
       if (themeUntil) {
@@ -360,16 +362,18 @@
           targetGlobal = 'regular';
           targetBills = null;
           targetSabres = null;
+          targetBandits = null;
         }
       }
 
-      // Respect URL query parameter overrides (?theme=..., ?billsTheme=..., ?sabresTheme=...) so dev/preview and shared links do not reset during auto updates
+      // Respect URL query parameter overrides (?theme=..., ?billsTheme=..., ?sabresTheme=..., ?banditsTheme=...) so dev/preview and shared links do not reset during auto updates
       if (typeof window !== 'undefined' && window.location && window.location.search) {
         try {
           const urlParams = new URLSearchParams(window.location.search);
           const qTheme = urlParams.get('theme');
           const qBills = urlParams.get('billsTheme');
           const qSabres = urlParams.get('sabresTheme');
+          const qBandits = urlParams.get('banditsTheme');
           if (qTheme && VALID_THEMES.includes(qTheme.toLowerCase().trim())) {
             targetGlobal = qTheme.toLowerCase().trim();
           }
@@ -378,6 +382,9 @@
           }
           if (qSabres && VALID_SABRES_OVERRIDES.includes(qSabres.toLowerCase().trim())) {
             targetSabres = qSabres.toLowerCase().trim();
+          }
+          if (qBandits && VALID_BANDITS_OVERRIDES.includes(qBandits.toLowerCase().trim())) {
+            targetBandits = qBandits.toLowerCase().trim();
           }
         } catch (e) {}
       }
@@ -394,6 +401,10 @@
         targetSabres = null;
       }
 
+      if (targetBandits && !VALID_BANDITS_OVERRIDES.includes(targetBandits)) {
+        targetBandits = null;
+      }
+
       // Resolve effective team themes (paired era defaults if override is null)
       const effectiveBills = targetBills || (
         targetGlobal === '90s-nostalgia' ? 'red-helmet' :
@@ -406,6 +417,8 @@
         targetGlobal === 'the-aud-era' ? 'french-connection' :
         targetGlobal
       );
+
+      const effectiveBandits = targetBandits || targetGlobal;
 
       // Detect current page context
       const path = (typeof window !== 'undefined' && window.location) ? window.location.pathname : '';
@@ -423,7 +436,7 @@
         document.documentElement.setAttribute('data-theme', effectiveSabres);
       } else if (isBanditsHub) {
         // Full page adoption for bandits.html
-        document.documentElement.setAttribute('data-theme', targetGlobal);
+        document.documentElement.setAttribute('data-theme', effectiveBandits);
       } else {
         // index.html: Canvas runs globalTheme, cards run team-specific themes
         document.documentElement.setAttribute('data-theme', targetGlobal);
@@ -437,11 +450,11 @@
         }
         const banditsCard = document.getElementById('bandits-card') || document.querySelector('.card-bandits');
         if (banditsCard) {
-          banditsCard.setAttribute('data-team-theme', targetGlobal);
+          banditsCard.setAttribute('data-team-theme', effectiveBandits);
         }
       }
 
-      const activeThemeForMeta = isBillsHub ? effectiveBills : isSabresHub ? effectiveSabres : targetGlobal;
+      const activeThemeForMeta = isBillsHub ? effectiveBills : isSabresHub ? effectiveSabres : isBanditsHub ? effectiveBandits : targetGlobal;
       const metaTheme = document.querySelector('meta[name="theme-color"]');
       if (metaTheme) {
         metaTheme.setAttribute('content', THEME_COLORS[activeThemeForMeta] || '#080a0f');
@@ -449,7 +462,7 @@
 
       try {
         if (typeof window !== 'undefined' && window.umami && typeof window.umami.track === 'function' && targetGlobal !== 'regular') {
-          window.umami.track('theme_view', { theme: targetGlobal, bills: effectiveBills, sabres: effectiveSabres });
+          window.umami.track('theme_view', { theme: targetGlobal, bills: effectiveBills, sabres: effectiveSabres, bandits: effectiveBandits });
         }
       } catch (e) {}
 
@@ -462,7 +475,8 @@
       return {
         globalTheme: targetGlobal,
         billsTheme: effectiveBills,
-        sabresTheme: effectiveSabres
+        sabresTheme: effectiveSabres,
+        banditsTheme: effectiveBandits
       };
     }
 

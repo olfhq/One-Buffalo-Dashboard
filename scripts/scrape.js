@@ -3668,6 +3668,7 @@ async function scrapePlayoffStatus() {
   let currentTheme = 'regular';
   let currentBillsTheme = null;
   let currentSabresTheme = null;
+  let currentBanditsTheme = null;
   let currentThemeUntil = null;
   if (fs.existsSync(dataJsonPath)) {
     try {
@@ -3676,6 +3677,7 @@ async function scrapePlayoffStatus() {
         currentTheme = existingData.theme;
         currentBillsTheme = existingData.billsTheme || null;
         currentSabresTheme = existingData.sabresTheme || null;
+        currentBanditsTheme = existingData.banditsTheme || null;
         currentThemeUntil = existingData.themeUntil || null;
         if (currentThemeUntil && !isNaN(Date.parse(currentThemeUntil))) {
           if (Date.now() > Date.parse(currentThemeUntil)) {
@@ -3683,6 +3685,7 @@ async function scrapePlayoffStatus() {
             currentTheme = 'regular';
             currentBillsTheme = null;
             currentSabresTheme = null;
+            currentBanditsTheme = null;
             currentThemeUntil = null;
           }
         }
@@ -3698,6 +3701,7 @@ async function scrapePlayoffStatus() {
     theme: currentTheme,
     billsTheme: currentBillsTheme,
     sabresTheme: currentSabresTheme,
+    banditsTheme: currentBanditsTheme,
     themeUntil: currentThemeUntil,
     bills: billsData,
     sabres: sabresData,
@@ -3718,6 +3722,7 @@ function buildTrimmedFallbackForFile(fileName, fullPayload) {
     theme: fullPayload.theme || 'regular',
     billsTheme: fullPayload.billsTheme || null,
     sabresTheme: fullPayload.sabresTheme || null,
+    banditsTheme: fullPayload.banditsTheme || null,
     themeUntil: fullPayload.themeUntil || null
   };
 
@@ -3802,12 +3807,15 @@ function syncHtmlFallbacks(fullPayload) {
           globalTheme === 'the-aud-era' ? 'french-connection' :
           globalTheme
         );
+        const effectiveBandits = trimmedPayload.banditsTheme || globalTheme;
 
         let activeHtmlTheme = globalTheme;
         if (baseName === 'bills.html') {
           activeHtmlTheme = effectiveBills;
         } else if (baseName === 'sabres.html') {
           activeHtmlTheme = effectiveSabres;
+        } else if (baseName === 'bandits.html') {
+          activeHtmlTheme = effectiveBandits;
         }
 
         // Keep root data-theme and data-global-theme attributes in sync with payload theme
@@ -3821,7 +3829,7 @@ function syncHtmlFallbacks(fullPayload) {
           return `<html${nextAttrs}>`;
         });
 
-        // For index.html, also stamp data-team-theme onto bills-card and sabres-card
+        // For index.html, also stamp data-team-theme onto bills-card, sabres-card, and bandits-card
         if (baseName === 'index.html') {
           updatedContent = updatedContent.replace(/(<article[^>]*class="[^"]*card-bills[^"]*"[^>]*)>/i, (match, before) => {
             if (/data-team-theme="[^"]*"/.test(before)) {
@@ -3837,9 +3845,9 @@ function syncHtmlFallbacks(fullPayload) {
           });
           updatedContent = updatedContent.replace(/(<article[^>]*class="[^"]*card-bandits[^"]*"[^>]*)>/i, (match, before) => {
             if (/data-team-theme="[^"]*"/.test(before)) {
-              return before.replace(/data-team-theme="[^"]*"/, `data-team-theme="${globalTheme}"`) + '>';
+              return before.replace(/data-team-theme="[^"]*"/, `data-team-theme="${effectiveBandits}"`) + '>';
             }
-            return `${before} data-team-theme="${globalTheme}">`;
+            return `${before} data-team-theme="${effectiveBandits}">`;
           });
         }
 
