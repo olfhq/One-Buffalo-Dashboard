@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-23T21:29:46.150Z",
+  "updatedAt": "2026-11-23T23:35:16.521Z",
   "source": "http://www.playoffstatus.com and ESPN API",
   "theme": "regular",
   "billsTheme": null,
@@ -33,7 +33,7 @@
       "venue": "Highmark Stadium, Orchard Park, NY",
       "roof": "Open-Air Stadium",
       "surface": "Natural Grass",
-      "weather": "38°F, 17mph Wind, 90% PoP",
+      "weather": "46°F, 18mph Wind, 20% PoP",
       "window": "TNF",
       "windowLabel": "Sunday Night Football",
       "windowBadge": "Sunday Night Football",
@@ -89,24 +89,31 @@
       },
       "injuries": [
         {
-          "player": "Dorian Williams",
+          "player": "Greg Rousseau",
           "pos": "LB",
-          "status": "Out",
-          "injury": "Calf",
+          "status": "Questionable",
+          "injury": "Back",
           "team": "Bills"
         },
         {
-          "player": "Christian Benford",
-          "pos": "CB",
-          "status": "Out",
-          "injury": "Groin",
+          "player": "Damar Hamlin",
+          "pos": "S",
+          "status": "Questionable",
+          "injury": "Toe",
           "team": "Bills"
         },
         {
-          "player": "T.J. Sanders",
-          "pos": "DT",
-          "status": "Out",
-          "injury": "Shoulder",
+          "player": "Spencer Brown",
+          "pos": "OT",
+          "status": "Questionable",
+          "injury": "Back",
+          "team": "Bills"
+        },
+        {
+          "player": "O'Cyrus Torrence",
+          "pos": "G",
+          "status": "Questionable",
+          "injury": "Ankle",
           "team": "Bills"
         },
         {
@@ -117,24 +124,17 @@
           "team": "Bills"
         },
         {
-          "player": "Ar'maj Reed-Adams",
-          "pos": "G",
-          "status": "Injured Reserve",
-          "injury": "Back",
-          "team": "Bills"
+          "player": "Kenneth Walker III",
+          "pos": "RB",
+          "status": "Out",
+          "injury": "Groin",
+          "team": "Chiefs"
         },
         {
           "player": "Trey Smith",
           "pos": "G",
           "status": "Out",
           "injury": "Concussion",
-          "team": "Chiefs"
-        },
-        {
-          "player": "Kenneth Walker III",
-          "pos": "RB",
-          "status": "Out",
-          "injury": "Groin",
           "team": "Chiefs"
         },
         {
@@ -552,8 +552,8 @@
         "bufScore": null,
         "oppScore": null,
         "result": null,
-        "broadcast": "CBS",
-        "primeTime": null
+        "broadcast": "NBC",
+        "primeTime": "SNF"
       }
     ],
     "outOfTownGames": [
@@ -592,7 +592,7 @@
         "venue": "Soldier Field, Chicago, IL",
         "roof": "Open-Air Stadium",
         "surface": "Natural Bermuda Grass",
-        "weather": "55°F, 10mph Wind, 59% PoP",
+        "weather": "49°F, 15mph Wind, 20% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -673,7 +673,7 @@
         "venue": "Arrowhead Stadium, Kansas City, MO",
         "roof": "Open-Air Stadium",
         "surface": "Natural Bermuda Grass",
-        "weather": "48°F, 16mph Wind, 0% PoP",
+        "weather": "59°F, 12mph Wind, 5% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -700,7 +700,7 @@
         "venue": "Lincoln Financial Field, Philadelphia, PA",
         "roof": "Open-Air Stadium",
         "surface": "Natural Grass (Desso)",
-        "weather": "63°F, 8mph Wind, 2% PoP",
+        "weather": "56°F, 10mph Wind, 10% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -727,7 +727,7 @@
         "venue": "Bank of America Stadium, Charlotte, NC",
         "roof": "Open-Air Stadium",
         "surface": "FieldTurf",
-        "weather": "59°F, 8mph Wind, 12% PoP",
+        "weather": "66°F, 6mph Wind, 10% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -781,7 +781,7 @@
         "venue": "Empower Field at Mile High, Denver, CO",
         "roof": "Open-Air Stadium",
         "surface": "Natural Kentucky Bluegrass",
-        "weather": "44°F, 6mph Wind, 0% PoP",
+        "weather": "52°F, 9mph Wind, 0% PoP",
         "window": "LATE",
         "windowLabel": "Sunday 4:25 PM ET National Window",
         "windowBadge": "America's Game of the Week",
@@ -862,7 +862,7 @@
         "venue": "Northwest Stadium, Landover, MD",
         "roof": "Open-Air Stadium",
         "surface": "Natural Bermuda Grass",
-        "weather": "54°F, 9mph Wind, 5% PoP",
+        "weather": "57°F, 9mph Wind, 10% PoP",
         "window": "MNF",
         "windowLabel": "Monday Night Football",
         "windowBadge": "ESPN / ABC Prime Time",
