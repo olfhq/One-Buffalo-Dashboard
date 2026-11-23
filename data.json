@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-23T05:00:29.030Z",
+  "updatedAt": "2026-11-23T06:28:14.478Z",
   "source": "http://www.playoffstatus.com and ESPN NFL API",
   "theme": "gameday",
   "billsTheme": "cold-front",
@@ -32,7 +32,7 @@
       "venue": "Highmark Stadium, Orchard Park, NY",
       "roof": "Open-Air Stadium",
       "surface": "Natural Grass",
-      "weather": "39°F, 17mph Wind, 90% PoP",
+      "weather": "39°F, 18mph Wind, 90% PoP",
       "window": "TNF",
       "windowLabel": "Sunday Night Football",
       "windowBadge": "Sunday Night Football",
@@ -52,39 +52,39 @@
       "efficiency": [
         {
           "metric": "Points / Game",
-          "bills": "31.9 (1st)",
-          "opp": "26.3 (8th)"
+          "bills": "31.3 (2nd)",
+          "opp": "27.1 (7th)"
         },
         {
           "metric": "Total Yards / Game",
-          "bills": "399.7 (4th)",
-          "opp": "401.0 (3rd)"
+          "bills": "402.6 (3rd)",
+          "opp": "405.1 (2nd)"
         },
         {
           "metric": "Passing Yards / Game",
-          "bills": "234.0 (13th)",
-          "opp": "256.7 (5th)"
+          "bills": "241.6 (12th)",
+          "opp": "262.7 (4th)"
         },
         {
           "metric": "Rushing Yards / Game",
-          "bills": "152.7 (2nd)",
-          "opp": "136.0 (5th)"
+          "bills": "146.9 (2nd)",
+          "opp": "134.2 (5th)"
         },
         {
           "metric": "3rd Down Conversion %",
-          "bills": "41.0% (9th)",
-          "opp": "40.4% (10th)"
+          "bills": "42.6% (8th)",
+          "opp": "41.8% (9th)"
         },
         {
           "metric": "Red Zone TD %",
-          "bills": "66.7% (7th)",
-          "opp": "66.7% (7th)"
+          "bills": "63.4% (12th)",
+          "opp": "65.8% (8th)"
         }
       ],
       "turnoverRatio": {
-        "bills": "0 (14 Takeaways / 14 Giveaways)",
+        "bills": "-1 (15 Takeaways / 16 Giveaways)",
         "opp": "+6 (13 Takeaways / 7 Giveaways)",
-        "advantage": "Chiefs (+6 Differential Margin)"
+        "advantage": "Chiefs (+7 Differential Margin)"
       },
       "injuries": [
         {
