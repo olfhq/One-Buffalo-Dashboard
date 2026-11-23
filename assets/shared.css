@@ -904,6 +904,14 @@ h1, h2, h3, .section-subtitle, .matchup-opp, .pinned-matchup-title {
   font-variant-numeric: tabular-nums;
 }
 
+.stat-val .stat-unit {
+  font-size: 0.58em;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  opacity: 0.85;
+  vertical-align: baseline;
+}
+
 /* CARD ARCHITECTURE WITH THEMED CORNERS, ELEVATION & MICRO-INTERACTIONS */
 @keyframes card-bootup {
   from {

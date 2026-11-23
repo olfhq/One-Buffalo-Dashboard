@@ -339,35 +339,49 @@
 
     .stat-row {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 0.5rem;
       text-align: center;
     }
+    @media (max-width: 420px) {
+      .stat-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
     .stat-box {
+      min-width: 0;
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(255, 255, 255, 0.05);
-      padding: 0.6rem 0.3rem;
+      padding: 0.6rem 0.25rem;
       border-radius: 8px;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
     }
-    .stat-val { font-size: 1.35rem; font-weight: 800; color: #fff; line-height: 1.1; }
+    .stat-val {
+      font-size: clamp(1.1rem, 1.35vw, 1.35rem);
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.1;
+      white-space: nowrap;
+    }
     .stat-label {
-      font-size: 0.68rem;
+      font-size: clamp(0.6rem, 0.68vw, 0.68rem);
       color: var(--text-muted);
       margin-top: 0.25rem;
       text-transform: uppercase;
-      letter-spacing: 0.3px;
+      letter-spacing: 0.25px;
+      white-space: nowrap;
     }
     .stat-sublabel {
-      font-size: 0.62rem;
+      font-size: clamp(0.56rem, 0.62vw, 0.62rem);
       color: var(--text-muted);
       margin-top: 0.15rem;
       font-weight: 500;
       opacity: 0.85;
-      letter-spacing: 0.2px;
+      letter-spacing: 0.15px;
+      white-space: nowrap;
     }
 
     .section-subtitle {

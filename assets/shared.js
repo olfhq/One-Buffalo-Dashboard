@@ -289,7 +289,7 @@
       const paceMatch = rawTragic.match(/\d+/);
       const pacePts = paceMatch ? parseInt(paceMatch[0], 10) : 91;
       const cutline = Number(s.cutlinePoints) || 95;
-      valEl.textContent = `${pacePts} PTS`;
+      valEl.innerHTML = `${pacePts}<span class="stat-unit"> PTS</span>`;
 
       if (pacePts >= cutline) {
         valEl.style.color = '#34d399';
