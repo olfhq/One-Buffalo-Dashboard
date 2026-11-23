@@ -3,6 +3,7 @@ const fs = require('fs');
 const data = JSON.parse(fs.readFileSync('data.json', 'utf8'));
 const billsHtml = fs.readFileSync('bills.html', 'utf8');
 const sabresHtml = fs.readFileSync('sabres.html', 'utf8');
+const banditsHtml = fs.readFileSync('bandits.html', 'utf8');
 const indexHtml = fs.readFileSync('index.html', 'utf8');
 
 const findings = [];
@@ -57,6 +58,24 @@ check('Bills division radar sorted descending by pct', isBillsRadarSorted, JSON.
 const isSabresRadarSorted = s.divisionRadar.every((val, i, arr) => !i || arr[i - 1].pct >= val.pct);
 check('Sabres division radar sorted descending by pct', isSabresRadarSorted, JSON.stringify(s.divisionRadar.map(r => `${r.team}:${r.pct}`)));
 
+// 2b. BANDITS DATA.JSON INTERNAL CONSISTENCY
+const bd = data.bandits;
+check('Bandits data present', !!bd && typeof bd === 'object', `team=${bd?.team}`);
+if (bd) {
+  check('Bandits nextGame.isoTime is valid date', !!bd.nextGame?.isoTime && !isNaN(new Date(bd.nextGame.isoTime).getTime()), `isoTime=${bd.nextGame?.isoTime}`);
+  check('Bandits nextGame.winChance in [0, 100]', typeof bd.nextGame?.winChance === 'number' && bd.nextGame.winChance >= 0 && bd.nextGame.winChance <= 100, `winChance=${bd.nextGame?.winChance}`);
+  check('Bandits standings contains 12 teams', Array.isArray(bd.standings) && bd.standings.length === 12, `count=${bd.standings?.length}`);
+  const banditsStRow = (bd.standings || []).find(r => r.isBandits);
+  check('Bandits standings contains Buffalo Bandits', !!banditsStRow, JSON.stringify(banditsStRow));
+  if (banditsStRow) {
+    check('Bandits standingPosition matches standings rank', bd.standingPosition === banditsStRow.rank, `pos=${bd.standingPosition}, rank=${banditsStRow.rank}`);
+    check('Bandits record matches standings W-L', bd.record === `${banditsStRow.wins}-${banditsStRow.losses}`, `record=${bd.record}, st=${banditsStRow.wins}-${banditsStRow.losses}`);
+    check('Bandits goalDiff matches standings diff', bd.goalDiff === banditsStRow.diff, `goalDiff=${bd.goalDiff}, stDiff=${banditsStRow.diff}`);
+  }
+  const areBanditsRanksSequential = (bd.standings || []).every((r, i) => r.rank === i + 1);
+  check('Bandits standings ranks sequential 1..12', areBanditsRanksSequential, JSON.stringify((bd.standings || []).map(r => r.rank)));
+}
+
 // 3. CHECK FALLBACK_DATA IN HTML FILES
 function extractFallback(html, filename) {
   const m = html.match(/const\s+FALLBACK_DATA\s*=\s*(\{[\s\S]*?\n\s*\};)/);
@@ -85,17 +104,30 @@ function extractFallback(html, filename) {
 const fbIndex = extractFallback(indexHtml, 'index.html');
 const fbBills = extractFallback(billsHtml, 'bills.html');
 const fbSabres = extractFallback(sabresHtml, 'sabres.html');
+const fbBandits = extractFallback(banditsHtml, 'bandits.html');
 
 console.log('=== CHECKING INLINED HTML FALLBACK INTEGRITY ===');
 check('index.html fallback parsed', typeof fbIndex === 'object' && fbIndex !== null, 'parsed');
 check('bills.html fallback parsed', typeof fbBills === 'object' && fbBills !== null, 'parsed');
 check('sabres.html fallback parsed', typeof fbSabres === 'object' && fbSabres !== null, 'parsed');
+check('bandits.html fallback parsed', typeof fbBandits === 'object' && fbBandits !== null, 'parsed');
 
 if (typeof fbIndex === 'object' && fbIndex !== null) {
   check('index.html FALLBACK_DATA bills.makePlayoffs matches data.json', fbIndex.bills.makePlayoffs === b.makePlayoffs, `index=${fbIndex.bills.makePlayoffs}, data=${b.makePlayoffs}`);
   check('index.html FALLBACK_DATA sabres.makePlayoffs matches data.json', fbIndex.sabres.makePlayoffs === s.makePlayoffs, `index=${fbIndex.sabres.makePlayoffs}, data=${s.makePlayoffs}`);
   check('index.html FALLBACK_DATA sabres.winDivision matches data.json', fbIndex.sabres.winDivision === s.winDivision, `index=${fbIndex.sabres.winDivision}, data=${s.winDivision}`);
   check('index.html FALLBACK_DATA sabres.wildcard matches data.json', fbIndex.sabres.wildcard === s.wildcard, `index=${fbIndex.sabres.wildcard}, data=${s.wildcard}`);
+  if (bd) {
+    check('index.html FALLBACK_DATA bandits.record matches data.json', fbIndex.bandits?.record === bd.record, `index=${fbIndex.bandits?.record}, data=${bd.record}`);
+    check('index.html FALLBACK_DATA bandits.nextGame.winChance matches data.json', fbIndex.bandits?.nextGame?.winChance === bd.nextGame?.winChance, `index=${fbIndex.bandits?.nextGame?.winChance}, data=${bd.nextGame?.winChance}`);
+  }
+}
+
+if (typeof fbBandits === 'object' && fbBandits !== null && bd) {
+  check('bandits.html FALLBACK_DATA bandits.record matches data.json', fbBandits.bandits?.record === bd.record, `bandits=${fbBandits.bandits?.record}, data=${bd.record}`);
+  check('bandits.html FALLBACK_DATA bandits.standingPosition matches data.json', fbBandits.bandits?.standingPosition === bd.standingPosition, `bandits=${fbBandits.bandits?.standingPosition}, data=${bd.standingPosition}`);
+  check('bandits.html FALLBACK_DATA bandits.nextGame.opponent matches data.json', fbBandits.bandits?.nextGame?.opponent === bd.nextGame?.opponent, `bandits=${fbBandits.bandits?.nextGame?.opponent}, data=${bd.nextGame?.opponent}`);
+  check('bandits.html FALLBACK_DATA bandits.nextGame.winChance matches data.json', fbBandits.bandits?.nextGame?.winChance === bd.nextGame?.winChance, `bandits=${fbBandits.bandits?.nextGame?.winChance}, data=${bd.nextGame?.winChance}`);
 }
 
 if (typeof fbBills === 'object' && fbBills !== null) {

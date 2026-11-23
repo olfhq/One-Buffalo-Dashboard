@@ -3000,6 +3000,95 @@ function formatOrdinalSimple(n) {
   return n + (s[(v - 20) % 10] || s[v] || s[0]);
 }
 
+function estimateNllWinChance(teamSt, oppSt, isHome) {
+  const tGp = (teamSt?.wins || 0) + (teamSt?.losses || 0);
+  const oGp = (oppSt?.wins || 0) + (oppSt?.losses || 0);
+  const homeBoost = isHome ? 0.16 : -0.16;
+  if (tGp === 0 && oGp === 0) {
+    return isHome ? 54 : 46;
+  }
+  const tPct = tGp > 0 ? (teamSt.wins / tGp) : 0.5;
+  const oPct = oGp > 0 ? (oppSt.wins / oGp) : 0.5;
+  const tDiffPg = tGp > 0 ? (teamSt.diff / tGp) : 0;
+  const oDiffPg = oGp > 0 ? (oppSt.diff / oGp) : 0;
+  const z = homeBoost + (tPct - oPct) * 1.8 + (tDiffPg - oDiffPg) * 0.16;
+  const prob = Math.round((1 / (1 + Math.exp(-z))) * 100);
+  return Math.max(18, Math.min(82, prob));
+}
+
+function computeNllTeamForm(events, targetIsoTime, teamId, teamAbbrev) {
+  let homeW = 0, homeL = 0, awayW = 0, awayL = 0;
+  const completed = [];
+  const targetMs = targetIsoTime ? new Date(targetIsoTime).getTime() : NaN;
+  let lastGameMs = null;
+
+  (events || []).forEach(ev => {
+    const comp = ev.competitions?.[0] || {};
+    const competitors = comp.competitors || [];
+    const teamComp = competitors.find(c => String(c.id || c.team?.id) === String(teamId) || c.team?.abbreviation === teamAbbrev);
+    const oppComp = competitors.find(c => c !== teamComp);
+    if (!teamComp || !oppComp) return;
+
+    const statusState = comp.status?.type?.state || 'pre';
+    const evMs = new Date(ev.date).getTime();
+    if (!isNaN(targetMs) && !isNaN(evMs) && evMs < targetMs - 3600000) {
+      if (statusState === 'post' || evMs < Date.now()) {
+        if (lastGameMs === null || evMs > lastGameMs) lastGameMs = evMs;
+      }
+    }
+
+    if (statusState === 'post') {
+      const tScore = Number(teamComp.score?.value ?? teamComp.score?.displayValue);
+      const oScore = Number(oppComp.score?.value ?? oppComp.score?.displayValue);
+      if (Number.isFinite(tScore) && Number.isFinite(oScore)) {
+        const win = tScore > oScore;
+        const isHome = teamComp.homeAway === 'home';
+        if (isHome) {
+          if (win) homeW++; else homeL++;
+        } else {
+          if (win) awayW++; else awayL++;
+        }
+        completed.push(win ? 'W' : 'L');
+      }
+    }
+  });
+
+  let streak = '—';
+  if (completed.length > 0) {
+    const last = completed[completed.length - 1];
+    let cnt = 0;
+    for (let i = completed.length - 1; i >= 0; i--) {
+      if (completed[i] === last) cnt++;
+      else break;
+    }
+    streak = `${last}${cnt}`;
+  }
+
+  const last5Arr = completed.slice(-5);
+  const l5W = last5Arr.filter(r => r === 'W').length;
+  const l5L = last5Arr.length - l5W;
+  const restDays = (!isNaN(targetMs) && lastGameMs !== null)
+    ? Math.max(1, Math.round((targetMs - lastGameMs) / (1000 * 60 * 60 * 24)))
+    : null;
+
+  return {
+    homeRecord: `${homeW}-${homeL}`,
+    awayRecord: `${awayW}-${awayL}`,
+    last5: last5Arr.length > 0 ? `${l5W}-${l5L}` : '0-0',
+    streak,
+    restDays: (restDays !== null && restDays <= 35) ? restDays : null
+  };
+}
+
+function buildNllLeagueRankMap(standings, getter, ascending = false) {
+  const sorted = [...standings].sort((a, b) => ascending ? (getter(a) - getter(b)) : (getter(b) - getter(a)));
+  const map = new Map();
+  sorted.forEach((row, idx) => {
+    map.set(row.abbrev || row.team, idx + 1);
+  });
+  return map;
+}
+
 async function fetchBanditsData() {
   const fallback = {
     team: 'Buffalo Bandits',
@@ -3009,6 +3098,14 @@ async function fetchBanditsData() {
     winPct: '.000',
     standingPosition: 1,
     standingSummary: '1st in NLL',
+    playoffLineRank: 8,
+    inPlayoffSpot: true,
+    projectedWins: null,
+    magicNumber: null,
+    clinchAlert: {
+      active: false,
+      scenario: 'Top 8 of 12 NLL teams qualify for the postseason.'
+    },
     goalsFor: 0,
     goalsAgainst: 0,
     goalDiff: 0,
@@ -3017,22 +3114,44 @@ async function fetchBanditsData() {
     gamesRemaining: 18,
     nextGame: {
       opponent: 'vs. Georgia Swarm',
-      oppShortName: 'Georgia Swarm',
+      oppShortName: 'Swarm',
+      oppFullName: 'Georgia Swarm',
+      oppId: '125425',
       oppAbbrev: 'GA',
       isHome: true,
       gameTime: 'Sat, Nov 28 • 7:00 PM ET',
       isoTime: '2026-11-29T00:00Z',
-      matchupRecords: 'Bandits (0-0) vs. Georgia Swarm (0-0)',
+      winChance: 54,
+      matchupRecords: 'Bandits (0-0) vs. Swarm (0-0)',
       broadcast: 'ESPN+',
       venue: 'KeyBank Center, Buffalo, NY',
       statusState: 'pre',
       statusDetail: 'Sat, Nov 28 • 7:00 PM ET',
       bufScore: '',
       oppScore: '',
-      liveScore: null
+      liveScore: null,
+      restAdvantage: {
+        banditsDays: null,
+        oppDays: null,
+        summary: 'Season Opener (Both Teams Fresh)'
+      },
+      scoringEdge: {
+        bandits: '0.0 GF/G | 0.0 GA/G',
+        opp: '0.0 GF/G | 0.0 GA/G',
+        advantage: 'Even Margin (Season Opener)'
+      },
+      efficiency: [
+        { metric: 'Goals / Game', bandits: '0.0', opp: '0.0' },
+        { metric: 'Goals Against / Game', bandits: '0.0', opp: '0.0' },
+        { metric: 'Goal Diff / Game', bandits: '0.0', opp: '0.0' },
+        { metric: 'Win %', bandits: '.000', opp: '.000' },
+        { metric: 'Home / Road Split', bandits: '0-0 Home', opp: '0-0 Away' },
+        { metric: 'Last 5 Form', bandits: '0-0 (Opener)', opp: '0-0 (Opener)' }
+      ]
     },
     standings: [],
     seasonSchedule: [],
+    seasonSeries: [],
     recentResults: [],
     leagueScoreboard: [],
     teamStats: []
@@ -3056,15 +3175,19 @@ async function fetchBanditsData() {
       });
       const wins = Number(statsMap.wins?.value ?? 0);
       const losses = Number(statsMap.losses?.value ?? 0);
+      const gp = wins + losses;
       const winPctVal = Number(statsMap.winPercent?.value ?? 0);
       const winPct = statsMap.winPercent?.displayValue || '.000';
       const gf = Number(statsMap.pointsFor?.value ?? 0);
       const ga = Number(statsMap.pointsAgainst?.value ?? 0);
       const diff = Number(statsMap.pointDifferential?.value ?? (gf - ga));
+      const streakStr = statsMap.streak?.displayValue || '—';
       standings.push({
+        teamId: String(t.id || ''),
         team: t.displayName || t.name || 'Team',
         shortName: t.shortDisplayName || t.name || t.displayName || 'Team',
         abbrev: t.abbreviation || '',
+        gp,
         wins,
         losses,
         winPctVal,
@@ -3072,6 +3195,10 @@ async function fetchBanditsData() {
         gf,
         ga,
         diff,
+        gfPerGame: gp > 0 ? Number((gf / gp).toFixed(1)) : 0,
+        gaPerGame: gp > 0 ? Number((ga / gp).toFixed(1)) : 0,
+        diffPerGame: gp > 0 ? Number((diff / gp).toFixed(1)) : 0,
+        streak: streakStr,
         isBandits: t.id === '125429' || t.abbreviation === 'BUF'
       });
     });
@@ -3084,19 +3211,34 @@ async function fetchBanditsData() {
     });
     standings.forEach((row, idx) => {
       row.rank = idx + 1;
-      delete row.winPctVal;
+      row.inPlayoffs = row.rank <= 8;
     });
 
-    const banditsStanding = standings.find(s => s.isBandits) || {
+    const gfRanks = buildNllLeagueRankMap(standings, r => r.gfPerGame, false);
+    const gaRanks = buildNllLeagueRankMap(standings, r => r.gaPerGame, true);
+    const diffRanks = buildNllLeagueRankMap(standings, r => r.diffPerGame, false);
+    const pctRanks = buildNllLeagueRankMap(standings, r => r.winPctVal, false);
+
+    const standingsClean = standings.map(({ winPctVal, ...rest }) => rest);
+
+    const banditsStanding = standingsClean.find(s => s.isBandits) || {
+      teamId: '125429',
       rank: 1,
       team: 'Buffalo Bandits',
+      shortName: 'Bandits',
       abbrev: 'BUF',
+      gp: 0,
       wins: 0,
       losses: 0,
       winPct: '.000',
       gf: 0,
       ga: 0,
-      diff: 0
+      diff: 0,
+      gfPerGame: 0,
+      gaPerGame: 0,
+      diffPerGame: 0,
+      streak: '—',
+      inPlayoffs: true
     };
 
     // 2. Parse Bandits Season Schedule
@@ -3104,12 +3246,13 @@ async function fetchBanditsData() {
     const seasonSchedule = events.map((ev, idx) => {
       const comp = ev.competitions?.[0] || {};
       const competitors = comp.competitors || [];
-      const bufComp = competitors.find(c => c.id === '125429' || c.team?.abbreviation === 'BUF') || {};
-      const oppComp = competitors.find(c => c.id !== '125429' && c.team?.abbreviation !== 'BUF') || {};
+      const bufComp = competitors.find(c => c.id === '125429' || c.team?.id === '125429' || c.team?.abbreviation === 'BUF') || {};
+      const oppComp = competitors.find(c => c !== bufComp) || {};
       const isHome = bufComp.homeAway === 'home';
       const oppName = oppComp.team?.displayName || 'Opponent';
       const oppShortName = oppComp.team?.shortDisplayName || oppComp.team?.name || oppName;
       const oppAbbrev = oppComp.team?.abbreviation || '';
+      const oppId = String(oppComp.team?.id || oppComp.id || '');
       const homeKey = isHome ? 'BUF' : (oppAbbrev || oppName);
       const venue = comp.venue?.fullName || NLL_ARENAS[homeKey] || NLL_ARENAS[oppName] || 'KeyBank Center, Buffalo, NY';
       const broadcast = comp.broadcasts?.[0]?.media?.shortName || 'ESPN+';
@@ -3140,6 +3283,7 @@ async function fetchBanditsData() {
         opponent: oppName,
         oppShortName,
         oppAbbrev,
+        oppId,
         isHome,
         venue,
         statusState,
@@ -3152,46 +3296,184 @@ async function fetchBanditsData() {
     });
 
     // Compute streak & played/remaining counts
+    const totalGames = seasonSchedule.length || 18;
     const completedGames = seasonSchedule.filter(g => g.statusState === 'post' && g.result);
     const gamesPlayed = completedGames.length;
-    const gamesRemaining = Math.max(0, seasonSchedule.length - gamesPlayed);
-    let streak = '—';
-    if (completedGames.length > 0) {
-      const lastRes = completedGames[completedGames.length - 1].result;
-      let count = 0;
-      for (let i = completedGames.length - 1; i >= 0; i--) {
-        if (completedGames[i].result === lastRes) count++;
-        else break;
-      }
-      streak = `${lastRes}${count}`;
+    const gamesRemaining = Math.max(0, totalGames - gamesPlayed);
+    const banditsForm = computeNllTeamForm(events, null, '125429', 'BUF');
+    const streak = banditsForm.streak !== '—' ? banditsForm.streak : (banditsStanding.streak || '—');
+    if (banditsStanding.streak === '—' && streak !== '—') {
+      banditsStanding.streak = streak;
     }
 
     const recentResults = completedGames.slice(-5).reverse();
 
-    // 3. Determine Next Game
+    // 3. Determine Next Game + Fetch Opponent Schedule for Rest/Splits + Multi-Day League Slate
     const activeGame = seasonSchedule.find(g => g.statusState === 'in')
       || seasonSchedule.find(g => g.statusState === 'pre')
       || seasonSchedule[seasonSchedule.length - 1];
 
+    const oppStandLookup = activeGame
+      ? standingsClean.find(s => s.abbrev === activeGame.oppAbbrev || s.team === activeGame.opponent || (activeGame.oppId && s.teamId === activeGame.oppId))
+      : null;
+    const oppIdToFetch = activeGame?.oppId || oppStandLookup?.teamId || '';
+
+    // Collect calendar dates in [now - 2 days, now + 8 days] for full weekly NLL slate
+    const nowMs = Date.now();
+    const minWindowMs = nowMs - (2 * 24 * 60 * 60 * 1000);
+    const maxWindowMs = nowMs + (8 * 24 * 60 * 60 * 1000);
+    const calendarDates = [];
+    (sbRes?.leagues?.[0]?.calendar || []).forEach(iso => {
+      const ms = new Date(iso).getTime();
+      if (!isNaN(ms) && ms >= minWindowMs && ms <= maxWindowMs) {
+        const ymd = new Intl.DateTimeFormat('en-CA', {
+          timeZone: 'America/New_York',
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit'
+        }).format(new Date(ms)).replace(/-/g, '');
+        if (!calendarDates.includes(ymd)) calendarDates.push(ymd);
+      }
+    });
+
+    const [oppSchedRes, ...extraSbRes] = await Promise.all([
+      oppIdToFetch
+        ? fetch(`https://site.api.espn.com/apis/site/v2/sports/lacrosse/nll/teams/${oppIdToFetch}/schedule`, { signal: AbortSignal.timeout(8000) }).then(r => r.ok ? r.json() : null).catch(() => null)
+        : Promise.resolve(null),
+      ...calendarDates.slice(0, 6).map(ymd =>
+        fetch(`https://site.api.espn.com/apis/site/v2/sports/lacrosse/nll/scoreboard?dates=${ymd}`, { signal: AbortSignal.timeout(8000) }).then(r => r.ok ? r.json() : null).catch(() => null)
+      )
+    ]);
+
     let nextGame = fallback.nextGame;
-    let teamStats = [];
+    let efficiency = fallback.nextGame.efficiency;
+    let seasonSeries = [];
+
     if (activeGame) {
-      const oppStanding = standings.find(s => s.abbrev === activeGame.oppAbbrev || s.team === activeGame.opponent) || {
-        wins: 0, losses: 0, gf: 0, ga: 0, diff: 0, winPct: '.000'
+      const oppStanding = oppStandLookup || {
+        teamId: oppIdToFetch,
+        rank: 1,
+        wins: 0,
+        losses: 0,
+        gp: 0,
+        gf: 0,
+        ga: 0,
+        diff: 0,
+        gfPerGame: 0,
+        gaPerGame: 0,
+        diffPerGame: 0,
+        winPct: '.000',
+        abbrev: activeGame.oppAbbrev
       };
+
+      const banditsMatchupForm = computeNllTeamForm(events, activeGame.isoTime, '125429', 'BUF');
+      const oppMatchupForm = computeNllTeamForm(oppSchedRes?.events || [], activeGame.isoTime, oppStanding.teamId || oppIdToFetch, oppStanding.abbrev || activeGame.oppAbbrev);
+
       const parts = formatNllEtParts(activeGame.isoTime);
       const prefix = activeGame.isHome ? 'vs.' : '@';
       const bufRecStr = `${banditsStanding.wins}-${banditsStanding.losses}`;
       const oppRecStr = `${oppStanding.wins}-${oppStanding.losses}`;
       const hasScore = activeGame.bufScore !== null && activeGame.oppScore !== null;
+      const preProb = estimateNllWinChance(banditsStanding, oppStanding, activeGame.isHome);
+      const winChance = (activeGame.statusState === 'post' && hasScore)
+        ? (activeGame.bufScore > activeGame.oppScore ? 100 : (activeGame.bufScore < activeGame.oppScore ? 0 : 50))
+        : preProb;
+
+      // Rest Differential
+      let restSummary = 'Season Opener (Both Teams Fresh)';
+      if (banditsMatchupForm.restDays !== null && oppMatchupForm.restDays !== null) {
+        const delta = banditsMatchupForm.restDays - oppMatchupForm.restDays;
+        if (delta > 0) restSummary = `Bandits +${delta} (${banditsMatchupForm.restDays}d vs ${oppMatchupForm.restDays}d Rest)`;
+        else if (delta < 0) restSummary = `${activeGame.oppShortName} +${Math.abs(delta)} (${banditsMatchupForm.restDays}d vs ${oppMatchupForm.restDays}d Rest)`;
+        else restSummary = `Even Rest (Both on ${banditsMatchupForm.restDays} Days Rest)`;
+      } else if (banditsMatchupForm.restDays !== null) {
+        restSummary = `Bandits on ${banditsMatchupForm.restDays}d Rest`;
+      } else if (oppMatchupForm.restDays !== null) {
+        restSummary = `${activeGame.oppShortName} on ${oppMatchupForm.restDays}d Rest`;
+      }
+
+      const restAdvantage = {
+        banditsDays: banditsMatchupForm.restDays,
+        oppDays: oppMatchupForm.restDays,
+        summary: restSummary
+      };
+
+      // Scoring & Goal Differential Edge
+      const bufGp = banditsStanding.gp || 0;
+      const oppGp = oppStanding.gp || 0;
+      const hasAnyGames = bufGp > 0 || oppGp > 0;
+      const bufDiffPg = bufGp > 0 ? (banditsStanding.diff / bufGp) : 0;
+      const oppDiffPg = oppGp > 0 ? (oppStanding.diff / oppGp) : 0;
+      const netEdge = bufDiffPg - oppDiffPg;
+      let edgeSummary = 'Even Margin (Season Opener)';
+      if (hasAnyGames) {
+        if (Math.abs(netEdge) < 0.05) edgeSummary = 'Even Goal Margin';
+        else if (netEdge > 0) edgeSummary = `Bandits +${netEdge.toFixed(1)} Goals/Gm Edge`;
+        else edgeSummary = `${activeGame.oppShortName} +${Math.abs(netEdge).toFixed(1)} Goals/Gm Edge`;
+      }
+
+      const scoringEdge = {
+        bandits: `${banditsStanding.gfPerGame.toFixed(1)} GF/G | ${banditsStanding.gaPerGame.toFixed(1)} GA/G`,
+        opp: `${oppStanding.gfPerGame.toFixed(1)} GF/G | ${oppStanding.gaPerGame.toFixed(1)} GA/G`,
+        advantage: edgeSummary
+      };
+
+      const bufKey = banditsStanding.abbrev || banditsStanding.team;
+      const oppKey = oppStanding.abbrev || oppStanding.team;
+      const fmtValWithRank = (valStr, rankMap, key, allowRank) => {
+        if (!allowRank) return valStr;
+        const rk = rankMap.get(key);
+        return rk ? `${valStr} (${formatOrdinalSimple(rk)})` : valStr;
+      };
+
+      const bufSplitLabel = activeGame.isHome ? `${banditsMatchupForm.homeRecord} Home` : `${banditsMatchupForm.awayRecord} Away`;
+      const oppSplitLabel = activeGame.isHome ? `${oppMatchupForm.awayRecord} Away` : `${oppMatchupForm.homeRecord} Home`;
+      const bufFormLabel = banditsMatchupForm.last5 === '0-0' ? '0-0 (Opener)' : `${banditsMatchupForm.last5} (${banditsMatchupForm.streak})`;
+      const oppFormLabel = oppMatchupForm.last5 === '0-0' ? '0-0 (Opener)' : `${oppMatchupForm.last5} (${oppMatchupForm.streak})`;
+
+      efficiency = [
+        {
+          metric: 'Goals / Game',
+          bandits: fmtValWithRank(banditsStanding.gfPerGame.toFixed(1), gfRanks, bufKey, hasAnyGames && bufGp > 0),
+          opp: fmtValWithRank(oppStanding.gfPerGame.toFixed(1), gfRanks, oppKey, hasAnyGames && oppGp > 0)
+        },
+        {
+          metric: 'Goals Against / Game',
+          bandits: fmtValWithRank(banditsStanding.gaPerGame.toFixed(1), gaRanks, bufKey, hasAnyGames && bufGp > 0),
+          opp: fmtValWithRank(oppStanding.gaPerGame.toFixed(1), gaRanks, oppKey, hasAnyGames && oppGp > 0)
+        },
+        {
+          metric: 'Goal Diff / Game',
+          bandits: fmtValWithRank((bufDiffPg > 0 ? `+${bufDiffPg.toFixed(1)}` : bufDiffPg.toFixed(1)), diffRanks, bufKey, hasAnyGames && bufGp > 0),
+          opp: fmtValWithRank((oppDiffPg > 0 ? `+${oppDiffPg.toFixed(1)}` : oppDiffPg.toFixed(1)), diffRanks, oppKey, hasAnyGames && oppGp > 0)
+        },
+        {
+          metric: 'Win %',
+          bandits: fmtValWithRank(banditsStanding.winPct, pctRanks, bufKey, hasAnyGames && bufGp > 0),
+          opp: fmtValWithRank(oppStanding.winPct, pctRanks, oppKey, hasAnyGames && oppGp > 0)
+        },
+        {
+          metric: 'Home / Road Split',
+          bandits: bufSplitLabel,
+          opp: oppSplitLabel
+        },
+        {
+          metric: 'Last 5 Form',
+          bandits: bufFormLabel,
+          opp: oppFormLabel
+        }
+      ];
 
       nextGame = {
         opponent: `${prefix} ${activeGame.opponent}`,
-        oppShortName: activeGame.opponent,
+        oppShortName: activeGame.oppShortName,
+        oppFullName: activeGame.opponent,
+        oppId: oppIdToFetch,
         oppAbbrev: activeGame.oppAbbrev,
         isHome: activeGame.isHome,
         gameTime: parts.gameTime,
         isoTime: activeGame.isoTime,
+        winChance,
         matchupRecords: `Bandits (${bufRecStr}) vs. ${activeGame.oppShortName} (${oppRecStr})`,
         broadcast: activeGame.broadcast,
         venue: activeGame.venue,
@@ -3203,24 +3485,57 @@ async function fetchBanditsData() {
           ? (activeGame.isHome
             ? `Bandits ${activeGame.bufScore} - ${activeGame.oppScore} ${activeGame.oppShortName}`
             : `${activeGame.oppShortName} ${activeGame.oppScore} - ${activeGame.bufScore} Bandits`)
-          : null
+          : null,
+        restAdvantage,
+        scoringEdge,
+        efficiency
       };
 
-      const bufGp = Math.max(1, banditsStanding.wins + banditsStanding.losses);
-      const oppGp = Math.max(1, oppStanding.wins + oppStanding.losses);
-      const hasAnyGames = (banditsStanding.wins + banditsStanding.losses) > 0 || (oppStanding.wins + oppStanding.losses) > 0;
-      teamStats = [
-        { metric: 'Season Record', bandits: bufRecStr, opp: oppRecStr },
-        { metric: 'NLL Standings', bandits: `${formatOrdinalSimple(banditsStanding.rank)}`, opp: `${formatOrdinalSimple(oppStanding.rank || 1)}` },
-        { metric: 'Goals For', bandits: String(banditsStanding.gf), opp: String(oppStanding.gf) },
-        { metric: 'Goals Against', bandits: String(banditsStanding.ga), opp: String(oppStanding.ga) },
-        { metric: 'Goal Differential', bandits: (banditsStanding.diff > 0 ? `+${banditsStanding.diff}` : String(banditsStanding.diff)), opp: (oppStanding.diff > 0 ? `+${oppStanding.diff}` : String(oppStanding.diff)) },
-        { metric: 'Goals / Game', bandits: hasAnyGames ? (banditsStanding.gf / bufGp).toFixed(1) : '0.0', opp: hasAnyGames ? (oppStanding.gf / oppGp).toFixed(1) : '0.0' }
-      ];
+      seasonSeries = seasonSchedule.filter(g =>
+        (activeGame.oppAbbrev && g.oppAbbrev === activeGame.oppAbbrev) || g.opponent === activeGame.opponent
+      );
     }
 
-    // 4. Parse League Scoreboard
-    const leagueScoreboard = (sbRes?.events || []).map(ev => {
+    // Playoff Picture, Clinching & Pace
+    const projectedWins = gamesPlayed > 0 ? Math.round((banditsStanding.wins / gamesPlayed) * totalGames) : null;
+    const ninthTeam = standingsClean[8];
+    const eighthTeam = standingsClean[7];
+    let magicNumber = null;
+    let clinchAlert = {
+      active: false,
+      scenario: 'Top 8 of 12 NLL teams qualify for the playoffs.'
+    };
+    if (gamesPlayed > 0 && ninthTeam && eighthTeam) {
+      const ninthMaxWins = ninthTeam.wins + Math.max(0, totalGames - ninthTeam.gp);
+      const bufMaxWins = banditsStanding.wins + gamesRemaining;
+      if (banditsStanding.wins > ninthMaxWins) {
+        magicNumber = '0';
+        clinchAlert = { active: true, scenario: 'Buffalo Bandits have clinched a Top-8 NLL Playoff berth.' };
+      } else if (bufMaxWins < eighthTeam.wins) {
+        clinchAlert = { active: true, scenario: 'Buffalo Bandits are mathematically eliminated from NLL playoff contention.' };
+      } else {
+        const needed = Math.max(1, ninthMaxWins + 1 - banditsStanding.wins);
+        magicNumber = String(needed);
+        clinchAlert = {
+          active: false,
+          scenario: `${banditsStanding.inPlayoffs ? 'Currently in Top-8 playoff position' : 'Chasing Top-8 playoff cutline'} • Magic # to clinch: ${needed}`
+        };
+      }
+    }
+
+    // 4. Parse Full Weekly League Scoreboard (deduped across calendar dates)
+    const rawSbEvents = [
+      ...(sbRes?.events || []),
+      ...extraSbRes.flatMap(res => res?.events || [])
+    ];
+    const seenEventIds = new Set();
+    const leagueScoreboard = [];
+
+    rawSbEvents.forEach(ev => {
+      const id = String(ev.id || '');
+      if (!id || seenEventIds.has(id)) return;
+      seenEventIds.add(id);
+
       const comp = ev.competitions?.[0] || {};
       const competitors = comp.competitors || [];
       const home = competitors.find(c => c.homeAway === 'home') || competitors[0] || {};
@@ -3235,8 +3550,61 @@ async function fetchBanditsData() {
       if (statusState === 'post') statusDetail = 'Final';
       else if (statusState === 'in') statusDetail = comp.status?.type?.shortDetail || comp.status?.type?.detail || 'Live';
 
-      return {
-        id: String(ev.id || ''),
+      const homeSt = standingsClean.find(s => s.abbrev === homeAbbrev || s.team === homeName);
+      const awaySt = standingsClean.find(s => s.abbrev === awayAbbrev || s.team === awayName);
+      const homeRecord = homeSt ? `${homeSt.wins}-${homeSt.losses}` : '0-0';
+      const awayRecord = awaySt ? `${awaySt.wins}-${awaySt.losses}` : '0-0';
+      const homeRank = homeSt?.rank || null;
+      const awayRank = awaySt?.rank || null;
+
+      let homeWinChance = estimateNllWinChance(homeSt, awaySt, true);
+      let awayWinChance = 100 - homeWinChance;
+      const hSc = Number(home.score);
+      const aSc = Number(away.score);
+      if (statusState === 'post' && Number.isFinite(hSc) && Number.isFinite(aSc)) {
+        homeWinChance = hSc > aSc ? 100 : (hSc < aSc ? 0 : 50);
+        awayWinChance = 100 - homeWinChance;
+      }
+
+      const isBanditsGame = homeAbbrev === 'BUF' || awayAbbrev === 'BUF';
+      let verdict = 'NLL SLATE';
+      let impactClass = 'neutral';
+      let target = 'League Watch';
+      let why = '12-team unified NLL standings matchup.';
+
+      if (isBanditsGame) {
+        verdict = 'BANDITS GAME NIGHT';
+        impactClass = 'good';
+        target = 'Root for Buffalo Bandits';
+        why = 'Direct NLL standings impact for Buffalo in the Top-8 playoff race.';
+      } else if (homeSt && awaySt && (homeSt.gp > 0 || awaySt.gp > 0)) {
+        const homeThreat = homeSt.rank <= banditsStanding.rank + 2;
+        const awayThreat = awaySt.rank <= banditsStanding.rank + 2;
+        if (homeThreat && !awayThreat) {
+          verdict = 'SEEDING WATCH';
+          impactClass = 'warning';
+          target = `Root for ${awaySt.shortName}`;
+          why = `A ${homeSt.shortName} (#${homeSt.rank}) loss helps Buffalo gain ground in the NLL standings.`;
+        } else if (awayThreat && !homeThreat) {
+          verdict = 'SEEDING WATCH';
+          impactClass = 'warning';
+          target = `Root for ${homeSt.shortName}`;
+          why = `A ${awaySt.shortName} (#${awaySt.rank}) loss helps Buffalo gain ground in the NLL standings.`;
+        } else if (homeSt.rank <= 8 && awaySt.rank <= 8) {
+          verdict = 'TOP-8 CLASH';
+          impactClass = 'neutral';
+          target = `Watch #${awaySt.rank} @ #${homeSt.rank}`;
+          why = 'Head-to-head battle between Top-8 NLL playoff contenders.';
+        }
+      } else if (homeSt && awaySt) {
+        verdict = 'OPENING WEEK';
+        impactClass = 'neutral';
+        target = `${awaySt.shortName} @ ${homeSt.shortName}`;
+        why = '2026-27 NLL opening week matchup; Top 8 of 12 teams qualify for playoffs.';
+      }
+
+      leagueScoreboard.push({
+        id,
         isoTime: ev.date,
         dateFormatted: parts.dateFormatted,
         timeFormatted: parts.timeFormatted,
@@ -3245,16 +3613,28 @@ async function fetchBanditsData() {
         awayTeam: awayName,
         awayShort: away.team?.shortDisplayName || awayName,
         awayAbbrev,
+        awayRecord,
+        awayRank,
         awayScore: away.score !== undefined ? String(away.score) : '',
+        awayWinChance,
         homeTeam: homeName,
         homeShort: home.team?.shortDisplayName || homeName,
         homeAbbrev,
+        homeRecord,
+        homeRank,
         homeScore: home.score !== undefined ? String(home.score) : '',
+        homeWinChance,
         broadcast: comp.broadcasts?.[0]?.media?.shortName || 'ESPN+',
         venue: comp.venue?.fullName || NLL_ARENAS[homeAbbrev] || NLL_ARENAS[homeName] || 'NLL Arena',
-        isBanditsGame: homeAbbrev === 'BUF' || awayAbbrev === 'BUF'
-      };
+        isBanditsGame,
+        verdict,
+        impactClass,
+        target,
+        why
+      });
     });
+
+    leagueScoreboard.sort((a, b) => new Date(a.isoTime).getTime() - new Date(b.isoTime).getTime());
 
     return {
       team: 'Buffalo Bandits',
@@ -3264,6 +3644,11 @@ async function fetchBanditsData() {
       winPct: banditsStanding.winPct,
       standingPosition: banditsStanding.rank,
       standingSummary: `${formatOrdinalSimple(banditsStanding.rank)} in NLL`,
+      playoffLineRank: 8,
+      inPlayoffSpot: banditsStanding.rank <= 8,
+      projectedWins,
+      magicNumber,
+      clinchAlert,
       goalsFor: banditsStanding.gf,
       goalsAgainst: banditsStanding.ga,
       goalDiff: banditsStanding.diff,
@@ -3271,11 +3656,12 @@ async function fetchBanditsData() {
       gamesPlayed,
       gamesRemaining,
       nextGame,
-      standings,
+      standings: standingsClean,
       seasonSchedule,
+      seasonSeries,
       recentResults,
       leagueScoreboard,
-      teamStats
+      teamStats: efficiency
     };
   } catch (err) {
     console.warn('Bandits data fetch fallback used:', err.message);
@@ -3729,10 +4115,11 @@ function buildTrimmedFallbackForFile(fileName, fullPayload) {
   if (fileName === 'index.html') {
     const trimSport = (s) => {
       if (!s) return s;
-      const { outOfTownGames, seasonSchedule, standings, leagueScoreboard, teamStats, recentResults, ...rest } = s;
+      const { outOfTownGames, seasonSchedule, seasonSeries, standings, leagueScoreboard, teamStats, recentResults, ...rest } = s;
       const nextGame = rest.nextGame ? { ...rest.nextGame } : {};
       delete nextGame.efficiency;
       delete nextGame.injuries;
+      delete nextGame.scoringEdge;
       return { ...rest, nextGame };
     };
     return {

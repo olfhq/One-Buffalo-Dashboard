@@ -1033,6 +1033,11 @@ button,
   background: rgba(252, 181, 20, 0.1);
 }
 
+.bandits-theme .intel-table td.intel-col-buf.intel-edge-win {
+  color: #fb923c !important;
+  background: rgba(255, 103, 31, 0.12);
+}
+
 .intel-table td.intel-col-opp.intel-edge-win {
   color: #34d399 !important;
   background: rgba(16, 185, 129, 0.09);
@@ -1064,6 +1069,12 @@ button,
   background: rgba(252, 181, 20, 0.18);
   color: var(--sabres-gold);
   border-color: rgba(252, 181, 20, 0.4);
+}
+
+.bandits-theme .intel-col-buf .intel-edge-badge {
+  background: rgba(255, 103, 31, 0.18);
+  color: #fb923c;
+  border-color: rgba(255, 103, 31, 0.42);
 }
 
 .intel-col-opp .intel-edge-badge {

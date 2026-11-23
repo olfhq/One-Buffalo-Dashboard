@@ -188,6 +188,20 @@ try {
     issues.push('renderEfficiencyRows failed to highlight statistical leader on each row');
   }
 
+  const banditsEffHtml = renderEfficiencyRows([
+    { metric: 'Goals / Game', bandits: '12.5 (2nd)', opp: '10.1 (8th)' },
+    { metric: 'Goals Against / Game', bandits: '9.8 (4th)', opp: '8.9 (1st)' }
+  ], 'bandits');
+  if (!banditsEffHtml.includes('intel-col-buf intel-edge-win') || !banditsEffHtml.includes('intel-col-opp intel-edge-win')) {
+    issues.push('renderEfficiencyRows failed to highlight Bandits statistical leader on each row');
+  }
+
+  const fnNllProb = sharedJs.match(/function calculateLiveNllWinChance\([\s\S]*?^    \}/m)[0];
+  eval(fnNllProb);
+  if (calculateLiveNllWinChance(12, 8, '4th Qtr 2:00', 54) <= 75 || calculateLiveNllWinChance(8, 12, 'Final', 54) !== 0) {
+    issues.push('calculateLiveNllWinChance returned unexpected win probability');
+  }
+
   const distHtml = renderSeedDistribution([
     { seed: 'Seed #1', pct: 3 },
     { seed: 'Seed #2', pct: 10 }

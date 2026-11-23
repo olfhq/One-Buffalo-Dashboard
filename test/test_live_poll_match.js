@@ -84,4 +84,41 @@ const nhlMismatchResult = isSameTeamGame(redWingsScoreboardEvent, capitalsNextGa
 assert.strictEqual(nhlMismatchResult, false, 'Scoreboard Red Wings game must NOT match Capitals nextGame');
 console.log('✓ Rejected stale NHL Red Wings scoreboard game against Capitals nextGame');
 
+// Case 5: NLL Bandits matching live game
+const swarmScoreboardEvent = {
+  date: '2026-11-29T00:00Z',
+  competitions: [{
+    status: { type: { state: 'in', shortDetail: '3rd Qtr 8:42' } },
+    competitors: [
+      { id: '125429', homeAway: 'home', score: '9', team: { id: '125429', abbreviation: 'BUF', displayName: 'Buffalo Bandits' } },
+      { id: '125425', homeAway: 'away', score: '7', team: { id: '125425', abbreviation: 'GA', displayName: 'Georgia Swarm', shortDisplayName: 'Swarm' } }
+    ]
+  }]
+};
+
+const swarmNextGame = {
+  opponent: 'vs. Georgia Swarm',
+  oppShortName: 'Swarm',
+  oppId: '125425',
+  isoTime: '2026-11-29T00:00Z',
+  gameTime: 'Sat, Nov 28 • 7:00 PM ET'
+};
+
+const banditsMatchResult = isSameTeamGame(swarmScoreboardEvent, swarmNextGame, 'BUF');
+assert.strictEqual(banditsMatchResult, true, 'Live NLL Swarm scoreboard event MUST match Bandits nextGame');
+console.log('✓ Accepted matching live NLL Swarm game against Bandits nextGame');
+
+// Case 6: NLL Bandits stale event rejection
+const thunderbirdsNextGame = {
+  opponent: '@ Halifax Thunderbirds',
+  oppShortName: 'Thunderbirds',
+  oppId: '125426',
+  isoTime: '2026-12-19T23:00Z',
+  gameTime: 'Sat, Dec 19 • 6:00 PM ET'
+};
+
+const banditsMismatchResult = isSameTeamGame(swarmScoreboardEvent, thunderbirdsNextGame, 'BUF');
+assert.strictEqual(banditsMismatchResult, false, 'Stale NLL Swarm game must NOT match upcoming Thunderbirds nextGame');
+console.log('✓ Rejected stale NLL Swarm scoreboard game against Thunderbirds nextGame');
+
 console.log('\nAll live poll matching unit tests passed successfully.');

@@ -184,6 +184,48 @@
       return Math.min(99, Math.max(1, Math.round(prob * 100)));
     }
 
+    // Real-Time In-Game Win Probability Engine (NLL Box Lacrosse Logistic Model)
+    function calculateLiveNllWinChance(bufScore, oppScore, statusDetail, preGameProb = 55) {
+      const buf = parseInt(bufScore) || 0;
+      const opp = parseInt(oppScore) || 0;
+      const diff = buf - opp;
+      const detail = (statusDetail || '').toLowerCase();
+
+      if (detail.includes('final')) {
+        if (diff > 0) return 100;
+        if (diff < 0) return 0;
+        return 50;
+      }
+
+      let minsRemaining = 60;
+      if (detail.includes('ot') || detail.includes('overtime')) {
+        minsRemaining = 5.0;
+      } else if (detail.includes('4') || detail.includes('4th')) {
+        const match = detail.match(/(\d+):(\d+)/);
+        minsRemaining = match ? Math.max(0.2, parseInt(match[1], 10) + parseInt(match[2], 10) / 60) : 7.5;
+      } else if (detail.includes('3') || detail.includes('3rd')) {
+        const match = detail.match(/(\d+):(\d+)/);
+        minsRemaining = match ? Math.max(15.2, 15 + parseInt(match[1], 10) + parseInt(match[2], 10) / 60) : 22.5;
+      } else if (detail.includes('2') || detail.includes('2nd') || detail.includes('half')) {
+        const match = detail.match(/(\d+):(\d+)/);
+        minsRemaining = match ? Math.max(30.2, 30 + parseInt(match[1], 10) + parseInt(match[2], 10) / 60) : 37.5;
+      } else if (detail.includes('1') || detail.includes('1st')) {
+        const match = detail.match(/(\d+):(\d+)/);
+        minsRemaining = match ? Math.max(45.2, 45 + parseInt(match[1], 10) + parseInt(match[2], 10) / 60) : 52.5;
+      }
+
+      if (diff === 0 && minsRemaining <= 1.0) return 50;
+
+      const frac = Math.max(0.005, minsRemaining / 60);
+      const p0 = Math.min(0.95, Math.max(0.05, (preGameProb || 55) / 100));
+      const baselineLogit = Math.log(p0 / (1 - p0));
+      const sigma = Math.max(1.0, 4.8 * Math.sqrt(frac));
+      const z = (baselineLogit * frac * 0.45) + (diff * 1.45 / sigma);
+      const prob = 1 / (1 + Math.exp(-z));
+
+      return Math.min(99, Math.max(1, Math.round(prob * 100)));
+    }
+
     // Real-Time In-Game Win Probability Engine (NHL Logistic Model)
     function calculateLiveNhlWinChance(bufScore, oppScore, statusDetail, preGameProb = 52) {
       const buf = parseInt(bufScore) || 0;
@@ -222,6 +264,48 @@
       const baselineLogit = Math.log(p0 / (1 - p0));
       const sigma = Math.sqrt(0.12 * minsRemaining + 0.25);
       const z = (baselineLogit * frac * 0.5) + (diff * 1.55 / sigma);
+      const prob = 1 / (1 + Math.exp(-z));
+
+      return Math.min(99, Math.max(1, Math.round(prob * 100)));
+    }
+
+    // Real-Time In-Game Win Probability Engine (NLL Box Lacrosse Logistic Model)
+    function calculateLiveNllWinChance(bufScore, oppScore, statusDetail, preGameProb = 55) {
+      const buf = parseInt(bufScore) || 0;
+      const opp = parseInt(oppScore) || 0;
+      const diff = buf - opp;
+      const detail = (statusDetail || '').toLowerCase();
+
+      if (detail.includes('final')) {
+        if (diff > 0) return 100;
+        if (diff < 0) return 0;
+        return 50;
+      }
+
+      let minsRemaining = 60;
+      if (detail.includes('ot') || detail.includes('overtime')) {
+        minsRemaining = 5.0;
+      } else if (detail.includes('4') || detail.includes('4th')) {
+        const match = detail.match(/(\d+):(\d+)/);
+        minsRemaining = match ? Math.max(0.2, parseInt(match[1], 10) + parseInt(match[2], 10) / 60) : 7.5;
+      } else if (detail.includes('3') || detail.includes('3rd')) {
+        const match = detail.match(/(\d+):(\d+)/);
+        minsRemaining = match ? Math.max(15.2, 15 + parseInt(match[1], 10) + parseInt(match[2], 10) / 60) : 22.5;
+      } else if (detail.includes('2') || detail.includes('2nd') || detail.includes('half')) {
+        const match = detail.match(/(\d+):(\d+)/);
+        minsRemaining = match ? Math.max(30.2, 30 + parseInt(match[1], 10) + parseInt(match[2], 10) / 60) : 37.5;
+      } else if (detail.includes('1') || detail.includes('1st')) {
+        const match = detail.match(/(\d+):(\d+)/);
+        minsRemaining = match ? Math.max(45.2, 45 + parseInt(match[1], 10) + parseInt(match[2], 10) / 60) : 52.5;
+      }
+
+      if (diff === 0 && minsRemaining <= 1.0) return 50;
+
+      const frac = Math.max(0.005, minsRemaining / 60);
+      const p0 = Math.min(0.95, Math.max(0.05, (preGameProb || 55) / 100));
+      const baselineLogit = Math.log(p0 / (1 - p0));
+      const sigma = Math.max(1.0, 4.8 * Math.sqrt(frac));
+      const z = (baselineLogit * frac * 0.45) + (diff * 1.45 / sigma);
       const prob = 1 / (1 + Math.exp(-z));
 
       return Math.min(99, Math.max(1, Math.round(prob * 100)));
@@ -613,7 +697,7 @@
       runAfterNextPaint(() => {
         const grid = gridId
           ? document.getElementById(gridId)
-          : (document.getElementById('bills-scoreboard-grid') || document.getElementById('sabres-scoreboard-grid'));
+          : (document.getElementById('bills-scoreboard-grid') || document.getElementById('sabres-scoreboard-grid') || document.getElementById('bandits-scoreboard-grid'));
         if (grid) grid.setAttribute('data-filter', filter);
       });
     }
@@ -634,6 +718,27 @@
         return 'tie';
       }
 
+      // Support W-L record comparisons (e.g. "4-1" vs "2-3")
+      const wlRegex = /^(\d+)-(\d+)(?:\s|$)/;
+      const bWlMatch = bStr.match(wlRegex);
+      const oWlMatch = oStr.match(wlRegex);
+      if (bWlMatch && oWlMatch) {
+        const bW = parseInt(bWlMatch[1], 10);
+        const bL = parseInt(bWlMatch[2], 10);
+        const oW = parseInt(oWlMatch[1], 10);
+        const oL = parseInt(oWlMatch[2], 10);
+        const bTot = bW + bL;
+        const oTot = oW + oL;
+        if (bTot === 0 && oTot === 0) return 'tie';
+        const bPct = bTot > 0 ? bW / bTot : 0;
+        const oPct = oTot > 0 ? oW / oTot : 0;
+        if (bPct > oPct) return 'buf';
+        if (oPct > bPct) return 'opp';
+        if (bW > oW) return 'buf';
+        if (oW > bW) return 'opp';
+        return 'tie';
+      }
+
       const numRegex = /([+-]?\d+(?:\.\d+)?)/;
       const bNumMatch = bStr.match(numRegex);
       const oNumMatch = oStr.match(numRegex);
@@ -641,7 +746,7 @@
         const bNum = parseFloat(bNumMatch[1]);
         const oNum = parseFloat(oNumMatch[1]);
         const mLower = String(metricName || '').toLowerCase();
-        const lowerIsBetter = mLower.includes('against') || mLower.includes('allowed') || mLower.includes('ga/gp');
+        const lowerIsBetter = mLower.includes('against') || mLower.includes('allowed') || mLower.includes('ga/gp') || mLower.includes('standings');
         if (lowerIsBetter) {
           if (bNum < oNum) return 'buf';
           if (oNum < bNum) return 'opp';
@@ -656,7 +761,7 @@
     function renderEfficiencyRows(efficiencyData, teamKey = 'bills') {
       if (!Array.isArray(efficiencyData) || efficiencyData.length === 0) return '';
       return efficiencyData.map(row => {
-        const bufVal = row[teamKey] ?? row.bills ?? row.sabres ?? '--';
+        const bufVal = row[teamKey] ?? row.bills ?? row.sabres ?? row.bandits ?? '--';
         const oppVal = row.opp ?? '--';
         const winner = compareEfficiencyRow(bufVal, oppVal, row.metric);
 
@@ -767,6 +872,7 @@
         resolveGameIso,
         compareEfficiencyRow,
         renderEfficiencyRows,
-        renderSeedDistribution
+        renderSeedDistribution,
+        calculateLiveNllWinChance
       };
     }

@@ -630,8 +630,14 @@
 
         <div class="stakes-bottom-row">
           <div class="metric-panel">
-            <span class="metric-label">Venue</span>
-            <span style="font-size: 0.85rem; font-weight: 700; color: var(--text-main);" id="bandits-venue">KeyBank Center, Buffalo, NY</span>
+            <span class="metric-label">Game Win Chance</span>
+            <span class="win-chance-value" id="bandits-win-chance">--%</span>
+          </div>
+
+          <div class="metric-panel" style="align-items: flex-end; text-align: right;">
+            <span class="metric-label">Venue &amp; Playoff Cut</span>
+            <span style="font-size: 0.78rem; font-weight: 700; color: var(--text-main);" id="bandits-venue">KeyBank Center, Buffalo, NY</span>
+            <span style="font-size: 0.68rem; color: var(--text-muted); font-weight: 600;" id="bandits-cutline-note">Top 8 of 12 Make Playoffs</span>
           </div>
         </div>
       </div>
@@ -670,6 +676,7 @@
     let data = null;
     let liveBillsOverrideState = null;
     let liveSabresOverrideState = null;
+    let liveBanditsOverrideState = null;
     let livePollTimeout = null;
     async function checkLiveScores() {
       if (document.hidden) return;
@@ -915,6 +922,121 @@
         console.warn('Live NHL scoreboard poll:', err);
       }
 
+      // 3. Live NLL Check (Bandits)
+      try {
+        const nllRes = await fetch('https://site.api.espn.com/apis/site/v2/sports/lacrosse/nll/scoreboard', { cache: 'no-store' });
+        if (nllRes.ok) {
+          const nllData = await nllRes.json();
+          const banditsEv = (nllData.events || []).find(ev => {
+            const comp = ev.competitions?.[0];
+            return comp?.competitors?.some(c => c.team?.abbreviation === 'BUF' || c.team?.id === '125429' || c.team?.displayName === 'Buffalo Bandits');
+          });
+
+          const isMatchingBandits = banditsEv && isSameTeamGame(banditsEv, data?.bandits?.nextGame, 'BUF');
+
+          if (isMatchingBandits) {
+            const comp = banditsEv.competitions[0];
+            const state = comp.status?.type?.state;
+            const detail = comp.status?.type?.shortDetail || 'LIVE';
+            const buf = comp.competitors.find(c => c.team?.abbreviation === 'BUF' || c.team?.id === '125429');
+            const opp = comp.competitors.find(c => c !== buf);
+
+            const prefixEl = document.getElementById('bandits-matchup-prefix');
+            const nextOppEl = document.getElementById('bandits-next-opp');
+            const countdownEl = document.getElementById('bandits-countdown');
+            const countdownLabelEl = document.getElementById('bandits-countdown-label');
+            const recordsEl = document.getElementById('bandits-records');
+            const winChanceEl = document.getElementById('bandits-win-chance');
+
+            if (state === 'in') {
+              anyLive = true;
+              liveBanditsOverrideState = 'in';
+              stopCountdown('bandits-countdown');
+              if (prefixEl) prefixEl.innerHTML = `<span class="live-pulse-badge"><span class="live-dot"></span> LIVE IN PROGRESS</span>`;
+              if (countdownEl) {
+                countdownEl.innerHTML = `<span class="live-dot"></span> ${detail}`;
+                countdownEl.style.color = '#10b981';
+              }
+              if (countdownLabelEl) {
+                countdownLabelEl.textContent = 'LIVE GAME CLOCK';
+                countdownLabelEl.style.color = '#10b981';
+              }
+              if (nextOppEl && buf && opp) {
+                const oppName = opp.team?.shortDisplayName || opp.team?.displayName || (data?.bandits?.nextGame?.oppShortName || 'Opponent');
+                const isHome = buf.homeAway === 'home';
+                nextOppEl.innerHTML = `<span class="live-score-highlight">${isHome ? `Bandits ${buf.score || 0} - ${opp.score || 0} ${oppName}` : `${oppName} ${opp.score || 0} - ${buf.score || 0} Bandits`}</span>`;
+              }
+              if (recordsEl) {
+                const bdGameDate = data?.bandits?.nextGame?.gameTime ? `📅 ${data.bandits.nextGame.gameTime} • ` : '';
+                const bdMatchupRec = data?.bandits?.nextGame?.matchupRecords || 'Live Game Action';
+                recordsEl.innerHTML = `⏱️ Quarter / Time: <strong style="color: #10b981;">${detail}</strong> • ${bdGameDate}${bdMatchupRec}`;
+              }
+              const bdProb = calculateLiveNllWinChance(buf?.score || 0, opp?.score || 0, detail, data?.bandits?.nextGame?.winChance || 54);
+              if (winChanceEl) {
+                winChanceEl.textContent = `${bdProb}%`;
+                if (bdProb >= 60) winChanceEl.style.color = '#34d399';
+                else if (bdProb >= 40) winChanceEl.style.color = '#fbbf24';
+                else winChanceEl.style.color = '#f87171';
+              }
+            } else if (state === 'post') {
+              liveBanditsOverrideState = 'post';
+              stopCountdown('bandits-countdown');
+              if (prefixEl) prefixEl.textContent = 'FINAL SCORE:';
+              if (countdownEl) {
+                countdownEl.textContent = detail.includes('OT') ? 'FINAL/OT' : 'FINAL';
+                countdownEl.style.color = '#fff';
+              }
+              if (countdownLabelEl) {
+                countdownLabelEl.textContent = 'FINAL SCORE';
+              }
+              if (nextOppEl && buf && opp) {
+                const oppName = opp.team?.shortDisplayName || opp.team?.displayName || (data?.bandits?.nextGame?.oppShortName || 'Opponent');
+                const isHome = buf.homeAway === 'home';
+                nextOppEl.textContent = isHome ? `Bandits ${buf.score || 0} - ${opp.score || 0} ${oppName}` : `${oppName} ${opp.score || 0} - ${buf.score || 0} Bandits`;
+              }
+              if (recordsEl && buf && opp) {
+                const oppName = opp.team?.shortDisplayName || opp.team?.displayName || (data?.bandits?.nextGame?.oppShortName || 'Opponent');
+                const isHome = buf.homeAway === 'home';
+                recordsEl.textContent = isHome ? `Final: Bandits ${buf.score || 0}, ${oppName} ${opp.score || 0}` : `Final: ${oppName} ${opp.score || 0}, Bandits ${buf.score || 0}`;
+              }
+              const finalProb = (parseInt(buf?.score, 10) || 0) > (parseInt(opp?.score, 10) || 0) ? 100 : 0;
+              if (winChanceEl) {
+                winChanceEl.textContent = `${finalProb}%`;
+                winChanceEl.style.color = finalProb === 100 ? '#34d399' : '#f87171';
+              }
+            } else {
+              liveBanditsOverrideState = null;
+            }
+          } else if (liveBanditsOverrideState) {
+            liveBanditsOverrideState = null;
+            const prefixEl = document.getElementById('bandits-matchup-prefix');
+            const nextOppEl = document.getElementById('bandits-next-opp');
+            const countdownEl = document.getElementById('bandits-countdown');
+            const countdownLabelEl = document.getElementById('bandits-countdown-label');
+            const recordsEl = document.getElementById('bandits-records');
+            const winChanceEl = document.getElementById('bandits-win-chance');
+            if (prefixEl) prefixEl.textContent = 'Next Matchup:';
+            if (nextOppEl && data?.bandits?.nextGame) nextOppEl.textContent = data.bandits.nextGame.opponent || 'TBD';
+            if (recordsEl && data?.bandits?.nextGame) recordsEl.textContent = data.bandits.nextGame.matchupRecords || '';
+            if (winChanceEl && data?.bandits?.nextGame) {
+              const prob = data.bandits.nextGame.winChance || 54;
+              winChanceEl.textContent = `${prob}%`;
+              winChanceEl.style.color = prob >= 60 ? '#34d399' : (prob >= 40 ? '#fbbf24' : '#f87171');
+            }
+            if (countdownLabelEl) {
+              countdownLabelEl.textContent = 'Faceoff In';
+              countdownLabelEl.style.color = 'var(--text-muted)';
+            }
+            const banditsIso = resolveGameIso(data?.bandits?.nextGame);
+            if (banditsIso && countdownEl) {
+              startCountdown('bandits-countdown', banditsIso);
+            }
+          }
+        }
+      } catch (err) {
+        console.warn('Live NLL scoreboard poll:', err);
+      }
+
       // Schedule next poll
       const pollDelay = anyLive ? 25000 : 60000;
       if (!document.hidden) {
@@ -930,7 +1052,7 @@
       const statusEl = document.getElementById('update-status');
 
       const FALLBACK_DATA = {
-  "updatedAt": "2026-11-23T20:30:02.651Z",
+  "updatedAt": "2026-11-23T21:29:46.150Z",
   "source": "http://www.playoffstatus.com and ESPN API",
   "theme": "regular",
   "billsTheme": null,
@@ -964,7 +1086,7 @@
       "venue": "Highmark Stadium, Orchard Park, NY",
       "roof": "Open-Air Stadium",
       "surface": "Natural Grass",
-      "weather": "38°F, 17mph Wind, 96% PoP",
+      "weather": "38°F, 17mph Wind, 90% PoP",
       "window": "TNF",
       "windowLabel": "Sunday Night Football",
       "windowBadge": "Sunday Night Football",
@@ -1155,6 +1277,14 @@
     "winPct": ".000",
     "standingPosition": 1,
     "standingSummary": "1st in NLL",
+    "playoffLineRank": 8,
+    "inPlayoffSpot": true,
+    "projectedWins": null,
+    "magicNumber": null,
+    "clinchAlert": {
+      "active": false,
+      "scenario": "Top 8 of 12 NLL teams qualify for the playoffs."
+    },
     "goalsFor": 0,
     "goalsAgainst": 0,
     "goalDiff": 0,
@@ -1163,11 +1293,14 @@
     "gamesRemaining": 18,
     "nextGame": {
       "opponent": "vs. Georgia Swarm",
-      "oppShortName": "Georgia Swarm",
+      "oppShortName": "Swarm",
+      "oppFullName": "Georgia Swarm",
+      "oppId": "125425",
       "oppAbbrev": "GA",
       "isHome": true,
       "gameTime": "Sat, Nov 28 • 7:00 PM ET",
       "isoTime": "2026-11-29T00:00Z",
+      "winChance": 54,
       "matchupRecords": "Bandits (0-0) vs. Swarm (0-0)",
       "broadcast": "ESPN+",
       "venue": "KeyBank Center, Buffalo, NY",
@@ -1175,7 +1308,12 @@
       "statusDetail": "Sat, Nov 28 • 7:00 PM ET",
       "bufScore": "",
       "oppScore": "",
-      "liveScore": null
+      "liveScore": null,
+      "restAdvantage": {
+        "banditsDays": null,
+        "oppDays": null,
+        "summary": "Season Opener (Both Teams Fresh)"
+      }
     }
   }
 };
@@ -1369,9 +1507,33 @@
         const bdTimeEl = document.getElementById('bandits-game-time');
         const bdBroadcastEl = document.getElementById('bandits-broadcast');
         const bdVenueEl = document.getElementById('bandits-venue');
+        const bdWinChanceEl = document.getElementById('bandits-win-chance');
+        const bdCutlineEl = document.getElementById('bandits-cutline-note');
         if (bdTimeEl) bdTimeEl.textContent = bdg.gameTime || '';
         if (bdBroadcastEl) bdBroadcastEl.textContent = bdg.broadcast || 'ESPN+';
         if (bdVenueEl) bdVenueEl.textContent = bdg.venue || 'KeyBank Center, Buffalo, NY';
+        if (bdCutlineEl) {
+          const inPlayoffs = bd.inPlayoffSpot !== false;
+          bdCutlineEl.textContent = bd.magicNumber === '0'
+            ? 'Clinched Top-8 NLL Playoff Berth'
+            : (inPlayoffs ? 'Top 8 of 12 Make Playoffs' : 'Chasing Top-8 Playoff Cut');
+        }
+
+        if (bdg.statusState === 'in' || bdg.statusState === 'post') {
+          const bdProb = calculateLiveNllWinChance(bdg.bufScore, bdg.oppScore, bdg.statusDetail, bdg.winChance || 54);
+          if (bdWinChanceEl) {
+            bdWinChanceEl.textContent = `${bdProb}%`;
+            if (bdProb >= 60) bdWinChanceEl.style.color = '#34d399';
+            else if (bdProb >= 40) bdWinChanceEl.style.color = '#fbbf24';
+            else bdWinChanceEl.style.color = '#f87171';
+          }
+        } else if (!liveBanditsOverrideState && bdWinChanceEl) {
+          const bdProb = bdg.winChance || 54;
+          bdWinChanceEl.textContent = `${bdProb}%`;
+          if (bdProb >= 60) bdWinChanceEl.style.color = '#34d399';
+          else if (bdProb >= 40) bdWinChanceEl.style.color = '#fbbf24';
+          else bdWinChanceEl.style.color = '#f87171';
+        }
 
         const bdPrefixEl = document.getElementById('bandits-matchup-prefix');
         const bdNextOppEl = document.getElementById('bandits-next-opp');
@@ -1402,7 +1564,7 @@
             bdCountdownEl.style.color = '#fff';
           }
           if (bdCountdownLabelEl) bdCountdownLabelEl.textContent = 'FINAL SCORE';
-        } else {
+        } else if (!liveBanditsOverrideState) {
           if (bdPrefixEl) bdPrefixEl.textContent = 'Next Matchup:';
           if (bdNextOppEl) bdNextOppEl.textContent = bdg.opponent || 'TBD';
           if (bdRecordsEl) bdRecordsEl.textContent = bdg.matchupRecords || '';

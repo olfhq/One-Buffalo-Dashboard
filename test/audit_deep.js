@@ -24,6 +24,16 @@ if (!data.sabres.nextGame.efficiency || data.sabres.nextGame.efficiency.length <
   });
 }
 
+console.log('\nBandits efficiency count:', data.bandits?.nextGame?.efficiency?.length || 0);
+if (!data.bandits?.nextGame?.efficiency || data.bandits.nextGame.efficiency.length < 6) {
+  console.error('FAIL: Bandits efficiency count is less than 6');
+  errors++;
+} else {
+  data.bandits.nextGame.efficiency.forEach(e => {
+    console.log(`  ${e.metric}: Bandits ${e.bandits} vs Opp ${e.opp}`);
+  });
+}
+
 console.log('\n=== CHECKING COUNTDOWN ISO TIMESTAMPS ===');
 if (!data.bills.nextGame.isoTime || isNaN(new Date(data.bills.nextGame.isoTime).getTime())) {
   console.error('FAIL: Bills nextGame.isoTime is invalid or missing:', data.bills.nextGame.isoTime);
@@ -37,6 +47,13 @@ if (!data.sabres.nextGame.isoTime || isNaN(new Date(data.sabres.nextGame.isoTime
   errors++;
 } else {
   console.log('Sabres nextGame.isoTime is valid:', data.sabres.nextGame.isoTime);
+}
+
+if (!data.bandits?.nextGame?.isoTime || isNaN(new Date(data.bandits.nextGame.isoTime).getTime())) {
+  console.error('FAIL: Bandits nextGame.isoTime is invalid or missing:', data.bandits?.nextGame?.isoTime);
+  errors++;
+} else {
+  console.log('Bandits nextGame.isoTime is valid:', data.bandits.nextGame.isoTime);
 }
 
 console.log('\n=== CHECKING INJURIES ===');
@@ -78,6 +95,14 @@ if (!data.sabres.nextGame.specialTeams?.sabres || !data.sabres.nextGame.specialT
   console.error('FAIL: Sabres specialTeams missing');
   errors++;
 }
+if (!data.bandits?.nextGame?.restAdvantage?.summary) {
+  console.error('FAIL: Bandits restAdvantage summary missing');
+  errors++;
+}
+if (!data.bandits?.nextGame?.scoringEdge?.advantage) {
+  console.error('FAIL: Bandits scoringEdge advantage missing');
+  errors++;
+}
 
 console.log('\n=== CHECKING ROOTING GUIDE VS OUT OF TOWN GAMES ===');
 if (!data.sabres.outOfTownGames || data.sabres.outOfTownGames.length === 0) {
@@ -104,6 +129,19 @@ if (!data.bills.outOfTownGames || data.bills.outOfTownGames.length === 0) {
     }
   });
   console.log('Bills out of town games all have valid impactClass, verdict, target.');
+}
+
+if (!data.bandits?.leagueScoreboard || data.bandits.leagueScoreboard.length === 0) {
+  console.error('FAIL: Bandits leagueScoreboard is empty');
+  errors++;
+} else {
+  data.bandits.leagueScoreboard.forEach((g, i) => {
+    if (!g.impactClass || !g.verdict || !g.target) {
+      console.error(`FAIL: Bandits league game ${i} missing verdict/impact/target:`, g.awayTeam, '@', g.homeTeam);
+      errors++;
+    }
+  });
+  console.log(`Bandits leagueScoreboard verified (${data.bandits.leagueScoreboard.length} games with valid impactClass, verdict, target).`);
 }
 
 console.log('\n=== CHECKING FULL SEASON SCHEDULES ===');
@@ -164,6 +202,26 @@ if (!Array.isArray(data.sabres.seasonSchedule) || data.sabres.seasonSchedule.len
     }
   });
   console.log(`Sabres season schedule verified: ${data.sabres.seasonSchedule.length} games across months ${[...months].join(', ')} (${played.length} played, ${future.length} upcoming)`);
+}
+
+if (!Array.isArray(data.bandits?.seasonSchedule) || data.bandits.seasonSchedule.length < 18) {
+  console.error(`FAIL: Bandits seasonSchedule must have >= 18 games, found ${data.bandits?.seasonSchedule?.length}`);
+  errors++;
+} else {
+  const bMonths = new Set(data.bandits.seasonSchedule.map(g => g.monthLabel));
+  ['NOV', 'DEC', 'JAN', 'FEB', 'MAR', 'APR'].forEach(m => {
+    if (!bMonths.has(m)) {
+      console.error(`FAIL: Bandits seasonSchedule missing games for month ${m}`);
+      errors++;
+    }
+  });
+  data.bandits.seasonSchedule.forEach(g => {
+    if (!g.date || !g.dayOfWeek || !g.opponent) {
+      console.error(`FAIL: Bandits game ${g.gameNumber} missing date/day/opp`);
+      errors++;
+    }
+  });
+  console.log(`Bandits season schedule verified: ${data.bandits.seasonSchedule.length} games across months ${[...bMonths].join(', ')}`);
 }
 
 if (errors > 0) {
