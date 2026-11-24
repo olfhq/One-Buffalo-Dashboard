@@ -607,11 +607,14 @@
             turkeyDrop = document.createElement('div');
             turkeyDrop.id = 'thanksgiving-turkey-drop';
             turkeyDrop.setAttribute('aria-hidden', 'true');
+            const turkeyInner = '<div class="turkey-chute"></div><div class="turkey-bird"></div>';
             turkeyDrop.innerHTML =
               '<div class="turkey-chopper"><div class="chopper-rotor-blur"></div><div class="chopper-sprite"></div></div>' +
-              '<div class="para-turkey pt1"></div>' +
-              '<div class="para-turkey pt2"></div>' +
-              '<div class="para-turkey pt3"></div>';
+              '<div class="para-turkey pt1">' + turkeyInner + '</div>' +
+              '<div class="para-turkey pt2">' + turkeyInner + '</div>' +
+              '<div class="para-turkey pt3">' + turkeyInner + '</div>' +
+              '<div class="para-turkey pt4">' + turkeyInner + '</div>' +
+              '<div class="para-turkey pt5">' + turkeyInner + '</div>';
             document.body.appendChild(turkeyDrop);
           }
         } else if (turkeyDrop) {

@@ -1585,7 +1585,7 @@ html[data-theme="thanksgiving"] .card:hover {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55), 0 0 20px rgba(245, 158, 11, 0.35) !important;
 }
 
-/* 7. THANKSGIVING: WKRP-Style Helicopter & Parachuting Turkeys */
+/* 7. THANKSGIVING: WKRP-Style Helicopter & Synchronized Parachuting Turkeys */
 #thanksgiving-turkey-drop {
   position: fixed;
   inset: 0;
@@ -1596,12 +1596,12 @@ html[data-theme="thanksgiving"] .card:hover {
 
 #thanksgiving-turkey-drop .turkey-chopper {
   position: absolute;
-  top: 14px;
+  top: 12px;
   left: 0;
   width: 112px;
   height: 54px;
   will-change: transform, opacity;
-  animation: chopper-patrol 24s ease-in-out infinite;
+  animation: chopper-patrol 24s linear infinite;
 }
 
 #thanksgiving-turkey-drop .chopper-sprite {
@@ -1610,53 +1610,79 @@ html[data-theme="thanksgiving"] .card:hover {
   background-repeat: no-repeat;
   background-size: contain;
   background-position: center;
-  background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20180%2090%22%20width%3D%22180%22%20height%3D%2290%22%3E%3Crect%20x%3D%2288%22%20y%3D%2218%22%20width%3D%228%22%20height%3D%2212%22%20fill%3D%22%2378350f%22%2F%3E%3Crect%20x%3D%2230%22%20y%3D%2214%22%20width%3D%22124%22%20height%3D%224.5%22%20rx%3D%222.2%22%20fill%3D%22%23fef3c7%22%20opacity%3D%220.85%22%2F%3E%3Cpath%20d%3D%22M56%2042%20L20%2036%20L16%2042%20L56%2052%20Z%22%20fill%3D%22%239a3412%22%2F%3E%3Cpath%20d%3D%22M16%2030%20L22%2046%20L12%2046%20Z%22%20fill%3D%22%23be123c%22%2F%3E%3Ccircle%20cx%3D%2215%22%20cy%3D%2239%22%20r%3D%228%22%20fill%3D%22none%22%20stroke%3D%22%23fef3c7%22%20stroke-width%3D%222%22%20stroke-dasharray%3D%224%204%22%2F%3E%3Cellipse%20cx%3D%2296%22%20cy%3D%2246%22%20rx%3D%2242%22%20ry%3D%2218%22%20fill%3D%22%23b45309%22%2F%3E%3Cpath%20d%3D%22M104%2030%20C124%2030%20136%2038%20136%2046%20L104%2046%20Z%22%20fill%3D%22%23fde68a%22%20opacity%3D%220.9%22%2F%3E%3Crect%20x%3D%2266%22%20y%3D%2248%22%20width%3D%2262%22%20height%3D%225%22%20rx%3D%222%22%20fill%3D%22%23f59e0b%22%2F%3E%3Cpath%20d%3D%22M74%2064%20L70%2074%20M116%2064%20L120%2074%20M60%2074%20L132%2074%22%20stroke%3D%22%23d97706%22%20stroke-width%3D%223.5%22%20stroke-linecap%3D%22round%22%2F%3E%3C%2Fsvg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20180%2090%22%20width%3D%22180%22%20height%3D%2290%22%3E%3Crect%20x%3D%2286%22%20y%3D%2216%22%20width%3D%228%22%20height%3D%2213%22%20fill%3D%22%2378350f%22%2F%3E%3Crect%20x%3D%2224%22%20y%3D%2213%22%20width%3D%22132%22%20height%3D%224.5%22%20rx%3D%222.2%22%20fill%3D%22%23fef3c7%22%20opacity%3D%220.88%22%2F%3E%3Cpath%20d%3D%22M56%2042%20L18%2035%20L14%2042%20L56%2052%20Z%22%20fill%3D%22%239a3412%22%2F%3E%3Cpath%20d%3D%22M14%2028%20L22%2046%20L10%2046%20Z%22%20fill%3D%22%23be123c%22%2F%3E%3Ccircle%20cx%3D%2214%22%20cy%3D%2239%22%20r%3D%228.5%22%20fill%3D%22none%22%20stroke%3D%22%23fef3c7%22%20stroke-width%3D%222%22%20stroke-dasharray%3D%224%204%22%2F%3E%3Cellipse%20cx%3D%2294%22%20cy%3D%2246%22%20rx%3D%2243%22%20ry%3D%2219%22%20fill%3D%22%23b45309%22%2F%3E%3Cpath%20d%3D%22M106%2029%20C125%2029%20137%2038%20137%2046%20L106%2046%20Z%22%20fill%3D%22%23fde68a%22%20opacity%3D%220.92%22%2F%3E%3Crect%20x%3D%2262%22%20y%3D%2248%22%20width%3D%2266%22%20height%3D%225%22%20rx%3D%222%22%20fill%3D%22%23f59e0b%22%2F%3E%3Crect%20x%3D%2281%22%20y%3D%2235%22%20width%3D%2218%22%20height%3D%2222%22%20rx%3D%222.5%22%20fill%3D%22%23150a04%22%20stroke%3D%22%23fbbf24%22%20stroke-width%3D%221.5%22%2F%3E%3Cpath%20d%3D%22M72%2064%20L68%2075%20M114%2064%20L118%2075%20M56%2075%20L132%2075%22%20stroke%3D%22%23d97706%22%20stroke-width%3D%223.5%22%20stroke-linecap%3D%22round%22%2F%3E%3C%2Fsvg%3E");
   filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.55)) drop-shadow(0 0 12px rgba(245, 158, 11, 0.35));
 }
 
 #thanksgiving-turkey-drop .chopper-rotor-blur {
   position: absolute;
-  top: 7px;
-  left: 16px;
-  width: 80px;
-  height: 3px;
+  top: 6px;
+  left: 14px;
+  width: 84px;
+  height: 3.5px;
   border-radius: 999px;
-  background: linear-gradient(90deg, transparent, rgba(254, 243, 199, 0.9), transparent);
-  animation: rotor-spin 0.14s linear infinite;
+  background: linear-gradient(90deg, transparent, rgba(254, 243, 199, 0.95), transparent);
+  animation: rotor-spin 0.12s linear infinite;
 }
 
 @keyframes rotor-spin {
   0% { transform: scaleX(1); opacity: 0.95; }
-  50% { transform: scaleX(0.35); opacity: 0.45; }
+  50% { transform: scaleX(0.32); opacity: 0.45; }
   100% { transform: scaleX(1); opacity: 0.95; }
 }
 
+/* Constant 2.5vw per 1% linear patrol so turkey drop coordinates match the cargo bay door exactly */
 @keyframes chopper-patrol {
   0% {
-    transform: translate3d(-130px, 4px, 0) scaleX(1) rotate(3deg);
+    transform: translate3d(-10vw, 4px, 0) scaleX(1) rotate(4deg);
     opacity: 0;
   }
-  6% {
-    opacity: 0.95;
+  2% {
+    transform: translate3d(-5vw, 4px, 0) scaleX(1) rotate(4deg);
+    opacity: 0.96;
   }
-  44% {
-    transform: translate3d(106vw, -2px, 0) scaleX(1) rotate(3deg);
-    opacity: 0.95;
+  12% {
+    transform: translate3d(20vw, 2px, 0) scaleX(1) rotate(2deg);
+    opacity: 0.96;
+  }
+  24% {
+    transform: translate3d(50vw, 5px, 0) scaleX(1) rotate(4deg);
+    opacity: 0.96;
+  }
+  36% {
+    transform: translate3d(80vw, 2px, 0) scaleX(1) rotate(2deg);
+    opacity: 0.96;
+  }
+  46% {
+    transform: translate3d(105vw, 4px, 0) scaleX(1) rotate(4deg);
+    opacity: 0.96;
   }
   48% {
-    transform: translate3d(106vw, 6px, 0) scaleX(-1) rotate(3deg);
+    transform: translate3d(110vw, 4px, 0) scaleX(1) rotate(4deg);
     opacity: 0;
   }
   52% {
-    transform: translate3d(106vw, 10px, 0) scaleX(-1) rotate(3deg);
-    opacity: 0.95;
+    transform: translate3d(110vw, 8px, 0) scaleX(-1) rotate(4deg);
+    opacity: 0;
   }
-  92% {
-    transform: translate3d(-130px, 2px, 0) scaleX(-1) rotate(3deg);
-    opacity: 0.95;
+  54% {
+    transform: translate3d(105vw, 8px, 0) scaleX(-1) rotate(4deg);
+    opacity: 0.96;
   }
-  97%, 100% {
-    transform: translate3d(-130px, 4px, 0) scaleX(1) rotate(3deg);
+  66% {
+    transform: translate3d(75vw, 5px, 0) scaleX(-1) rotate(2deg);
+    opacity: 0.96;
+  }
+  80% {
+    transform: translate3d(40vw, 8px, 0) scaleX(-1) rotate(2deg);
+    opacity: 0.96;
+  }
+  98% {
+    transform: translate3d(-5vw, 6px, 0) scaleX(-1) rotate(4deg);
+    opacity: 0.96;
+  }
+  100% {
+    transform: translate3d(-10vw, 6px, 0) scaleX(-1) rotate(4deg);
     opacity: 0;
   }
 }
@@ -1664,81 +1690,194 @@ html[data-theme="thanksgiving"] .card:hover {
 #thanksgiving-turkey-drop .para-turkey {
   position: absolute;
   top: 0;
-  width: 56px;
-  height: 76px;
+  width: 58px;
+  height: 78px;
+  transform-origin: 50% 58px;
   will-change: transform, opacity;
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-position: center;
-  background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20100%20130%22%20width%3D%22100%22%20height%3D%22130%22%3E%3Cpath%20d%3D%22M14%2042%20C14%2014%2086%2014%2086%2042%20Z%22%20fill%3D%22%23f59e0b%22%2F%3E%3Cpath%20d%3D%22M32%2042%20C32%2018%2068%2018%2068%2042%20Z%22%20fill%3D%22%23be123c%22%2F%3E%3Cpath%20d%3D%22M44%2042%20C44%2022%2056%2022%2056%2042%20Z%22%20fill%3D%22%23fef3c7%22%2F%3E%3Cpath%20d%3D%22M18%2042%20L44%2082%20M36%2042%20L48%2080%20M64%2042%20L52%2080%20M82%2042%20L56%2082%22%20stroke%3D%22%23fde68a%22%20stroke-width%3D%221.8%22%20opacity%3D%220.85%22%2F%3E%3Ccircle%20cx%3D%2238%22%20cy%3D%2290%22%20r%3D%2210%22%20fill%3D%22%23ea580c%22%2F%3E%3Ccircle%20cx%3D%2242%22%20cy%3D%2283%22%20r%3D%228%22%20fill%3D%22%23f59e0b%22%2F%3E%3Ccircle%20cx%3D%2252%22%20cy%3D%2294%22%20r%3D%2214%22%20fill%3D%22%2378350f%22%2F%3E%3Cellipse%20cx%3D%2250%22%20cy%3D%2295%22%20rx%3D%228%22%20ry%3D%225%22%20fill%3D%22%239a3412%22%2F%3E%3Ccircle%20cx%3D%2266%22%20cy%3D%2284%22%20r%3D%226.5%22%20fill%3D%22%2392400e%22%2F%3E%3Cpath%20d%3D%22M71%2083%20L78%2085%20L71%2088%20Z%22%20fill%3D%22%23fbbf24%22%2F%3E%3Cpath%20d%3D%22M69%2088%20Q71%2094%2067%2095%20Q65%2092%2067%2088%20Z%22%20fill%3D%22%23e11d48%22%2F%3E%3Ccircle%20cx%3D%2267.5%22%20cy%3D%2282.5%22%20r%3D%221.4%22%20fill%3D%22%23fef3c7%22%2F%3E%3Cpath%20d%3D%22M47%20107%20L45%20116%20M57%20107%20L59%20116%22%20stroke%3D%22%23fbbf24%22%20stroke-width%3D%222.5%22%20stroke-linecap%3D%22round%22%2F%3E%3C%2Fsvg%3E");
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.45));
 }
 
+#thanksgiving-turkey-drop .turkey-chute {
+  width: 58px;
+  height: 44px;
+  transform-origin: 50% 100%;
+  will-change: transform, opacity;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: bottom center;
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20100%2076%22%20width%3D%22100%22%20height%3D%2276%22%3E%3Cpath%20d%3D%22M10%2038%20C10%208%2090%208%2090%2038%20Z%22%20fill%3D%22%23f59e0b%22%2F%3E%3Cpath%20d%3D%22M28%2038%20C28%2012%2072%2012%2072%2038%20Z%22%20fill%3D%22%23be123c%22%2F%3E%3Cpath%20d%3D%22M42%2038%20C42%2016%2058%2016%2058%2038%20Z%22%20fill%3D%22%23fef3c7%22%2F%3E%3Cpath%20d%3D%22M14%2038%20L45%2074%20M33%2038%20L48%2074%20M67%2038%20L52%2074%20M86%2038%20L55%2074%22%20stroke%3D%22%23fde68a%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.9%22%2F%3E%3C%2Fsvg%3E");
+}
+
+#thanksgiving-turkey-drop .turkey-bird {
+  width: 44px;
+  height: 38px;
+  margin: -5px auto 0;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: top center;
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2076%2064%22%20width%3D%2276%22%20height%3D%2264%22%3E%3Ccircle%20cx%3D%2224%22%20cy%3D%2228%22%20r%3D%2211%22%20fill%3D%22%23ea580c%22%2F%3E%3Ccircle%20cx%3D%2229%22%20cy%3D%2220%22%20r%3D%229.5%22%20fill%3D%22%23f59e0b%22%2F%3E%3Ccircle%20cx%3D%2220%22%20cy%3D%2235%22%20r%3D%228.5%22%20fill%3D%22%23be123c%22%2F%3E%3Ccircle%20cx%3D%2238%22%20cy%3D%2233%22%20r%3D%2214.5%22%20fill%3D%22%2378350f%22%2F%3E%3Cellipse%20cx%3D%2236%22%20cy%3D%2234%22%20rx%3D%228.5%22%20ry%3D%225.5%22%20fill%3D%22%239a3412%22%2F%3E%3Ccircle%20cx%3D%2253%22%20cy%3D%2223%22%20r%3D%227%22%20fill%3D%22%2392400e%22%2F%3E%3Cpath%20d%3D%22M58%2022%20L66%2024.5%20L58%2027.5%20Z%22%20fill%3D%22%23fbbf24%22%2F%3E%3Cpath%20d%3D%22M56%2027%20Q58%2034%2054%2035%20Q52%2031%2054%2027%20Z%22%20fill%3D%22%23e11d48%22%2F%3E%3Ccircle%20cx%3D%2254.5%22%20cy%3D%2221.5%22%20r%3D%222%22%20fill%3D%22%23fef3c7%22%2F%3E%3Ccircle%20cx%3D%2255%22%20cy%3D%2221.5%22%20r%3D%220.9%22%20fill%3D%22%23150a04%22%2F%3E%3Cpath%20d%3D%22M33%2046%20L30%2057%20M43%2046%20L46%2057%22%20stroke%3D%22%23fbbf24%22%20stroke-width%3D%222.8%22%20stroke-linecap%3D%22round%22%2F%3E%3C%2Fsvg%3E");
+}
+
+/* Synchronized drop coordinates & delays matching helicopter passes on the 24s cycle */
 #thanksgiving-turkey-drop .pt1 {
-  left: 16vw;
-  animation: turkey-parachute-drop 16s linear infinite;
+  left: calc(20vw + 27px);
+  animation: turkey-drop-right 24s linear infinite -21.12s;
+}
+#thanksgiving-turkey-drop .pt1 .turkey-chute {
+  animation: chute-pop-open 24s linear infinite -21.12s;
 }
 
 #thanksgiving-turkey-drop .pt2 {
-  left: 48vw;
-  animation: turkey-parachute-drop-alt 18s linear infinite -6s;
+  left: calc(50vw + 27px);
+  animation: turkey-drop-right 24s linear infinite -18.24s;
+}
+#thanksgiving-turkey-drop .pt2 .turkey-chute {
+  animation: chute-pop-open 24s linear infinite -18.24s;
 }
 
 #thanksgiving-turkey-drop .pt3 {
-  left: 78vw;
-  animation: turkey-parachute-drop 15s linear infinite -11s;
+  left: calc(80vw + 27px);
+  animation: turkey-drop-right 24s linear infinite -15.36s;
+}
+#thanksgiving-turkey-drop .pt3 .turkey-chute {
+  animation: chute-pop-open 24s linear infinite -15.36s;
 }
 
-@keyframes turkey-parachute-drop {
-  0% {
-    transform: translate3d(0, 42px, 0) rotate(-6deg) scale(0.75);
+#thanksgiving-turkey-drop .pt4 {
+  left: calc(75vw + 27px);
+  animation: turkey-drop-left 24s linear infinite -8.16s;
+}
+#thanksgiving-turkey-drop .pt4 .turkey-chute {
+  animation: chute-pop-open 24s linear infinite -8.16s;
+}
+
+#thanksgiving-turkey-drop .pt5 {
+  left: calc(40vw + 27px);
+  animation: turkey-drop-left 24s linear infinite -4.8s;
+}
+#thanksgiving-turkey-drop .pt5 .turkey-chute {
+  animation: chute-pop-open 24s linear infinite -4.8s;
+}
+
+/* Parachute remains folded inside backpack during free-fall (0% -> 3.2%), then pops open with recoil */
+@keyframes chute-pop-open {
+  0%, 3.1% {
+    transform: scale(0.05, 0.05);
     opacity: 0;
   }
-  8% {
-    transform: translate3d(12px, 12vh, 0) rotate(7deg) scale(1);
-    opacity: 0.95;
+  3.6% {
+    transform: scale(0.35, 0.65);
+    opacity: 0.85;
   }
-  32% {
-    transform: translate3d(-18px, 36vh, 0) rotate(-8deg) scale(1);
-    opacity: 0.95;
+  4.4% {
+    transform: scale(1.22, 0.86);
+    opacity: 1;
   }
-  58% {
-    transform: translate3d(18px, 62vh, 0) rotate(8deg) scale(1);
-    opacity: 0.95;
+  5.3% {
+    transform: scale(0.95, 1.05);
+    opacity: 1;
   }
-  84% {
-    transform: translate3d(-12px, 88vh, 0) rotate(-6deg) scale(1);
-    opacity: 0.9;
+  6.2%, 44% {
+    transform: scale(1, 1);
+    opacity: 1;
   }
-  100% {
-    transform: translate3d(6px, 108vh, 0) rotate(4deg) scale(0.95);
+  45%, 100% {
+    transform: scale(0.05, 0.05);
     opacity: 0;
   }
 }
 
-@keyframes turkey-parachute-drop-alt {
+/* Drop directly out of helicopter cargo door (y=-15px puts turkey at y=43px door center) -> fast free-fall -> brake on chute pop -> slow pendulum float */
+@keyframes turkey-drop-right {
   0% {
-    transform: translate3d(0, 42px, 0) rotate(6deg) scale(0.75);
+    transform: translate3d(0, -15px, 0) rotate(0deg) scale(0.45);
     opacity: 0;
   }
-  8% {
-    transform: translate3d(-14px, 12vh, 0) rotate(-7deg) scale(1);
+  0.4% {
+    transform: translate3d(3px, -12px, 0) rotate(12deg) scale(0.68);
+    opacity: 1;
+  }
+  2.0% {
+    transform: translate3d(16px, 48px, 0) rotate(-25deg) scale(0.92);
+    opacity: 1;
+  }
+  3.6% {
+    transform: translate3d(26px, 118px, 0) rotate(14deg) scale(1);
+    opacity: 1;
+  }
+  4.5% {
+    transform: translate3d(28px, 106px, 0) rotate(-8deg) scale(1);
+    opacity: 1;
+  }
+  5.6% {
+    transform: translate3d(24px, 124px, 0) rotate(-11deg) scale(1);
+    opacity: 1;
+  }
+  14% {
+    transform: translate3d(-14px, 34vh, 0) rotate(9deg) scale(1);
+    opacity: 0.98;
+  }
+  24% {
+    transform: translate3d(20px, 58vh, 0) rotate(-9deg) scale(1);
+    opacity: 0.98;
+  }
+  34% {
+    transform: translate3d(-12px, 82vh, 0) rotate(7deg) scale(1);
     opacity: 0.95;
   }
-  35% {
-    transform: translate3d(18px, 38vh, 0) rotate(8deg) scale(1);
+  44% {
+    transform: translate3d(10px, 105vh, 0) rotate(-4deg) scale(0.95);
+    opacity: 0;
+  }
+  44.1%, 100% {
+    transform: translate3d(0, -15px, 0) rotate(0deg) scale(0.45);
+    opacity: 0;
+  }
+}
+
+@keyframes turkey-drop-left {
+  0% {
+    transform: translate3d(0, -11px, 0) rotate(0deg) scale(0.45);
+    opacity: 0;
+  }
+  0.4% {
+    transform: translate3d(-3px, -8px, 0) rotate(-12deg) scale(0.68);
+    opacity: 1;
+  }
+  2.0% {
+    transform: translate3d(-16px, 52px, 0) rotate(25deg) scale(0.92);
+    opacity: 1;
+  }
+  3.6% {
+    transform: translate3d(-26px, 122px, 0) rotate(-14deg) scale(1);
+    opacity: 1;
+  }
+  4.5% {
+    transform: translate3d(-28px, 110px, 0) rotate(8deg) scale(1);
+    opacity: 1;
+  }
+  5.6% {
+    transform: translate3d(-24px, 128px, 0) rotate(11deg) scale(1);
+    opacity: 1;
+  }
+  14% {
+    transform: translate3d(14px, 34vh, 0) rotate(-9deg) scale(1);
+    opacity: 0.98;
+  }
+  24% {
+    transform: translate3d(-20px, 58vh, 0) rotate(9deg) scale(1);
+    opacity: 0.98;
+  }
+  34% {
+    transform: translate3d(12px, 82vh, 0) rotate(-7deg) scale(1);
     opacity: 0.95;
   }
-  62% {
-    transform: translate3d(-16px, 65vh, 0) rotate(-8deg) scale(1);
-    opacity: 0.95;
+  44% {
+    transform: translate3d(-10px, 105vh, 0) rotate(4deg) scale(0.95);
+    opacity: 0;
   }
-  86% {
-    transform: translate3d(14px, 88vh, 0) rotate(6deg) scale(1);
-    opacity: 0.9;
-  }
-  100% {
-    transform: translate3d(-6px, 108vh, 0) rotate(-4deg) scale(0.95);
+  44.1%, 100% {
+    transform: translate3d(0, -11px, 0) rotate(0deg) scale(0.45);
     opacity: 0;
   }
 }
@@ -1850,5 +1989,14 @@ html[data-theme="new-years"] .card:hover {
     animation: none !important;
     transform: translate3d(0, 72px, 0) rotate(-3deg) scale(0.95) !important;
     opacity: 0.9 !important;
+  }
+  #thanksgiving-turkey-drop .turkey-chute {
+    animation: none !important;
+    transform: scale(1) !important;
+    opacity: 1 !important;
+  }
+  #thanksgiving-turkey-drop .pt4,
+  #thanksgiving-turkey-drop .pt5 {
+    display: none !important;
   }
 }
