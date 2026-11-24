@@ -136,7 +136,7 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add data.json index.html bills.html sabres.html bandits.html
           if ! git diff --staged --quiet; then
-            git commit -m "Auto-update Buffalo playoff probabilities [skip ci]"
+            git commit -m "Auto-update Buffalo playoff probabilities"
             git pull --rebase --autostash origin v4
             git push origin v4
           fi

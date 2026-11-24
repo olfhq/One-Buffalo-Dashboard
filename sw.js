@@ -1,5 +1,5 @@
 // Service Worker for One Buffalo Tracker
-const CACHE_NAME = 'one-buffalo-v13';
+const CACHE_NAME = 'one-buffalo-v14';
 
 const PRECACHE_ASSETS = [
   './',

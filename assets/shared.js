@@ -571,8 +571,10 @@
       if (typeof document === 'undefined') return;
       const mount = () => {
         if (!document.body) return;
+        const activeTheme = document.documentElement.getAttribute('data-global-theme') ||
+          document.documentElement.getAttribute('data-theme') || theme;
         let witch = document.getElementById('halloween-witch');
-        if (theme === 'halloween') {
+        if (activeTheme === 'halloween') {
           if (!witch) {
             witch = document.createElement('div');
             witch.id = 'halloween-witch';
@@ -597,8 +599,10 @@
       if (typeof document === 'undefined') return;
       const mount = () => {
         if (!document.body) return;
+        const activeTheme = document.documentElement.getAttribute('data-global-theme') ||
+          document.documentElement.getAttribute('data-theme') || theme;
         let turkeyDrop = document.getElementById('thanksgiving-turkey-drop');
-        if (theme === 'thanksgiving') {
+        if (activeTheme === 'thanksgiving') {
           if (!turkeyDrop) {
             turkeyDrop = document.createElement('div');
             turkeyDrop.id = 'thanksgiving-turkey-drop';
