@@ -554,6 +554,9 @@
         if (typeof syncWitchElement === 'function') {
           syncWitchElement(targetGlobal);
         }
+        if (typeof syncThanksgivingTurkeyDrop === 'function') {
+          syncThanksgivingTurkeyDrop(targetGlobal);
+        }
       } catch (e) {}
 
       return {
@@ -580,6 +583,35 @@
           }
         } else if (witch) {
           witch.remove();
+        }
+      };
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', mount, { once: true });
+      } else {
+        mount();
+      }
+    }
+
+    function syncThanksgivingTurkeyDrop(theme) {
+      if (typeof document === 'undefined') return;
+      const mount = () => {
+        if (!document.body) return;
+        let turkeyDrop = document.getElementById('thanksgiving-turkey-drop');
+        if (theme === 'thanksgiving') {
+          if (!turkeyDrop) {
+            turkeyDrop = document.createElement('div');
+            turkeyDrop.id = 'thanksgiving-turkey-drop';
+            turkeyDrop.setAttribute('aria-hidden', 'true');
+            turkeyDrop.innerHTML =
+              '<div class="turkey-chopper"><div class="chopper-rotor-blur"></div><div class="chopper-sprite"></div></div>' +
+              '<div class="para-turkey pt1"></div>' +
+              '<div class="para-turkey pt2"></div>' +
+              '<div class="para-turkey pt3"></div>';
+            document.body.appendChild(turkeyDrop);
+          }
+        } else if (turkeyDrop) {
+          turkeyDrop.remove();
         }
       };
 

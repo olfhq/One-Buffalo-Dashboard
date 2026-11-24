@@ -206,13 +206,13 @@ html[data-theme="thanksgiving"],
   --radius-card: 10px;
   --font-display: 'Barlow Condensed', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-data: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  --bills-accent: #e11d48;
+  --bills-accent: #be123c;
   --sabres-accent: #f59e0b;
   --accent-blue: #fbbf24;
   --accent-gold: #f59e0b;
   --accent-green: #10b981;
   --text-main: #fef3c7;
-  --text-muted: #d97706;
+  --text-muted: #c49a6c;
   --focus-ring: #f59e0b;
   --theme-color: #150a04;
 
@@ -221,7 +221,7 @@ html[data-theme="thanksgiving"],
   --card-inner: var(--surface-inset);
   --card-border: var(--border-subtle);
   --bills-blue: #9a3412;
-  --bills-red: #e11d48;
+  --bills-red: #be123c;
   --sabres-blue: #1c1008;
   --sabres-gold: #f59e0b;
 }
@@ -822,15 +822,15 @@ html[data-theme="french-connection"] .card:hover {
 
 /* TEAM THEME: THANKSGIVING */
 [data-team-theme="thanksgiving"].card-bills {
-  --bills-accent: #e11d48 !important;
+  --bills-accent: #be123c !important;
   --card-border: #9f1239 !important;
   --border-subtle: #9f1239 !important;
   --surface-card: #230d14 !important;
-  --focus-ring: #e11d48 !important;
+  --focus-ring: #be123c !important;
 }
 [data-team-theme="thanksgiving"].card-bills:hover {
-  border-color: #e11d48 !important;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55), 0 0 16px rgba(225, 29, 72, 0.4) !important;
+  border-color: #be123c !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55), 0 0 16px rgba(190, 18, 60, 0.4) !important;
 }
 
 [data-team-theme="thanksgiving"].card-sabres {
@@ -865,6 +865,10 @@ html[data-theme="french-connection"] .card:hover {
   --border-subtle: #9a3412 !important;
   --surface-card: #241108 !important;
   --focus-ring: #f97316 !important;
+}
+[data-team-theme="thanksgiving"].card-bandits:hover {
+  border-color: #f97316 !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55), 0 0 16px rgba(249, 115, 22, 0.4) !important;
 }
 
 /* --------------------------------------------------------------------------
@@ -1535,54 +1539,208 @@ html[data-theme="halloween"] .card:hover {
   }
 }
 
-/* 7. THANKSGIVING (Warm Harvest Hearth & Amber Glow) */
+/* 7. THANKSGIVING (Warm Harvest Hearth, Drifting Autumn Leaves & Turkey Drop) */
 html[data-theme="thanksgiving"] body::before {
   content: "";
   position: fixed;
-  top: 0;
+  bottom: 0;
   left: 0;
   right: 0;
-  height: 420px;
+  height: 380px;
   pointer-events: none;
   z-index: 0;
-  background: radial-gradient(ellipse at 50% 0%, rgba(245, 158, 11, 0.22), rgba(225, 29, 72, 0.14) 50%, transparent 75%);
+  background: radial-gradient(ellipse at 50% 100%, rgba(245, 158, 11, 0.2), rgba(190, 18, 60, 0.14) 50%, transparent 75%);
   animation: harvest-glow 6s ease-in-out infinite alternate;
 }
 
 @keyframes harvest-glow {
-  0% { opacity: 0.6; transform: scaleY(0.95); }
-  100% { opacity: 1; transform: scaleY(1.05); }
+  0% { opacity: 0.65; transform: scaleY(0.96); }
+  100% { opacity: 1; transform: scaleY(1.04); }
 }
 
-/* Warm rising hearth embers / sparks from the feast fireplace */
+/* Drifting autumn leaves across the harvest sky */
 html[data-theme="thanksgiving"] body::after {
   content: "";
   position: fixed;
-  bottom: -200px;
+  top: -320px;
   left: 0;
   right: 0;
-  top: 0;
+  bottom: 0;
   pointer-events: none;
-  z-index: 999;
-  background-image:
-    radial-gradient(2.5px 2.5px at 40px 100px, rgba(245, 158, 11, 0.8), transparent),
-    radial-gradient(3.5px 3.5px at 130px 180px, rgba(225, 29, 72, 0.75), transparent),
-    radial-gradient(2px 2px at 220px 80px, rgba(217, 119, 6, 0.8), transparent),
-    radial-gradient(3px 3px at 290px 240px, rgba(251, 191, 36, 0.7), transparent);
+  z-index: 998;
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22320%22%20height%3D%22320%22%20viewBox%3D%220%200%20320%20320%22%3E%3Cg%20opacity%3D%220.65%22%3E%3Cpath%20d%3D%22M48%2036%20C54%2026%2064%2028%2062%2038%20C70%2036%2074%2044%2064%2048%20C68%2056%2060%2060%2054%2052%20L50%2062%20L48%2052%20C40%2056%2036%2048%2044%2044%20C38%2038%2042%2030%2048%2036%20Z%22%20fill%3D%22%23ea580c%22%20transform%3D%22rotate(18%2054%2044)%22%2F%3E%3Cpath%20d%3D%22M176%20118%20C182%20108%20190%20112%20188%20122%20C196%20122%20196%20130%20186%20132%20L182%20142%20L178%20132%20C168%20130%20168%20122%20176%20118%20Z%22%20fill%3D%22%23f59e0b%22%20transform%3D%22rotate(-25%20182%20126)%22%2F%3E%3Cpath%20d%3D%22M264%2062%20C270%2054%20278%2056%20276%2066%20C284%2066%20284%2074%20274%2076%20L270%2086%20L266%2076%20C258%2074%20256%2066%20264%2062%20Z%22%20fill%3D%22%23be123c%22%20transform%3D%22rotate(34%20270%2070)%22%2F%3E%3Cpath%20d%3D%22M98%20232%20C104%20222%20112%20224%20110%20234%20C118%20234%20118%20242%20108%20244%20L104%20254%20L100%20244%20C92%20242%2090%20234%2098%20232%20Z%22%20fill%3D%22%23d97706%22%20transform%3D%22rotate(-15%20104%20238)%22%2F%3E%3Cpath%20d%3D%22M232%20226%20C238%20218%20246%20220%20244%20230%20C252%20230%20252%20238%20242%20240%20L238%20250%20L234%20240%20C226%20238%20224%20230%20232%20226%20Z%22%20fill%3D%22%23ea580c%22%20transform%3D%22rotate(22%20238%20234)%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E");
   background-size: 320px 320px;
-  opacity: 0.8;
-  animation: hearth-ember-rise 11s linear infinite;
+  opacity: 0.72;
+  animation: autumn-leaf-fall 18s linear infinite;
 }
 
-@keyframes hearth-ember-rise {
-  0% { transform: translateY(0) translateX(0); }
-  50% { transform: translateY(-150px) translateX(14px); }
-  100% { transform: translateY(-300px) translateX(0); }
+@keyframes autumn-leaf-fall {
+  0% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(18px, 160px, 0); }
+  100% { transform: translate3d(0, 320px, 0); }
 }
 
 html[data-theme="thanksgiving"] .card:hover {
   border-color: #f59e0b !important;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55), 0 0 20px rgba(245, 158, 11, 0.35) !important;
+}
+
+/* 7. THANKSGIVING: WKRP-Style Helicopter & Parachuting Turkeys */
+#thanksgiving-turkey-drop {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  overflow: hidden;
+}
+
+#thanksgiving-turkey-drop .turkey-chopper {
+  position: absolute;
+  top: 14px;
+  left: 0;
+  width: 112px;
+  height: 54px;
+  will-change: transform, opacity;
+  animation: chopper-patrol 24s ease-in-out infinite;
+}
+
+#thanksgiving-turkey-drop .chopper-sprite {
+  width: 112px;
+  height: 54px;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20180%2090%22%20width%3D%22180%22%20height%3D%2290%22%3E%3Crect%20x%3D%2288%22%20y%3D%2218%22%20width%3D%228%22%20height%3D%2212%22%20fill%3D%22%2378350f%22%2F%3E%3Crect%20x%3D%2230%22%20y%3D%2214%22%20width%3D%22124%22%20height%3D%224.5%22%20rx%3D%222.2%22%20fill%3D%22%23fef3c7%22%20opacity%3D%220.85%22%2F%3E%3Cpath%20d%3D%22M56%2042%20L20%2036%20L16%2042%20L56%2052%20Z%22%20fill%3D%22%239a3412%22%2F%3E%3Cpath%20d%3D%22M16%2030%20L22%2046%20L12%2046%20Z%22%20fill%3D%22%23be123c%22%2F%3E%3Ccircle%20cx%3D%2215%22%20cy%3D%2239%22%20r%3D%228%22%20fill%3D%22none%22%20stroke%3D%22%23fef3c7%22%20stroke-width%3D%222%22%20stroke-dasharray%3D%224%204%22%2F%3E%3Cellipse%20cx%3D%2296%22%20cy%3D%2246%22%20rx%3D%2242%22%20ry%3D%2218%22%20fill%3D%22%23b45309%22%2F%3E%3Cpath%20d%3D%22M104%2030%20C124%2030%20136%2038%20136%2046%20L104%2046%20Z%22%20fill%3D%22%23fde68a%22%20opacity%3D%220.9%22%2F%3E%3Crect%20x%3D%2266%22%20y%3D%2248%22%20width%3D%2262%22%20height%3D%225%22%20rx%3D%222%22%20fill%3D%22%23f59e0b%22%2F%3E%3Cpath%20d%3D%22M74%2064%20L70%2074%20M116%2064%20L120%2074%20M60%2074%20L132%2074%22%20stroke%3D%22%23d97706%22%20stroke-width%3D%223.5%22%20stroke-linecap%3D%22round%22%2F%3E%3C%2Fsvg%3E");
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.55)) drop-shadow(0 0 12px rgba(245, 158, 11, 0.35));
+}
+
+#thanksgiving-turkey-drop .chopper-rotor-blur {
+  position: absolute;
+  top: 7px;
+  left: 16px;
+  width: 80px;
+  height: 3px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, rgba(254, 243, 199, 0.9), transparent);
+  animation: rotor-spin 0.14s linear infinite;
+}
+
+@keyframes rotor-spin {
+  0% { transform: scaleX(1); opacity: 0.95; }
+  50% { transform: scaleX(0.35); opacity: 0.45; }
+  100% { transform: scaleX(1); opacity: 0.95; }
+}
+
+@keyframes chopper-patrol {
+  0% {
+    transform: translate3d(-130px, 4px, 0) scaleX(1) rotate(3deg);
+    opacity: 0;
+  }
+  6% {
+    opacity: 0.95;
+  }
+  44% {
+    transform: translate3d(106vw, -2px, 0) scaleX(1) rotate(3deg);
+    opacity: 0.95;
+  }
+  48% {
+    transform: translate3d(106vw, 6px, 0) scaleX(-1) rotate(3deg);
+    opacity: 0;
+  }
+  52% {
+    transform: translate3d(106vw, 10px, 0) scaleX(-1) rotate(3deg);
+    opacity: 0.95;
+  }
+  92% {
+    transform: translate3d(-130px, 2px, 0) scaleX(-1) rotate(3deg);
+    opacity: 0.95;
+  }
+  97%, 100% {
+    transform: translate3d(-130px, 4px, 0) scaleX(1) rotate(3deg);
+    opacity: 0;
+  }
+}
+
+#thanksgiving-turkey-drop .para-turkey {
+  position: absolute;
+  top: 0;
+  width: 56px;
+  height: 76px;
+  will-change: transform, opacity;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20100%20130%22%20width%3D%22100%22%20height%3D%22130%22%3E%3Cpath%20d%3D%22M14%2042%20C14%2014%2086%2014%2086%2042%20Z%22%20fill%3D%22%23f59e0b%22%2F%3E%3Cpath%20d%3D%22M32%2042%20C32%2018%2068%2018%2068%2042%20Z%22%20fill%3D%22%23be123c%22%2F%3E%3Cpath%20d%3D%22M44%2042%20C44%2022%2056%2022%2056%2042%20Z%22%20fill%3D%22%23fef3c7%22%2F%3E%3Cpath%20d%3D%22M18%2042%20L44%2082%20M36%2042%20L48%2080%20M64%2042%20L52%2080%20M82%2042%20L56%2082%22%20stroke%3D%22%23fde68a%22%20stroke-width%3D%221.8%22%20opacity%3D%220.85%22%2F%3E%3Ccircle%20cx%3D%2238%22%20cy%3D%2290%22%20r%3D%2210%22%20fill%3D%22%23ea580c%22%2F%3E%3Ccircle%20cx%3D%2242%22%20cy%3D%2283%22%20r%3D%228%22%20fill%3D%22%23f59e0b%22%2F%3E%3Ccircle%20cx%3D%2252%22%20cy%3D%2294%22%20r%3D%2214%22%20fill%3D%22%2378350f%22%2F%3E%3Cellipse%20cx%3D%2250%22%20cy%3D%2295%22%20rx%3D%228%22%20ry%3D%225%22%20fill%3D%22%239a3412%22%2F%3E%3Ccircle%20cx%3D%2266%22%20cy%3D%2284%22%20r%3D%226.5%22%20fill%3D%22%2392400e%22%2F%3E%3Cpath%20d%3D%22M71%2083%20L78%2085%20L71%2088%20Z%22%20fill%3D%22%23fbbf24%22%2F%3E%3Cpath%20d%3D%22M69%2088%20Q71%2094%2067%2095%20Q65%2092%2067%2088%20Z%22%20fill%3D%22%23e11d48%22%2F%3E%3Ccircle%20cx%3D%2267.5%22%20cy%3D%2282.5%22%20r%3D%221.4%22%20fill%3D%22%23fef3c7%22%2F%3E%3Cpath%20d%3D%22M47%20107%20L45%20116%20M57%20107%20L59%20116%22%20stroke%3D%22%23fbbf24%22%20stroke-width%3D%222.5%22%20stroke-linecap%3D%22round%22%2F%3E%3C%2Fsvg%3E");
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.45));
+}
+
+#thanksgiving-turkey-drop .pt1 {
+  left: 16vw;
+  animation: turkey-parachute-drop 16s linear infinite;
+}
+
+#thanksgiving-turkey-drop .pt2 {
+  left: 48vw;
+  animation: turkey-parachute-drop-alt 18s linear infinite -6s;
+}
+
+#thanksgiving-turkey-drop .pt3 {
+  left: 78vw;
+  animation: turkey-parachute-drop 15s linear infinite -11s;
+}
+
+@keyframes turkey-parachute-drop {
+  0% {
+    transform: translate3d(0, 42px, 0) rotate(-6deg) scale(0.75);
+    opacity: 0;
+  }
+  8% {
+    transform: translate3d(12px, 12vh, 0) rotate(7deg) scale(1);
+    opacity: 0.95;
+  }
+  32% {
+    transform: translate3d(-18px, 36vh, 0) rotate(-8deg) scale(1);
+    opacity: 0.95;
+  }
+  58% {
+    transform: translate3d(18px, 62vh, 0) rotate(8deg) scale(1);
+    opacity: 0.95;
+  }
+  84% {
+    transform: translate3d(-12px, 88vh, 0) rotate(-6deg) scale(1);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate3d(6px, 108vh, 0) rotate(4deg) scale(0.95);
+    opacity: 0;
+  }
+}
+
+@keyframes turkey-parachute-drop-alt {
+  0% {
+    transform: translate3d(0, 42px, 0) rotate(6deg) scale(0.75);
+    opacity: 0;
+  }
+  8% {
+    transform: translate3d(-14px, 12vh, 0) rotate(-7deg) scale(1);
+    opacity: 0.95;
+  }
+  35% {
+    transform: translate3d(18px, 38vh, 0) rotate(8deg) scale(1);
+    opacity: 0.95;
+  }
+  62% {
+    transform: translate3d(-16px, 65vh, 0) rotate(-8deg) scale(1);
+    opacity: 0.95;
+  }
+  86% {
+    transform: translate3d(14px, 88vh, 0) rotate(6deg) scale(1);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate3d(-6px, 108vh, 0) rotate(-4deg) scale(0.95);
+    opacity: 0;
+  }
 }
 
 /* 8. CHRISTMAS (Evergreen, Holiday Twinkle & Gentle Winter Snowfall) */
@@ -1679,5 +1837,18 @@ html[data-theme="new-years"] .card:hover {
   #halloween-witch .smoke {
     animation-duration: 2.4s !important;
     animation-iteration-count: infinite !important;
+  }
+  #thanksgiving-turkey-drop .turkey-chopper {
+    animation: none !important;
+    transform: translate3d(5vw, 14px, 0) scaleX(1) !important;
+    opacity: 0.95 !important;
+  }
+  #thanksgiving-turkey-drop .chopper-rotor-blur {
+    animation: none !important;
+  }
+  #thanksgiving-turkey-drop .para-turkey {
+    animation: none !important;
+    transform: translate3d(0, 72px, 0) rotate(-3deg) scale(0.95) !important;
+    opacity: 0.9 !important;
   }
 }
