@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-24T05:00:26.543Z",
+  "updatedAt": "2026-11-24T08:58:17.865Z",
   "source": "http://www.playoffstatus.com and ESPN API",
   "theme": "regular",
   "billsTheme": null,
@@ -9,8 +9,8 @@
   "bills": {
     "team": "Buffalo Bills",
     "makePlayoffs": 100,
-    "winDivision": 98,
-    "seed1": 41,
+    "winDivision": 97,
+    "seed1": 43,
     "magicNumber": "4",
     "clinchAlert": {
       "active": false,
@@ -33,7 +33,7 @@
       "venue": "Highmark Stadium, Orchard Park, NY",
       "roof": "Open-Air Stadium",
       "surface": "Natural Grass",
-      "weather": "36°F, 14mph Wind, 96% PoP",
+      "weather": "35°F, 12mph Wind, 98% PoP",
       "window": "TNF",
       "windowLabel": "Sunday Night Football",
       "windowBadge": "Sunday Night Football",
@@ -163,7 +163,7 @@
     "divisionRadar": [
       {
         "team": "Bills",
-        "pct": 98
+        "pct": 97
       },
       {
         "team": "Patriots",
@@ -181,23 +181,23 @@
     "seedDistribution": [
       {
         "seed": "#1 Seed",
-        "pct": 41
+        "pct": 43
       },
       {
         "seed": "#2 Seed",
-        "pct": 28
+        "pct": 30
       },
       {
         "seed": "#3 Seed",
-        "pct": 19
+        "pct": 16
       },
       {
         "seed": "#4 Seed",
-        "pct": 10
+        "pct": 8
       },
       {
         "seed": "#5 Seed",
-        "pct": 0.5
+        "pct": 1
       },
       {
         "seed": "#6 Seed",
@@ -211,15 +211,15 @@
     "opponents": [
       {
         "team": "Pittsburgh Steelers",
-        "pct": 13
-      },
-      {
-        "team": "Cleveland Browns",
         "pct": 11
       },
       {
         "team": "New England Patriots",
-        "pct": 10
+        "pct": 11
+      },
+      {
+        "team": "Cleveland Browns",
+        "pct": 11
       }
     ],
     "seasonSchedule": [
@@ -970,7 +970,7 @@
         "venue": "Acrisure Stadium, Pittsburgh, PA",
         "roof": "Open-Air Stadium",
         "surface": "Natural Kentucky Bluegrass",
-        "weather": "38°F, 16mph Wind, 67% PoP",
+        "weather": "37°F, 16mph Wind, 65% PoP",
         "window": "SPECIAL",
         "windowLabel": "Fri Football Window",
         "windowBadge": "Marquee Broadcast",
@@ -997,7 +997,7 @@
         "venue": "Paycor Stadium, Cincinnati, OH",
         "roof": "Open-Air Stadium",
         "surface": "FieldTurf CORE",
-        "weather": "58°F, 8mph Wind, 19% PoP",
+        "weather": "55°F, 7mph Wind, 24% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -1051,7 +1051,7 @@
         "venue": "Hard Rock Stadium, Miami Gardens, FL",
         "roof": "Open-Air Stadium",
         "surface": "Natural Bermuda Grass",
-        "weather": "77°F, 10mph Wind, 28% PoP",
+        "weather": "76°F, 11mph Wind, 28% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -1105,7 +1105,7 @@
         "venue": "EverBank Stadium, Jacksonville, FL",
         "roof": "Open-Air Stadium",
         "surface": "Natural Bermuda Grass",
-        "weather": "68°F, 3mph Wind, 5% PoP",
+        "weather": "69°F, 1mph Wind, 5% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -1213,7 +1213,7 @@
         "venue": "Levi's Stadium, Santa Clara, CA",
         "roof": "Open-Air Stadium",
         "surface": "Natural Bermuda Grass",
-        "weather": "65°F, 12mph Wind, 73% PoP",
+        "weather": "64°F, 10mph Wind, 72% PoP",
         "window": "LATE",
         "windowLabel": "Sunday 4:25 PM ET National Window",
         "windowBadge": "America's Game of the Week",
@@ -1240,7 +1240,7 @@
         "venue": "Huntington Bank Field, Cleveland, OH",
         "roof": "Open-Air Stadium",
         "surface": "Natural Kentucky Bluegrass",
-        "weather": "48°F, 9mph Wind, 28% PoP",
+        "weather": "47°F, 10mph Wind, 35% PoP",
         "window": "SNF",
         "windowLabel": "Sunday Night Football",
         "windowBadge": "NBC / Peacock Marquee",
@@ -1267,7 +1267,7 @@
         "venue": "Raymond James Stadium, Tampa, FL",
         "roof": "Open-Air Stadium",
         "surface": "Natural Bermuda Grass",
-        "weather": "70°F, 6mph Wind, 12% PoP",
+        "weather": "73°F, 11mph Wind, 12% PoP",
         "window": "MNF",
         "windowLabel": "Monday Night Football",
         "windowBadge": "ESPN / ABC Prime Time",
