@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-24T19:50:36.665Z",
+  "updatedAt": "2026-11-24T22:03:56.701Z",
   "source": "http://www.playoffstatus.com and ESPN API",
   "theme": "thanksgiving",
   "billsTheme": null,
@@ -33,7 +33,7 @@
       "venue": "Highmark Stadium, Orchard Park, NY",
       "roof": "Open-Air Stadium",
       "surface": "Natural Grass",
-      "weather": "36°F, 18mph Wind, 96% PoP",
+      "weather": "36°F, 18mph Wind, 95% PoP",
       "window": "TNF",
       "windowLabel": "Sunday Night Football",
       "windowBadge": "Sunday Night Football",
@@ -124,17 +124,17 @@
           "team": "Bills"
         },
         {
-          "player": "Ben VanSumeren",
-          "pos": "FB",
-          "status": "Injured Reserve",
-          "injury": "Knee",
-          "team": "Chiefs"
-        },
-        {
           "player": "Kenneth Walker III",
           "pos": "RB",
           "status": "Questionable",
           "injury": "Groin",
+          "team": "Chiefs"
+        },
+        {
+          "player": "Ben VanSumeren",
+          "pos": "FB",
+          "status": "Injured Reserve",
+          "injury": "Knee",
           "team": "Chiefs"
         },
         {
@@ -970,7 +970,7 @@
         "venue": "Acrisure Stadium, Pittsburgh, PA",
         "roof": "Open-Air Stadium",
         "surface": "Natural Kentucky Bluegrass",
-        "weather": "38°F, 14mph Wind, 58% PoP",
+        "weather": "38°F, 14mph Wind, 66% PoP",
         "window": "SPECIAL",
         "windowLabel": "Fri Football Window",
         "windowBadge": "Marquee Broadcast",
@@ -997,7 +997,7 @@
         "venue": "Paycor Stadium, Cincinnati, OH",
         "roof": "Open-Air Stadium",
         "surface": "FieldTurf CORE",
-        "weather": "55°F, 9mph Wind, 20% PoP",
+        "weather": "55°F, 9mph Wind, 23% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -1063,8 +1063,8 @@
         "homeName": "Miami Dolphins",
         "homeRecord": "1-9, L4",
         "homeScore": "0",
-        "homeWinChance": 35,
-        "awayWinChance": 65,
+        "homeWinChance": 36,
+        "awayWinChance": 64,
         "verdict": "AFC EAST WATCH",
         "impactClass": "bad",
         "target": "Root for Miami Dolphins",
@@ -1090,8 +1090,8 @@
         "homeName": "Minnesota Vikings",
         "homeRecord": "7-3, L1",
         "homeScore": "0",
-        "homeWinChance": 75,
-        "awayWinChance": 25,
+        "homeWinChance": 74,
+        "awayWinChance": 26,
         "verdict": "NFC MATCHUP",
         "impactClass": "neutral",
         "target": "Neutral Matchup",
@@ -1105,7 +1105,7 @@
         "venue": "EverBank Stadium, Jacksonville, FL",
         "roof": "Open-Air Stadium",
         "surface": "Natural Bermuda Grass",
-        "weather": "69°F, 1mph Wind, 5% PoP",
+        "weather": "69°F, 1mph Wind, 4% PoP",
         "window": "EARLY",
         "windowLabel": "Sunday 1:00 PM ET Early Window",
         "windowBadge": "Regional CBS / FOX Lineups",
@@ -1213,7 +1213,7 @@
         "venue": "Levi's Stadium, Santa Clara, CA",
         "roof": "Open-Air Stadium",
         "surface": "Natural Bermuda Grass",
-        "weather": "66°F, 11mph Wind, 55% PoP",
+        "weather": "66°F, 11mph Wind, 59% PoP",
         "window": "LATE",
         "windowLabel": "Sunday 4:25 PM ET National Window",
         "windowBadge": "America's Game of the Week",
@@ -1240,7 +1240,7 @@
         "venue": "Huntington Bank Field, Cleveland, OH",
         "roof": "Open-Air Stadium",
         "surface": "Natural Kentucky Bluegrass",
-        "weather": "48°F, 15mph Wind, 45% PoP",
+        "weather": "48°F, 15mph Wind, 53% PoP",
         "window": "SNF",
         "windowLabel": "Sunday Night Football",
         "windowBadge": "NBC / Peacock Marquee",
@@ -1267,7 +1267,7 @@
         "venue": "Raymond James Stadium, Tampa, FL",
         "roof": "Open-Air Stadium",
         "surface": "Natural Bermuda Grass",
-        "weather": "65°F, 13mph Wind, 14% PoP",
+        "weather": "65°F, 13mph Wind, 18% PoP",
         "window": "MNF",
         "windowLabel": "Monday Night Football",
         "windowBadge": "ESPN / ABC Prime Time",
@@ -1405,17 +1405,17 @@
           "team": "Sabres"
         },
         {
+          "player": "Kyle Palmieri",
+          "pos": "C",
+          "status": "Injured Reserve",
+          "injury": "Lower Body",
+          "team": "New York"
+        },
+        {
           "player": "Ryan Pulock",
           "pos": "D",
           "status": "Out",
           "injury": "Shoulder",
-          "team": "New York"
-        },
-        {
-          "player": "Kyle Palmieri",
-          "pos": "C",
-          "status": "Day-To-Day",
-          "injury": "Lower Body",
           "team": "New York"
         },
         {
